@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 import { SettingsPopout, type SettingsPopoutItem } from '@/components/settings-popout'
 import { Slider } from './Slider'
 import { VolumeControl } from './VolumeControl'
+import { useVideoPlayer } from './useVideoPlayer'
 
 const PLAYBACK_SPEEDS = [0.5, 1, 1.5, 2] as const
 
@@ -40,16 +41,24 @@ export function VideoPlayer({
   ...videoProps
 }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [volume, setVolume] = useState(1)
-  const [progress, setProgress] = useState(0)
-  const [isMuted, setIsMuted] = useState(false)
-  const [playbackSpeed, setPlaybackSpeed] = useState(1)
+  const {
+    isPlaying,
+    volume,
+    isMuted,
+    playbackSpeed,
+    currentTime,
+    duration,
+    progress,
+    togglePlay,
+    seek,
+    changeVolume,
+    toggleMute,
+    setSpeed,
+    mediaHandlers,
+  } = useVideoPlayer(videoRef, { onPlay, onPause })
   const [showControls, setShowControls] = useState(!autoHideControls)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [volumeOpen, setVolumeOpen] = useState(false)
-  const [currentTime, setCurrentTime] = useState(0)
-  const [duration, setDuration] = useState(0)
 
   const settingsItems = useMemo<SettingsPopoutItem[]>(
     () =>
@@ -69,73 +78,6 @@ export function VideoPlayer({
       setShowControls(true)
     }
   }, [autoHideControls])
-
-  const togglePlay = async () => {
-    const video = videoRef.current
-    if (!video) return
-
-    if (video.paused) {
-      await video.play()
-      setIsPlaying(true)
-      onPlay?.()
-    } else {
-      video.pause()
-      setIsPlaying(false)
-      onPause?.()
-    }
-  }
-
-  const handleVolumeChange = (value: number) => {
-    const video = videoRef.current
-    if (!video) return
-    const nextVolume = value / 100
-    video.volume = nextVolume
-    video.muted = nextVolume === 0
-    setVolume(nextVolume)
-    setIsMuted(nextVolume === 0)
-  }
-
-  const handleTimeUpdate = () => {
-    const video = videoRef.current
-    if (!video || !video.duration) return
-    const nextProgress = (video.currentTime / video.duration) * 100
-    setProgress(Number.isFinite(nextProgress) ? nextProgress : 0)
-    setCurrentTime(video.currentTime)
-    setDuration(video.duration)
-  }
-
-  const handleSeek = (value: number) => {
-    const video = videoRef.current
-    if (!video || !video.duration) return
-    const time = (value / 100) * video.duration
-    if (!Number.isFinite(time)) return
-    video.currentTime = time
-    setProgress(value)
-  }
-
-  const toggleMute = () => {
-    const video = videoRef.current
-    if (!video) return
-
-    if (isMuted || volume === 0) {
-      const restored = volume === 0 ? 1 : volume
-      video.muted = false
-      video.volume = restored
-      setIsMuted(false)
-      setVolume(restored)
-      return
-    }
-
-    video.muted = true
-    setIsMuted(true)
-  }
-
-  const setSpeed = (speed: number) => {
-    const video = videoRef.current
-    if (!video) return
-    video.playbackRate = speed
-    setPlaybackSpeed(speed)
-  }
 
   const handleSettingsSelect = (id: string) => {
     if (!id.startsWith('speed-')) return
@@ -181,19 +123,9 @@ export function VideoPlayer({
         className="w-full cursor-pointer rounded-lg bg-black"
         src={src}
         poster={poster}
-        onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={handleTimeUpdate}
-        onPlay={() => {
-          setIsPlaying(true)
-          onPlay?.()
-        }}
-        onPause={() => {
-          setIsPlaying(false)
-          onPause?.()
-        }}
-        onEnded={() => setIsPlaying(false)}
         onClick={togglePlay}
         aria-label={isPlaying ? 'Pause video' : 'Play video'}
+        {...mediaHandlers}
         {...videoProps}
       />
 
@@ -213,7 +145,7 @@ export function VideoPlayer({
 
               <Slider
                 value={progress}
-                onChange={handleSeek}
+                onChange={seek}
                 className="flex-1"
                 aria-label="Seek"
               />
@@ -226,7 +158,7 @@ export function VideoPlayer({
                 <VolumeControl
                   volume={volume}
                   isMuted={isMuted}
-                  onVolumeChange={handleVolumeChange}
+                  onVolumeChange={changeVolume}
                   onToggleMute={toggleMute}
                   onOpenChange={(open) => {
                     if (open) setSettingsOpen(false)
