@@ -168,18 +168,18 @@ export function VolumeControl({
     >
       <motion.button
         type="button"
-        whileHover={{ scale: 1.04 }}
-        whileTap={{ scale: 0.96 }}
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.94 }}
         onClick={onToggleMute}
         aria-label={isMuted ? 'Unmute' : 'Mute'}
         aria-expanded={open}
         aria-controls="tint-volume-drawer"
         className={cn(
-          'inline-flex size-8 items-center justify-center rounded-none text-white transition-colors hover:bg-[#111111d1]',
+          'inline-flex size-8 items-center justify-center rounded-lg text-white transition-colors hover:bg-[#111111d1]',
           open && 'bg-[#111111d1]',
         )}
       >
-        <VolumeIcon className="size-4" strokeWidth={2} />
+        <VolumeIcon className="size-4" />
       </motion.button>
 
       <AnimatePresence>
@@ -192,10 +192,10 @@ export function VolumeControl({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
             transition={{ duration: 0.18, ease: 'easeOut' }}
-            className="absolute bottom-[calc(100%+0.35rem)] left-1/2 z-30 grid h-36 w-8 -translate-x-1/2 grid-rows-[auto_1fr] justify-items-center rounded-none border border-white/10 bg-[#14161ccc] py-1.5 shadow-[0_12px_32px_rgba(0,0,0,0.4)] backdrop-blur-xl"
+            className="absolute bottom-[calc(100%+0.4rem)] left-1/2 z-30 flex h-36 w-14 -translate-x-1/2 flex-col items-center rounded-2xl border border-white/10 bg-[#14161ccc] px-2 py-2.5 shadow-[0_12px_32px_rgba(0,0,0,0.4)] backdrop-blur-xl"
             onMouseDown={(event) => event.stopPropagation()}
           >
-            <form onSubmit={onInputSubmit} className="mb-1.5 w-[calc(100%-4px)]">
+            <form onSubmit={onInputSubmit} className="mb-2 w-full">
               <input
                 ref={inputRef}
                 type="text"
@@ -214,19 +214,21 @@ export function VolumeControl({
                   setInputValue(next)
                 }}
                 onKeyDown={onInputKeyDown}
-                className="w-full rounded-none border border-white/15 bg-white/10 px-0 py-0.5 text-center text-[10px] font-medium text-white tabular-nums outline-none placeholder:text-white/35 focus:border-white/40 focus:bg-white/15"
+                className="w-full rounded-md border border-white/15 bg-white/10 px-1 py-1 text-center text-[11px] font-medium text-white tabular-nums outline-none placeholder:text-white/35 focus:border-white/40 focus:bg-white/15"
               />
             </form>
-            <Slider
-              orientation="vertical"
-              value={displayVolume}
-              onChange={(value) => {
-                setEditing(false)
-                onVolumeChange(value)
-              }}
-              aria-label="Volume"
-              className="h-full"
-            />
+            <div className="flex min-h-0 w-full flex-1 justify-center">
+              <Slider
+                orientation="vertical"
+                value={displayVolume}
+                onChange={(value) => {
+                  setEditing(false)
+                  onVolumeChange(value)
+                }}
+                aria-label="Volume"
+                className="h-full"
+              />
+            </div>
           </motion.div>
         ) : null}
       </AnimatePresence>
