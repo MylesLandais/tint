@@ -58,8 +58,8 @@ export function Slider({
       aria-valuemax={100}
       aria-valuenow={Math.round(value)}
       className={cn(
-        'relative cursor-pointer rounded-full bg-white/20 outline-none focus-visible:ring-2 focus-visible:ring-white/60',
-        isVertical ? 'mx-auto h-full w-1' : 'h-1 w-full',
+        'relative cursor-pointer rounded-sm bg-white/20 outline-none focus-visible:ring-2 focus-visible:ring-white/60',
+        isVertical ? 'h-full w-1' : 'h-1 w-full',
         className,
       )}
       onPointerDown={handlePointerDown}
@@ -95,7 +95,7 @@ export function Slider({
     >
       <motion.div
         className={cn(
-          'absolute rounded-full bg-white',
+          'absolute rounded-sm bg-white',
           isVertical ? 'right-0 bottom-0 left-0 w-full' : 'top-0 left-0 h-full',
         )}
         initial={false}

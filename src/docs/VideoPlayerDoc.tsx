@@ -194,8 +194,8 @@ export function VideoPlayerDoc() {
             </span>
           </div>
 
-          <div className="overflow-visible rounded-2xl border border-[var(--color-tint-border)] bg-[var(--color-tint-panel)] p-4 shadow-sm sm:p-6">
-            <div className="overflow-visible rounded-xl bg-[linear-gradient(160deg,#1a1d24_0%,#0f1115_100%)] p-3 sm:p-5">
+          <div className="overflow-visible rounded-sm border border-[var(--color-tint-border)] bg-[var(--color-tint-panel)] p-4 shadow-sm sm:p-6">
+            <div className="overflow-visible rounded-sm bg-[linear-gradient(160deg,#1a1d24_0%,#0f1115_100%)] p-3 sm:p-5">
               <VideoPlayer src={DEMO_SRC} />
             </div>
           </div>

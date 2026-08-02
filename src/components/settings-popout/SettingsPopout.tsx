@@ -197,7 +197,7 @@ export function SettingsPopout({
           exit={{ opacity: 0, y: 8, scale: 0.98 }}
           transition={{ duration: 0.18, ease: 'easeOut' }}
           className={cn(
-            'absolute right-0 bottom-[calc(100%+0.5rem)] z-30 w-72 overflow-hidden rounded-2xl border border-white/10 bg-[#14161ccc] text-white shadow-[0_16px_48px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:w-80',
+            'absolute right-0 bottom-[calc(100%+0.5rem)] z-30 w-72 overflow-hidden rounded-sm border border-white/10 bg-[#14161ccc] text-white shadow-[0_16px_48px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:w-80',
             className,
           )}
           onMouseDown={(event) => event.stopPropagation()}
@@ -254,7 +254,7 @@ export function SettingsPopout({
                           role="option"
                           aria-selected={isSelected}
                           className={cn(
-                            'flex w-full items-center gap-2 rounded-xl px-2.5 py-2 text-left text-sm transition-colors',
+                            'flex w-full items-center gap-2 rounded-sm px-2.5 py-2 text-left text-sm transition-colors',
                             isActive ? 'bg-white/12' : 'hover:bg-white/8',
                             isSelected && 'font-medium',
                           )}
@@ -263,7 +263,7 @@ export function SettingsPopout({
                         >
                           <span className="min-w-0 flex-1 truncate">{item.label}</span>
                           {item.shortcut ? (
-                            <kbd className="rounded-md bg-white/10 px-1.5 py-0.5 font-mono text-[11px] text-white/60">
+                            <kbd className="rounded-sm bg-white/10 px-1.5 py-0.5 font-mono text-[11px] text-white/60">
                               {item.shortcut}
                             </kbd>
                           ) : null}
@@ -285,13 +285,13 @@ export function SettingsPopout({
             {footer ?? (
               <>
                 <span>
-                  <kbd className="rounded bg-white/10 px-1 py-0.5">↑</kbd>{' '}
-                  <kbd className="rounded bg-white/10 px-1 py-0.5">↓</kbd> navigate
+                  <kbd className="rounded-sm bg-white/10 px-1 py-0.5">↑</kbd>{' '}
+                  <kbd className="rounded-sm bg-white/10 px-1 py-0.5">↓</kbd> navigate
                 </span>
                 <span>
-                  <kbd className="rounded bg-white/10 px-1 py-0.5">↵</kbd> select
+                  <kbd className="rounded-sm bg-white/10 px-1 py-0.5">↵</kbd> select
                   <span className="mx-2 text-white/25">·</span>
-                  <kbd className="rounded bg-white/10 px-1 py-0.5">esc</kbd> close
+                  <kbd className="rounded-sm bg-white/10 px-1 py-0.5">esc</kbd> close
                 </span>
               </>
             )}
