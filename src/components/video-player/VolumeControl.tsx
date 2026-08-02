@@ -192,10 +192,10 @@ export function VolumeControl({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
             transition={{ duration: 0.18, ease: 'easeOut' }}
-            className="absolute bottom-[calc(100%+0.4rem)] left-1/2 z-30 flex h-36 w-14 -translate-x-1/2 flex-col items-center rounded-2xl border border-white/10 bg-[#14161ccc] px-2 py-2.5 shadow-[0_12px_32px_rgba(0,0,0,0.4)] backdrop-blur-xl"
+            className="absolute bottom-[calc(100%+0.75rem)] left-1/2 z-30 flex h-36 w-14 -translate-x-1/2 flex-col items-center rounded-2xl border border-white/10 bg-[#14161ccc] px-2 pt-2 pb-3 shadow-[0_12px_32px_rgba(0,0,0,0.4)] backdrop-blur-xl"
             onMouseDown={(event) => event.stopPropagation()}
           >
-            <form onSubmit={onInputSubmit} className="mb-2 w-full">
+            <form onSubmit={onInputSubmit} className="mb-2.5 w-full">
               <input
                 ref={inputRef}
                 type="text"
@@ -214,7 +214,7 @@ export function VolumeControl({
                   setInputValue(next)
                 }}
                 onKeyDown={onInputKeyDown}
-                className="w-full rounded-md border border-white/15 bg-white/10 px-1 py-1 text-center text-[11px] font-medium text-white tabular-nums outline-none placeholder:text-white/35 focus:border-white/40 focus:bg-white/15"
+                className="w-full border-0 border-b border-white/35 bg-transparent px-0.5 py-0.5 text-center text-[11px] font-medium text-white tabular-nums outline-none placeholder:text-white/35 focus:border-white/70"
               />
             </form>
             <div className="flex min-h-0 w-full flex-1 justify-center">
