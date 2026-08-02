@@ -185,7 +185,8 @@ export function VideoPlayerDoc() {
                 >
                   test-videos.co.uk
                 </a>
-                . Hover the speaker for volume; open settings from the gear.
+                . Volume and settings sit together on the right — hover the speaker,
+                then type a value or drag the vertical slider.
               </p>
             </div>
             <span className="rounded-md bg-[var(--color-tint-accent-soft)] px-2.5 py-1 text-xs font-medium text-[var(--color-tint-accent)]">
@@ -250,8 +251,8 @@ export function VideoPlayerDoc() {
           <ul className="grid gap-3 sm:grid-cols-2">
             {[
               'Click the video surface to play or pause',
-              'Compact control bar with seek, volume, and settings',
-              'Vertical volume drawer that opens from the speaker icon',
+              'Compact control bar with seek plus volume and settings grouped on the right',
+              'Vertical volume drawer with typed percentage input and slider',
               'Settings popout for playback speed (CommandPalette-style)',
               'Auto-hiding control bar on hover and keyboard focus',
               'Accepts standard HTML video attributes',

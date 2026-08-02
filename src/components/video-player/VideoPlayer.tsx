@@ -207,14 +207,6 @@ export function VideoPlayer({
             transition={{ duration: 0.45, ease: 'circInOut', type: 'spring' }}
           >
             <div className="flex items-center gap-2">
-              <VolumeControl
-                volume={volume}
-                isMuted={isMuted}
-                onVolumeChange={handleVolumeChange}
-                onToggleMute={toggleMute}
-                onOpenChange={setVolumeOpen}
-              />
-
               <span className="min-w-9 text-xs text-white tabular-nums">
                 {formatTime(currentTime)}
               </span>
@@ -230,35 +222,48 @@ export function VideoPlayer({
                 {formatTime(duration)}
               </span>
 
-              <div className="relative">
-                <motion.button
-                  type="button"
-                  whileHover={{ scale: 1.08 }}
-                  whileTap={{ scale: 0.94 }}
-                  onClick={() => {
-                    setVolumeOpen(false)
-                    setSettingsOpen((open) => !open)
+              <div className="flex items-center gap-0.5">
+                <VolumeControl
+                  volume={volume}
+                  isMuted={isMuted}
+                  onVolumeChange={handleVolumeChange}
+                  onToggleMute={toggleMute}
+                  onOpenChange={(open) => {
+                    if (open) setSettingsOpen(false)
+                    setVolumeOpen(open)
                   }}
-                  aria-label="Settings"
-                  aria-haspopup="dialog"
-                  aria-expanded={settingsOpen}
-                  className={cn(
-                    'inline-flex size-8 items-center justify-center rounded-lg text-white transition-colors hover:bg-[#111111d1]',
-                    settingsOpen && 'bg-[#111111d1]',
-                  )}
-                >
-                  <Settings className="size-4" />
-                </motion.button>
-
-                <SettingsPopout
-                  isOpen={settingsOpen}
-                  onOpenChange={setSettingsOpen}
-                  items={settingsItems}
-                  value={`speed-${playbackSpeed}`}
-                  onSelect={handleSettingsSelect}
-                  label="Player settings"
-                  placeholder="Search settings…"
                 />
+
+                <div className="relative">
+                  <motion.button
+                    type="button"
+                    whileHover={{ scale: 1.08 }}
+                    whileTap={{ scale: 0.94 }}
+                    onClick={() => {
+                      setVolumeOpen(false)
+                      setSettingsOpen((open) => !open)
+                    }}
+                    aria-label="Settings"
+                    aria-haspopup="dialog"
+                    aria-expanded={settingsOpen}
+                    className={cn(
+                      'inline-flex size-8 items-center justify-center rounded-lg text-white transition-colors hover:bg-[#111111d1]',
+                      settingsOpen && 'bg-[#111111d1]',
+                    )}
+                  >
+                    <Settings className="size-4" />
+                  </motion.button>
+
+                  <SettingsPopout
+                    isOpen={settingsOpen}
+                    onOpenChange={setSettingsOpen}
+                    items={settingsItems}
+                    value={`speed-${playbackSpeed}`}
+                    onSelect={handleSettingsSelect}
+                    label="Player settings"
+                    placeholder="Search settings…"
+                  />
+                </div>
               </div>
             </div>
           </motion.div>

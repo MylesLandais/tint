@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react'
 import { Volume1, Volume2, VolumeX } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { cn } from '@/lib/utils'
@@ -13,6 +13,11 @@ export type VolumeControlProps = {
   className?: string
 }
 
+function clampVolume(value: number) {
+  if (!Number.isFinite(value)) return 0
+  return Math.min(Math.max(Math.round(value), 0), 100)
+}
+
 export function VolumeControl({
   volume,
   isMuted,
@@ -22,15 +27,34 @@ export function VolumeControl({
   className,
 }: VolumeControlProps) {
   const rootRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
   const closeTimerRef = useRef<number | null>(null)
   const onOpenChangeRef = useRef(onOpenChange)
+  const onVolumeChangeRef = useRef(onVolumeChange)
+  const inputValueRef = useRef('100')
   const [open, setOpen] = useState(false)
+  const [editing, setEditing] = useState(false)
+  const [inputValue, setInputValue] = useState('100')
   const displayVolume = isMuted ? 0 : volume * 100
   const VolumeIcon = isMuted || volume === 0 ? VolumeX : volume > 0.5 ? Volume2 : Volume1
 
   useEffect(() => {
     onOpenChangeRef.current = onOpenChange
   }, [onOpenChange])
+
+  useEffect(() => {
+    onVolumeChangeRef.current = onVolumeChange
+  }, [onVolumeChange])
+
+  useEffect(() => {
+    inputValueRef.current = inputValue
+  }, [inputValue])
+
+  useEffect(() => {
+    if (!editing) {
+      setInputValue(String(Math.round(displayVolume)))
+    }
+  }, [displayVolume, editing])
 
   const clearCloseTimer = () => {
     if (closeTimerRef.current != null) {
@@ -42,6 +66,9 @@ export function VolumeControl({
   const setDrawerOpen = (next: boolean) => {
     setOpen(next)
     onOpenChangeRef.current?.(next)
+    if (!next) {
+      setEditing(false)
+    }
   }
 
   const openDrawer = () => {
@@ -50,8 +77,16 @@ export function VolumeControl({
   }
 
   const scheduleClose = () => {
+    if (editing) return
     clearCloseTimer()
     closeTimerRef.current = window.setTimeout(() => setDrawerOpen(false), 160)
+  }
+
+  const commitInputValue = () => {
+    const parsed = clampVolume(Number(inputValueRef.current))
+    setInputValue(String(parsed))
+    onVolumeChangeRef.current(parsed)
+    setEditing(false)
   }
 
   useEffect(() => () => clearCloseTimer(), [])
@@ -61,13 +96,25 @@ export function VolumeControl({
 
     const onPointerDown = (event: MouseEvent) => {
       if (!rootRef.current?.contains(event.target as Node)) {
+        if (editing) {
+          const parsed = clampVolume(Number(inputValueRef.current))
+          setInputValue(String(parsed))
+          onVolumeChangeRef.current(parsed)
+        }
         setOpen(false)
         onOpenChangeRef.current?.(false)
+        setEditing(false)
       }
     }
 
-    const onKeyDown = (event: KeyboardEvent) => {
+    const onKeyDown = (event: globalThis.KeyboardEvent) => {
       if (event.key === 'Escape') {
+        if (editing) {
+          setInputValue(String(Math.round(displayVolume)))
+          setEditing(false)
+          inputRef.current?.blur()
+          return
+        }
         setOpen(false)
         onOpenChangeRef.current?.(false)
       }
@@ -79,7 +126,32 @@ export function VolumeControl({
       document.removeEventListener('mousedown', onPointerDown)
       document.removeEventListener('keydown', onKeyDown)
     }
-  }, [open])
+  }, [open, editing, displayVolume])
+
+  const onInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      commitInputValue()
+      inputRef.current?.blur()
+    }
+    if (event.key === 'ArrowUp') {
+      event.preventDefault()
+      const next = clampVolume(Number(inputValue || displayVolume) + 1)
+      setInputValue(String(next))
+      onVolumeChange(next)
+    }
+    if (event.key === 'ArrowDown') {
+      event.preventDefault()
+      const next = clampVolume(Number(inputValue || displayVolume) - 1)
+      setInputValue(String(next))
+      onVolumeChange(next)
+    }
+  }
+
+  const onInputSubmit = (event: FormEvent) => {
+    event.preventDefault()
+    commitInputValue()
+  }
 
   return (
     <div
@@ -120,16 +192,38 @@ export function VolumeControl({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
             transition={{ duration: 0.18, ease: 'easeOut' }}
-            className="absolute bottom-[calc(100%+0.4rem)] left-1/2 z-30 flex h-28 w-10 -translate-x-1/2 flex-col items-center rounded-2xl border border-white/10 bg-[#14161ccc] px-2 py-3 shadow-[0_12px_32px_rgba(0,0,0,0.4)] backdrop-blur-xl"
+            className="absolute right-0 bottom-[calc(100%+0.4rem)] z-30 flex h-36 w-14 flex-col items-center rounded-2xl border border-white/10 bg-[#14161ccc] px-2 py-2.5 shadow-[0_12px_32px_rgba(0,0,0,0.4)] backdrop-blur-xl"
             onMouseDown={(event) => event.stopPropagation()}
           >
-            <span className="mb-2 text-[10px] font-medium text-white/55 tabular-nums">
-              {Math.round(displayVolume)}
-            </span>
+            <form onSubmit={onInputSubmit} className="mb-2 w-full">
+              <input
+                ref={inputRef}
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={inputValue}
+                aria-label="Volume percentage"
+                onFocus={() => {
+                  setEditing(true)
+                  openDrawer()
+                }}
+                onBlur={commitInputValue}
+                onChange={(event) => {
+                  const next = event.target.value.replace(/[^\d]/g, '').slice(0, 3)
+                  setEditing(true)
+                  setInputValue(next)
+                }}
+                onKeyDown={onInputKeyDown}
+                className="w-full rounded-md border border-white/15 bg-white/10 px-1 py-1 text-center text-[11px] font-medium text-white tabular-nums outline-none placeholder:text-white/35 focus:border-white/40 focus:bg-white/15"
+              />
+            </form>
             <Slider
               orientation="vertical"
               value={displayVolume}
-              onChange={onVolumeChange}
+              onChange={(value) => {
+                setEditing(false)
+                onVolumeChange(value)
+              }}
               aria-label="Volume"
               className="flex-1"
             />
