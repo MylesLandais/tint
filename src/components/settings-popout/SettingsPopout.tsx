@@ -197,7 +197,7 @@ export function SettingsPopout({
           exit={{ opacity: 0, y: 8, scale: 0.98 }}
           transition={{ duration: 0.18, ease: 'easeOut' }}
           className={cn(
-            'absolute right-0 bottom-[calc(100%+0.5rem)] z-30 w-[min(100%,20rem)] overflow-hidden rounded-2xl border border-white/10 bg-[#14161ccc] text-white shadow-[0_16px_48px_rgba(0,0,0,0.45)] backdrop-blur-xl',
+            'absolute right-0 bottom-[calc(100%+0.5rem)] z-30 w-72 overflow-hidden rounded-2xl border border-white/10 bg-[#14161ccc] text-white shadow-[0_16px_48px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:w-80',
             className,
           )}
           onMouseDown={(event) => event.stopPropagation()}
