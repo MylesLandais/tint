@@ -157,7 +157,7 @@ export function VideoPlayer({
   return (
     <motion.div
       className={cn(
-        'relative mx-auto w-full max-w-4xl rounded-sm bg-[#11111198] shadow-[0_0_20px_rgba(0,0,0,0.2)] backdrop-blur-sm',
+        'relative mx-auto w-full max-w-4xl rounded-none bg-[#11111198] shadow-[0_0_20px_rgba(0,0,0,0.2)] backdrop-blur-sm',
         className,
       )}
       initial={{ opacity: 0, y: 20 }}
@@ -178,7 +178,7 @@ export function VideoPlayer({
     >
       <video
         ref={videoRef}
-        className="w-full cursor-pointer rounded-sm bg-black"
+        className="w-full cursor-pointer rounded-none bg-black"
         src={src}
         poster={poster}
         onTimeUpdate={handleTimeUpdate}
@@ -200,7 +200,7 @@ export function VideoPlayer({
       <AnimatePresence>
         {showControls && (
           <motion.div
-            className="absolute right-0 bottom-0 left-0 z-20 m-2 mx-auto max-w-xl rounded-sm bg-[#11111198] px-3 py-2 backdrop-blur-md"
+            className="absolute right-0 bottom-0 left-0 z-20 m-2 mx-auto max-w-xl rounded-none bg-[#11111198] px-3 py-2 backdrop-blur-md"
             initial={{ y: 20, opacity: 0, filter: 'blur(10px)' }}
             animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
             exit={{ y: 20, opacity: 0, filter: 'blur(10px)' }}
@@ -247,7 +247,7 @@ export function VideoPlayer({
                     aria-haspopup="dialog"
                     aria-expanded={settingsOpen}
                     className={cn(
-                      'inline-flex size-8 items-center justify-center rounded-sm text-white transition-colors hover:bg-[#111111d1]',
+                      'inline-flex size-8 items-center justify-center rounded-none text-white transition-colors hover:bg-[#111111d1]',
                       settingsOpen && 'bg-[#111111d1]',
                     )}
                   >
