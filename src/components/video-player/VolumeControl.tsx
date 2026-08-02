@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 
 import { Volume1, Volume2, VolumeX } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { cn } from '@/lib/utils'
+import { useDismissable } from '@/lib/useDismissable'
 import { Slider } from './Slider'
 
 export type VolumeControlProps = {
@@ -29,26 +30,11 @@ export function VolumeControl({
   const rootRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const closeTimerRef = useRef<number | null>(null)
-  const onOpenChangeRef = useRef(onOpenChange)
-  const onVolumeChangeRef = useRef(onVolumeChange)
-  const inputValueRef = useRef('100')
   const [open, setOpen] = useState(false)
   const [editing, setEditing] = useState(false)
   const [inputValue, setInputValue] = useState('100')
   const displayVolume = isMuted ? 0 : volume * 100
   const VolumeIcon = isMuted || volume === 0 ? VolumeX : volume > 0.5 ? Volume2 : Volume1
-
-  useEffect(() => {
-    onOpenChangeRef.current = onOpenChange
-  }, [onOpenChange])
-
-  useEffect(() => {
-    onVolumeChangeRef.current = onVolumeChange
-  }, [onVolumeChange])
-
-  useEffect(() => {
-    inputValueRef.current = inputValue
-  }, [inputValue])
 
   useEffect(() => {
     if (!editing) {
@@ -65,7 +51,7 @@ export function VolumeControl({
 
   const setDrawerOpen = (next: boolean) => {
     setOpen(next)
-    onOpenChangeRef.current?.(next)
+    onOpenChange?.(next)
     if (!next) {
       setEditing(false)
     }
@@ -83,50 +69,29 @@ export function VolumeControl({
   }
 
   const commitInputValue = () => {
-    const parsed = clampVolume(Number(inputValueRef.current))
+    const parsed = clampVolume(Number(inputValue))
     setInputValue(String(parsed))
-    onVolumeChangeRef.current(parsed)
+    onVolumeChange(parsed)
     setEditing(false)
   }
 
   useEffect(() => () => clearCloseTimer(), [])
 
-  useEffect(() => {
-    if (!open) return
-
-    const onPointerDown = (event: MouseEvent) => {
-      if (!rootRef.current?.contains(event.target as Node)) {
-        if (editing) {
-          const parsed = clampVolume(Number(inputValueRef.current))
-          setInputValue(String(parsed))
-          onVolumeChangeRef.current(parsed)
-        }
-        setOpen(false)
-        onOpenChangeRef.current?.(false)
+  useDismissable(open, rootRef, {
+    onPointerDownOutside: () => {
+      if (editing) commitInputValue()
+      setDrawerOpen(false)
+    },
+    onEscapeKeyDown: () => {
+      if (editing) {
+        setInputValue(String(Math.round(displayVolume)))
         setEditing(false)
+        inputRef.current?.blur()
+        return
       }
-    }
-
-    const onKeyDown = (event: globalThis.KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        if (editing) {
-          setInputValue(String(Math.round(displayVolume)))
-          setEditing(false)
-          inputRef.current?.blur()
-          return
-        }
-        setOpen(false)
-        onOpenChangeRef.current?.(false)
-      }
-    }
-
-    document.addEventListener('mousedown', onPointerDown)
-    document.addEventListener('keydown', onKeyDown)
-    return () => {
-      document.removeEventListener('mousedown', onPointerDown)
-      document.removeEventListener('keydown', onKeyDown)
-    }
-  }, [open, editing, displayVolume])
+      setDrawerOpen(false)
+    },
+  })
 
   const onInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {

@@ -10,6 +10,7 @@ import {
 import { AnimatePresence, motion } from 'motion/react'
 import { Check, Search } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useDismissable } from '@/lib/useDismissable'
 
 export type SettingsPopoutItem = {
   id: string
@@ -117,29 +118,13 @@ export function SettingsPopout({
     return () => window.cancelAnimationFrame(frame)
   }, [isOpen, value, items])
 
-  useEffect(() => {
-    if (!isOpen) return
-
-    const onPointerDown = (event: MouseEvent) => {
-      if (!panelRef.current?.contains(event.target as Node)) {
-        onOpenChange(false)
-      }
-    }
-
-    const onKeyDown = (event: globalThis.KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        event.preventDefault()
-        onOpenChange(false)
-      }
-    }
-
-    document.addEventListener('mousedown', onPointerDown)
-    document.addEventListener('keydown', onKeyDown)
-    return () => {
-      document.removeEventListener('mousedown', onPointerDown)
-      document.removeEventListener('keydown', onKeyDown)
-    }
-  }, [isOpen, onOpenChange])
+  useDismissable(isOpen, panelRef, {
+    onPointerDownOutside: () => onOpenChange(false),
+    onEscapeKeyDown: (event) => {
+      event.preventDefault()
+      onOpenChange(false)
+    },
+  })
 
   useEffect(() => {
     if (activeIndex > flat.length - 1) {
