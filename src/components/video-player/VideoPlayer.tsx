@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState, type VideoHTMLAttributes } from 'react'
-import { Pause, Play, Volume1, Volume2, VolumeX } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState, type VideoHTMLAttributes } from 'react'
+import { Settings, Volume1, Volume2, VolumeX } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { cn } from '@/lib/utils'
+import { SettingsPopout, type SettingsPopoutItem } from '@/components/settings-popout'
 
 const PLAYBACK_SPEEDS = [0.5, 1, 1.5, 2] as const
 
@@ -95,8 +96,20 @@ export function VideoPlayer({
   const [isMuted, setIsMuted] = useState(false)
   const [playbackSpeed, setPlaybackSpeed] = useState(1)
   const [showControls, setShowControls] = useState(!autoHideControls)
+  const [settingsOpen, setSettingsOpen] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
+
+  const settingsItems = useMemo<SettingsPopoutItem[]>(
+    () =>
+      PLAYBACK_SPEEDS.map((speed) => ({
+        id: `speed-${speed}`,
+        label: `${speed}x`,
+        group: 'Playback speed',
+        description: `Play at ${speed} times normal speed`,
+      })),
+    [],
+  )
 
   useEffect(() => {
     if (!autoHideControls) {
@@ -171,23 +184,41 @@ export function VideoPlayer({
     setPlaybackSpeed(speed)
   }
 
+  const handleSettingsSelect = (id: string) => {
+    if (!id.startsWith('speed-')) return
+    const speed = Number(id.replace('speed-', ''))
+    if (!Number.isFinite(speed)) return
+    setSpeed(speed)
+  }
+
+  const revealControls = () => {
+    if (autoHideControls) setShowControls(true)
+  }
+
+  const maybeHideControls = () => {
+    if (autoHideControls && !settingsOpen) {
+      setShowControls(false)
+    }
+  }
+
   const VolumeIcon = isMuted || volume === 0 ? VolumeX : volume > 0.5 ? Volume2 : Volume1
 
   return (
     <motion.div
       className={cn(
-        'relative mx-auto w-full max-w-4xl overflow-hidden rounded-xl bg-[#11111198] shadow-[0_0_20px_rgba(0,0,0,0.2)] backdrop-blur-sm',
+        'relative mx-auto w-full max-w-4xl rounded-xl bg-[#11111198] shadow-[0_0_20px_rgba(0,0,0,0.2)] backdrop-blur-sm',
         className,
       )}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      onMouseEnter={() => autoHideControls && setShowControls(true)}
-      onMouseLeave={() => autoHideControls && setShowControls(false)}
-      onFocusCapture={() => autoHideControls && setShowControls(true)}
+      onMouseEnter={revealControls}
+      onMouseLeave={maybeHideControls}
+      onFocusCapture={revealControls}
       onBlurCapture={(event) => {
         if (
           autoHideControls &&
+          !settingsOpen &&
           !event.currentTarget.contains(event.relatedTarget as Node | null)
         ) {
           setShowControls(false)
@@ -196,7 +227,7 @@ export function VideoPlayer({
     >
       <video
         ref={videoRef}
-        className="w-full cursor-pointer bg-black"
+        className="w-full cursor-pointer rounded-xl bg-black"
         src={src}
         poster={poster}
         onTimeUpdate={handleTimeUpdate}
@@ -211,13 +242,14 @@ export function VideoPlayer({
         }}
         onEnded={() => setIsPlaying(false)}
         onClick={togglePlay}
+        aria-label={isPlaying ? 'Pause video' : 'Play video'}
         {...videoProps}
       />
 
       <AnimatePresence>
         {showControls && (
           <motion.div
-            className="absolute right-0 bottom-0 left-0 m-2 mx-auto max-w-xl rounded-2xl bg-[#11111198] p-4 backdrop-blur-md"
+            className="absolute right-0 bottom-0 left-0 z-20 m-2 mx-auto max-w-xl rounded-2xl bg-[#11111198] p-4 backdrop-blur-md"
             initial={{ y: 20, opacity: 0, filter: 'blur(10px)' }}
             animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
             exit={{ y: 20, opacity: 0, filter: 'blur(10px)' }}
@@ -238,57 +270,53 @@ export function VideoPlayer({
               </span>
             </div>
 
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
+            <div className="relative flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
                 <motion.button
                   type="button"
                   whileHover={{ scale: 1.08 }}
                   whileTap={{ scale: 0.94 }}
-                  onClick={togglePlay}
-                  aria-label={isPlaying ? 'Pause' : 'Play'}
+                  onClick={toggleMute}
+                  aria-label={isMuted ? 'Unmute' : 'Mute'}
                   className="inline-flex size-9 items-center justify-center rounded-lg text-white transition-colors hover:bg-[#111111d1]"
                 >
-                  {isPlaying ? <Pause className="size-5" /> : <Play className="size-5" />}
+                  <VolumeIcon className="size-5" />
                 </motion.button>
-
-                <div className="flex items-center gap-2">
-                  <motion.button
-                    type="button"
-                    whileHover={{ scale: 1.08 }}
-                    whileTap={{ scale: 0.94 }}
-                    onClick={toggleMute}
-                    aria-label={isMuted ? 'Unmute' : 'Mute'}
-                    className="inline-flex size-9 items-center justify-center rounded-lg text-white transition-colors hover:bg-[#111111d1]"
-                  >
-                    <VolumeIcon className="size-5" />
-                  </motion.button>
-                  <div className="w-24">
-                    <Slider
-                      value={isMuted ? 0 : volume * 100}
-                      onChange={handleVolumeChange}
-                      aria-label="Volume"
-                    />
-                  </div>
+                <div className="w-24">
+                  <Slider
+                    value={isMuted ? 0 : volume * 100}
+                    onChange={handleVolumeChange}
+                    aria-label="Volume"
+                  />
                 </div>
               </div>
 
-              <div className="flex items-center gap-1">
-                {PLAYBACK_SPEEDS.map((speed) => (
-                  <motion.button
-                    key={speed}
-                    type="button"
-                    whileHover={{ scale: 1.06 }}
-                    whileTap={{ scale: 0.94 }}
-                    onClick={() => setSpeed(speed)}
-                    aria-pressed={playbackSpeed === speed}
-                    className={cn(
-                      'min-w-10 rounded-lg px-2 py-1.5 text-sm text-white transition-colors hover:bg-[#111111d1]',
-                      playbackSpeed === speed && 'bg-[#111111d1]',
-                    )}
-                  >
-                    {speed}x
-                  </motion.button>
-                ))}
+              <div className="relative">
+                <motion.button
+                  type="button"
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.94 }}
+                  onClick={() => setSettingsOpen((open) => !open)}
+                  aria-label="Settings"
+                  aria-haspopup="dialog"
+                  aria-expanded={settingsOpen}
+                  className={cn(
+                    'inline-flex size-9 items-center justify-center rounded-lg text-white transition-colors hover:bg-[#111111d1]',
+                    settingsOpen && 'bg-[#111111d1]',
+                  )}
+                >
+                  <Settings className="size-5" />
+                </motion.button>
+
+                <SettingsPopout
+                  isOpen={settingsOpen}
+                  onOpenChange={setSettingsOpen}
+                  items={settingsItems}
+                  value={`speed-${playbackSpeed}`}
+                  onSelect={handleSettingsSelect}
+                  label="Player settings"
+                  placeholder="Search settings…"
+                />
               </div>
             </div>
           </motion.div>

@@ -2,8 +2,7 @@ import { VideoPlayer } from '@/components/video-player'
 import { CodeBlock } from './components/CodeBlock'
 import { PropsTable } from './components/PropsTable'
 
-const DEMO_SRC =
-  'https://videos.pexels.com/video-files/30333849/13003128_2560_1440_25fps.mp4'
+const DEMO_SRC = '/videos/big-buck-bunny.mp4'
 
 const installCode = `npm install tint
 # or copy the VideoPlayer component into your project`
@@ -22,8 +21,7 @@ export function MediaCard() {
   return (
     <article className="overflow-hidden rounded-xl border bg-white">
       <VideoPlayer
-        src="/media/demo.mp4"
-        poster="/media/poster.jpg"
+        src="/videos/big-buck-bunny.mp4"
         className="max-w-none rounded-none shadow-none"
       />
       <div className="space-y-2 p-4">
@@ -33,6 +31,31 @@ export function MediaCard() {
         </p>
       </div>
     </article>
+  )
+}`
+
+const settingsUsageCode = `import { SettingsPopout } from 'tint'
+import { useState } from 'react'
+
+const items = [
+  { id: 'speed-1', label: '1x', group: 'Playback speed' },
+  { id: 'speed-1.5', label: '1.5x', group: 'Playback speed' },
+  { id: 'speed-2', label: '2x', group: 'Playback speed' },
+]
+
+export function SettingsExample() {
+  const [open, setOpen] = useState(false)
+  const [value, setValue] = useState('speed-1')
+
+  return (
+    <SettingsPopout
+      isOpen={open}
+      onOpenChange={setOpen}
+      items={items}
+      value={value}
+      onSelect={setValue}
+      label="Player settings"
+    />
   )
 }`
 
@@ -71,6 +94,43 @@ const props = [
   },
 ]
 
+const settingsProps = [
+  {
+    name: 'isOpen',
+    type: 'boolean',
+    required: true,
+    description: 'Whether the settings popout is visible.',
+  },
+  {
+    name: 'onOpenChange',
+    type: '(isOpen: boolean) => void',
+    required: true,
+    description: 'Called when the popout should open or close.',
+  },
+  {
+    name: 'items',
+    type: 'SettingsPopoutItem[]',
+    required: true,
+    description: 'Selectable settings items, optionally grouped.',
+  },
+  {
+    name: 'value',
+    type: 'string',
+    description: 'Currently selected item id in picker mode.',
+  },
+  {
+    name: 'onSelect',
+    type: '(id: string) => void',
+    description: 'Called when an item is selected.',
+  },
+  {
+    name: 'placeholder',
+    type: 'string',
+    defaultValue: "'Search settings…'",
+    description: 'Placeholder text for the search input.',
+  },
+]
+
 export function VideoPlayerDoc() {
   return (
     <div className="min-h-screen">
@@ -105,9 +165,8 @@ export function VideoPlayerDoc() {
             Video Player
           </h1>
           <p className="text-lg leading-relaxed text-[var(--color-tint-muted)]">
-            A reusable React video player with animated controls for play/pause, seek, volume, and
-            playback speed. Built for media surfaces — product walkthroughs, card media, and
-            documentation previews.
+            A reusable React video player with animated controls for seek, volume, and a
+            CommandPalette-style settings popout. Click the video surface to play or pause.
           </p>
         </div>
 
@@ -116,7 +175,16 @@ export function VideoPlayerDoc() {
             <div>
               <h2 className="text-2xl font-semibold tracking-tight">Preview</h2>
               <p className="mt-1 text-[var(--color-tint-muted)]">
-                Hover the player to reveal the control bar.
+                Demo uses Big Buck Bunny from{' '}
+                <a
+                  href="https://test-videos.co.uk/bigbuckbunny/mp4-h264"
+                  className="text-[var(--color-tint-accent)] underline-offset-2 hover:underline"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  test-videos.co.uk
+                </a>
+                . Open settings from the gear icon.
               </p>
             </div>
             <span className="rounded-md bg-[var(--color-tint-accent-soft)] px-2.5 py-1 text-xs font-medium text-[var(--color-tint-accent)]">
@@ -134,15 +202,8 @@ export function VideoPlayerDoc() {
         <section id="usage" className="mb-14 scroll-mt-24">
           <h2 className="mb-2 text-2xl font-semibold tracking-tight">Usage</h2>
           <p className="mb-6 max-w-2xl text-[var(--color-tint-muted)]">
-            Import the component and pass a video source. Additional native video attributes such as{' '}
-            <code className="rounded bg-[var(--color-tint-surface)] px-1.5 py-0.5 text-[13px]">
-              loop
-            </code>{' '}
-            and{' '}
-            <code className="rounded bg-[var(--color-tint-surface)] px-1.5 py-0.5 text-[13px]">
-              muted
-            </code>{' '}
-            are supported.
+            Import the component and pass a video source. Playback toggles from the video surface;
+            speed and other options live in the settings popout.
           </p>
 
           <div className="space-y-6">
@@ -164,6 +225,18 @@ export function VideoPlayerDoc() {
               </p>
               <CodeBlock code={mediaCardUsageCode} />
             </div>
+
+            <div>
+              <h3 className="mb-3 text-base font-semibold">Settings popout</h3>
+              <p className="mb-3 text-sm text-[var(--color-tint-muted)]">
+                <code className="rounded bg-[var(--color-tint-surface)] px-1.5 py-0.5 text-[13px]">
+                  SettingsPopout
+                </code>{' '}
+                is a searchable picker inspired by Astryx CommandPalette — grouped items, keyboard
+                navigation, and a selected checkmark.
+              </p>
+              <CodeBlock code={settingsUsageCode} />
+            </div>
           </div>
         </section>
 
@@ -175,10 +248,10 @@ export function VideoPlayerDoc() {
           </p>
           <ul className="grid gap-3 sm:grid-cols-2">
             {[
-              'Play / pause with click-to-toggle on the video surface',
+              'Click the video surface to play or pause',
               'Seek scrubber with spring-animated progress fill',
               'Mute toggle and volume slider',
-              'Playback speed presets: 0.5x, 1x, 1.5x, 2x',
+              'Settings popout for playback speed (CommandPalette-style)',
               'Auto-hiding control bar on hover and keyboard focus',
               'Accepts standard HTML video attributes',
             ].map((feature) => (
@@ -192,20 +265,33 @@ export function VideoPlayerDoc() {
           </ul>
         </section>
 
-        <section id="api" className="scroll-mt-24">
-          <h2 className="mb-2 text-2xl font-semibold tracking-tight">API</h2>
-          <p className="mb-6 max-w-2xl text-[var(--color-tint-muted)]">
-            Props for <code className="rounded bg-[var(--color-tint-surface)] px-1.5 py-0.5 text-[13px]">VideoPlayer</code>.
-            Required props are marked with an asterisk.
-          </p>
-          <PropsTable rows={props} />
+        <section id="api" className="scroll-mt-24 space-y-10">
+          <div>
+            <h2 className="mb-2 text-2xl font-semibold tracking-tight">API</h2>
+            <p className="mb-6 max-w-2xl text-[var(--color-tint-muted)]">
+              Props for{' '}
+              <code className="rounded bg-[var(--color-tint-surface)] px-1.5 py-0.5 text-[13px]">
+                VideoPlayer
+              </code>
+              . Required props are marked with an asterisk.
+            </p>
+            <PropsTable rows={props} />
+          </div>
+
+          <div>
+            <h3 className="mb-2 text-xl font-semibold tracking-tight">SettingsPopout</h3>
+            <p className="mb-6 max-w-2xl text-[var(--color-tint-muted)]">
+              Reusable searchable settings picker used by the player gear menu.
+            </p>
+            <PropsTable rows={settingsProps} />
+          </div>
         </section>
       </main>
 
       <footer className="border-t border-[var(--color-tint-border)] py-8">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 text-sm text-[var(--color-tint-muted)] sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <span>tint · React component library</span>
-          <span>Video Player is the first published component.</span>
+          <span>Demo media: Big Buck Bunny (Blender Foundation)</span>
         </div>
       </footer>
     </div>
