@@ -165,8 +165,9 @@ export function VideoPlayerDoc() {
             Video Player
           </h1>
           <p className="text-lg leading-relaxed text-[var(--color-tint-muted)]">
-            A reusable React video player with animated controls for seek, volume, and a
-            CommandPalette-style settings popout. Click the video surface to play or pause.
+            A reusable React video player with a compact control bar — seek, a vertical volume
+            drawer, and a CommandPalette-style settings popout. Click the video surface to play
+            or pause.
           </p>
         </div>
 
@@ -184,7 +185,7 @@ export function VideoPlayerDoc() {
                 >
                   test-videos.co.uk
                 </a>
-                . Open settings from the gear icon.
+                . Hover the speaker for volume; open settings from the gear.
               </p>
             </div>
             <span className="rounded-md bg-[var(--color-tint-accent-soft)] px-2.5 py-1 text-xs font-medium text-[var(--color-tint-accent)]">
@@ -249,8 +250,8 @@ export function VideoPlayerDoc() {
           <ul className="grid gap-3 sm:grid-cols-2">
             {[
               'Click the video surface to play or pause',
-              'Seek scrubber with spring-animated progress fill',
-              'Mute toggle and volume slider',
+              'Compact control bar with seek, volume, and settings',
+              'Vertical volume drawer that opens from the speaker icon',
               'Settings popout for playback speed (CommandPalette-style)',
               'Auto-hiding control bar on hover and keyboard focus',
               'Accepts standard HTML video attributes',

@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useRef, useState, type VideoHTMLAttributes } from 'react'
-import { Settings, Volume1, Volume2, VolumeX } from 'lucide-react'
+import { Settings } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { cn } from '@/lib/utils'
 import { SettingsPopout, type SettingsPopoutItem } from '@/components/settings-popout'
+import { Slider } from './Slider'
+import { VolumeControl } from './VolumeControl'
 
 const PLAYBACK_SPEEDS = [0.5, 1, 1.5, 2] as const
 
@@ -28,58 +30,6 @@ function formatTime(seconds: number) {
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
 }
 
-type SliderProps = {
-  value: number
-  onChange: (value: number) => void
-  className?: string
-  'aria-label': string
-}
-
-function Slider({ value, onChange, className, 'aria-label': ariaLabel }: SliderProps) {
-  const trackRef = useRef<HTMLDivElement>(null)
-
-  const updateFromClientX = (clientX: number) => {
-    const rect = trackRef.current?.getBoundingClientRect()
-    if (!rect || rect.width === 0) return
-    const percentage = ((clientX - rect.left) / rect.width) * 100
-    onChange(Math.min(Math.max(percentage, 0), 100))
-  }
-
-  return (
-    <div
-      ref={trackRef}
-      role="slider"
-      tabIndex={0}
-      aria-label={ariaLabel}
-      aria-valuemin={0}
-      aria-valuemax={100}
-      aria-valuenow={Math.round(value)}
-      className={cn(
-        'relative h-1 w-full cursor-pointer rounded-full bg-white/20 outline-none focus-visible:ring-2 focus-visible:ring-white/60',
-        className,
-      )}
-      onClick={(event) => updateFromClientX(event.clientX)}
-      onKeyDown={(event) => {
-        if (event.key === 'ArrowRight' || event.key === 'ArrowUp') {
-          event.preventDefault()
-          onChange(Math.min(value + 5, 100))
-        }
-        if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') {
-          event.preventDefault()
-          onChange(Math.max(value - 5, 0))
-        }
-      }}
-    >
-      <motion.div
-        className="absolute top-0 left-0 h-full rounded-full bg-white"
-        initial={false}
-        animate={{ width: `${value}%` }}
-        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-      />
-    </div>
-  )
-}
-
 export function VideoPlayer({
   src,
   poster,
@@ -97,6 +47,7 @@ export function VideoPlayer({
   const [playbackSpeed, setPlaybackSpeed] = useState(1)
   const [showControls, setShowControls] = useState(!autoHideControls)
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const [volumeOpen, setVolumeOpen] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
 
@@ -110,6 +61,8 @@ export function VideoPlayer({
       })),
     [],
   )
+
+  const overlayOpen = settingsOpen || volumeOpen
 
   useEffect(() => {
     if (!autoHideControls) {
@@ -196,12 +149,10 @@ export function VideoPlayer({
   }
 
   const maybeHideControls = () => {
-    if (autoHideControls && !settingsOpen) {
+    if (autoHideControls && !overlayOpen) {
       setShowControls(false)
     }
   }
-
-  const VolumeIcon = isMuted || volume === 0 ? VolumeX : volume > 0.5 ? Volume2 : Volume1
 
   return (
     <motion.div
@@ -218,7 +169,7 @@ export function VideoPlayer({
       onBlurCapture={(event) => {
         if (
           autoHideControls &&
-          !settingsOpen &&
+          !overlayOpen &&
           !event.currentTarget.contains(event.relatedTarget as Node | null)
         ) {
           setShowControls(false)
@@ -249,63 +200,54 @@ export function VideoPlayer({
       <AnimatePresence>
         {showControls && (
           <motion.div
-            className="absolute right-0 bottom-0 left-0 z-20 m-2 mx-auto max-w-xl rounded-2xl bg-[#11111198] p-4 backdrop-blur-md"
+            className="absolute right-0 bottom-0 left-0 z-20 m-2 mx-auto max-w-xl rounded-2xl bg-[#11111198] px-3 py-2.5 backdrop-blur-md"
             initial={{ y: 20, opacity: 0, filter: 'blur(10px)' }}
             animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
             exit={{ y: 20, opacity: 0, filter: 'blur(10px)' }}
             transition={{ duration: 0.45, ease: 'circInOut', type: 'spring' }}
           >
-            <div className="mb-3 flex items-center gap-2">
-              <span className="min-w-10 text-sm text-white tabular-nums">
+            <div className="flex items-center gap-2">
+              <VolumeControl
+                volume={volume}
+                isMuted={isMuted}
+                onVolumeChange={handleVolumeChange}
+                onToggleMute={toggleMute}
+                onOpenChange={setVolumeOpen}
+              />
+
+              <span className="min-w-9 text-xs text-white tabular-nums">
                 {formatTime(currentTime)}
               </span>
+
               <Slider
                 value={progress}
                 onChange={handleSeek}
                 className="flex-1"
                 aria-label="Seek"
               />
-              <span className="min-w-10 text-right text-sm text-white tabular-nums">
+
+              <span className="min-w-9 text-right text-xs text-white tabular-nums">
                 {formatTime(duration)}
               </span>
-            </div>
-
-            <div className="relative flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
-                <motion.button
-                  type="button"
-                  whileHover={{ scale: 1.08 }}
-                  whileTap={{ scale: 0.94 }}
-                  onClick={toggleMute}
-                  aria-label={isMuted ? 'Unmute' : 'Mute'}
-                  className="inline-flex size-9 items-center justify-center rounded-lg text-white transition-colors hover:bg-[#111111d1]"
-                >
-                  <VolumeIcon className="size-5" />
-                </motion.button>
-                <div className="w-24">
-                  <Slider
-                    value={isMuted ? 0 : volume * 100}
-                    onChange={handleVolumeChange}
-                    aria-label="Volume"
-                  />
-                </div>
-              </div>
 
               <div className="relative">
                 <motion.button
                   type="button"
                   whileHover={{ scale: 1.08 }}
                   whileTap={{ scale: 0.94 }}
-                  onClick={() => setSettingsOpen((open) => !open)}
+                  onClick={() => {
+                    setVolumeOpen(false)
+                    setSettingsOpen((open) => !open)
+                  }}
                   aria-label="Settings"
                   aria-haspopup="dialog"
                   aria-expanded={settingsOpen}
                   className={cn(
-                    'inline-flex size-9 items-center justify-center rounded-lg text-white transition-colors hover:bg-[#111111d1]',
+                    'inline-flex size-8 items-center justify-center rounded-lg text-white transition-colors hover:bg-[#111111d1]',
                     settingsOpen && 'bg-[#111111d1]',
                   )}
                 >
-                  <Settings className="size-5" />
+                  <Settings className="size-4" />
                 </motion.button>
 
                 <SettingsPopout
