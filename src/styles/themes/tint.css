@@ -1,0 +1,52 @@
+/*
+ * Tint — the default theme.
+ *
+ * Applied at :root so it needs no [data-theme] attribute. A named theme layered
+ * on top overrides whichever tokens it redeclares.
+ */
+
+:root {
+  /* Surface and text */
+  --tint-bg: light-dark(#fbfbfc, #0b0d11);
+  --tint-surface: light-dark(#f6f7fa, #16191f);
+  --tint-panel: light-dark(#ffffff, #1b1f26);
+  --tint-ink: light-dark(#12141a, #e6e9f0);
+  --tint-muted: light-dark(#5c6578, #9aa3b4);
+  --tint-border: light-dark(#d8dde8, #2c313b);
+  --tint-border-strong: light-dark(#b9c1d1, #3d434f);
+
+  /* Accent. The dark accent is a light green, so on-accent inverts with it —
+     white text over #4fd1a5 would be unreadable. */
+  --tint-accent: light-dark(#0f6e56, #4fd1a5);
+  --tint-accent-hover: light-dark(#0c5a46, #6fdbb8);
+  --tint-accent-soft: light-dark(#e6f4ef, #15302a);
+  --tint-on-accent: light-dark(#ffffff, #06231a);
+
+  /* Status */
+  --tint-danger: light-dark(#b42318, #f97066);
+  --tint-danger-soft: light-dark(#fef3f2, #3a1613);
+  --tint-danger-ink: light-dark(#912018, #fda29b);
+  --tint-warning: light-dark(#b54708, #fdb022);
+  --tint-warning-soft: light-dark(#fffaeb, #3a2411);
+  --tint-warning-ink: light-dark(#93370d, #fec84b);
+  --tint-success: light-dark(#067647, #47cd89);
+  --tint-success-soft: light-dark(#ecfdf3, #0d2f1f);
+  --tint-success-ink: light-dark(#085d3a, #75e0a7);
+  --tint-info: light-dark(#175cd3, #6aa9ff);
+  --tint-info-soft: light-dark(#eff8ff, #12233d);
+  --tint-info-ink: light-dark(#1849a9, #9cc6ff);
+
+  /* Code. Dark in both schemes, but the dark variant drops below the panel and
+     gains a border so it stays distinguishable on a dark page. */
+  --tint-code: light-dark(#0f172a, #0d1017);
+  --tint-code-ink: light-dark(#e2e8f0, #dfe5ee);
+  --tint-code-muted: light-dark(#94a3b8, #8b93a3);
+  --tint-code-border: light-dark(#334155, #262c38);
+
+  /* Media chrome — fixed, never flips. */
+  --tint-chrome: #14161ccc;
+  --tint-chrome-ink: #ffffff;
+  --tint-chrome-border: #ffffff1a;
+
+  --tint-shadow-color: light-dark(rgb(30 42 58 / 0.1), rgb(0 0 0 / 0.5));
+}

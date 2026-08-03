@@ -1,0 +1,94 @@
+/*
+ * The Tint theme contract.
+ *
+ * A theme is a plain CSS block that declares every `--tint-*` token below. There
+ * are two independent axes, and they compose:
+ *
+ *   [data-theme='gruvbox']   picks the palette family   (absent = tint default)
+ *   [data-scheme='dark']     forces the scheme          (absent = follow the OS)
+ *
+ * Scheme resolution is CSS-native. `:root { color-scheme: light dark }` lets
+ * `light-dark()` follow the operating system; setting `color-scheme` to a single
+ * value forces every token to that side at once. There is no duplicated dark
+ * block and no media query in any theme file.
+ *
+ * Authoring a theme:
+ *
+ *   [data-theme='mine'] {
+ *     --tint-ink: light-dark(#222, #eee);
+ *     ... all 31 tokens ...
+ *   }
+ *
+ * Every token is required. Components reference them with no fallback, so an
+ * omitted token renders an invisible element rather than quietly reverting to a
+ * light default. `src/styles/themes.test.ts` enforces parity across all themes.
+ *
+ * The `@theme inline` bridge below is what makes overrides reach Tailwind's
+ * utilities. A plain `@theme` substitutes at declaration time and would freeze
+ * each utility to `:root`'s value; `inline` emits `var(--tint-x)` into the
+ * utility itself, so it resolves at the use site — which is why a theme works
+ * both on `<html>` and on any subtree.
+ */
+
+@theme inline {
+  /* Surface and text */
+  --color-tint-bg: var(--tint-bg);
+  --color-tint-surface: var(--tint-surface);
+  --color-tint-panel: var(--tint-panel);
+  --color-tint-ink: var(--tint-ink);
+  --color-tint-muted: var(--tint-muted);
+  --color-tint-border: var(--tint-border);
+  --color-tint-border-strong: var(--tint-border-strong);
+
+  /* Accent */
+  --color-tint-accent: var(--tint-accent);
+  --color-tint-accent-hover: var(--tint-accent-hover);
+  --color-tint-accent-soft: var(--tint-accent-soft);
+  --color-tint-on-accent: var(--tint-on-accent);
+
+  /* Status: base is the icon, border, or solid fill; -soft is the background
+     wash; -ink is text that must stay readable on -soft. */
+  --color-tint-danger: var(--tint-danger);
+  --color-tint-danger-soft: var(--tint-danger-soft);
+  --color-tint-danger-ink: var(--tint-danger-ink);
+  --color-tint-warning: var(--tint-warning);
+  --color-tint-warning-soft: var(--tint-warning-soft);
+  --color-tint-warning-ink: var(--tint-warning-ink);
+  --color-tint-success: var(--tint-success);
+  --color-tint-success-soft: var(--tint-success-soft);
+  --color-tint-success-ink: var(--tint-success-ink);
+  --color-tint-info: var(--tint-info);
+  --color-tint-info-soft: var(--tint-info-soft);
+  --color-tint-info-ink: var(--tint-info-ink);
+
+  /* Code blocks */
+  --color-tint-code: var(--tint-code);
+  --color-tint-code-ink: var(--tint-code-ink);
+  --color-tint-code-muted: var(--tint-code-muted);
+  --color-tint-code-border: var(--tint-code-border);
+
+  /* Media chrome. Deliberately NOT paired with light-dark(): these overlay video
+     and must stay legible over bright and dark footage alike, so they are tinted
+     per theme but never flip with the scheme. */
+  --color-tint-chrome: var(--tint-chrome);
+  --color-tint-chrome-ink: var(--tint-chrome-ink);
+  --color-tint-chrome-border: var(--tint-chrome-border);
+
+  /* Elevation */
+  --color-tint-shadow: var(--tint-shadow-color);
+}
+
+:root {
+  /* No [data-scheme] means follow the operating system. `light dark` is what
+     makes that automatic resolution possible — without it, light-dark() would
+     always pick its first value. */
+  color-scheme: light dark;
+}
+
+:root[data-scheme='light'] {
+  color-scheme: light;
+}
+
+:root[data-scheme='dark'] {
+  color-scheme: dark;
+}

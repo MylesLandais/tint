@@ -20,16 +20,16 @@ export function CodeBlock({ code, language = 'tsx', className }: CodeBlockProps)
   return (
     <div
       className={cn(
-        'overflow-hidden rounded-xl border border-[var(--color-tint-border)] bg-[var(--color-tint-code)] text-slate-100 shadow-sm',
+        'overflow-hidden rounded-xl border border-tint-code-border bg-tint-code text-tint-code-ink shadow-sm',
         className,
       )}
     >
-      <div className="flex items-center justify-between border-b border-white/10 px-4 py-2 text-xs text-slate-300">
+      <div className="flex items-center justify-between border-b border-tint-code-border px-4 py-2 text-xs text-tint-code-muted">
         <span className="uppercase tracking-[0.08em]">{language}</span>
         <button
           type="button"
           onClick={handleCopy}
-          className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-slate-200 transition-colors hover:bg-white/10"
+          className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-tint-code-ink transition-colors hover:bg-tint-code-ink/10"
         >
           {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
           {copied ? 'Copied' : 'Copy'}

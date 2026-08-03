@@ -19,5 +19,7 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["vite.config.ts"]
+  // themes.test.ts reads the theme stylesheets off disk, so it is a Node-side
+  // test and belongs here rather than in the browser project.
+  "include": ["vite.config.ts", "vitest.config.ts", "src/styles/themes.test.ts"]
 }

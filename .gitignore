@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Research notes that reference local filesystem paths and private repositories.
+# Kept out of version control; the published research lives in docs/chat/0[1-5]-*.md.
+docs/chat/00-source-inventory.md

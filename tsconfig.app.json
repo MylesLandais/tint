@@ -29,5 +29,8 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  // Typechecked by tsconfig.node.json instead — it needs Node's fs, and the app
+  // project deliberately has no Node types so browser code cannot reach for them.
+  "exclude": ["src/styles/themes.test.ts"]
 }

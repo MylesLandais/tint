@@ -197,13 +197,13 @@ export function SettingsPopout({
           exit={{ opacity: 0, y: 8, scale: 0.98 }}
           transition={{ duration: 0.18, ease: 'easeOut' }}
           className={cn(
-            'absolute right-0 bottom-[calc(100%+0.5rem)] z-30 w-72 overflow-hidden rounded-xl border border-white/10 bg-[#14161ccc] text-white shadow-[0_16px_48px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:w-80',
+            'absolute right-0 bottom-[calc(100%+0.5rem)] z-30 w-72 overflow-hidden rounded-xl border border-tint-chrome-border bg-tint-chrome text-tint-chrome-ink shadow-[0_16px_48px_var(--tint-shadow-color)] backdrop-blur-xl sm:w-80',
             className,
           )}
           onMouseDown={(event) => event.stopPropagation()}
         >
-          <div className="flex items-center gap-2 border-b border-white/10 px-3 py-2.5">
-            <Search className="size-4 shrink-0 text-white/55" aria-hidden="true" />
+          <div className="flex items-center gap-2 border-b border-tint-chrome-border px-3 py-2.5">
+            <Search className="size-4 shrink-0 text-tint-chrome-ink/55" aria-hidden="true" />
             <input
               ref={inputRef}
               value={query}
@@ -218,7 +218,7 @@ export function SettingsPopout({
               aria-activedescendant={
                 flat[activeIndex] ? `${listId}-${flat[activeIndex].id}` : undefined
               }
-              className="w-full bg-transparent text-sm text-white outline-none placeholder:text-white/40"
+              className="w-full bg-transparent text-sm text-tint-chrome-ink outline-none placeholder:text-tint-chrome-ink/40"
             />
           </div>
 
@@ -229,14 +229,14 @@ export function SettingsPopout({
             className="max-h-64 overflow-y-auto p-1.5"
           >
             {flat.length === 0 ? (
-              <div className="px-3 py-6 text-center text-sm text-white/55">
+              <div className="px-3 py-6 text-center text-sm text-tint-chrome-ink/55">
                 {emptySearchText}
               </div>
             ) : (
               grouped.map((group) => (
                 <div key={group.heading ?? 'ungrouped'} className="mb-1 last:mb-0">
                   {group.heading ? (
-                    <div className="px-2.5 pt-1.5 pb-1 text-[11px] font-medium tracking-[0.08em] text-white/45 uppercase">
+                    <div className="px-2.5 pt-1.5 pb-1 text-[11px] font-medium tracking-[0.08em] text-tint-chrome-ink/45 uppercase">
                       {group.heading}
                     </div>
                   ) : null}
@@ -255,7 +255,7 @@ export function SettingsPopout({
                           aria-selected={isSelected}
                           className={cn(
                             'flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-sm transition-colors',
-                            isActive ? 'bg-white/12' : 'hover:bg-white/8',
+                            isActive ? 'bg-tint-chrome-ink/12' : 'hover:bg-tint-chrome-ink/8',
                             isSelected && 'font-medium',
                           )}
                           onMouseEnter={() => setActiveIndex(index)}
@@ -263,12 +263,12 @@ export function SettingsPopout({
                         >
                           <span className="min-w-0 flex-1 truncate">{item.label}</span>
                           {item.shortcut ? (
-                            <kbd className="rounded-md bg-white/10 px-1.5 py-0.5 font-mono text-[11px] text-white/60">
+                            <kbd className="rounded-md bg-tint-chrome-ink/10 px-1.5 py-0.5 font-mono text-[11px] text-tint-chrome-ink/60">
                               {item.shortcut}
                             </kbd>
                           ) : null}
                           {isSelected ? (
-                            <Check className="size-4 shrink-0 text-white" aria-hidden="true" />
+                            <Check className="size-4 shrink-0 text-tint-chrome-ink" aria-hidden="true" />
                           ) : (
                             <span className="size-4 shrink-0" aria-hidden="true" />
                           )}
@@ -281,17 +281,17 @@ export function SettingsPopout({
             )}
           </div>
 
-          <div className="flex items-center justify-between gap-3 border-t border-white/10 px-3 py-2 text-[11px] text-white/45">
+          <div className="flex items-center justify-between gap-3 border-t border-tint-chrome-border px-3 py-2 text-[11px] text-tint-chrome-ink/45">
             {footer ?? (
               <>
                 <span>
-                  <kbd className="rounded bg-white/10 px-1 py-0.5">↑</kbd>{' '}
-                  <kbd className="rounded bg-white/10 px-1 py-0.5">↓</kbd> navigate
+                  <kbd className="rounded bg-tint-chrome-ink/10 px-1 py-0.5">↑</kbd>{' '}
+                  <kbd className="rounded bg-tint-chrome-ink/10 px-1 py-0.5">↓</kbd> navigate
                 </span>
                 <span>
-                  <kbd className="rounded bg-white/10 px-1 py-0.5">↵</kbd> select
-                  <span className="mx-2 text-white/25">·</span>
-                  <kbd className="rounded bg-white/10 px-1 py-0.5">esc</kbd> close
+                  <kbd className="rounded bg-tint-chrome-ink/10 px-1 py-0.5">↵</kbd> select
+                  <span className="mx-2 text-tint-chrome-ink/25">·</span>
+                  <kbd className="rounded bg-tint-chrome-ink/10 px-1 py-0.5">esc</kbd> close
                 </span>
               </>
             )}

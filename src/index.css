@@ -1,17 +1,10 @@
 @import 'tailwindcss';
+@import './styles/contract.css';
+@import './styles/themes/tint.css';
 
 @theme {
   --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
-
-  --color-tint-ink: #12141a;
-  --color-tint-muted: #5c6578;
-  --color-tint-border: #d8dde8;
-  --color-tint-surface: #f6f7fa;
-  --color-tint-panel: #ffffff;
-  --color-tint-accent: #0f6e56;
-  --color-tint-accent-soft: #e6f4ef;
-  --color-tint-code: #0f172a;
 }
 
 @layer base {
@@ -29,11 +22,21 @@
     margin: 0;
     min-width: 320px;
     font-family: var(--font-sans);
-    color: var(--color-tint-ink);
+    color: var(--tint-ink);
+    /* The two washes are the accent and a cool neutral at low alpha, so they
+       retint with the theme instead of being baked-in light greens. */
     background:
-      radial-gradient(1200px 480px at 10% -10%, #e8f2ee 0%, transparent 55%),
-      radial-gradient(900px 420px at 100% 0%, #eef1f8 0%, transparent 50%),
-      #fbfbfc;
+      radial-gradient(
+        1200px 480px at 10% -10%,
+        color-mix(in oklab, var(--tint-accent) 12%, transparent) 0%,
+        transparent 55%
+      ),
+      radial-gradient(
+        900px 420px at 100% 0%,
+        color-mix(in oklab, var(--tint-info) 10%, transparent) 0%,
+        transparent 50%
+      ),
+      var(--tint-bg);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

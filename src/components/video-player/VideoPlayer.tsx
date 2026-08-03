@@ -157,7 +157,7 @@ export function VideoPlayer({
   return (
     <motion.div
       className={cn(
-        'relative mx-auto w-full max-w-4xl rounded-lg bg-[#11111198] shadow-[0_0_20px_rgba(0,0,0,0.2)] backdrop-blur-sm',
+        'relative mx-auto w-full max-w-4xl rounded-lg bg-tint-chrome shadow-[0_0_20px_var(--tint-shadow-color)] backdrop-blur-sm',
         className,
       )}
       initial={{ opacity: 0, y: 20 }}
@@ -200,14 +200,14 @@ export function VideoPlayer({
       <AnimatePresence>
         {showControls && (
           <motion.div
-            className="absolute bottom-3 left-1/2 z-20 w-2/3 max-w-xl -translate-x-1/2 rounded-xl bg-[#11111198] px-3 py-2.5 backdrop-blur-md"
+            className="absolute bottom-3 left-1/2 z-20 w-2/3 max-w-xl -translate-x-1/2 rounded-xl bg-tint-chrome px-3 py-2.5 backdrop-blur-md"
             initial={{ y: 20, opacity: 0, filter: 'blur(10px)' }}
             animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
             exit={{ y: 20, opacity: 0, filter: 'blur(10px)' }}
             transition={{ duration: 0.45, ease: 'circInOut', type: 'spring' }}
           >
             <div className="flex items-center gap-2">
-              <span className="min-w-9 text-xs text-white tabular-nums">
+              <span className="min-w-9 text-xs text-tint-chrome-ink tabular-nums">
                 {formatTime(currentTime)}
               </span>
 
@@ -218,7 +218,7 @@ export function VideoPlayer({
                 aria-label="Seek"
               />
 
-              <span className="min-w-9 text-right text-xs text-white tabular-nums">
+              <span className="min-w-9 text-right text-xs text-tint-chrome-ink tabular-nums">
                 {formatTime(duration)}
               </span>
 
@@ -247,8 +247,8 @@ export function VideoPlayer({
                     aria-haspopup="dialog"
                     aria-expanded={settingsOpen}
                     className={cn(
-                      'inline-flex size-8 items-center justify-center rounded-md text-white transition-colors hover:bg-[#111111d1]',
-                      settingsOpen && 'bg-[#111111d1]',
+                      'inline-flex size-8 items-center justify-center rounded-md text-tint-chrome-ink transition-colors hover:bg-tint-chrome-ink/12',
+                      settingsOpen && 'bg-tint-chrome-ink/12',
                     )}
                   >
                     <Settings className="size-4" />

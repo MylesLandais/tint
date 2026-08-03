@@ -175,8 +175,8 @@ export function VolumeControl({
         aria-expanded={open}
         aria-controls="tint-volume-drawer"
         className={cn(
-          'inline-flex size-8 items-center justify-center rounded-md text-white transition-colors hover:bg-[#111111d1]',
-          open && 'bg-[#111111d1]',
+          'inline-flex size-8 items-center justify-center rounded-md text-tint-chrome-ink transition-colors hover:bg-tint-chrome-ink/12',
+          open && 'bg-tint-chrome-ink/12',
         )}
       >
         <VolumeIcon className="size-4" />
@@ -192,7 +192,7 @@ export function VolumeControl({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
             transition={{ duration: 0.18, ease: 'easeOut' }}
-            className="absolute bottom-[calc(100%+0.75rem)] left-1/2 z-30 flex h-36 w-14 -translate-x-1/2 flex-col items-center rounded-xl border border-white/10 bg-[#14161ccc] px-2 pt-2 pb-3 shadow-[0_12px_32px_rgba(0,0,0,0.4)] backdrop-blur-xl"
+            className="absolute bottom-[calc(100%+0.75rem)] left-1/2 z-30 flex h-36 w-14 -translate-x-1/2 flex-col items-center rounded-xl border border-tint-chrome-border bg-tint-chrome px-2 pt-2 pb-3 shadow-[0_12px_32px_var(--tint-shadow-color)] backdrop-blur-xl"
             onMouseDown={(event) => event.stopPropagation()}
           >
             <form onSubmit={onInputSubmit} className="mb-2.5 w-full">
@@ -214,7 +214,7 @@ export function VolumeControl({
                   setInputValue(next)
                 }}
                 onKeyDown={onInputKeyDown}
-                className="w-full border-0 border-b border-white/35 bg-transparent px-0.5 py-0.5 text-center text-[11px] font-medium text-white tabular-nums outline-none placeholder:text-white/35 focus:border-white/70"
+                className="w-full border-0 border-b border-tint-chrome-ink/35 bg-transparent px-0.5 py-0.5 text-center text-[11px] font-medium text-tint-chrome-ink tabular-nums outline-none placeholder:text-tint-chrome-ink/35 focus:border-tint-chrome-ink/70"
               />
             </form>
             <div className="flex min-h-0 w-full flex-1 justify-center">

@@ -1,0 +1,65 @@
+/*
+ * Solarized — Ethan Schoonover's palette.
+ *
+ *   base03 #002b36  base02 #073642  base01 #586e75  base00 #657b83
+ *   base0  #839496  base1  #93a1a1  base2  #eee8d5  base3  #fdf6e3
+ *   yellow #b58900  orange #cb4b16  red    #dc322f  magenta #d33682
+ *   violet #6c71c4  blue   #268bd2  cyan   #2aa198  green   #859900
+ *
+ * The accents are scheme-independent by design — Solarized picks hues that hold
+ * against both backgrounds — so accent, danger, warning, success, and info keep
+ * one value across light and dark. Only the greyscale ramp flips.
+ *
+ * Usage: <html data-theme="solarized">
+ */
+
+[data-theme='solarized'] {
+  /* Surface and text. Dark uses #00212b below base03 for the recessed tone,
+     the convention most Solarized ports adopt for a third background step. */
+  --tint-bg: light-dark(#fdf6e3, #002b36);
+  --tint-surface: light-dark(#eee8d5, #00212b);
+  --tint-panel: light-dark(#fdf6e3, #073642);
+  --tint-ink: light-dark(#566c73, #93a1a1);
+  --tint-muted: light-dark(#586c72, #8c9b9d);
+    /* The dark border sits above base02 rather than below it — a hairline derived
+     from the page background is invisible once it wraps a raised panel. */
+  --tint-border: light-dark(#ddd6c3, #254b55);
+  --tint-border-strong: light-dark(#c9c0a8, #37626e);
+
+  /* Accent: blue, nudged per scheme. Canonical #268bd2 predates WCAG contrast
+     requirements for UI — at 3.41:1 it fails both as link text on base3 and as a
+     filled button. These are the nearest values along the same hue that clear
+     4.5:1 in both roles, which is the bar this library commits to. */
+  --tint-accent: light-dark(#2076b3, #4b9fda);
+  --tint-accent-hover: light-dark(#1a6396, #6fb4e4);
+  --tint-accent-soft: light-dark(#dfe9f2, #0a3348);
+  --tint-on-accent: light-dark(#fdf6e3, #002b36);
+
+  /* Status: red, orange, green, cyan. */
+  --tint-danger: light-dark(#dc322f, #de3e3b);
+  --tint-danger-soft: light-dark(#f7e0df, #3a1210);
+  --tint-danger-ink: light-dark(#a52521, #f07a78);
+  --tint-warning: light-dark(#cb4b16, #ce5422);
+  --tint-warning-soft: light-dark(#f7e6db, #3a1e0d);
+  --tint-warning-ink: light-dark(#9c3a11, #e08a5c);
+  --tint-success: light-dark(#849700, #859900);
+  --tint-success-soft: light-dark(#eef0da, #2a2f08);
+  --tint-success-ink: light-dark(#5f6d00, #b3c43c);
+  --tint-info: light-dark(#299e95, #2aa198);
+  --tint-info-soft: light-dark(#dcefed, #0a302e);
+  --tint-info-ink: light-dark(#1e7670, #5fc4bc);
+
+  /* Code. Solarized light genuinely wants a light code block — this is exactly
+     the case the tint default cannot express. */
+  --tint-code: light-dark(#eee8d5, #073642);
+  --tint-code-ink: light-dark(#566c73, #93a1a1);
+  --tint-code-muted: light-dark(#586b72, #8c9b9d);
+  --tint-code-border: light-dark(#ddd6c3, #254b55);
+
+  /* Media chrome — base03 at overlay opacity, fixed. */
+  --tint-chrome: #002b36ee;
+  --tint-chrome-ink: #93a1a1;
+  --tint-chrome-border: #93a1a129;
+
+  --tint-shadow-color: light-dark(rgb(88 110 117 / 0.16), rgb(0 0 0 / 0.55));
+}

@@ -1,0 +1,61 @@
+/*
+ * Gruvbox — the retro-groove palette.
+ *
+ *   dark   bg0_h #1d2021  bg0 #282828  bg0_s #32302f  bg1 #3c3836  bg2 #504945
+ *          fg1   #ebdbb2  fg2 #d5c4a1  fg3   #bdae93  fg4 #a89984
+ *   light  bg0_h #f9f5d7  bg0 #fbf1c7  bg1   #ebdbb2  bg2 #d5c4a1  bg3 #bdae93
+ *          fg1   #3c3836  fg2 #504945  fg3   #665c54  fg4 #7c6f64
+ *
+ * Unlike Solarized, Gruvbox ships two accent sets: bright accents for dark
+ * backgrounds and faded accents for light ones. Every hue therefore pairs, using
+ * the medium background variant throughout.
+ *
+ * Usage: <html data-theme="gruvbox">
+ */
+
+[data-theme='gruvbox'] {
+  /* Surface and text */
+  --tint-bg: light-dark(#fbf1c7, #282828);
+  --tint-surface: light-dark(#ebdbb2, #1d2021);
+  --tint-panel: light-dark(#f9f5d7, #32302f);
+  --tint-ink: light-dark(#3c3836, #ebdbb2);
+  --tint-muted: light-dark(#665c54, #a89984);
+    /* bg1 is indistinguishable from the bg0_s panel, so the dark hairline steps
+     up to a value that stays visible on both the page and a raised surface. */
+  --tint-border: light-dark(#d5c4a1, #484442);
+  --tint-border-strong: light-dark(#bdae93, #5c5754);
+
+  /* Accent: aqua — faded #427b58 on light, bright #8ec07c on dark. The bright
+     variant is light enough that on-accent has to invert to bg0_h. */
+  --tint-accent: light-dark(#417956, #8ec07c);
+  --tint-accent-hover: light-dark(#356047, #a9d18f);
+  --tint-accent-soft: light-dark(#e8e0bd, #2f3a2c);
+  --tint-on-accent: light-dark(#fbf1c7, #1d2021);
+
+  /* Status: red, yellow/orange, green, blue. */
+  --tint-danger: light-dark(#9d0006, #fb4934);
+  --tint-danger-soft: light-dark(#f2dcc4, #3c2222);
+  --tint-danger-ink: light-dark(#9d0006, #fb5642);
+  --tint-warning: light-dark(#b57614, #fabd2f);
+  --tint-warning-soft: light-dark(#f4e4b8, #3a3020);
+  --tint-warning-ink: light-dark(#af3a03, #fabd2f);
+  --tint-success: light-dark(#79740e, #b8bb26);
+  --tint-success-soft: light-dark(#eae5b0, #2f3220);
+  --tint-success-ink: light-dark(#6c670c, #b8bb26);
+  --tint-info: light-dark(#076678, #83a598);
+  --tint-info-soft: light-dark(#dbe6e0, #23343a);
+  --tint-info-ink: light-dark(#076678, #83a598);
+
+  /* Code — the hard background variant, which is what gruvbox uses for editors. */
+  --tint-code: light-dark(#f9f5d7, #1d2021);
+  --tint-code-ink: light-dark(#3c3836, #ebdbb2);
+  --tint-code-muted: light-dark(#7a6d62, #a89984);
+  --tint-code-border: light-dark(#d5c4a1, #3c3836);
+
+  /* Media chrome — bg0_h at overlay opacity, fixed. */
+  --tint-chrome: #1d2021ee;
+  --tint-chrome-ink: #ebdbb2;
+  --tint-chrome-border: #ebdbb229;
+
+  --tint-shadow-color: light-dark(rgb(60 56 54 / 0.18), rgb(0 0 0 / 0.55));
+}

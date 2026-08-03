@@ -15,6 +15,24 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <script>
+      // Runs before first paint so a stored preference never flashes the wrong
+      // theme. Absent attributes are the defaults: no data-scheme follows the OS
+      // via `color-scheme: light dark`, no data-theme is the built-in palette.
+      // Kept inline and dependency-free — a deferred module would be too late.
+      (function () {
+        try {
+          var root = document.documentElement
+          var scheme = localStorage.getItem('tint-color-scheme')
+          if (scheme === 'light' || scheme === 'dark') root.dataset.scheme = scheme
+          var theme = localStorage.getItem('tint-theme')
+          if (theme && theme !== 'tint') root.dataset.theme = theme
+        } catch (error) {
+          // Storage is unavailable (private mode, sandboxed frame). The page
+          // still renders; it just follows the system instead.
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>
