@@ -1,5 +1,8 @@
 import type { HTMLAttributes, ReactNode, Ref } from 'react'
+import type { Table as TableInstance } from '@/vendor/tanstack-table-core'
 import type { TableFieldType } from './fieldTypes'
+
+export type { TableInstance }
 
 /** Rows are keyed by string throughout — ids are coerced at the boundary. */
 export type TableRowId = string
@@ -73,8 +76,16 @@ export type DataTableProps<TRow> = Omit<
   HTMLAttributes<HTMLDivElement>,
   'children' | 'onSelect'
 > & {
-  /** Rows to render, already filtered/sorted/paged. See `deriveRows`. */
-  rows: readonly TRow[]
+  /**
+   * Rows to render, already filtered/sorted/paged. See `deriveRows`.
+   *
+   * Ignored when `table` is supplied — that is the path where the engine owns
+   * the row model, and it is what lets a grid and a masonry render the same
+   * sorted, filtered rows without duplicating any state.
+   */
+  rows?: readonly TRow[]
+  /** A `useDataTable` instance. Supplies rows in place of the `rows` prop. */
+  table?: TableInstance<TRow>
   columns: readonly TableColumn<TRow>[]
   /** How to identify a row. A key name, or a function for composite ids. */
   rowId: (keyof TRow & string) | ((row: TRow) => TableRowId)

@@ -1,6 +1,7 @@
 import { ThemeControls } from '../components/ThemeControls'
 import { CodeBlock } from '../components/CodeBlock'
 import { MusicCollection } from './MusicCollection'
+import { MasonryCollection } from './MasonryCollection'
 
 const usageCode = `import {
   DataTable,
@@ -90,7 +91,22 @@ export function TableDoc() {
 
         <MusicCollection />
 
-        <section className="mt-10 grid gap-4 md:grid-cols-3">
+        <section className="mt-14">
+          <h2 className="mb-2 text-2xl font-semibold tracking-tight text-tint-ink">
+            One row model, two layouts
+          </h2>
+          <p className="mt-0 mb-5 max-w-3xl text-base leading-7 text-tint-muted">
+            A masonry is a table whose cells have inconsistent dimensions, and infinite scroll is
+            pagination wearing a different hat. Both views below read the same{' '}
+            <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">useDataTable</code>{' '}
+            instance — flipping the layout changes where cells are placed, not what the filter
+            matched or how it sorted. Scrolling to the end grows the page size; that is all
+            &ldquo;infinite&rdquo; ever means, and the active filter bounds it.
+          </p>
+          <MasonryCollection />
+        </section>
+
+        <section className="mt-14 grid gap-4 md:grid-cols-3">
           {notes.map(([title, body]) => (
             <article
               key={title}

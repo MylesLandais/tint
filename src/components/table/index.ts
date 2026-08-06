@@ -1,5 +1,11 @@
 export { DataTable } from './DataTable'
+export { DataMasonry, columnsFor } from './DataMasonry'
+export type { DataMasonryProps, MasonryDensity } from './DataMasonry'
+export { InfiniteRows } from './InfiniteRows'
+export type { InfiniteRowsProps } from './InfiniteRows'
 export { TableColumnsMenu, TablePager, TableToolbar } from './TableChrome'
+export { useDataTable } from './useDataTable'
+export { originalOf, tintFilter, tintNatural } from './engine'
 export {
   compareValues,
   deriveFilteredSortedRows,

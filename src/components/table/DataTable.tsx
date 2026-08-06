@@ -58,7 +58,8 @@ function pinnedOffsets<TRow>(columns: readonly TableColumn<TRow>[], gutter: numb
 }
 
 export function DataTable<TRow>({
-  rows,
+  rows: rowsProp,
+  table,
   columns,
   rowId,
   label,
@@ -82,6 +83,17 @@ export function DataTable<TRow>({
 }: DataTableProps<TRow>) {
   const viewportRef = useRef<HTMLDivElement>(null)
   const [scrolledRight, setScrolledRight] = useState(false)
+
+  // Either source works. An instance means the engine owns filtering, sorting,
+  // and paging — which is what lets this grid and a `DataMasonry` render the
+  // same rows without either one holding its own copy of that state.
+  //
+  // Not memoized on purpose: the row model is already memoized inside the
+  // engine, and any dep that tracked its state would change identity every
+  // render anyway.
+  const rows = table
+    ? table.getRowModel().rows.map((row) => row.original)
+    : (rowsProp ?? [])
 
   const getRowId = useCallback(
     (row: TRow): TableRowId =>
