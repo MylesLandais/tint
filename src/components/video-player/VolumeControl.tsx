@@ -192,7 +192,7 @@ export function VolumeControl({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
             transition={{ duration: 0.18, ease: 'easeOut' }}
-            className="absolute bottom-[calc(100%+0.75rem)] left-1/2 z-30 flex h-36 w-14 -translate-x-1/2 flex-col items-center rounded-xl border border-tint-chrome-border bg-tint-chrome px-2 pt-2 pb-3 shadow-[0_12px_32px_var(--tint-shadow-color)] backdrop-blur-xl"
+            className="absolute bottom-[calc(100%+0.5rem)] left-1/2 z-30 flex h-36 w-14 -translate-x-1/2 flex-col items-center rounded-xl border border-tint-chrome-border bg-tint-chrome px-2 pt-2 pb-3 shadow-[0_12px_32px_var(--tint-shadow-color)] backdrop-blur-xl"
             onMouseDown={(event) => event.stopPropagation()}
           >
             <form onSubmit={onInputSubmit} className="mb-2.5 w-full">
