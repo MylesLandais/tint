@@ -29,6 +29,8 @@ import {
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { cn } from '../../lib/utils'
+import { AudioPlayer } from '../audio-player'
+import { HighlightedCode } from '../code'
 import { Icon, Spinner, StatusIcon, STATUS_ICONS } from '../icon'
 import type { StatusName } from '../icon'
 import { safeHref, stripBidi } from './sanitize'
@@ -190,7 +192,7 @@ export function ChatCodeBlock({
         </button>
       </header>
       <pre className="overflow-x-auto p-4 text-[0.8125rem] leading-6">
-        <code>{part.code}</code>
+        <HighlightedCode code={part.code} language={part.language} />
       </pre>
     </section>
   )
@@ -289,19 +291,11 @@ export function ChatFile({
   )
 }
 
-function readableDuration(seconds: number) {
-  const total = Math.round(seconds)
-  const minutes = Math.floor(total / 60)
-  return `${minutes}:${String(total % 60).padStart(2, '0')}`
-}
-
 export function ChatAudio({
   part,
   className,
   ...props
 }: ChatRichPartProps<ChatAudioPart>) {
-  const peak = part.waveform?.length ? Math.max(...part.waveform, 1) : 1
-
   return (
     <section
       data-chat-part="audio"
@@ -315,28 +309,17 @@ export function ChatAudio({
       <div className="mb-2 flex items-center gap-2 text-xs font-medium text-tint-muted">
         <Icon icon={Music2} />
         Audio
-        {part.duration ? <span>· {readableDuration(part.duration)}</span> : null}
       </div>
-      {part.waveform?.length ? (
-        // Static amplitude bars: a shape hint for the recording, never the control
-        // surface. The native player below is the accessible interface, so this is
-        // decorative and carries no animation for reduced-motion users to opt out of.
-        <div
-          className="mb-2 flex h-8 items-center gap-px overflow-hidden"
-          aria-hidden="true"
-        >
-          {part.waveform.map((amplitude, index) => (
-            <span
-              key={index}
-              className="min-h-px flex-1 rounded-full bg-tint-accent-soft"
-              style={{ height: `${Math.max(0, Math.min(amplitude / peak, 1)) * 100}%` }}
-            />
-          ))}
-        </div>
-      ) : null}
-      <audio controls src={part.src} className="h-9 w-full" preload="metadata">
-        Your browser does not support audio playback.
-      </audio>
+      <AudioPlayer
+        src={part.src}
+        label={part.title ?? 'audio message'}
+        title={part.title}
+        artist={part.artist}
+        artwork={part.artwork}
+        artworkAlt={part.artworkAlt}
+        duration={part.duration}
+        waveform={part.waveform}
+      />
       {part.transcript ? (
         <details className="mt-2 text-sm">
           <summary className="cursor-pointer text-xs font-medium">Transcript</summary>

@@ -1,11 +1,13 @@
 import { lazy, type ComponentType } from 'react'
 import type { DocRoutePath } from './routes'
+import { AudioPlayerDoc } from './AudioPlayerDoc'
 import { ChatComponentDoc } from './chat/ChatComponentDoc'
 import { CollabDoc } from './collab/CollabDoc'
 import { IconsDoc } from './IconsDoc'
 import { TableDoc } from './table/TableDoc'
 import { ThemeDoc } from './ThemeDoc'
 import { VideoPlayerDoc } from './VideoPlayerDoc'
+import { AudioInputDoc } from './AudioInputDoc'
 
 /**
  * Path -> page component, kept apart from `routes.ts` so that the route data
@@ -29,7 +31,9 @@ const AuthDoc = lazy(() => import('./auth/AuthDoc').then((module) => ({ default:
  */
 export const DOC_PAGES = {
   'components/video-player': VideoPlayerDoc,
+  'components/audio-player': AudioPlayerDoc,
   'components/chat': ChatComponentDoc,
+  'components/audio-input': AudioInputDoc,
   'components/table': TableDoc,
   'components/editor': EditorDoc,
   'components/terminal': TerminalDoc,

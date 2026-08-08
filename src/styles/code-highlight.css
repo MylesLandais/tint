@@ -1,0 +1,72 @@
+/* Syntax highlighting.
+ *
+ * highlight.js emits ~40 `.hljs-*` classes; tint groups them onto six theme
+ * tokens rather than carrying a colour per class. Grouping keeps the token
+ * contract small (every token must be declared by all three palettes) and keeps
+ * highlighted code recognisably part of the active theme rather than a foreign
+ * editor colour scheme dropped into the page.
+ */
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-section,
+.hljs-doctag,
+.hljs-name,
+.hljs-strong {
+  color: var(--tint-code-keyword);
+}
+
+.hljs-string,
+.hljs-regexp,
+.hljs-addition,
+.hljs-attribute,
+.hljs-meta .hljs-string,
+.hljs-selector-attr,
+.hljs-selector-pseudo {
+  color: var(--tint-code-string);
+}
+
+.hljs-number,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-quote,
+.hljs-link,
+.hljs-selector-id,
+.hljs-template-variable,
+.hljs-variable {
+  color: var(--tint-code-number);
+}
+
+.hljs-comment,
+.hljs-deletion,
+.hljs-meta {
+  color: var(--tint-code-comment);
+}
+
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.function_,
+.hljs-built_in,
+.hljs-class,
+.hljs-type,
+.hljs-selector-class {
+  color: var(--tint-code-function);
+}
+
+.hljs-punctuation,
+.hljs-operator,
+.hljs-params,
+.hljs-property,
+.hljs-attr,
+.hljs-tag {
+  color: var(--tint-code-punctuation);
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: 600;
+}

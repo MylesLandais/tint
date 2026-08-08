@@ -56,6 +56,15 @@
   --tint-code-muted: light-dark(#586b72, #8c9b9d);
   --tint-code-border: light-dark(#ddd6c3, #254b55);
 
+  /* Syntax. Solarized's accent hues are shared by both schemes by design, so
+     these stay put while only the base tones flip around them. */
+  --tint-code-keyword: light-dark(#859900, #859900);
+  --tint-code-string: light-dark(#2aa198, #2aa198);
+  --tint-code-number: light-dark(#d33682, #d33682);
+  --tint-code-comment: light-dark(#93a1a1, #586e75);
+  --tint-code-function: light-dark(#268bd2, #268bd2);
+  --tint-code-punctuation: light-dark(#657b83, #839496);
+
   /* Media chrome — base03 at overlay opacity, fixed. */
   --tint-chrome: #002b36ee;
   --tint-chrome-ink: #93a1a1;

@@ -87,7 +87,7 @@ describe('output caps and formatting', () => {
       />,
     )
 
-    expect(screen.getByText('· 3:07')).toBeInTheDocument()
+    expect(screen.getByText('-3:07')).toBeInTheDocument()
   })
 
   it('strips bidi overrides from a filename and its remove label', () => {

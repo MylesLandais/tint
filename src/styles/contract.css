@@ -16,7 +16,7 @@
  *
  *   [data-theme='mine'] {
  *     --tint-ink: light-dark(#222, #eee);
- *     ... all 31 tokens ...
+ *     ... all 37 tokens ...
  *   }
  *
  * Every token is required. Components reference them with no fallback, so an
@@ -66,6 +66,12 @@
   --color-tint-code-ink: var(--tint-code-ink);
   --color-tint-code-muted: var(--tint-code-muted);
   --color-tint-code-border: var(--tint-code-border);
+  --color-tint-code-keyword: var(--tint-code-keyword);
+  --color-tint-code-string: var(--tint-code-string);
+  --color-tint-code-number: var(--tint-code-number);
+  --color-tint-code-comment: var(--tint-code-comment);
+  --color-tint-code-function: var(--tint-code-function);
+  --color-tint-code-punctuation: var(--tint-code-punctuation);
 
   /* Media chrome. Deliberately NOT paired with light-dark(): these overlay video
      and must stay legible over bright and dark footage alike, so they are tinted

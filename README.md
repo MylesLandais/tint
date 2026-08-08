@@ -1,8 +1,9 @@
 # tint
 
 Tint is a React component library for media, rich chat, drafting, and interactive
-workbench interfaces. It includes **VideoPlayer**, **SettingsPopout**, controlled
-**Chat** components, a WYSIWYG **Editor**, and a runtime-agnostic **TerminalConsole**.
+workbench interfaces. It includes **VideoPlayer**, **AudioPlayer**, controlled
+**AudioInput** and **Chat** components, a WYSIWYG **Editor**, and a runtime-agnostic
+**TerminalConsole**.
 
 The documentation site contains an interactive, client-only Chat demo alongside prop tables for
 each component. The research that informed Chat's controlled architecture, accessibility
@@ -16,17 +17,19 @@ npm install
 npm run dev
 ```
 
-Open the docs site to preview the components and copy usage examples.
-
-Open `#/components/chat` for the mock chat demo.
-
 The dev server owns `127.0.0.1:45173` and refuses to auto-select another port.
 Local Traefik exposes it at the repo-specific origin `http://tint.localhost`.
-
-Open `http://tint.localhost/#/components/editor` for the rich-text buffer and
-`http://tint.localhost/#/components/terminal` for the mock PTY-backed terminal demo.
 `http://127.0.0.1:45173` is the direct-upstream diagnostic URL, not the normal
 browser entrypoint.
+
+Open `http://tint.localhost/` for the component index — every documented component
+is linked from there, including `#/components/editor` (the rich-text buffer),
+`#/components/terminal` (the mock PTY-backed terminal), `#/components/auth`, and
+`#/components/chat`, `#/components/audio-player`, and `#/components/audio-input`.
+
+Doc pages are declared once in `src/docs/routes.ts`; the router, the page title, the
+breadcrumb, and the index cards all read from that list, so a new entry appears
+everywhere at once.
 
 Demo video: [Big Buck Bunny](https://test-videos.co.uk/bigbuckbunny/mp4-h264) (MP4 H.264) stored at `public/videos/big-buck-bunny.mp4`.
 
@@ -45,6 +48,37 @@ Chat components can be imported from the package root or the focused subpath:
 ```tsx
 import { ChatComposer, ChatConversation, ChatMessageList } from 'tint/chat'
 ```
+
+Audio playback and microphone capture are separate focused packages. `AudioInput` captures
+the stream and forwards it to a host-supplied `AudioTranscriber`; it does not choose a speech
+service or send audio anywhere by itself:
+
+```tsx
+import { AudioInput, type AudioTranscriber } from 'tint/audio-input'
+import { AudioPlayer } from 'tint/audio-player'
+
+<AudioInput
+  transcriber={transcriber satisfies AudioTranscriber}
+  value={draft}
+  onValueChange={setDraft}
+  onCapture={(blob, meta) => saveVoiceNote(blob, meta.duration)}
+/>
+<AudioPlayer
+  src="/recordings/briefing.webm"
+  label="Project briefing"
+  title="Project briefing"
+  artist="Operations"
+  onPrevious={() => queue.previous()}
+  onNext={() => queue.next()}
+/>
+```
+
+`AudioPlayer` scales to the width of its containing slot: full rails retain queue and volume
+controls, while narrow chat slots reduce to artwork, playback, metadata, and seek. The optional
+offset shadow is enabled with `shadow`; it is disabled by default for embedded rows.
+
+The Web Speech adapter on the docs page is only a demo. Browser support is limited and a
+browser’s default recognition service may process captured audio remotely.
 
 ## Editor and terminal
 
@@ -209,7 +243,7 @@ before any stylesheet or module. It is what keeps a dark-mode reader from seeing
 
 ### Writing a theme
 
-A theme declares all 31 tokens under its own selector. Every token is required — components
+A theme declares all 37 tokens under its own selector. Every token is required — components
 reference them with no fallback, so an omitted token renders an invisible element rather than
 silently reverting to a light default. `src/styles/themes.test.ts` enforces this across all
 shipped themes.
@@ -218,7 +252,7 @@ shipped themes.
 [data-theme='nord'] {
   --tint-ink: light-dark(#2e3440, #eceff4);
   --tint-panel: light-dark(#ffffff, #3b4252);
-  /* …the remaining 29… */
+  /* …the remaining 35… */
 }
 ```
 
@@ -227,7 +261,7 @@ shipped themes.
 | Surface & text | `bg` `surface` `panel` `ink` `muted` `border` `border-strong` |
 | Accent | `accent` `accent-hover` `accent-soft` `on-accent` |
 | Status | `danger` `warning` `success` `info`, each × `{base}` `-soft` `-ink` |
-| Code | `code` `code-ink` `code-muted` `code-border` |
+| Code | `code` `code-ink` `code-muted` `code-border` plus `code-keyword` `code-string` `code-number` `code-comment` `code-function` `code-punctuation` |
 | Media chrome | `chrome` `chrome-ink` `chrome-border` |
 | Elevation | `shadow-color` |
 
@@ -281,6 +315,9 @@ Swap to `<Icon icon={Sun} size="sm" />` to stay aligned with the rest of the lib
 ```
 src/
   components/video-player/     # reusable VideoPlayer
+  components/media/            # shared scrubber, volume control, and time formatting
+  components/audio-player/     # compact accessible audio player
+  components/audio-input/      # controlled microphone/transcriber seam
   components/settings-popout/  # searchable settings popout
   components/chat/             # controlled chat primitives and rich parts
   components/table/            # controlled DataTable and its pure behavior core
@@ -292,9 +329,12 @@ src/
   components/panel/            # controlled disclosure shell shared by workbench surfaces
   components/editor/           # controlled Tiptap rich-text editor
   components/terminal/         # xterm emulator with a consumer-owned runtime adapter
+  components/auth/             # controlled sign-in form and OAuth links
+  auth/client/                 # transport-agnostic session client
   styles/contract.css          # the annotated token contract
   styles/themes/               # tint, solarized, gruvbox
   docs/                        # component docs and demos
+  docs/routes.ts               # the docs route registry — add a page here first
   index.ts                     # library exports
 public/videos/                 # demo media assets
 ```

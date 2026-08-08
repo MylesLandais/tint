@@ -1,5 +1,16 @@
 export { VideoPlayer } from './components/video-player'
 export type { VideoPlayerProps } from './components/video-player'
+export { formatTime, Slider, VolumeControl } from './components/media'
+export type { SliderProps, VolumeControlProps } from './components/media'
+export { AudioPlayer } from './components/audio-player'
+export type { AudioPlayerProps } from './components/audio-player'
+export { AudioInput } from './components/audio-input'
+export type {
+  AudioCaptureMeta,
+  AudioInputProps,
+  AudioTranscriber,
+  TranscriptChunk,
+} from './components/audio-input'
 
 export { SettingsPopout } from './components/settings-popout'
 export type {

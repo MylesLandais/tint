@@ -141,7 +141,10 @@ export type ChatTextPart = ChatPartBase & {
 export type ChatCodePart = ChatPartBase & {
   type: 'code'
   code: string
-  /** Shown in the header when `filename` is absent. Not used for highlighting. */
+  /**
+   * Selects the syntax highlighter, and shown in the header when `filename` is
+   * absent. An unrecognised value renders as plain text rather than failing.
+   */
   language?: string
   filename?: string
 }
@@ -163,6 +166,14 @@ export type ChatFilePart = ChatPartBase & {
 export type ChatAudioPart = ChatPartBase & {
   type: 'audio'
   src: string
+  /** Optional visible track or recording title. */
+  title?: string
+  /** Optional artist, speaker, or source. */
+  artist?: string
+  /** Optional square artwork URL. */
+  artwork?: string
+  /** Keep empty when the artwork only repeats the track metadata. */
+  artworkAlt?: string
   /** Seconds. Rendered as `m:ss`. */
   duration?: number
   /** Text fallback, shown in a disclosure below the player. */
@@ -417,6 +428,8 @@ export type ChatComposerProps = Omit<FormHTMLAttributes<HTMLFormElement>, 'onSub
   metadata?: Readonly<Record<string, unknown>>
   /** Access to the textarea, for focusing it after a send. */
   inputRef?: Ref<HTMLTextAreaElement>
+  /** Extra controls rendered after attachments in the footer's left cluster. */
+  actions?: ReactNode
   onValueChange: (value: string) => void
   onSubmit: (payload: ChatSubmitPayload) => void
   /** Supplying this swaps the send button for Stop while streaming. */

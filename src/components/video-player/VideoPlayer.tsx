@@ -4,8 +4,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { cn } from '../../lib/utils'
 import { Icon } from '../icon'
 import { SettingsPopout, type SettingsPopoutItem } from '../settings-popout'
-import { Slider } from './Slider'
-import { VolumeControl } from './VolumeControl'
+import { formatTime, Slider, VolumeControl } from '../media'
 
 const PLAYBACK_SPEEDS = [0.5, 1, 1.5, 2] as const
 
@@ -23,13 +22,6 @@ export type VideoPlayerProps = {
   /** Called when playback pauses */
   onPause?: () => void
 } & Omit<VideoHTMLAttributes<HTMLVideoElement>, 'src' | 'poster' | 'className' | 'controls'>
-
-function formatTime(seconds: number) {
-  if (!Number.isFinite(seconds) || seconds < 0) return '0:00'
-  const minutes = Math.floor(seconds / 60)
-  const remainingSeconds = Math.floor(seconds % 60)
-  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
-}
 
 export function VideoPlayer({
   src,
@@ -215,7 +207,7 @@ export function VideoPlayer({
               <Slider
                 value={progress}
                 onChange={handleSeek}
-                className="flex-1"
+                className="flex-1 text-tint-chrome-ink"
                 aria-label="Seek"
               />
 

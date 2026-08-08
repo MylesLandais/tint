@@ -45,6 +45,16 @@ const ROUTE_DATA = [
     ],
   },
   {
+    path: 'components/audio-player',
+    label: 'Audio Player',
+    blurb: 'Container-responsive mini player with artwork, transport, seek, and volume controls.',
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      { id: 'usage', label: 'Usage' },
+      { id: 'api', label: 'API' },
+    ],
+  },
+  {
     path: 'components/chat',
     label: 'Chat',
     blurb: 'Message list, composer, and streaming-friendly primitives for conversational UI.',
@@ -53,6 +63,15 @@ const ROUTE_DATA = [
       { id: 'features', label: 'Features' },
       { id: 'usage', label: 'Usage' },
       { id: 'api', label: 'API' },
+    ],
+  },
+  {
+    path: 'components/audio-input',
+    label: 'Audio Input',
+    blurb: 'Controlled microphone input with a host-supplied transcriber seam.',
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      ...USAGE_AND_API,
     ],
   },
   {

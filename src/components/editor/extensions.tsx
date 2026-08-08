@@ -5,9 +5,11 @@ import {
   type Extensions,
   type Range,
 } from '@tiptap/core'
+import { CodeBlockLowlight } from '@tiptap/extension-code-block-lowlight'
 import { Placeholder } from '@tiptap/extensions'
 import { ReactRenderer } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import { lowlight } from '../code'
 import Suggestion, { type SuggestionProps } from '@tiptap/suggestion'
 import {
   Braces,
@@ -304,7 +306,12 @@ export function createEditorSchemaExtensions(
               autolink: true,
               defaultProtocol: 'https',
             },
+            // Replaced below by the highlighting variant. It registers under the
+            // same `codeBlock` name, so the duplicate-name guard permits exactly
+            // one of the two — and every `codeBlock` call site keeps working.
+            codeBlock: false,
           }),
+          CodeBlockLowlight.configure({ lowlight, defaultLanguage: null }),
         ]
       : []),
     Placeholder.configure({ placeholder, includeChildren: true }),

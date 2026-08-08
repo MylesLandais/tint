@@ -2,6 +2,7 @@
 @import '@xterm/xterm/css/xterm.css';
 @import './styles/contract.css';
 @import './styles/themes/tint.css';
+@import './styles/code-highlight.css';
 
 @theme {
   --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
@@ -9,6 +10,72 @@
 }
 
 @layer components {
+  [data-tint-audio-player] {
+    container-type: inline-size;
+  }
+
+  [data-tint-audio-player] [data-audio-surface] {
+    background: color-mix(in srgb, var(--tint-panel) 90%, transparent);
+  }
+
+  [data-tint-audio-player][data-shadow='offset'] [data-audio-surface] {
+    box-shadow: 6px 6px 0
+      color-mix(in srgb, var(--tint-ink) 20%, transparent);
+  }
+
+  @container (max-width: 34rem) {
+    /* These scoped declarations intentionally outrank Tailwind utilities on
+       the component's descendants; the utilities live in a later layer. */
+    [data-tint-audio-player] [data-audio-surface] {
+      gap: 0.875rem !important;
+      padding-inline: 0.75rem !important;
+    }
+
+    [data-tint-audio-player] [data-audio-previous],
+    [data-tint-audio-player] [data-audio-next],
+    [data-tint-audio-player] [data-audio-divider],
+    [data-tint-audio-player] [data-audio-volume] {
+      display: none !important;
+    }
+  }
+
+  @container (max-width: 25rem) {
+    [data-tint-audio-player] [data-audio-surface] {
+      min-height: 4.5rem !important;
+      gap: 0.625rem !important;
+      padding: 0.625rem !important;
+    }
+
+    [data-tint-audio-player] [data-audio-artwork] {
+      width: 3rem !important;
+      height: 3rem !important;
+    }
+
+    [data-tint-audio-player] [data-audio-transport] {
+      gap: 0 !important;
+    }
+
+    [data-tint-audio-player] [data-audio-artist],
+    [data-tint-audio-player] [data-audio-time='remaining'] {
+      display: none !important;
+    }
+
+    [data-tint-audio-player] [data-audio-meta] {
+      display: block !important;
+    }
+
+    [data-tint-audio-player][data-shadow='offset'] [data-audio-surface] {
+      box-shadow: 4px 4px 0
+        color-mix(in srgb, var(--tint-ink) 20%, transparent);
+    }
+  }
+
+  @container (max-width: 19rem) {
+    [data-tint-audio-player] [data-audio-artwork] {
+      display: none !important;
+    }
+  }
+
   .tint-editor-content .tiptap {
     min-height: 20rem;
     padding: 2rem clamp(1.25rem, 5vw, 4rem) 4rem;

@@ -16,6 +16,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import type { ReactNode } from 'react'
+import { CODE_LANGUAGES } from '../code'
 import { Icon } from '../icon'
 import { cn } from '../../lib/utils'
 
@@ -80,6 +81,7 @@ export function EditorToolbar({
       ordered: current.isActive('orderedList'),
       quote: current.isActive('blockquote'),
       codeBlock: current.isActive('codeBlock'),
+      codeLanguage: (current.getAttributes('codeBlock').language as string | null) ?? 'plaintext',
       canUndo: hasHistory && current.can().undo(),
       canRedo: hasHistory && current.can().redo(),
     }),
@@ -174,6 +176,34 @@ export function EditorToolbar({
           pressed={state.codeBlock}
           onPress={() => editor.chain().focus().toggleCodeBlock().run()}
         />
+      ) : null}
+      {/* Only meaningful inside a code block, so it appears with the caret rather
+          than sitting permanently disabled. */}
+      {extensions.has('codeBlock') && state.codeBlock ? (
+        <>
+          <span aria-hidden="true" className="mx-1 h-5 w-px bg-tint-border" />
+          <select
+            aria-label="Code language"
+            value={state.codeLanguage}
+            onChange={(event) => {
+              const language = event.target.value
+              editor
+                .chain()
+                .focus()
+                .updateAttributes('codeBlock', {
+                  language: language === 'plaintext' ? null : language,
+                })
+                .run()
+            }}
+            className="h-8 rounded-md border border-tint-border bg-tint-panel px-2 text-xs text-tint-ink outline-none focus-visible:ring-2 focus-visible:ring-tint-accent"
+          >
+            {CODE_LANGUAGES.map((language) => (
+              <option key={language.value} value={language.value}>
+                {language.label}
+              </option>
+            ))}
+          </select>
+        </>
       ) : null}
       {end ? <div className="ml-auto flex items-center">{end}</div> : null}
     </div>

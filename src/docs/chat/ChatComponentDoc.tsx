@@ -248,7 +248,7 @@ const audioPartProps = [
     type: 'ChatAudioPart',
     required: true,
     description:
-      'A native audio player, an optional decorative waveform, and an optional transcript disclosure.',
+      'A responsive AudioPlayer with optional track metadata, artwork, waveform, and transcript disclosure.',
   },
 ]
 

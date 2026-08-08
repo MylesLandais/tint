@@ -43,6 +43,15 @@
   --tint-code-muted: light-dark(#94a3b8, #8b93a3);
   --tint-code-border: light-dark(#334155, #262c38);
 
+  /* Syntax. The code surface above is dark in both schemes, so these barely move
+     between them — six hues carry every highlight.js class. */
+  --tint-code-keyword: light-dark(#c792ea, #cba6f7);
+  --tint-code-string: light-dark(#7ee787, #a6e3a1);
+  --tint-code-number: light-dark(#f78c6c, #fab387);
+  --tint-code-comment: light-dark(#7d8799, #6c7689);
+  --tint-code-function: light-dark(#82aaff, #89b4fa);
+  --tint-code-punctuation: light-dark(#a6accd, #9aa2bd);
+
   /* Media chrome — fixed, never flips. */
   --tint-chrome: #14161ccc;
   --tint-chrome-ink: #ffffff;

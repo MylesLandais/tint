@@ -52,6 +52,15 @@
   --tint-code-muted: light-dark(#7a6d62, #a89984);
   --tint-code-border: light-dark(#d5c4a1, #3c3836);
 
+  /* Syntax. Gruvbox ships a faded set for light backgrounds and a bright set for
+     dark, so unlike the other themes every pair here genuinely differs. */
+  --tint-code-keyword: light-dark(#9d0006, #fb4934);
+  --tint-code-string: light-dark(#79740e, #b8bb26);
+  --tint-code-number: light-dark(#8f3f71, #d3869b);
+  --tint-code-comment: light-dark(#928374, #928374);
+  --tint-code-function: light-dark(#427b58, #8ec07c);
+  --tint-code-punctuation: light-dark(#7c6f64, #a89984);
+
   /* Media chrome — bg0_h at overlay opacity, fixed. */
   --tint-chrome: #1d2021ee;
   --tint-chrome-ink: #ebdbb2;

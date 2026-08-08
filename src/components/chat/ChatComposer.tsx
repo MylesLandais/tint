@@ -139,6 +139,7 @@ export function ChatComposer({
   accept,
   multiple = true,
   metadata,
+  actions,
   inputRef: forwardedInputRef,
   onValueChange,
   onSubmit,
@@ -326,6 +327,7 @@ export function ChatComposer({
                 </ChatActionButton>
               </>
             ) : null}
+            {actions}
             <span className="hidden text-[0.6875rem] text-tint-muted sm:inline">
               {dragging ? 'Drop files to attach' : 'Shift + Enter for a new line'}
             </span>

@@ -3,13 +3,13 @@ import { Clock3 } from 'lucide-react'
 import { useMemo, useRef, useState } from 'react'
 import {
   Editor,
-  editorDocumentToHTML,
   type EditorDocument,
   type EditorSlashCommand,
 } from '../../components/editor'
 import { CodeBlock } from '../components/CodeBlock'
 import { DocsNav } from '../components/DocsNav'
 import { PropsTable } from '../components/PropsTable'
+import { EditorOutput } from './EditorOutput'
 
 const INITIAL_DOCUMENT: EditorDocument = {
   type: 'doc',
@@ -114,7 +114,7 @@ function countWords(document: EditorDocument) {
 export function EditorDoc() {
   const [document, setDocument] = useState<EditorDocument>(INITIAL_DOCUMENT)
   const [expanded, setExpanded] = useState(true)
-  const [showJson, setShowJson] = useState(false)
+  const [showOutput, setShowOutput] = useState(false)
   const [contentError, setContentError] = useState<string>()
   const editorRef = useRef<TiptapEditor | null>(null)
 
@@ -169,20 +169,15 @@ export function EditorDoc() {
             toolbarEnd={
               <button
                 type="button"
-                onClick={() => setShowJson((current) => !current)}
+                onClick={() => setShowOutput((current) => !current)}
                 className="rounded-md px-2 py-1 text-xs text-tint-muted hover:bg-tint-accent-soft hover:text-tint-ink"
               >
-                {showJson ? 'Hide JSON' : 'Show JSON'}
+                {showOutput ? 'Hide output' : 'Show output'}
               </button>
             }
           />
           {contentError ? <p role="alert" className="text-sm text-tint-danger">{contentError}</p> : null}
-          {showJson ? (
-            <div className="mt-4 grid gap-4 lg:grid-cols-2">
-              <CodeBlock code={JSON.stringify(document, null, 2)} language="json" />
-              <CodeBlock code={editorDocumentToHTML(document)} language="html" />
-            </div>
-          ) : null}
+          {showOutput ? <EditorOutput document={document} /> : null}
         </section>
 
         <section id="usage" className="mb-14 max-w-3xl scroll-mt-24">

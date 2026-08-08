@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Check, Copy } from 'lucide-react'
 import { cn } from '../../lib/utils'
+import { HighlightedCode } from '../../components/code'
 import { Icon } from '../../components/icon'
 
 type CodeBlockProps = {
@@ -37,7 +38,7 @@ export function CodeBlock({ code, language = 'tsx', className }: CodeBlockProps)
         </button>
       </div>
       <pre className="overflow-x-auto p-4 text-[13px] leading-6">
-        <code>{code}</code>
+        <HighlightedCode code={code} language={language} />
       </pre>
     </div>
   )

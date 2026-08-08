@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react'
+import { useEffect, useId, useRef, useState, type FormEvent, type KeyboardEvent } from 'react'
 import { Volume1, Volume2, VolumeX } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { cn } from '../../lib/utils'
@@ -11,6 +11,7 @@ export type VolumeControlProps = {
   onVolumeChange: (value: number) => void
   onToggleMute: () => void
   onOpenChange?: (open: boolean) => void
+  tone?: 'chrome' | 'surface'
   className?: string
 }
 
@@ -25,8 +26,10 @@ export function VolumeControl({
   onVolumeChange,
   onToggleMute,
   onOpenChange,
+  tone = 'chrome',
   className,
 }: VolumeControlProps) {
+  const drawerId = useId()
   const rootRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const closeTimerRef = useRef<number | null>(null)
@@ -38,6 +41,7 @@ export function VolumeControl({
   const [inputValue, setInputValue] = useState('100')
   const displayVolume = isMuted ? 0 : volume * 100
   const VolumeIcon = isMuted || volume === 0 ? VolumeX : volume > 0.5 ? Volume2 : Volume1
+  const isSurface = tone === 'surface'
 
   useEffect(() => {
     onOpenChangeRef.current = onOpenChange
@@ -174,10 +178,13 @@ export function VolumeControl({
         onClick={onToggleMute}
         aria-label={isMuted ? 'Unmute' : 'Mute'}
         aria-expanded={open}
-        aria-controls="tint-volume-drawer"
+        aria-controls={drawerId}
         className={cn(
-          'inline-flex size-8 items-center justify-center rounded-md text-tint-chrome-ink transition-colors hover:bg-tint-chrome-ink/12',
-          open && 'bg-tint-chrome-ink/12',
+          'inline-flex size-8 items-center justify-center rounded-md transition-colors',
+          isSurface
+            ? 'text-tint-ink hover:bg-tint-surface'
+            : 'text-tint-chrome-ink hover:bg-tint-chrome-ink/12',
+          open && (isSurface ? 'bg-tint-surface' : 'bg-tint-chrome-ink/12'),
         )}
       >
         <Icon icon={VolumeIcon} />
@@ -186,14 +193,19 @@ export function VolumeControl({
       <AnimatePresence>
         {open ? (
           <motion.div
-            id="tint-volume-drawer"
+            id={drawerId}
             role="dialog"
             aria-label="Volume"
             initial={{ opacity: 0, y: 8, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
             transition={{ duration: 0.18, ease: 'easeOut' }}
-            className="absolute bottom-[calc(100%+0.5rem)] left-1/2 z-30 flex h-36 w-14 -translate-x-1/2 flex-col items-center rounded-xl border border-tint-chrome-border bg-tint-chrome px-2 pt-2 pb-3 shadow-[0_12px_32px_var(--tint-shadow-color)] backdrop-blur-xl"
+            className={cn(
+              'absolute bottom-[calc(100%+0.5rem)] left-1/2 z-30 flex h-36 w-14 -translate-x-1/2 flex-col items-center rounded-xl border px-2 pt-2 pb-3 shadow-[0_12px_32px_var(--tint-shadow-color)] backdrop-blur-xl',
+              isSurface
+                ? 'border-tint-border bg-tint-panel text-tint-ink'
+                : 'border-tint-chrome-border bg-tint-chrome text-tint-chrome-ink',
+            )}
             onMouseDown={(event) => event.stopPropagation()}
           >
             <form onSubmit={onInputSubmit} className="mb-2.5 w-full">
@@ -215,7 +227,12 @@ export function VolumeControl({
                   setInputValue(next)
                 }}
                 onKeyDown={onInputKeyDown}
-                className="w-full border-0 border-b border-tint-chrome-ink/35 bg-transparent px-0.5 py-0.5 text-center text-[11px] font-medium text-tint-chrome-ink tabular-nums outline-none placeholder:text-tint-chrome-ink/35 focus:border-tint-chrome-ink/70"
+                className={cn(
+                  'w-full border-0 border-b bg-transparent px-0.5 py-0.5 text-center text-[11px] font-medium tabular-nums outline-none',
+                  isSurface
+                    ? 'border-tint-ink/35 text-tint-ink placeholder:text-tint-muted focus:border-tint-accent'
+                    : 'border-tint-chrome-ink/35 text-tint-chrome-ink placeholder:text-tint-chrome-ink/35 focus:border-tint-chrome-ink/70',
+                )}
               />
             </form>
             <div className="flex min-h-0 w-full flex-1 justify-center">
@@ -227,7 +244,7 @@ export function VolumeControl({
                   onVolumeChange(value)
                 }}
                 aria-label="Volume"
-                className="h-full"
+                className={cn('h-full', isSurface ? 'text-tint-ink' : 'text-tint-chrome-ink')}
               />
             </div>
           </motion.div>
