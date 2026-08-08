@@ -1,6 +1,7 @@
 import { ChevronLeft, ChevronRight, Columns3, Eye, EyeOff } from 'lucide-react'
 import { useEffect, useId, useRef, useState } from 'react'
 import { cn } from '@/lib/utils'
+import { Icon } from '@/components/icon'
 import type {
   TableColumnsMenuProps,
   TablePagerProps,
@@ -91,7 +92,7 @@ export function TableColumnsMenu<TRow>({
         aria-controls={open ? menuId : undefined}
         className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-tint-border bg-tint-panel px-2.5 text-xs font-medium text-tint-ink transition hover:bg-tint-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tint-accent"
       >
-        <Columns3 className="size-3.5" aria-hidden="true" />
+        <Icon icon={Columns3} size="sm" />
         {label}
         {hiddenSet.size ? (
           <span className="rounded-full bg-tint-accent-soft px-1.5 text-[0.6875rem] text-tint-accent">
@@ -121,9 +122,9 @@ export function TableColumnsMenu<TRow>({
                 className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-xs text-tint-ink transition hover:bg-tint-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tint-accent disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isHidden ? (
-                  <EyeOff className="size-3.5 text-tint-muted" aria-hidden="true" />
+                  <Icon icon={EyeOff} size="sm" className="text-tint-muted" />
                 ) : (
-                  <Eye className="size-3.5 text-tint-accent" aria-hidden="true" />
+                  <Icon icon={Eye} size="sm" className="text-tint-accent" />
                 )}
                 {columnName(column)}
               </button>
@@ -175,7 +176,7 @@ export function TablePager({
           aria-label="Previous page"
           className="inline-flex size-8 items-center justify-center rounded-lg border border-tint-border bg-tint-panel transition hover:bg-tint-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tint-accent disabled:cursor-not-allowed disabled:opacity-40"
         >
-          <ChevronLeft className="size-4" aria-hidden="true" />
+          <Icon icon={ChevronLeft} />
         </button>
         <span className="px-1 tabular-nums">
           {clamped + 1} / {pageCount}
@@ -187,7 +188,7 @@ export function TablePager({
           aria-label="Next page"
           className="inline-flex size-8 items-center justify-center rounded-lg border border-tint-border bg-tint-panel transition hover:bg-tint-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tint-accent disabled:cursor-not-allowed disabled:opacity-40"
         >
-          <ChevronRight className="size-4" aria-hidden="true" />
+          <Icon icon={ChevronRight} />
         </button>
       </span>
     </nav>

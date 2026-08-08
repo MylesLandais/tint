@@ -1,11 +1,14 @@
 import { LayoutGrid, Rows3, Search } from 'lucide-react'
 import { useMemo, useState } from 'react'
+import { Icon } from '@/components/icon'
 import {
   DataMasonry,
   DataTable,
   InfiniteRows,
   TableToolbar,
+  toColumnFilters,
   useDataTable,
+  type DataFilterModel,
   type MasonryDensity,
   type TableColumn,
 } from '@/components/table'
@@ -103,17 +106,33 @@ export function MasonryCollection() {
   const [query, setQuery] = useState('')
   const [pageSize, setPageSize] = useState(PAGE_STEP)
 
+  const filterModel = useMemo<DataFilterModel>(
+    () => ({
+      items: query
+        ? [
+            {
+              id: 'name-contains',
+              field: 'name',
+              operator: 'contains',
+              value: query,
+            },
+          ]
+        : [],
+    }),
+    [query],
+  )
+
   const table = useDataTable({
     data: infrasoundArtists,
     columns,
     rowId: 'id',
     state: useMemo(
       () => ({
-        columnFilters: query ? [{ id: 'name', value: query }] : [],
+        columnFilters: toColumnFilters(filterModel),
         pagination: { pageIndex: 0, pageSize },
         sorting: [{ id: 'name', desc: false }],
       }),
-      [query, pageSize],
+      [filterModel, pageSize],
     ),
   })
 
@@ -132,9 +151,9 @@ export function MasonryCollection() {
       <TableToolbar>
         <label className="relative min-w-52 flex-1">
           <span className="sr-only">Search artists</span>
-          <Search
-            className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-tint-muted"
-            aria-hidden="true"
+          <Icon
+            icon={Search}
+            className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-tint-muted"
           />
           <input
             type="search"
@@ -152,7 +171,7 @@ export function MasonryCollection() {
           className="inline-flex items-center gap-0.5 rounded-lg border border-tint-border bg-tint-surface p-0.5"
         >
           {([['masonry', 'Masonry', LayoutGrid], ['grid', 'Grid', Rows3]] as const).map(
-            ([value, label, Icon]) => (
+            ([value, label, layoutIcon]) => (
               <button
                 key={value}
                 type="button"
@@ -165,7 +184,7 @@ export function MasonryCollection() {
                     : 'inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs font-medium text-tint-muted hover:text-tint-ink'
                 }
               >
-                <Icon className="size-3.5" aria-hidden="true" />
+                <Icon icon={layoutIcon} size="sm" />
                 {label}
               </button>
             ),

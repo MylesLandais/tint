@@ -1,56 +1,51 @@
-import { useEffect, useState } from 'react'
-import { ChatDocs } from './chat/ChatDocs'
-import { ChatComponentDoc } from './chat/ChatComponentDoc'
-import { VideoPlayerDoc } from './VideoPlayerDoc'
-import { TableDoc } from './table/TableDoc'
+import { Suspense, useEffect, useState } from 'react'
+import { HomeDoc } from './HomeDoc'
+import { DOC_PAGES } from './pages'
+import { findRoute } from './routes'
+
+function LoadingDoc() {
+  return (
+    <main className="grid min-h-screen place-items-center text-sm text-tint-muted">
+      Loading component…
+    </main>
+  )
+}
 
 function readRoute() {
   return window.location.hash.startsWith('#/') ? window.location.hash.slice(2) : ''
 }
 
-/** `music-library` was the old name for this page; keep the link working. */
-function isTableRoute(route: string) {
-  return route === 'components/table' || route === 'components/music-library'
-}
-
 export function DocsApp() {
-  const [route, setRoute] = useState(readRoute)
+  const [path, setPath] = useState(readRoute)
 
   useEffect(() => {
     const onHashChange = () => {
-      setRoute(readRoute())
-      if (window.location.hash.startsWith('#/')) {
-        window.scrollTo({ top: 0, behavior: 'auto' })
-      }
+      const hash = window.location.hash
+      // A stray in-page anchor is not a route change; leave the reader where they are.
+      if (hash !== '' && hash !== '#' && !hash.startsWith('#/')) return
+      setPath(readRoute())
+      window.scrollTo({ top: 0, behavior: 'auto' })
     }
 
     window.addEventListener('hashchange', onHashChange)
     return () => window.removeEventListener('hashchange', onHashChange)
   }, [])
 
+  const route = findRoute(path)
+
   useEffect(() => {
-    document.title =
-      route === 'components/chat'
-        ? 'Chat — Tint'
-        : isTableRoute(route)
-          ? 'Table — Tint'
-          : route.startsWith('chat')
-            ? 'Chat research — Tint'
-            : 'Video Player — Tint'
+    document.title = route ? `${route.label} — Tint` : 'Tint'
   }, [route])
 
-  if (route === 'components/chat') {
-    return <ChatComponentDoc />
-  }
+  // Unknown paths land on the component index rather than an arbitrary page.
+  if (!route) return <HomeDoc />
 
-  if (isTableRoute(route)) {
-    return <TableDoc />
-  }
+  const Page = DOC_PAGES[route.path]
+  if (!Page) return <HomeDoc />
 
-  if (route.startsWith('chat')) {
-    const [, slug] = route.split('/')
-    return <ChatDocs slug={slug} />
-  }
-
-  return <VideoPlayerDoc />
+  return (
+    <Suspense fallback={<LoadingDoc />}>
+      <Page />
+    </Suspense>
+  )
 }

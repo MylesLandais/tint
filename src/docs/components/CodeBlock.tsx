@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Check, Copy } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { Icon } from '@/components/icon'
 
 type CodeBlockProps = {
   code: string
@@ -31,7 +32,7 @@ export function CodeBlock({ code, language = 'tsx', className }: CodeBlockProps)
           onClick={handleCopy}
           className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-tint-code-ink transition-colors hover:bg-tint-code-ink/10"
         >
-          {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
+          {copied ? <Icon icon={Check} size="sm" /> : <Icon icon={Copy} size="sm" />}
           {copied ? 'Copied' : 'Copy'}
         </button>
       </div>

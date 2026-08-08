@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState, type VideoHTMLAttributes } from '
 import { Settings } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { cn } from '@/lib/utils'
+import { Icon } from '@/components/icon'
 import { SettingsPopout, type SettingsPopoutItem } from '@/components/settings-popout'
 import { Slider } from './Slider'
 import { VolumeControl } from './VolumeControl'
@@ -251,7 +252,7 @@ export function VideoPlayer({
                       settingsOpen && 'bg-tint-chrome-ink/12',
                     )}
                   >
-                    <Settings className="size-4" />
+                    <Icon icon={Settings} />
                   </motion.button>
 
                   <SettingsPopout

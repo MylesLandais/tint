@@ -19,7 +19,12 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  // themes.test.ts reads the theme stylesheets off disk, so it is a Node-side
-  // test and belongs here rather than in the browser project.
-  "include": ["vite.config.ts", "vitest.config.ts", "src/styles/themes.test.ts"]
+  // themes.test.ts and no-raw-lucide-imports.test.ts read source files off disk,
+  // so they are Node-side tests and belong here rather than in the browser project.
+  "include": [
+    "vite.config.ts",
+    "vitest.config.ts",
+    "src/styles/themes.test.ts",
+    "src/components/icon/no-raw-lucide-imports.test.ts"
+  ]
 }

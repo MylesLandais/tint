@@ -1,11 +1,13 @@
 # tint
 
-Tint is a React component library for media and rich chat interfaces. It includes
-**VideoPlayer**, **SettingsPopout**, and a controlled **Chat** component family.
+Tint is a React component library for media, rich chat, drafting, and interactive
+workbench interfaces. It includes **VideoPlayer**, **SettingsPopout**, controlled
+**Chat** components, a WYSIWYG **Editor**, and a runtime-agnostic **TerminalConsole**.
 
-The documentation site contains an interactive, client-only Chat demo plus the source-backed
-research that informed its controlled React architecture, accessibility contract, and exported
-TypeScript API.
+The documentation site contains an interactive, client-only Chat demo alongside prop tables for
+each component. The research that informed Chat's controlled architecture, accessibility
+contract, and exported TypeScript API lives in the author's personal notes rather than this
+repo.
 
 ## Quick start
 
@@ -16,8 +18,15 @@ npm run dev
 
 Open the docs site to preview the components and copy usage examples.
 
-Open `#/components/chat` for the mock chat demo or `#/chat/patterns` for the supporting
-research.
+Open `#/components/chat` for the mock chat demo.
+
+The dev server owns `127.0.0.1:45173` and refuses to auto-select another port.
+Local Traefik exposes it at the repo-specific origin `http://tint.localhost`.
+
+Open `http://tint.localhost/#/components/editor` for the rich-text buffer and
+`http://tint.localhost/#/components/terminal` for the mock PTY-backed terminal demo.
+`http://127.0.0.1:45173` is the direct-upstream diagnostic URL, not the normal
+browser entrypoint.
 
 Demo video: [Big Buck Bunny](https://test-videos.co.uk/bigbuckbunny/mp4-h264) (MP4 H.264) stored at `public/videos/big-buck-bunny.mp4`.
 
@@ -37,14 +46,105 @@ Chat components can be imported from the package root or the focused subpath:
 import { ChatComposer, ChatConversation, ChatMessageList } from 'tint/chat'
 ```
 
-`DataTable` is controlled the same way. Its pipeline — filter, then sort, then
-paginate — is a pure function you can also run on the server:
+## Editor and terminal
+
+`Editor` uses a controlled Tiptap JSON document. Its disclosure state is controlled too,
+so an application can coordinate it with the rest of a workbench without Tint choosing a
+store:
 
 ```tsx
-import { DataTable, deriveRows, type TableColumn } from 'tint/table'
+import { Editor, type EditorDocument } from 'tint/editor'
 
-const rows = deriveRows(tracks, { columns, sort, filters, page })
+const [document, setDocument] = useState<EditorDocument>({
+  type: 'doc',
+  content: [{ type: 'paragraph' }],
+})
+const [editorOpen, setEditorOpen] = useState(true)
+
+<Editor
+  value={document}
+  onValueChange={setDocument}
+  expanded={editorOpen}
+  onExpandedChange={setEditorOpen}
+/>
 ```
+
+`TerminalConsole` is a full VT/ANSI emulator, not a shell. Connect its session adapter to
+your PTY, WebSocket, worker, or browser runtime; Tint only forwards raw input and renders
+streamed output:
+
+```tsx
+import { TerminalConsole, type TerminalSession } from 'tint/terminal'
+
+const session: TerminalSession = {
+  onOutput(listener) {
+    runtime.on('data', listener)
+    return () => runtime.off('data', listener)
+  },
+  sendInput: data => runtime.write(data),
+  resize: size => runtime.resize(size.cols, size.rows),
+}
+
+<TerminalConsole
+  session={session}
+  status="connected"
+  expanded={terminalOpen}
+  onExpandedChange={setTerminalOpen}
+/>
+```
+
+`DataTable` is controlled the same way. Its pipeline — filter, then sort, then
+paginate — is a pure function you can also run on the server.
+
+Prefer the typed client models for UI state (MUI-shaped filter items, TanStack-shaped
+sorting), then adapt into `deriveRows` or `useDataTable`:
+
+```tsx
+import {
+  DataFilterControls,
+  DataTable,
+  deriveRows,
+  toDeriveFilters,
+  toTableSort,
+  type DataFilterModel,
+  type DataSortingState,
+  type TableColumn,
+} from 'tint/table'
+
+const [filterModel, setFilterModel] = useState<DataFilterModel>({ items: [] })
+const [sorting, setSorting] = useState<DataSortingState>([])
+
+const rows = deriveRows(tracks, {
+  columns,
+  filters: toDeriveFilters(filterModel),
+  sort: toTableSort(sorting),
+  page,
+})
+```
+
+`toColumnFilters(filterModel)` is the same bridge for the TanStack engine path.
+
+Collaborative text is a typed config, not an editor. Hosts own the room name and
+provider mesh; tint vendored Yjs v13 and exposes `createCollabSession`:
+
+```tsx
+import { createCollabSession } from 'tint/collab'
+
+const session = createCollabSession({
+  room: 'workspace:crate:note:intro',
+  network: { kind: 'broadcast' }, // or { kind: 'none' } / injected websocket
+})
+
+session.fragment.insert(0, 'hello')
+session.awareness?.setLocal({ name: 'warby' })
+session.destroy()
+```
+
+Websocket needs an injected `createProvider` — tint does not depend on `y-websocket`.
+Do not point hosts at the public Yjs demo server. TipTap / `y-prosemirror` binding is
+a later editor adapter, not this package.
+
+Open `#/components/collab` for two textareas sharing one room.
 
 ## Theming
 
@@ -137,6 +237,45 @@ light controls over bright footage are unreadable.
 
 See `src/styles/contract.css` for the annotated reference.
 
+## Icons
+
+Every icon in tint renders through one seam — `Icon`, a thin wrapper around
+[`lucide-react`](https://lucide.dev) (the library's sole icon dependency) with a fixed size
+scale and a decorative-by-default accessibility posture. `StatusIcon` layers a shared
+loading/success/error/… registry on top, so a status indicator is defined once and reused
+across chat, table, and video-player instead of reimplemented per feature.
+
+```tsx
+import { Icon, StatusIcon, Spinner } from 'tint/icon'
+import { Search } from 'lucide-react'
+
+<Icon icon={Search} size="sm" />
+<StatusIcon status="success" />
+<Spinner size="sm" />              {/* StatusIcon pinned to status="loading" */}
+```
+
+| Size | Class      | Pixels |
+| ---- | ---------- | ------ |
+| `xs` | `size-3`   | 12px   |
+| `sm` | `size-3.5` | 14px   |
+| `md` | `size-4`   | 16px   |
+| `lg` | `size-5`   | 20px   |
+| `xl` | `size-6`   | 24px   |
+
+`Spinner` deliberately does not carry the registry's info-blue tone — every existing loading
+spinner in the library inherits its surrounding text color, and `Spinner` preserves that rather
+than forcing a color call sites didn't ask for. `StatusIcon status="loading"` still carries the
+tone, for the cases (like a multi-state status pill) where a fixed color is the point.
+
+See the **Icons** page in the docs site (`#/components/icon`) for the full size scale, status
+registry, and icon vocabulary the library actually uses.
+
+**If you copied one of tint's components into your app** (this README says you can): earlier
+versions rendered lucide icons directly — `<Sun className="size-3.5" aria-hidden="true" />`,
+each call site re-specifying its own size and `aria-hidden`. That still works, since
+`lucide-react` remains a plain dependency, but it's no longer how tint's own components do it.
+Swap to `<Icon icon={Sun} size="sm" />` to stay aligned with the rest of the library.
+
 ## Project layout
 
 ```
@@ -145,12 +284,18 @@ src/
   components/settings-popout/  # searchable settings popout
   components/chat/             # controlled chat primitives and rich parts
   components/table/            # controlled DataTable and its pure behavior core
+  components/collab/           # Yjs CollabConfig + createCollabSession
+  vendor/yjs/                  # vendored Yjs v13 CRDT engine
   components/theme/            # scheme/theme hooks and controlled toggles
+  components/icon/             # Icon / StatusIcon, the size scale, the status registry
+  components/dice/             # DiceRoller — a worked example of extending Icon
+  components/panel/            # controlled disclosure shell shared by workbench surfaces
+  components/editor/           # controlled Tiptap rich-text editor
+  components/terminal/         # xterm emulator with a consumer-owned runtime adapter
   styles/contract.css          # the annotated token contract
   styles/themes/               # tint, solarized, gruvbox
-  docs/                        # component docs and rendered chat research
+  docs/                        # component docs and demos
   index.ts                     # library exports
-docs/chat/                     # canonical chat research Markdown
 public/videos/                 # demo media assets
 ```
 

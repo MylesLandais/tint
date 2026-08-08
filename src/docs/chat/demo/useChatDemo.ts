@@ -227,15 +227,15 @@ export function useChatDemo() {
               sources: [
                 {
                   id: 'source-tint-contract',
-                  title: 'Tint Chat TypeScript contract',
+                  title: 'Tint Chat — props & events',
                   description: 'Controlled props and object event payloads.',
-                  url: '#/chat/typescript-api',
+                  url: '#/components/chat',
                 },
                 {
                   id: 'source-tint-accessibility',
-                  title: 'Tint accessibility notes',
+                  title: 'Tint Chat — accessibility',
                   description: 'Keyboard, focus, and streaming guidance.',
-                  url: '#/chat/accessibility-ux',
+                  url: '#/components/chat',
                 },
               ],
             },
@@ -267,9 +267,9 @@ export function useChatDemo() {
                 status: 'approval-required',
                 input: {
                   query: 'accessible chat transcript patterns',
-                  scope: 'docs/chat',
+                  scope: '~/Vault (tint-chat-*)',
                 },
-                summary: 'Read the local Tint research files',
+                summary: 'Read the Tint research notes',
               },
             },
             {
@@ -634,15 +634,15 @@ export function useChatDemo() {
               sources: [
                 {
                   id: 'source-a11y',
-                  title: 'Accessibility and UX',
-                  description: 'Tint transcript focus and announcement guidance.',
-                  url: '#/chat/accessibility-ux',
+                  title: 'Tint Chat — accessibility',
+                  description: 'Transcript focus and announcement guidance.',
+                  url: '#/components/chat',
                 },
                 {
                   id: 'source-architecture',
-                  title: 'Tint architecture',
+                  title: 'Tint Chat — component reference',
                   description: 'Controlled presentation boundaries.',
-                  url: '#/chat/architecture',
+                  url: '#/components/chat',
                 },
               ],
             },

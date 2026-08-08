@@ -9,6 +9,7 @@ import {
   type UIEvent,
 } from 'react'
 import { cn } from '@/lib/utils'
+import { Icon } from '@/components/icon'
 import { getCellValue, nextSort, visibleColumns } from './derive'
 import { formatFieldValue, resolveFieldType } from './fieldTypes'
 import type {
@@ -276,15 +277,16 @@ export function DataTable<TRow>({
                       {column.header ?? column.id}
                       {active ? (
                         sort?.direction === 'asc' ? (
-                          <ArrowUp className="size-3.5" aria-hidden="true" />
+                          <Icon icon={ArrowUp} size="sm" />
                         ) : (
-                          <ArrowDown className="size-3.5" aria-hidden="true" />
+                          <Icon icon={ArrowDown} size="sm" />
                         )
                       ) : (
                         // Hinted rather than shouted: it appears on approach.
-                        <ChevronsUpDown
-                          className="size-3.5 opacity-0 transition-opacity group-hover/sort:opacity-50 group-focus-visible/sort:opacity-50 motion-reduce:transition-none"
-                          aria-hidden="true"
+                        <Icon
+                          icon={ChevronsUpDown}
+                          size="sm"
+                          className="opacity-0 transition-opacity group-hover/sort:opacity-50 group-focus-visible/sort:opacity-50 motion-reduce:transition-none"
                         />
                       )}
                     </button>
@@ -394,12 +396,12 @@ function FragmentRow<TRow>({
               aria-label={`${isExpanded ? 'Collapse' : 'Expand'} ${selectLabel}`}
               className="inline-flex size-7 items-center justify-center rounded-md text-tint-muted transition hover:bg-tint-surface hover:text-tint-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tint-accent"
             >
-              <ChevronRight
+              <Icon
+                icon={ChevronRight}
                 className={cn(
-                  'size-4 transition-transform motion-reduce:transition-none',
+                  'transition-transform motion-reduce:transition-none',
                   isExpanded && 'rotate-90',
                 )}
-                aria-hidden="true"
               />
             </button>
           </td>

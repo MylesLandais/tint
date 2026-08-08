@@ -1,14 +1,7 @@
-import {
-  Bot,
-  Check,
-  Copy,
-  LoaderCircle,
-  RotateCcw,
-  Square,
-  User,
-} from 'lucide-react'
+import { Bot, Check, Copy, RotateCcw, Square, User } from 'lucide-react'
 import { memo, useCallback, useMemo } from 'react'
 import { cn } from '@/lib/utils'
+import { Icon, Spinner } from '@/components/icon'
 import { ChatMessageActions, ChatMessageContent } from './ChatPrimitives'
 import { ChatMessagePartView } from './ChatParts'
 import { stripBidi } from './sanitize'
@@ -120,9 +113,9 @@ function ChatMessageImpl<TCustomPart extends ChatCustomPart = never>({
               className="size-full object-cover"
             />
           ) : message.actor.kind === 'assistant' ? (
-            <Bot className="size-4" />
+            <Icon icon={Bot} />
           ) : message.actor.kind === 'human' ? (
-            <User className="size-4" />
+            <Icon icon={User} />
           ) : (
             actorName.slice(0, 1).toUpperCase()
           )}
@@ -183,10 +176,7 @@ function ChatMessageImpl<TCustomPart extends ChatCustomPart = never>({
 
           {message.parts.length === 0 && message.status === 'streaming' ? (
             <div className="flex items-center gap-2 py-1 text-sm text-tint-muted">
-              <LoaderCircle
-                className="size-4 animate-spin motion-reduce:animate-none"
-                aria-hidden="true"
-              />
+              <Spinner />
               Thinking…
             </div>
           ) : null}
@@ -203,16 +193,13 @@ function ChatMessageImpl<TCustomPart extends ChatCustomPart = never>({
               role="status"
               className="flex items-center gap-1.5 text-xs text-tint-muted"
             >
-              <LoaderCircle
-                className="size-3 animate-spin motion-reduce:animate-none"
-                aria-hidden="true"
-              />
+              <Spinner size="xs" />
               Responding
             </span>
           ) : null}
           {message.status === 'stopped' ? (
             <span className="flex items-center gap-1.5 text-xs text-tint-muted">
-              <Square className="size-2.5 fill-current" aria-hidden="true" />
+              <Icon icon={Square} size="xs" className="fill-current" />
               Stopped
             </span>
           ) : null}
@@ -229,7 +216,7 @@ function ChatMessageImpl<TCustomPart extends ChatCustomPart = never>({
               className="inline-flex items-center gap-1 rounded-md p-1.5 text-xs text-tint-muted hover:bg-tint-surface hover:text-tint-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tint-accent"
               aria-label={copied ? 'Message copied' : 'Copy message'}
             >
-              {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
+              {copied ? <Icon icon={Check} size="sm" /> : <Icon icon={Copy} size="sm" />}
             </button>
             {canRetry && !hasInlineRetry ? (
               <button
@@ -237,7 +224,7 @@ function ChatMessageImpl<TCustomPart extends ChatCustomPart = never>({
                 onClick={retry}
                 className="inline-flex items-center gap-1 rounded-md px-2 py-1.5 text-xs font-medium text-tint-muted hover:bg-tint-surface hover:text-tint-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tint-accent"
               >
-                <RotateCcw className="size-3.5" aria-hidden="true" />
+                <Icon icon={RotateCcw} size="sm" />
                 Retry
               </button>
             ) : null}

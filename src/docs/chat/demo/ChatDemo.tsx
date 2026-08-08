@@ -10,6 +10,7 @@ import {
   ChatConversation,
   ChatMessageList,
 } from '@/components/chat'
+import { Icon } from '@/components/icon'
 import { cn } from '@/lib/utils'
 import { useChatDemo } from './useChatDemo'
 import type { ChatDemoScenarioId } from './scenarios'
@@ -25,7 +26,7 @@ export function ChatDemo() {
       <div className="flex flex-col gap-3 border-b border-tint-border bg-tint-panel px-3 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-4">
         <div className="flex min-w-0 items-center gap-3">
           <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-tint-accent-soft text-tint-accent">
-            <Sparkles className="size-4" aria-hidden="true" />
+            <Icon icon={Sparkles} />
           </span>
           <div className="min-w-0">
             <h3 className="truncate text-sm font-semibold">Tint Assistant</h3>
@@ -59,9 +60,10 @@ export function ChatDemo() {
                 </option>
               ))}
             </select>
-            <ChevronDown
-              className="pointer-events-none absolute top-1/2 right-2.5 size-3.5 -translate-y-1/2 text-tint-muted"
-              aria-hidden="true"
+            <Icon
+              icon={ChevronDown}
+              size="sm"
+              className="pointer-events-none absolute top-1/2 right-2.5 -translate-y-1/2 text-tint-muted"
             />
           </label>
           <button
@@ -69,7 +71,7 @@ export function ChatDemo() {
             onClick={demo.replay}
             className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-tint-border bg-tint-panel px-2.5 text-xs font-medium hover:bg-tint-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tint-accent"
           >
-            <FlaskConical className="size-3.5" aria-hidden="true" />
+            <Icon icon={FlaskConical} size="sm" />
             Replay
           </button>
           <button
@@ -78,7 +80,7 @@ export function ChatDemo() {
             className="inline-flex size-9 items-center justify-center rounded-lg text-tint-muted hover:bg-tint-surface hover:text-tint-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tint-accent"
             aria-label="Reset conversation"
           >
-            <RotateCcw className="size-3.5" />
+            <Icon icon={RotateCcw} size="sm" />
           </button>
         </div>
       </div>
@@ -122,7 +124,7 @@ export function ChatDemo() {
 
       <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-tint-border bg-tint-panel px-4 py-2.5 text-[0.6875rem] text-tint-muted">
         <span className="inline-flex items-center gap-1.5">
-          <CheckCircle2 className="size-3.5 text-tint-success" aria-hidden="true" />
+          <Icon icon={CheckCircle2} size="sm" className="text-tint-success" />
           No fetch, socket, persistence, or AI SDK
         </span>
         <span>Deterministic fixtures · local timers · controlled state</span>

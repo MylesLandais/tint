@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 
 import { Volume1, Volume2, VolumeX } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { cn } from '@/lib/utils'
+import { Icon } from '@/components/icon'
 import { Slider } from './Slider'
 
 export type VolumeControlProps = {
@@ -179,7 +180,7 @@ export function VolumeControl({
           open && 'bg-tint-chrome-ink/12',
         )}
       >
-        <VolumeIcon className="size-4" />
+        <Icon icon={VolumeIcon} />
       </motion.button>
 
       <AnimatePresence>

@@ -1,6 +1,6 @@
-import { LoaderCircle } from 'lucide-react'
 import { useEffect, useRef, type HTMLAttributes, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
+import { Spinner } from '@/components/icon'
 
 /*
  * Infinite scroll is pagination with a different presentation. It is also not
@@ -91,10 +91,7 @@ export function InfiniteRows({
           emptyLabel
         ) : loading ? (
           <>
-            <LoaderCircle
-              className="size-3.5 animate-spin motion-reduce:animate-none"
-              aria-hidden="true"
-            />
+            <Spinner size="sm" />
             {loadingLabel}
           </>
         ) : hasMore ? null : (

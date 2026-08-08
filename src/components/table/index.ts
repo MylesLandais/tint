@@ -1,6 +1,17 @@
 export { DataTable } from './DataTable'
 export { DataMasonry, columnsFor } from './DataMasonry'
 export type { DataMasonryProps, MasonryDensity } from './DataMasonry'
+export { DataFilterControls } from './DataFilterControls'
+export type { DataFilterControlsProps } from './DataFilterControls'
+export type * from './filterTypes'
+export {
+  evaluateFilterItem,
+  toColumnFilters,
+  toDataSortingState,
+  toDeriveFilters,
+  toTableSort,
+} from './clientState'
+export type { ColumnFilterEntry } from './clientState'
 export { InfiniteRows } from './InfiniteRows'
 export type { InfiniteRowsProps } from './InfiniteRows'
 export { TableColumnsMenu, TablePager, TableToolbar } from './TableChrome'

@@ -1,7 +1,7 @@
 import { VideoPlayer } from '@/components/video-player'
 import { CodeBlock } from './components/CodeBlock'
 import { PropsTable } from './components/PropsTable'
-import { ThemeControls } from './components/ThemeControls'
+import { DocsNav } from './components/DocsNav'
 
 const DEMO_SRC = '/videos/big-buck-bunny.mp4'
 
@@ -135,40 +135,9 @@ const settingsProps = [
 export function VideoPlayerDoc() {
   return (
     <div className="min-h-screen">
-      <header className="sticky top-0 z-20 border-b border-tint-border bg-tint-panel/85 backdrop-blur-md">
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
-          <a href="/" className="flex items-center gap-2 font-semibold tracking-tight">
-            <span className="inline-flex size-7 items-center justify-center rounded-md bg-tint-accent text-sm text-tint-on-accent">
-              t
-            </span>
-            tint
-          </a>
-          <nav className="flex items-center gap-5 text-sm text-tint-muted">
-            <a
-              href="#/components/chat"
-              className="transition-colors hover:text-tint-ink"
-            >
-              Chat
-            </a>
-            <a
-              href="#/chat/patterns"
-              className="transition-colors hover:text-tint-ink"
-            >
-              Chat research
-            </a>
-            <a href="#preview" className="transition-colors hover:text-tint-ink">
-              Preview
-            </a>
-            <a href="#usage" className="transition-colors hover:text-tint-ink">
-              Usage
-            </a>
-            <a href="#api" className="transition-colors hover:text-tint-ink">
-              API
-            </a>
-            <ThemeControls />
-          </nav>
-        </div>
-      </header>
+      <div className="mx-auto max-w-6xl px-4 pt-8 sm:px-6">
+        <DocsNav current="components/video-player" />
+      </div>
 
       <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
         <div className="mb-10 max-w-3xl">

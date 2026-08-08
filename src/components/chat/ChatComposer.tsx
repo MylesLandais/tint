@@ -1,10 +1,4 @@
-import {
-  ArrowUp,
-  LoaderCircle,
-  Paperclip,
-  Square,
-  X,
-} from 'lucide-react'
+import { ArrowUp, Paperclip, Square, X } from 'lucide-react'
 import {
   useCallback,
   useEffect,
@@ -18,6 +12,7 @@ import {
   type KeyboardEvent,
 } from 'react'
 import { cn } from '@/lib/utils'
+import { Icon, Spinner } from '@/components/icon'
 import {
   ChatComposerAttachments,
   ChatComposerFooter,
@@ -63,7 +58,7 @@ export function ChatActionButton({
       )}
       {...props}
     >
-      {pending ? <LoaderCircle className="size-4 animate-spin motion-reduce:animate-none" aria-hidden="true" /> : children}
+      {pending ? <Spinner /> : children}
     </button>
   )
 }
@@ -264,15 +259,9 @@ export function ChatComposer({
                 className="flex max-w-full items-center gap-2 rounded-lg border border-tint-border bg-tint-surface px-2.5 py-2"
               >
                 {attachment.status === 'uploading' ? (
-                  <LoaderCircle
-                    className="size-3.5 shrink-0 animate-spin motion-reduce:animate-none text-tint-accent"
-                    aria-hidden="true"
-                  />
+                  <Spinner size="sm" className="shrink-0 text-tint-accent" />
                 ) : (
-                  <Paperclip
-                    className="size-3.5 shrink-0 text-tint-muted"
-                    aria-hidden="true"
-                  />
+                  <Icon icon={Paperclip} size="sm" className="shrink-0 text-tint-muted" />
                 )}
                 <span className="max-w-48 truncate text-xs font-medium">
                   {stripBidi(attachment.name)}
@@ -289,7 +278,7 @@ export function ChatComposer({
                   aria-label={`Remove ${stripBidi(attachment.name)}`}
                   className="-mr-1 rounded p-1.5 text-tint-muted hover:bg-tint-panel hover:text-tint-ink focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-tint-accent"
                 >
-                  <X className="size-3.5" />
+                  <Icon icon={X} size="sm" />
                 </button>
               </div>
             ))}
@@ -333,7 +322,7 @@ export function ChatComposer({
                   className="text-tint-muted hover:bg-tint-surface hover:text-tint-ink"
                   disabled={readOnly || streaming}
                 >
-                  <Paperclip className="size-4" aria-hidden="true" />
+                  <Icon icon={Paperclip} />
                 </ChatActionButton>
               </>
             ) : null}
@@ -348,7 +337,7 @@ export function ChatComposer({
               onClick={onStop}
               className="bg-tint-ink text-tint-bg hover:bg-tint-muted"
             >
-              <Square className="size-3 fill-current" aria-hidden="true" />
+              <Icon icon={Square} size="xs" className="fill-current" />
             </ChatActionButton>
           ) : (
             <ChatActionButton
@@ -358,7 +347,7 @@ export function ChatComposer({
               pending={state === 'submitting'}
               className="bg-tint-accent text-tint-on-accent hover:bg-tint-accent-hover"
             >
-              <ArrowUp className="size-4" aria-hidden="true" />
+              <Icon icon={ArrowUp} />
             </ChatActionButton>
           )}
         </ChatComposerFooter>

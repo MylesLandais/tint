@@ -1,6 +1,7 @@
 import { Monitor, Moon, Sun } from 'lucide-react'
 import { useRef, type KeyboardEvent } from 'react'
 import { cn } from '@/lib/utils'
+import { Icon } from '@/components/icon'
 import type { ColorSchemePreference, ThemeToggleProps } from './types'
 
 const OPTIONS = [
@@ -76,7 +77,7 @@ export function ThemeToggle({
       )}
       {...props}
     >
-      {OPTIONS.map(({ value: option, label: optionLabel, icon: Icon }) => {
+      {OPTIONS.map(({ value: option, label: optionLabel, icon: OptionIcon }) => {
         const selected = option === value
         return (
           <button
@@ -96,7 +97,7 @@ export function ThemeToggle({
                 : 'text-tint-muted hover:text-tint-ink',
             )}
           >
-            <Icon className="size-3.5" aria-hidden="true" />
+            <Icon icon={OptionIcon} size="sm" />
             {showLabels ? optionLabel : null}
           </button>
         )

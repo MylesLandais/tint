@@ -1,6 +1,7 @@
 import { ChevronDown, Palette } from 'lucide-react'
 import { useId } from 'react'
 import { cn } from '@/lib/utils'
+import { Icon } from '@/components/icon'
 import type { ThemePickerProps } from './types'
 
 /**
@@ -29,9 +30,10 @@ export function ThemePicker({
         {label}
       </label>
       <div className="relative inline-flex items-center">
-        <Palette
-          className="pointer-events-none absolute left-2.5 size-3.5 text-tint-muted"
-          aria-hidden="true"
+        <Icon
+          icon={Palette}
+          size="sm"
+          className="pointer-events-none absolute left-2.5 text-tint-muted"
         />
         <select
           id={id}
@@ -49,9 +51,10 @@ export function ThemePicker({
             </option>
           ))}
         </select>
-        <ChevronDown
-          className="pointer-events-none absolute right-2 size-3.5 text-tint-muted"
-          aria-hidden="true"
+        <Icon
+          icon={ChevronDown}
+          size="sm"
+          className="pointer-events-none absolute right-2 text-tint-muted"
         />
       </div>
     </div>

@@ -1,11 +1,7 @@
-import {
-  ArrowDown,
-  CalendarDays,
-  LoaderCircle,
-  MessageCircle,
-} from 'lucide-react'
+import { ArrowDown, CalendarDays, MessageCircle } from 'lucide-react'
 import type { ButtonHTMLAttributes } from 'react'
 import { cn } from '@/lib/utils'
+import { Icon, Spinner } from '@/components/icon'
 import type {
   ChatComposerSlotProps,
   ChatMessageSlotProps,
@@ -26,7 +22,7 @@ export function ChatEmptyState({
       {...props}
     >
       <span className="grid size-11 place-items-center rounded-2xl bg-tint-accent-soft text-tint-accent">
-        <MessageCircle className="size-5" aria-hidden="true" />
+        <Icon icon={MessageCircle} size="lg" />
       </span>
       {children ?? 'Start a conversation'}
     </section>
@@ -49,7 +45,7 @@ export function ChatDateDivider({
       {...props}
     >
       <span className="h-px flex-1 bg-tint-border" />
-      <CalendarDays className="size-3.5" aria-hidden="true" />
+      <Icon icon={CalendarDays} size="sm" />
       <span>{children}</span>
       <span className="h-px flex-1 bg-tint-border" />
     </div>
@@ -71,7 +67,7 @@ export function ChatTypingIndicator({
       )}
       {...props}
     >
-      <LoaderCircle className="size-3.5 animate-spin motion-reduce:animate-none" aria-hidden="true" />
+      <Spinner size="sm" />
       <span>{children}</span>
     </div>
   )
@@ -92,7 +88,7 @@ export function ChatScrollToBottom({
       )}
       {...props}
     >
-      <ArrowDown className="size-3.5" aria-hidden="true" />
+      <Icon icon={ArrowDown} size="sm" />
       {children}
     </button>
   )

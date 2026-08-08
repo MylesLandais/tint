@@ -10,6 +10,7 @@ import {
 import { AnimatePresence, motion } from 'motion/react'
 import { Check, Search } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { Icon } from '@/components/icon'
 
 export type SettingsPopoutItem = {
   id: string
@@ -203,7 +204,7 @@ export function SettingsPopout({
           onMouseDown={(event) => event.stopPropagation()}
         >
           <div className="flex items-center gap-2 border-b border-tint-chrome-border px-3 py-2.5">
-            <Search className="size-4 shrink-0 text-tint-chrome-ink/55" aria-hidden="true" />
+            <Icon icon={Search} className="shrink-0 text-tint-chrome-ink/55" />
             <input
               ref={inputRef}
               value={query}
@@ -268,7 +269,7 @@ export function SettingsPopout({
                             </kbd>
                           ) : null}
                           {isSelected ? (
-                            <Check className="size-4 shrink-0 text-tint-chrome-ink" aria-hidden="true" />
+                            <Icon icon={Check} className="shrink-0 text-tint-chrome-ink" />
                           ) : (
                             <span className="size-4 shrink-0" aria-hidden="true" />
                           )}

@@ -9,8 +9,8 @@ import {
   type KeyboardEvent,
   type UIEvent,
 } from 'react'
-import { LoaderCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { Spinner } from '@/components/icon'
 import { ChatMessage } from './ChatMessage'
 import { ChatEmptyState, ChatScrollToBottom } from './ChatPrimitives'
 import { stripBidi } from './sanitize'
@@ -296,9 +296,7 @@ export function ChatMessageList<TCustomPart extends ChatCustomPart = never>({
               disabled={loading}
               className="inline-flex items-center gap-2 rounded-full border border-tint-border bg-tint-panel px-3 py-1.5 text-xs font-medium text-tint-muted hover:bg-tint-surface disabled:cursor-wait disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tint-accent"
             >
-              {loading ? (
-                <LoaderCircle className="size-3.5 animate-spin motion-reduce:animate-none" aria-hidden="true" />
-              ) : null}
+              {loading ? <Spinner size="sm" /> : null}
               {loading ? 'Loading…' : 'Load earlier messages'}
             </button>
           </div>

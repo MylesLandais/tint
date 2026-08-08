@@ -1,15 +1,22 @@
-import { ExternalLink, Library as LibraryIcon, ListPlus, Search } from 'lucide-react'
+import { ExternalLink, Library, ListPlus } from 'lucide-react'
 import { useMemo, useState } from 'react'
+import { Icon } from '@/components/icon'
 import {
+  DataFilterControls,
   DataTable,
   TableColumnsMenu,
   TablePager,
   TableToolbar,
   deriveFilteredSortedRows,
   deriveRows,
+  toDataSortingState,
+  toDeriveFilters,
+  toTableSort,
   useTableView,
+  type DataFilterField,
+  type DataFilterModel,
+  type DataSortingState,
   type TableColumn,
-  type TableSort,
 } from '@/components/table'
 import {
   COLLECTION_STATE_LABELS,
@@ -27,9 +34,9 @@ import { artistTracks } from './tracks-fixture'
 const PAGE_SIZE = 15
 
 /*
- * The demo owns every piece of state the table reads — sort, selection,
- * expansion, filters, page. That is the point: `DataTable` renders what it is
- * handed and reports intent, so this file is where the domain lives.
+ * The demo owns every piece of state the table reads — filter model, sorting,
+ * selection, expansion, page. `DataFilterControls` emits MUI-shaped filter
+ * items and TanStack-shaped sorting; adapters feed `deriveRows`.
  */
 
 function StateBadge({ state }: { state: MusicCollectionState }) {
@@ -54,7 +61,6 @@ function TrackDetail({ artist }: { artist: MusicLibraryArtist }) {
     )
   }
 
-  // The child grain gets its own table — same component, different columns.
   return (
     <DataTable
       rows={tracks}
@@ -83,16 +89,36 @@ const TRACK_COLUMNS: TableColumn<MusicTrack>[] = [
   { id: 'added', header: 'Added', type: 'date', width: 120 },
 ]
 
+const FILTER_FIELDS: readonly DataFilterField[] = [
+  { id: 'name', label: 'Artist', type: 'text', sortable: true },
+  { id: 'tracks', label: 'Tracks', type: 'number', sortable: true },
+  { id: 'releases', label: 'Releases', type: 'number', sortable: true },
+  { id: 'labels', label: 'Labels', type: 'number', sortable: true },
+  {
+    id: 'collectionState',
+    label: 'State',
+    type: 'select',
+    sortable: true,
+    options: [
+      { value: 'unreviewed', label: COLLECTION_STATE_LABELS.unreviewed },
+      { value: 'wishlist', label: COLLECTION_STATE_LABELS.wishlist },
+      { value: 'library', label: COLLECTION_STATE_LABELS.library },
+    ],
+  },
+]
+
 export function MusicCollection() {
   const [artists, setArtists] = useState(infrasoundArtists)
-  const [query, setQuery] = useState('')
-  const [stateFilter, setStateFilter] = useState<MusicCollectionState | 'all'>('all')
-  const [sort, setSort] = useState<TableSort | null>({ column: 'name', direction: 'asc' })
+  const [filterModel, setFilterModel] = useState<DataFilterModel>({ items: [] })
+  const [sorting, setSorting] = useState<DataSortingState>([
+    { id: 'name', desc: false },
+  ])
   const [selection, setSelection] = useState<readonly string[]>([])
   const [expanded, setExpanded] = useState<readonly string[]>([])
   const [page, setPage] = useState(0)
 
   const view = useTableView('tint.demo.table.music-collection')
+  const sort = useMemo(() => toTableSort(sorting), [sorting])
 
   const columns = useMemo<TableColumn<MusicLibraryArtist>[]>(
     () => [
@@ -128,7 +154,7 @@ export function MusicCollection() {
                   className="inline-flex min-h-7 items-center gap-1 rounded-lg border border-tint-border bg-tint-panel px-2 text-xs font-medium text-tint-muted transition hover:border-tint-accent hover:text-tint-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tint-accent"
                 >
                   {PLATFORM_LABELS[platform]}
-                  <ExternalLink className="size-3" aria-hidden="true" />
+                  <Icon icon={ExternalLink} size="xs" />
                 </a>
               ),
             )}
@@ -170,20 +196,12 @@ export function MusicCollection() {
     [],
   )
 
-  // Make `name` sortable only via the header button — it carries a custom cell,
-  // so the sort has to read the underlying value, not the rendered node.
   const sortableColumns = useMemo(
     () => columns.map((c) => (c.id === 'name' ? { ...c, sortable: true } : c)),
     [columns],
   )
 
-  const filters = useMemo(
-    () => ({
-      name: query || null,
-      collectionState: stateFilter === 'all' ? null : stateFilter,
-    }),
-    [query, stateFilter],
-  )
+  const filters = useMemo(() => toDeriveFilters(filterModel), [filterModel])
 
   const total = useMemo(
     () =>
@@ -246,40 +264,14 @@ export function MusicCollection() {
       </header>
 
       <TableToolbar>
-        <label className="relative min-w-56 flex-1">
-          <span className="sr-only">Search artists</span>
-          <Search
-            className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-tint-muted"
-            aria-hidden="true"
-          />
-          <input
-            type="search"
-            value={query}
-            onChange={(event) => resetPage(setQuery)(event.target.value)}
-            placeholder="Search artists…"
-            aria-label="Search artists"
-            className="min-h-9 w-full rounded-xl border border-tint-border bg-tint-panel py-1.5 pr-3 pl-9 text-sm text-tint-ink outline-none transition placeholder:text-tint-muted focus:border-tint-accent focus:ring-3 focus:ring-tint-accent-soft"
-          />
-        </label>
-
-        <label>
-          <span className="sr-only">Collection state</span>
-          <select
-            value={stateFilter}
-            onChange={(event) =>
-              resetPage(setStateFilter)(
-                event.target.value as MusicCollectionState | 'all',
-              )
-            }
-            aria-label="Collection state"
-            className="min-h-9 rounded-xl border border-tint-border bg-tint-panel px-3 text-sm text-tint-ink outline-none focus:border-tint-accent focus:ring-3 focus:ring-tint-accent-soft"
-          >
-            <option value="all">All states</option>
-            <option value="unreviewed">Unreviewed</option>
-            <option value="wishlist">Wishlist</option>
-            <option value="library">Library</option>
-          </select>
-        </label>
+        <DataFilterControls
+          fields={FILTER_FIELDS}
+          filterModel={filterModel}
+          onFilterModelChange={resetPage(setFilterModel)}
+          sorting={sorting}
+          onSortingChange={resetPage(setSorting)}
+          className="min-w-0 flex-1"
+        />
 
         <TableColumnsMenu
           columns={sortableColumns}
@@ -299,14 +291,14 @@ export function MusicCollection() {
             onClick={() => applyState('wishlist')}
             className="inline-flex min-h-9 items-center gap-2 rounded-xl border border-tint-accent/25 bg-tint-panel px-3 text-sm font-medium text-tint-ink transition hover:border-tint-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tint-accent"
           >
-            <ListPlus className="size-4" aria-hidden="true" /> Add to wishlist
+            <Icon icon={ListPlus} /> Add to wishlist
           </button>
           <button
             type="button"
             onClick={() => applyState('library')}
             className="inline-flex min-h-9 items-center gap-2 rounded-xl bg-tint-accent px-3 text-sm font-medium text-tint-on-accent transition hover:bg-tint-accent-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tint-accent"
           >
-            <LibraryIcon className="size-4" aria-hidden="true" /> Mark in library
+            <Icon icon={Library} /> Mark in library
           </button>
         </div>
       ) : null}
@@ -319,7 +311,10 @@ export function MusicCollection() {
         rowHeaderColumn="name"
         hiddenColumns={view.hiddenColumns}
         sort={sort}
-        onSortChange={resetPage(setSort)}
+        onSortChange={(next) => {
+          setSorting(toDataSortingState(next))
+          setPage(0)
+        }}
         selection={selection}
         onSelectionChange={(change) => setSelection(change.selection)}
         selectionLabel={(artist) => artist.name}

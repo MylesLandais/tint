@@ -1,0 +1,6 @@
+export { AuthClient, createAuthClient } from './client'
+export type { AuthClientOptions } from './client'
+export { AuthError, UnsupportedAuthOperationError, authErrorFromResponse, normalizeAuthError } from './errors'
+export { requireOperation, safeReturnTo } from './transport'
+export type { AuthTransport } from './transport'
+export type * from './types'

@@ -50,6 +50,40 @@ export {
 } from './components/theme'
 export type * from './components/theme'
 
+export { Icon, StatusIcon, Spinner, ICON_SIZES, STATUS_ICONS } from './components/icon'
+export type * from './components/icon'
+
+export { DiceRoller, D10, D20 } from './components/dice'
+export type * from './components/dice'
+
+export { Panel } from './components/panel'
+export type * from './components/panel'
+
+export {
+  Editor,
+  defaultSlashCommands,
+  editorDocumentToHTML,
+  editorHTMLToDocument,
+} from './components/editor'
+export type * from './components/editor'
+
+export { TerminalConsole } from './components/terminal'
+export type * from './components/terminal'
+
+export {
+  applyUpdate,
+  createCollabSession,
+  encodeStateAsUpdate,
+  TintAwareness,
+} from './components/collab'
+export type {
+  AwarenessState,
+  CollabConfig,
+  CollabNetwork,
+  CollabSession,
+  CreateWebsocketProvider,
+} from './components/collab'
+
 export {
   DataTable,
   TableColumnsMenu,

@@ -1,10 +1,124 @@
 @import 'tailwindcss';
+@import '@xterm/xterm/css/xterm.css';
 @import './styles/contract.css';
 @import './styles/themes/tint.css';
 
 @theme {
   --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+@layer components {
+  .tint-editor-content .tiptap {
+    min-height: 20rem;
+    padding: 2rem clamp(1.25rem, 5vw, 4rem) 4rem;
+    color: var(--tint-ink);
+    line-height: 1.75;
+    outline: none;
+  }
+
+  .tint-editor-content .tiptap > * {
+    max-width: 48rem;
+    margin-inline: auto;
+  }
+
+  .tint-editor-content .tiptap p {
+    margin-block: 0.75rem;
+  }
+
+  .tint-editor-content .tiptap h1,
+  .tint-editor-content .tiptap h2,
+  .tint-editor-content .tiptap h3 {
+    margin-top: 1.6em;
+    margin-bottom: 0.55em;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .tint-editor-content .tiptap h1 {
+    font-size: 2rem;
+  }
+
+  .tint-editor-content .tiptap h2 {
+    font-size: 1.5rem;
+  }
+
+  .tint-editor-content .tiptap h3 {
+    font-size: 1.2rem;
+  }
+
+  .tint-editor-content .tiptap ul,
+  .tint-editor-content .tiptap ol {
+    margin-block: 0.75rem;
+    padding-left: 1.6rem;
+  }
+
+  .tint-editor-content .tiptap ul {
+    list-style: disc;
+  }
+
+  .tint-editor-content .tiptap ol {
+    list-style: decimal;
+  }
+
+  .tint-editor-content .tiptap blockquote {
+    margin-block: 1rem;
+    border-left: 3px solid var(--tint-accent);
+    padding-left: 1rem;
+    color: var(--tint-muted);
+  }
+
+  .tint-editor-content .tiptap pre {
+    overflow-x: auto;
+    margin-block: 1rem;
+    border: 1px solid var(--tint-code-border);
+    border-radius: 0.625rem;
+    background: var(--tint-code);
+    padding: 1rem;
+    color: var(--tint-code-ink);
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+
+  .tint-editor-content .tiptap :not(pre) > code {
+    border: 1px solid var(--tint-border);
+    border-radius: 0.3rem;
+    background: var(--tint-surface);
+    padding: 0.1em 0.3em;
+    font-size: 0.88em;
+  }
+
+  .tint-editor-content .tiptap a {
+    color: var(--tint-accent);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  .tint-editor-content .tiptap hr {
+    margin-block: 2rem;
+    border: 0;
+    border-top: 1px solid var(--tint-border-strong);
+  }
+
+  .tint-editor-content .tiptap .is-empty::before {
+    float: left;
+    height: 0;
+    color: var(--tint-muted);
+    content: attr(data-placeholder);
+    pointer-events: none;
+  }
+
+  .tint-editor-content .tiptap ::selection {
+    background: var(--tint-accent-soft);
+  }
+
+  [data-terminal-viewport] .xterm {
+    height: 100%;
+  }
+
+  [data-terminal-viewport] .xterm-viewport {
+    scrollbar-color: var(--tint-code-muted) var(--tint-code);
+  }
 }
 
 @layer base {

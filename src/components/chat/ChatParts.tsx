@@ -4,7 +4,6 @@ import {
   Check,
   CheckCircle2,
   ChevronDown,
-  CircleDashed,
   Clock3,
   Code2,
   Copy,
@@ -13,13 +12,11 @@ import {
   FileText,
   Globe2,
   ImageIcon,
-  LoaderCircle,
   Music2,
   RotateCcw,
   ShieldCheck,
   Terminal,
   Wrench,
-  X,
   XCircle,
 } from 'lucide-react'
 import {
@@ -32,6 +29,8 @@ import {
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { cn } from '@/lib/utils'
+import { Icon, Spinner, StatusIcon, STATUS_ICONS } from '@/components/icon'
+import type { StatusName } from '@/components/icon'
 import { safeHref, stripBidi } from './sanitize'
 import { useCopied } from './useCopied'
 import type {
@@ -177,7 +176,7 @@ export function ChatCodeBlock({
     >
       <header className="flex items-center justify-between border-b border-tint-code-border px-3 py-2 text-xs text-tint-code-muted">
         <span className="flex items-center gap-2">
-          <Code2 className="size-3.5" aria-hidden="true" />
+          <Icon icon={Code2} size="sm" />
           {part.filename ?? part.language ?? 'Code'}
         </span>
         <button
@@ -186,7 +185,7 @@ export function ChatCodeBlock({
           className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 hover:bg-tint-code-ink/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tint-code-ink"
           aria-label={copied ? 'Code copied' : 'Copy code'}
         >
-          {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
+          {copied ? <Icon icon={Check} size="sm" /> : <Icon icon={Copy} size="sm" />}
           {copied ? 'Copied' : 'Copy'}
         </button>
       </header>
@@ -239,9 +238,9 @@ export function ChatFile({
 }: ChatRichPartProps<ChatFilePart>) {
   const { attachment } = part
   const icon = attachment.mediaType.startsWith('image/') ? (
-    <ImageIcon className="size-4" aria-hidden="true" />
+    <Icon icon={ImageIcon} />
   ) : (
-    <FileText className="size-4" aria-hidden="true" />
+    <Icon icon={FileText} />
   )
 
   return (
@@ -314,7 +313,7 @@ export function ChatAudio({
       {...props}
     >
       <div className="mb-2 flex items-center gap-2 text-xs font-medium text-tint-muted">
-        <Music2 className="size-4" aria-hidden="true" />
+        <Icon icon={Music2} />
         Audio
         {part.duration ? <span>· {readableDuration(part.duration)}</span> : null}
       </div>
@@ -361,7 +360,7 @@ export function ChatSources({
       {...props}
     >
       <h4 className="flex items-center gap-2 text-xs font-semibold tracking-wide text-tint-muted uppercase">
-        <Globe2 className="size-3.5" aria-hidden="true" />
+        <Icon icon={Globe2} size="sm" />
         Sources
       </h4>
       <div className="grid gap-2 sm:grid-cols-2">
@@ -382,7 +381,7 @@ export function ChatSources({
                   </span>
                 ) : null}
               </span>
-              {href ? <ExternalLink className="size-3.5 shrink-0" aria-hidden="true" /> : null}
+              {href ? <Icon icon={ExternalLink} size="sm" className="shrink-0" /> : null}
             </>
           )
 
@@ -431,21 +430,18 @@ export function ChatReasoning({
       {...props}
     >
       <summary className="flex cursor-pointer list-none items-center gap-2 px-3 py-2.5 text-xs font-medium text-tint-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tint-accent">
-        {active ? (
-          <LoaderCircle className="size-3.5 animate-spin motion-reduce:animate-none" aria-hidden="true" />
-        ) : (
-          <Brain className="size-3.5" aria-hidden="true" />
-        )}
+        {active ? <Spinner size="sm" /> : <Icon icon={Brain} size="sm" />}
         <span>{part.title ?? (active ? 'Thinking' : 'Reasoning')}</span>
         {part.durationMs ? (
           <span className="ml-auto flex items-center gap-1 font-normal">
-            <Clock3 className="size-3" aria-hidden="true" />
+            <Icon icon={Clock3} size="xs" />
             {(part.durationMs / 1000).toFixed(1)}s
           </span>
         ) : (
-          <ChevronDown
-            className="ml-auto size-3.5 transition-transform group-open:rotate-180"
-            aria-hidden="true"
+          <Icon
+            icon={ChevronDown}
+            size="sm"
+            className="ml-auto transition-transform group-open:rotate-180"
           />
         )}
       </summary>
@@ -456,60 +452,31 @@ export function ChatReasoning({
   )
 }
 
-type ToolPresentation = {
-  icon: typeof CircleDashed
-  label: string
-  tone: string
+/**
+ * Maps the network-facing `ChatToolStatus` union onto the shared `StatusName`
+ * registry. `ChatToolData` is application data that usually arrives over a
+ * network, where `ChatToolStatus` is not enforced, so an unrecognized token
+ * still needs a presentation (`humanizeStatus` below) rather than
+ * dereferencing `undefined` and taking the transcript down — that fallback is
+ * app-data resilience the strictly-typed shared registry shouldn't inherit,
+ * which is why this stays a thin local adapter instead of folding into it.
+ */
+const TOOL_STATUS_MAP: Partial<Record<string, StatusName>> = {
+  pending: 'pending',
+  running: 'loading',
+  'approval-required': 'needs-approval',
+  succeeded: 'success',
+  failed: 'error',
+  cancelled: 'cancelled',
 }
 
-const toolState = {
-  pending: {
-    icon: CircleDashed,
-    label: 'Pending',
-    tone: 'text-tint-muted',
-  },
-  running: {
-    icon: LoaderCircle,
-    label: 'Running',
-    tone: 'text-tint-info-ink',
-  },
-  'approval-required': {
-    icon: ShieldCheck,
-    label: 'Needs approval',
-    tone: 'text-tint-warning-ink',
-  },
-  succeeded: {
-    icon: CheckCircle2,
-    label: 'Complete',
-    tone: 'text-tint-success-ink',
-  },
-  failed: {
-    icon: XCircle,
-    label: 'Failed',
-    tone: 'text-tint-danger-ink',
-  },
-  cancelled: {
-    icon: X,
-    label: 'Cancelled',
-    tone: 'text-tint-muted',
-  },
-} as const satisfies Record<ChatToolStatus, ToolPresentation>
+function toolStatusName(status: ChatToolStatus): StatusName {
+  return TOOL_STATUS_MAP[status] ?? 'pending'
+}
 
-/**
- * `ChatToolData` is application data that usually arrives over a network, where
- * the `ChatToolStatus` union is not enforced. An unrecognized token renders as
- * itself rather than dereferencing `undefined` and taking the transcript down.
- */
-const toolStates: Partial<Record<string, ToolPresentation>> = toolState
-
-function toolPresentation(status: ChatToolStatus): ToolPresentation {
-  return (
-    toolStates[status] ?? {
-      icon: CircleDashed,
-      label: humanizeStatus(status),
-      tone: 'text-tint-muted',
-    }
-  )
+function toolLabel(status: ChatToolStatus): string {
+  const mapped = TOOL_STATUS_MAP[status]
+  return mapped ? STATUS_ICONS[mapped].label : humanizeStatus(status)
 }
 
 export function ChatTool({
@@ -517,9 +484,7 @@ export function ChatTool({
   className,
   ...props
 }: ChatRichPartProps<ChatToolPart>) {
-  const state = toolPresentation(part.tool.status)
-  const Icon = state.icon
-  const spinning = part.tool.status === 'running'
+  const statusName = toolStatusName(part.tool.status)
 
   return (
     <details
@@ -533,7 +498,7 @@ export function ChatTool({
     >
       <summary className="flex cursor-pointer list-none items-center gap-3 p-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tint-accent">
         <span className="grid size-8 place-items-center rounded-lg bg-tint-surface">
-          <Wrench className="size-4" aria-hidden="true" />
+          <Icon icon={Wrench} />
         </span>
         <span className="min-w-0 flex-1">
           <span className="block truncate text-sm font-medium">
@@ -545,13 +510,19 @@ export function ChatTool({
             </span>
           ) : null}
         </span>
-        <span className={cn('flex items-center gap-1.5 text-xs font-medium', state.tone)}>
-          <Icon className={cn('size-3.5', spinning && 'animate-spin motion-reduce:animate-none')} aria-hidden="true" />
-          {state.label}
+        <span
+          className={cn(
+            'flex items-center gap-1.5 text-xs font-medium',
+            STATUS_ICONS[statusName].tone,
+          )}
+        >
+          <StatusIcon status={statusName} size="sm" />
+          {toolLabel(part.tool.status)}
         </span>
-        <ChevronDown
-          className="size-3.5 text-tint-muted transition-transform group-open:rotate-180"
-          aria-hidden="true"
+        <Icon
+          icon={ChevronDown}
+          size="sm"
+          className="text-tint-muted transition-transform group-open:rotate-180"
         />
       </summary>
       {part.tool.input !== undefined ||
@@ -616,7 +587,7 @@ export function ChatApproval({
     >
       <div className="flex items-start gap-3">
         <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-tint-warning/20 text-tint-warning-ink">
-          <ShieldCheck className="size-4" aria-hidden="true" />
+          <Icon icon={ShieldCheck} />
         </span>
         <div className="min-w-0 flex-1">
           <h4 className="text-sm font-semibold text-tint-warning-ink">
@@ -666,9 +637,9 @@ export function ChatApproval({
       ) : (
         <p className="mt-3 flex items-center gap-1.5 text-xs font-medium text-tint-warning-ink">
           {part.approval.status === 'approved' ? (
-            <CheckCircle2 className="size-3.5 text-tint-success" aria-hidden="true" />
+            <Icon icon={CheckCircle2} size="sm" className="text-tint-success" />
           ) : (
-            <XCircle className="size-3.5 text-tint-danger" aria-hidden="true" />
+            <Icon icon={XCircle} size="sm" className="text-tint-danger" />
           )}
           {part.approval.status === 'approved' ? 'Approved' : 'Denied'}
         </p>
@@ -693,7 +664,7 @@ export function ChatArtifact({
       {...props}
     >
       <header className="flex items-center gap-2 border-b border-tint-border px-3 py-2.5">
-        <Terminal className="size-4 text-tint-accent" aria-hidden="true" />
+        <Icon icon={Terminal} className="text-tint-accent" />
         <div className="min-w-0">
           <h4 className="truncate text-sm font-medium">{part.title}</h4>
           <p className="text-xs text-tint-muted">{part.kind}</p>
@@ -735,7 +706,7 @@ export function ChatError({
       )}
       {...props}
     >
-      <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+      <Icon icon={AlertCircle} className="mt-0.5 shrink-0" />
       <div className="min-w-0 flex-1">
         <p className="text-sm">{part.message}</p>
         {part.code ? <p className="mt-1 text-xs text-tint-danger-ink/80">{part.code}</p> : null}
@@ -746,7 +717,7 @@ export function ChatError({
           onClick={onRetry}
           className="inline-flex shrink-0 items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold hover:bg-tint-danger/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tint-danger"
         >
-          <RotateCcw className="size-3.5" aria-hidden="true" />
+          <Icon icon={RotateCcw} size="sm" />
           Retry
         </button>
       ) : null}
@@ -802,7 +773,7 @@ function UnsupportedPart({ kind }: { kind?: string }) {
       data-chat-part="unsupported"
       className="flex items-center gap-2 rounded-lg border border-dashed border-tint-border bg-tint-surface p-3 text-sm text-tint-muted"
     >
-      <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
+      <Icon icon={AlertCircle} className="shrink-0" />
       {kind
         ? `This message contains a “${humanizeStatus(kind)}” part this version cannot display.`
         : 'This message contains a part this version cannot display.'}
@@ -868,7 +839,7 @@ export function ChatMessagePartView<TCustomPart extends ChatCustomPart = never>(
       data-chat-part="render-error"
       className="flex items-center gap-2 rounded-lg border border-tint-danger/35 bg-tint-danger-soft p-3 text-sm text-tint-danger-ink"
     >
-      <AlertCircle className="size-4" aria-hidden="true" />
+      <Icon icon={AlertCircle} />
       This message part could not be displayed.
     </div>
   )
@@ -896,7 +867,7 @@ export function ChatMessagePartView<TCustomPart extends ChatCustomPart = never>(
         className="rounded-xl border border-dashed border-tint-border bg-tint-surface p-3"
       >
         <div className="mb-2 flex items-center gap-2 text-xs font-semibold">
-          <File className="size-3.5" aria-hidden="true" />
+          <Icon icon={File} size="sm" />
           {stripBidi(part.kind)}
         </div>
         <JsonPreview
