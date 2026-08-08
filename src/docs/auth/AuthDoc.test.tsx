@@ -17,9 +17,11 @@ describe('AuthDoc', () => {
     await screen.findByRole('button', { name: 'Sign in' })
     submitSignIn()
 
-    expect(await screen.findByText('operator@example.test')).toBeInTheDocument()
+    // 'Signed in as' is unique to the session panel; the demo email also appears
+    // in the credentials table, so matching on it alone would pass immediately.
+    expect(await screen.findByText('Signed in as')).toBeInTheDocument()
 
-    fireEvent.click(screen.getByRole('button', { name: 'Sign out' }))
+    fireEvent.click(await screen.findByRole('button', { name: 'Sign out' }))
     await waitFor(() => expect(screen.getByRole('button', { name: 'Sign in' })).toBeInTheDocument())
   })
 
