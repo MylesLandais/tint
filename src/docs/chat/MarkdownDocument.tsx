@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import Markdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { safeHref } from '@/components/chat'
+import { safeHref } from '../../components/chat'
 
 const components: Components = {
   h1: ({ children }) => (

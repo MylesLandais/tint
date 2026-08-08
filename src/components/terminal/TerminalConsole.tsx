@@ -2,9 +2,9 @@ import { FitAddon } from '@xterm/addon-fit'
 import { Terminal as XtermTerminal, type ITheme } from '@xterm/xterm'
 import { Eraser, RefreshCw, Terminal as TerminalIcon } from 'lucide-react'
 import { useEffect, useRef } from 'react'
-import { Icon, StatusIcon } from '@/components/icon'
-import { Panel } from '@/components/panel'
-import { cn } from '@/lib/utils'
+import { Icon, StatusIcon } from '../icon'
+import { Panel } from '../panel'
+import { cn } from '../../lib/utils'
 import type {
   TerminalConsoleProps,
   TerminalSession,

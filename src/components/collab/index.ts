@@ -9,4 +9,4 @@ export type {
 } from './types'
 
 /** Re-exported for hosts that need a manual update round-trip without importing vendor. */
-export { applyUpdate, encodeStateAsUpdate } from '@/vendor/yjs'
+export { applyUpdate, encodeStateAsUpdate } from '../../vendor/yjs'

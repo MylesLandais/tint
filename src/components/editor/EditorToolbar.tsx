@@ -16,8 +16,8 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import type { ReactNode } from 'react'
-import { Icon } from '@/components/icon'
-import { cn } from '@/lib/utils'
+import { Icon } from '../icon'
+import { cn } from '../../lib/utils'
 
 type ToolbarButtonProps = {
   label: string

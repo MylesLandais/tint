@@ -1,10 +1,12 @@
 {
   "name": "tint",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "Tint — controlled React components for media and rich chat interfaces.",
-  "files": ["src"],
+  "files": [
+    "src"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

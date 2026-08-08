@@ -1,6 +1,6 @@
 import { ExternalLink, Library, ListPlus } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import { Icon } from '@/components/icon'
+import { Icon } from '../../components/icon'
 import {
   DataFilterControls,
   DataTable,
@@ -17,7 +17,7 @@ import {
   type DataFilterModel,
   type DataSortingState,
   type TableColumn,
-} from '@/components/table'
+} from '../../components/table'
 import {
   COLLECTION_STATE_LABELS,
   CONFIDENCE_LABELS,

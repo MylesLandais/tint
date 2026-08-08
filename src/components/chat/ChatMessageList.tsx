@@ -9,8 +9,8 @@ import {
   type KeyboardEvent,
   type UIEvent,
 } from 'react'
-import { cn } from '@/lib/utils'
-import { Spinner } from '@/components/icon'
+import { cn } from '../../lib/utils'
+import { Spinner } from '../icon'
 import { ChatMessage } from './ChatMessage'
 import { ChatEmptyState, ChatScrollToBottom } from './ChatPrimitives'
 import { stripBidi } from './sanitize'

@@ -6,7 +6,7 @@ import type {
 } from '@tiptap/core'
 import type { FocusPosition } from '@tiptap/core'
 import type { Ref, ReactNode } from 'react'
-import type { IconGlyph } from '@/components/icon'
+import type { IconGlyph } from '../icon'
 
 export type EditorDocument = JSONContent
 

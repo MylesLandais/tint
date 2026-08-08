@@ -1,7 +1,7 @@
 import { ArrowDown, CalendarDays, MessageCircle } from 'lucide-react'
 import type { ButtonHTMLAttributes } from 'react'
-import { cn } from '@/lib/utils'
-import { Icon, Spinner } from '@/components/icon'
+import { cn } from '../../lib/utils'
+import { Icon, Spinner } from '../icon'
 import type {
   ChatComposerSlotProps,
   ChatMessageSlotProps,

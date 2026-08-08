@@ -7,7 +7,7 @@ import type {
   ChatMessagePart,
   ChatSubmitPayload,
   ChatToolApprovalPayload,
-} from '@/components/chat'
+} from '../../../components/chat'
 import {
   chatDemoScenarios,
   demoAssistant,

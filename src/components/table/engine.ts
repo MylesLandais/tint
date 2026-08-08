@@ -10,7 +10,7 @@
  * by it. A server-side `ORDER BY` and this client still agree.
  */
 
-import type { Row } from '@/vendor/tanstack-table-core'
+import type { Row } from '../../vendor/tanstack-table-core'
 import { compareValues, matchesFilter } from './derive'
 import type { TableFilter } from './types'
 

@@ -1,7 +1,7 @@
 import { ArrowDown, ArrowUp, Filter, Plus, X } from 'lucide-react'
 import { useId, useMemo, useState } from 'react'
-import { Icon } from '@/components/icon'
-import { cn } from '@/lib/utils'
+import { Icon } from '../icon'
+import { cn } from '../../lib/utils'
 import type {
   DataFilterField,
   DataFilterItem,

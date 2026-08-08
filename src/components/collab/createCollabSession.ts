@@ -9,7 +9,7 @@
  * Quill and minus the public demo websocket.
  */
 
-import * as Y from '@/vendor/yjs'
+import * as Y from '../../vendor/yjs'
 import { TintAwareness } from './awareness'
 import { connectBroadcastProvider } from './broadcast'
 import type { CollabConfig, CollabSession } from './types'

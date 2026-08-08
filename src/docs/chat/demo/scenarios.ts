@@ -1,7 +1,7 @@
 import type {
   ChatActor,
   ChatMessageData,
-} from '@/components/chat'
+} from '../../../components/chat'
 
 export type ChatDemoScenarioId =
   | 'research'

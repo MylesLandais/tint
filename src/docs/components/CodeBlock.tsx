@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Check, Copy } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { Icon } from '@/components/icon'
+import { cn } from '../../lib/utils'
+import { Icon } from '../../components/icon'
 
 type CodeBlockProps = {
   code: string

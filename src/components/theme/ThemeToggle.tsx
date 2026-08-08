@@ -1,7 +1,7 @@
 import { Monitor, Moon, Sun } from 'lucide-react'
 import { useRef, type KeyboardEvent } from 'react'
-import { cn } from '@/lib/utils'
-import { Icon } from '@/components/icon'
+import { cn } from '../../lib/utils'
+import { Icon } from '../icon'
 import type { ColorSchemePreference, ThemeToggleProps } from './types'
 
 const OPTIONS = [

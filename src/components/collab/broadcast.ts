@@ -6,7 +6,7 @@
  * Origin tokens stop echo loops — the same pattern y-websocket uses.
  */
 
-import * as Y from '@/vendor/yjs'
+import * as Y from '../../vendor/yjs'
 import type { TintAwareness } from './awareness'
 
 type AwarenessWire = {

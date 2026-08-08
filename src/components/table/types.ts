@@ -1,5 +1,5 @@
 import type { HTMLAttributes, ReactNode, Ref } from 'react'
-import type { Table as TableInstance } from '@/vendor/tanstack-table-core'
+import type { Table as TableInstance } from '../../vendor/tanstack-table-core'
 import type { TableFieldType } from './fieldTypes'
 
 export type { TableInstance }

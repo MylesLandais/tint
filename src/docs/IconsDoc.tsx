@@ -47,10 +47,10 @@ import {
   X,
   XCircle,
 } from 'lucide-react'
-import { Icon, StatusIcon, Spinner, ICON_SIZES, STATUS_ICONS } from '@/components/icon'
-import type { IconSize, StatusName } from '@/components/icon'
-import { DiceRoller, D10, D20 } from '@/components/dice'
-import type { DiceKind } from '@/components/dice'
+import { Icon, StatusIcon, Spinner, ICON_SIZES, STATUS_ICONS } from '../components/icon'
+import type { IconSize, StatusName } from '../components/icon'
+import { DiceRoller, D10, D20 } from '../components/dice'
+import type { DiceKind } from '../components/dice'
 import { CodeBlock } from './components/CodeBlock'
 import { PropsTable } from './components/PropsTable'
 import { DocsNav } from './components/DocsNav'

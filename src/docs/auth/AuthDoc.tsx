@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { createAuthClient } from '@/auth/client'
+import { createAuthClient } from '../../auth/client'
 import {
   AuthProvider,
   OAuthButtons,
@@ -8,8 +8,8 @@ import {
   useSession,
   type OAuthOption,
   type SignInFormLabels,
-} from '@/components/auth'
-import '@/components/auth/styles.css'
+} from '../../components/auth'
+import '../../components/auth/styles.css'
 import { CodeBlock } from '../components/CodeBlock'
 import { DocsNav } from '../components/DocsNav'
 import { PropsTable } from '../components/PropsTable'

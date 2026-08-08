@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils'
+import { cn } from '../../lib/utils'
 import { Icon } from './Icon'
 import { STATUS_ICONS } from './status'
 import type { StatusIconProps } from './types'

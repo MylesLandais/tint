@@ -1,7 +1,7 @@
 import { ChevronLeft, ChevronRight, Columns3, Eye, EyeOff } from 'lucide-react'
 import { useEffect, useId, useRef, useState } from 'react'
-import { cn } from '@/lib/utils'
-import { Icon } from '@/components/icon'
+import { cn } from '../../lib/utils'
+import { Icon } from '../icon'
 import type {
   TableColumnsMenuProps,
   TablePagerProps,

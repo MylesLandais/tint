@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Dice1, Dice2, Dice3, Dice4, Dice5, Dice6, Shuffle } from 'lucide-react'
 import { motion, useReducedMotion } from 'motion/react'
-import { cn } from '@/lib/utils'
-import { Icon, type IconGlyph } from '@/components/icon'
+import { cn } from '../../lib/utils'
+import { Icon, type IconGlyph } from '../icon'
 import { D10, D20 } from './glyphs'
 import type { DiceKind, DiceRollerProps } from './types'
 

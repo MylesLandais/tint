@@ -6,7 +6,7 @@ import {
   editorDocumentToHTML,
   type EditorDocument,
   type EditorSlashCommand,
-} from '@/components/editor'
+} from '../../components/editor'
 import { CodeBlock } from '../components/CodeBlock'
 import { DocsNav } from '../components/DocsNav'
 import { PropsTable } from '../components/PropsTable'

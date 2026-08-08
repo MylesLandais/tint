@@ -9,8 +9,8 @@ import {
 } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { Check, Search } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { Icon } from '@/components/icon'
+import { cn } from '../../lib/utils'
+import { Icon } from '../icon'
 
 export type SettingsPopoutItem = {
   id: string

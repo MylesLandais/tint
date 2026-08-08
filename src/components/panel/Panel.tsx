@@ -4,8 +4,8 @@ import {
   type HTMLAttributes,
   type ReactNode,
 } from 'react'
-import { Icon } from '@/components/icon'
-import { cn } from '@/lib/utils'
+import { Icon } from '../icon'
+import { cn } from '../../lib/utils'
 
 export type PanelProps = Omit<HTMLAttributes<HTMLDivElement>, 'title'> & {
   /** Always-visible label for the panel disclosure. */

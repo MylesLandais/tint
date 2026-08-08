@@ -1,5 +1,5 @@
 import { Accessibility, Boxes, Code2, FlaskConical } from 'lucide-react'
-import { Icon } from '@/components/icon'
+import { Icon } from '../../components/icon'
 import { CodeBlock } from '../components/CodeBlock'
 import { PropsTable } from '../components/PropsTable'
 import { DocsNav } from '../components/DocsNav'

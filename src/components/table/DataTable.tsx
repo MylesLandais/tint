@@ -8,8 +8,8 @@ import {
   type ReactNode,
   type UIEvent,
 } from 'react'
-import { cn } from '@/lib/utils'
-import { Icon } from '@/components/icon'
+import { cn } from '../../lib/utils'
+import { Icon } from '../icon'
 import { getCellValue, nextSort, visibleColumns } from './derive'
 import { formatFieldValue, resolveFieldType } from './fieldTypes'
 import type {

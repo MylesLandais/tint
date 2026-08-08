@@ -1,6 +1,6 @@
 import { LayoutGrid, Rows3, Search } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import { Icon } from '@/components/icon'
+import { Icon } from '../../components/icon'
 import {
   DataMasonry,
   DataTable,
@@ -11,7 +11,7 @@ import {
   type DataFilterModel,
   type MasonryDensity,
   type TableColumn,
-} from '@/components/table'
+} from '../../components/table'
 import {
   COLLECTION_STATE_LABELS,
   PLATFORM_LABELS,

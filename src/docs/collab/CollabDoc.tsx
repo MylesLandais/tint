@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react'
-import { createCollabSession, type CollabSession } from '@/components/collab'
+import { createCollabSession, type CollabSession } from '../../components/collab'
 import { CodeBlock } from '../components/CodeBlock'
 import { DocsNav } from '../components/DocsNav'
 

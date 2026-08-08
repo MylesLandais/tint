@@ -11,8 +11,8 @@ import {
   type FormEvent,
   type KeyboardEvent,
 } from 'react'
-import { cn } from '@/lib/utils'
-import { Icon, Spinner } from '@/components/icon'
+import { cn } from '../../lib/utils'
+import { Icon, Spinner } from '../icon'
 import {
   ChatComposerAttachments,
   ChatComposerFooter,

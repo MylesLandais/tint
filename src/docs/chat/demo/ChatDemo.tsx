@@ -9,9 +9,9 @@ import {
   ChatComposer,
   ChatConversation,
   ChatMessageList,
-} from '@/components/chat'
-import { Icon } from '@/components/icon'
-import { cn } from '@/lib/utils'
+} from '../../../components/chat'
+import { Icon } from '../../../components/icon'
+import { cn } from '../../../lib/utils'
 import { useChatDemo } from './useChatDemo'
 import type { ChatDemoScenarioId } from './scenarios'
 

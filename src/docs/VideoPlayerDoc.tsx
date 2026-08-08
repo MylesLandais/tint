@@ -1,4 +1,4 @@
-import { VideoPlayer } from '@/components/video-player'
+import { VideoPlayer } from '../components/video-player'
 import { CodeBlock } from './components/CodeBlock'
 import { PropsTable } from './components/PropsTable'
 import { DocsNav } from './components/DocsNav'

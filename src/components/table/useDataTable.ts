@@ -12,7 +12,7 @@ import {
   type Table,
   type TableState,
   type Updater,
-} from '@/vendor/tanstack-table-core'
+} from '../../vendor/tanstack-table-core'
 import { tintFilter, tintNatural } from './engine'
 import type { TableColumn } from './types'
 

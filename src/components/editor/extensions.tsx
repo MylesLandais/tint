@@ -26,7 +26,7 @@ import {
   useImperativeHandle,
   useState,
 } from 'react'
-import { Icon } from '@/components/icon'
+import { Icon } from '../icon'
 import type { EditorSlashCommand } from './types'
 
 type SlashMenuProps = SuggestionProps<EditorSlashCommand, EditorSlashCommand>

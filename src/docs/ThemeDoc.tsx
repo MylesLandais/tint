@@ -1,4 +1,4 @@
-import { ThemePicker, ThemeToggle, useColorScheme, useThemeName } from '@/components/theme'
+import { ThemePicker, ThemeToggle, useColorScheme, useThemeName } from '../components/theme'
 import { CodeBlock } from './components/CodeBlock'
 import { PropsTable } from './components/PropsTable'
 import { DocsNav } from './components/DocsNav'

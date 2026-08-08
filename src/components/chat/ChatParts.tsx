@@ -28,9 +28,9 @@ import {
 } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { cn } from '@/lib/utils'
-import { Icon, Spinner, StatusIcon, STATUS_ICONS } from '@/components/icon'
-import type { StatusName } from '@/components/icon'
+import { cn } from '../../lib/utils'
+import { Icon, Spinner, StatusIcon, STATUS_ICONS } from '../icon'
+import type { StatusName } from '../icon'
 import { safeHref, stripBidi } from './sanitize'
 import { useCopied } from './useCopied'
 import type {

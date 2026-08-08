@@ -1,4 +1,4 @@
-import type * as Y from '@/vendor/yjs'
+import type * as Y from '../../vendor/yjs'
 import type { TintAwareness } from './awareness'
 
 export type CreateWebsocketProvider = (args: {

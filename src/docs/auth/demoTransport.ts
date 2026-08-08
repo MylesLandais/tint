@@ -1,4 +1,4 @@
-import { AuthError, type AuthSession, type AuthTransport } from '@/auth/client'
+import { AuthError, type AuthSession, type AuthTransport } from '../../auth/client'
 
 /**
  * An in-memory `AuthTransport` for the docs.

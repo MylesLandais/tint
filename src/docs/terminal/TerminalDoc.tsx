@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { TerminalConsole, type TerminalOutput, type TerminalSession, type TerminalStatus } from '@/components/terminal'
+import { TerminalConsole, type TerminalOutput, type TerminalSession, type TerminalStatus } from '../../components/terminal'
 import { CodeBlock } from '../components/CodeBlock'
 import { DocsNav } from '../components/DocsNav'
 import { PropsTable } from '../components/PropsTable'

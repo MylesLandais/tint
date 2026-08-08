@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useRef, useState, type VideoHTMLAttributes } from 'react'
 import { Settings } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
-import { cn } from '@/lib/utils'
-import { Icon } from '@/components/icon'
-import { SettingsPopout, type SettingsPopoutItem } from '@/components/settings-popout'
+import { cn } from '../../lib/utils'
+import { Icon } from '../icon'
+import { SettingsPopout, type SettingsPopoutItem } from '../settings-popout'
 import { Slider } from './Slider'
 import { VolumeControl } from './VolumeControl'
 
