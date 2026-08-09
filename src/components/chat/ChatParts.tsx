@@ -29,8 +29,8 @@ import {
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { cn } from '../../lib/utils'
-import { AudioPlayer } from '../audio-player'
 import { HighlightedCode } from '../code'
+import { MediaPlayer } from '../media-player'
 import { Icon, Spinner, StatusIcon, STATUS_ICONS } from '../icon'
 import type { StatusName } from '../icon'
 import { safeHref, stripBidi } from './sanitize'
@@ -310,7 +310,8 @@ export function ChatAudio({
         <Icon icon={Music2} />
         Audio
       </div>
-      <AudioPlayer
+      <MediaPlayer
+        kind="audio"
         src={part.src}
         label={part.title ?? 'audio message'}
         title={part.title}

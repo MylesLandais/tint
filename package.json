@@ -16,10 +16,10 @@
   },
   "exports": {
     ".": "./src/index.ts",
+    "./media-player": "./src/components/media-player/index.ts",
     "./video-player": "./src/components/video-player/index.ts",
     "./media": "./src/components/media/index.ts",
     "./code": "./src/components/code/index.ts",
-    "./audio-player": "./src/components/audio-player/index.ts",
     "./audio-input": "./src/components/audio-input/index.ts",
     "./chat": "./src/components/chat/index.ts",
     "./table": "./src/components/table/index.ts",

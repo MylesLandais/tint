@@ -1,9 +1,18 @@
+export { formatTime, MediaPlaceholder, Slider, VolumeControl, Waveform } from './components/media'
+export type {
+  MediaPlaceholderProps,
+  SliderProps,
+  VolumeControlProps,
+  WaveformProps,
+} from './components/media'
+export { MediaPlayer } from './components/media-player'
+export type {
+  MediaPlayerAudioProps,
+  MediaPlayerProps,
+  MediaPlayerVideoProps,
+} from './components/media-player'
 export { VideoPlayer } from './components/video-player'
 export type { VideoPlayerProps } from './components/video-player'
-export { formatTime, Slider, VolumeControl } from './components/media'
-export type { SliderProps, VolumeControlProps } from './components/media'
-export { AudioPlayer } from './components/audio-player'
-export type { AudioPlayerProps } from './components/audio-player'
 export { AudioInput } from './components/audio-input'
 export type {
   AudioCaptureMeta,
@@ -69,6 +78,9 @@ export type * from './components/dice'
 
 export { Panel } from './components/panel'
 export type * from './components/panel'
+
+export { CodeTabs, HighlightedCode } from './components/code'
+export type { CodeTab, CodeTabsProps, HighlightedCodeProps, TabItem } from './components/code'
 
 export {
   Editor,

@@ -10,70 +10,148 @@
 }
 
 @layer components {
-  [data-tint-audio-player] {
+  /*
+   * MediaPlayer size tiers: sm / md / lg (see src/components/media-player/sizes.ts
+   * for the canonical threshold values — 22rem and 40rem — cross-referenced
+   * here rather than duplicated, since there's no build-time sharing between
+   * TS and CSS in this repo).
+   *
+   * `lg` is the unprefixed base below: a full-width surface (16:9 for video,
+   * a 14rem square for audio) stacked above a full-width control bar. The
+   * `@container` rules narrow that down to a compact single row at `md`, then
+   * cull secondary controls at `sm`. An explicit `size` prop sets `data-size`
+   * on the root, which the mirrored `[data-size='…']` blocks below apply
+   * regardless of measured width; `:not([data-size])` on every auto-detect
+   * declaration keeps the two paths from silently diverging.
+   */
+  [data-tint-media-player] {
     container-type: inline-size;
   }
 
-  [data-tint-audio-player] [data-audio-surface] {
+  [data-tint-media-player] [data-media-surface-wrap] {
     background: color-mix(in srgb, var(--tint-panel) 90%, transparent);
   }
 
-  [data-tint-audio-player][data-shadow='offset'] [data-audio-surface] {
-    box-shadow: 6px 6px 0
-      color-mix(in srgb, var(--tint-ink) 20%, transparent);
+  [data-tint-media-player][data-shadow='offset'] [data-media-surface-wrap] {
+    box-shadow: 6px 6px 0 color-mix(in srgb, var(--tint-ink) 20%, transparent);
   }
 
-  @container (max-width: 34rem) {
+  [data-tint-media-player][data-kind='video'] [data-media-surface] {
+    aspect-ratio: 16 / 9;
+  }
+
+  [data-tint-media-player][data-kind='audio'] [data-media-surface] {
+    aspect-ratio: 1;
+    max-width: 14rem;
+  }
+
+  /* md: 22rem–40rem, auto-detected */
+  @container (max-width: 40rem) {
     /* These scoped declarations intentionally outrank Tailwind utilities on
        the component's descendants; the utilities live in a later layer. */
-    [data-tint-audio-player] [data-audio-surface] {
-      gap: 0.875rem !important;
-      padding-inline: 0.75rem !important;
-    }
-
-    [data-tint-audio-player] [data-audio-previous],
-    [data-tint-audio-player] [data-audio-next],
-    [data-tint-audio-player] [data-audio-divider],
-    [data-tint-audio-player] [data-audio-volume] {
-      display: none !important;
-    }
-  }
-
-  @container (max-width: 25rem) {
-    [data-tint-audio-player] [data-audio-surface] {
-      min-height: 4.5rem !important;
+    [data-tint-media-player]:not([data-size]) [data-media-surface-wrap] {
+      flex-direction: row !important;
+      align-items: center !important;
       gap: 0.625rem !important;
       padding: 0.625rem !important;
     }
 
-    [data-tint-audio-player] [data-audio-artwork] {
-      width: 3rem !important;
-      height: 3rem !important;
+    [data-tint-media-player]:not([data-size]) [data-media-surface] {
+      width: 3.5rem !important;
+      height: 3.5rem !important;
+      max-width: none !important;
+      aspect-ratio: auto !important;
     }
 
-    [data-tint-audio-player] [data-audio-transport] {
-      gap: 0 !important;
-    }
-
-    [data-tint-audio-player] [data-audio-artist],
-    [data-tint-audio-player] [data-audio-time='remaining'] {
+    [data-tint-media-player]:not([data-size]) [data-media-settings] {
       display: none !important;
     }
 
-    [data-tint-audio-player] [data-audio-meta] {
-      display: block !important;
-    }
-
-    [data-tint-audio-player][data-shadow='offset'] [data-audio-surface] {
-      box-shadow: 4px 4px 0
-        color-mix(in srgb, var(--tint-ink) 20%, transparent);
+    [data-tint-media-player]:not([data-size]) [data-media-transport] {
+      gap: 0 !important;
     }
   }
 
-  @container (max-width: 19rem) {
-    [data-tint-audio-player] [data-audio-artwork] {
+  /* sm: < 22rem, auto-detected. Volume stays visible even here — a chat-bubble
+     slot is narrow, but VolumeControl is just one small button until hovered,
+     so it costs little and the control is worth keeping reachable. */
+  @container (max-width: 22rem) {
+    [data-tint-media-player]:not([data-size]) [data-media-surface] {
+      width: 2.5rem !important;
+      height: 2.5rem !important;
+    }
+
+    [data-tint-media-player]:not([data-size]) [data-media-bar] {
+      gap: 0.625rem !important;
+    }
+
+    [data-tint-media-player]:not([data-size]) [data-media-previous],
+    [data-tint-media-player]:not([data-size]) [data-media-next],
+    [data-tint-media-player]:not([data-size]) [data-media-divider],
+    [data-tint-media-player]:not([data-size]) [data-media-artist],
+    [data-tint-media-player]:not([data-size]) [data-media-time='remaining'] {
       display: none !important;
     }
+
+    [data-tint-media-player][data-shadow='offset']:not([data-size]) [data-media-surface-wrap] {
+      box-shadow: 4px 4px 0 color-mix(in srgb, var(--tint-ink) 20%, transparent);
+    }
+  }
+
+  /* md override: same declarations as the auto @container block above, but
+     width-independent — wins regardless of measured container size. */
+  [data-tint-media-player][data-size='md'] [data-media-surface-wrap] {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 0.625rem !important;
+    padding: 0.625rem !important;
+  }
+
+  [data-tint-media-player][data-size='md'] [data-media-surface] {
+    width: 3.5rem !important;
+    height: 3.5rem !important;
+    max-width: none !important;
+    aspect-ratio: auto !important;
+  }
+
+  [data-tint-media-player][data-size='md'] [data-media-settings] {
+    display: none !important;
+  }
+
+  [data-tint-media-player][data-size='md'] [data-media-transport] {
+    gap: 0 !important;
+  }
+
+  /* sm override */
+  [data-tint-media-player][data-size='sm'] [data-media-surface-wrap] {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 0.625rem !important;
+    padding: 0.625rem !important;
+  }
+
+  [data-tint-media-player][data-size='sm'] [data-media-surface] {
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+    max-width: none !important;
+    aspect-ratio: auto !important;
+  }
+
+  [data-tint-media-player][data-size='sm'] [data-media-bar] {
+    gap: 0.625rem !important;
+  }
+
+  [data-tint-media-player][data-size='sm'] [data-media-settings],
+  [data-tint-media-player][data-size='sm'] [data-media-previous],
+  [data-tint-media-player][data-size='sm'] [data-media-next],
+  [data-tint-media-player][data-size='sm'] [data-media-divider],
+  [data-tint-media-player][data-size='sm'] [data-media-artist],
+  [data-tint-media-player][data-size='sm'] [data-media-time='remaining'] {
+    display: none !important;
+  }
+
+  [data-tint-media-player][data-shadow='offset'][data-size='sm'] [data-media-surface-wrap] {
+    box-shadow: 4px 4px 0 color-mix(in srgb, var(--tint-ink) 20%, transparent);
   }
 
   .tint-editor-content .tiptap {

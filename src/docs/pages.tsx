@@ -1,12 +1,11 @@
 import { lazy, type ComponentType } from 'react'
 import type { DocRoutePath } from './routes'
-import { AudioPlayerDoc } from './AudioPlayerDoc'
 import { ChatComponentDoc } from './chat/ChatComponentDoc'
 import { CollabDoc } from './collab/CollabDoc'
 import { IconsDoc } from './IconsDoc'
+import { MediaPlayerDoc } from './MediaPlayerDoc'
 import { TableDoc } from './table/TableDoc'
 import { ThemeDoc } from './ThemeDoc'
-import { VideoPlayerDoc } from './VideoPlayerDoc'
 import { AudioInputDoc } from './AudioInputDoc'
 
 /**
@@ -30,8 +29,7 @@ const AuthDoc = lazy(() => import('./auth/AuthDoc').then((module) => ({ default:
  * here (or vice versa) is a compile error, so the two can never drift.
  */
 export const DOC_PAGES = {
-  'components/video-player': VideoPlayerDoc,
-  'components/audio-player': AudioPlayerDoc,
+  'components/media-player': MediaPlayerDoc,
   'components/chat': ChatComponentDoc,
   'components/audio-input': AudioInputDoc,
   'components/table': TableDoc,

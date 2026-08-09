@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { AudioInput } from '../components/audio-input'
-import { AudioPlayer } from '../components/audio-player'
 import { ChatComposer } from '../components/chat'
+import { MediaPlayer } from '../components/media-player'
 import { CodeBlock } from './components/CodeBlock'
 import { DocsNav } from './components/DocsNav'
 import { PropsTable } from './components/PropsTable'
@@ -56,7 +56,7 @@ export function AudioInputDoc() {
                 })
               }} />}
             />
-            {recording ? <AudioPlayer src={recording.url} label="Recorded voice note" duration={recording.duration} className="mt-4" /> : null}
+            {recording ? <MediaPlayer kind="audio" src={recording.url} label="Recorded voice note" duration={recording.duration} className="mt-4" /> : null}
           </div>
         </section>
         <section id="usage" className="mb-14 max-w-3xl scroll-mt-24">

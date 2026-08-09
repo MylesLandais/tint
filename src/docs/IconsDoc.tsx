@@ -261,7 +261,7 @@ export function IconsDoc() {
             consistent decorative-by-default accessibility posture.{' '}
             <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">StatusIcon</code> layers
             a semantic status registry (loading, success, error, …) on top, reused across
-            chat, table, and video-player rather than reimplemented per feature.
+            chat, table, and media-player rather than reimplemented per feature.
           </p>
         </section>
 

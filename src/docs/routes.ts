@@ -34,23 +34,14 @@ const USAGE_AND_API: readonly DocSection[] = [
 
 const ROUTE_DATA = [
   {
-    path: 'components/video-player',
-    label: 'Video Player',
-    blurb: 'Media player with custom controls, a volume drawer, and a settings popout.',
+    path: 'components/media-player',
+    label: 'Media Player',
+    blurb: 'One container-responsive surface for audio and video: transport, waveform seek, volume, and a settings popout.',
+    aliases: ['components/audio-player', 'components/video-player'],
     sections: [
       { id: 'preview', label: 'Preview' },
       { id: 'usage', label: 'Usage' },
       { id: 'features', label: 'Features' },
-      { id: 'api', label: 'API' },
-    ],
-  },
-  {
-    path: 'components/audio-player',
-    label: 'Audio Player',
-    blurb: 'Container-responsive mini player with artwork, transport, seek, and volume controls.',
-    sections: [
-      { id: 'preview', label: 'Preview' },
-      { id: 'usage', label: 'Usage' },
       { id: 'api', label: 'API' },
     ],
   },

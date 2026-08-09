@@ -1,9 +1,9 @@
 # tint
 
 Tint is a React component library for media, rich chat, drafting, and interactive
-workbench interfaces. It includes **VideoPlayer**, **AudioPlayer**, controlled
-**AudioInput** and **Chat** components, a WYSIWYG **Editor**, and a runtime-agnostic
-**TerminalConsole**.
+workbench interfaces. It includes **MediaPlayer** (one entry point for audio and video),
+controlled **AudioInput** and **Chat** components, a WYSIWYG **Editor**, and a
+runtime-agnostic **TerminalConsole**.
 
 The documentation site contains an interactive, client-only Chat demo alongside prop tables for
 each component. The research that informed Chat's controlled architecture, accessibility
@@ -25,7 +25,7 @@ browser entrypoint.
 Open `http://tint.localhost/` for the component index — every documented component
 is linked from there, including `#/components/editor` (the rich-text buffer),
 `#/components/terminal` (the mock PTY-backed terminal), `#/components/auth`, and
-`#/components/chat`, `#/components/audio-player`, and `#/components/audio-input`.
+`#/components/chat`, `#/components/media-player`, and `#/components/audio-input`.
 
 Doc pages are declared once in `src/docs/routes.ts`; the router, the page title, the
 breadcrumb, and the index cards all read from that list, so a new entry appears
@@ -36,10 +36,10 @@ Demo video: [Big Buck Bunny](https://test-videos.co.uk/bigbuckbunny/mp4-h264) (M
 ## Using the component
 
 ```tsx
-import { VideoPlayer } from 'tint'
+import { MediaPlayer } from 'tint'
 
 export function Example() {
-  return <VideoPlayer src="/videos/big-buck-bunny.mp4" />
+  return <MediaPlayer kind="video" src="/videos/big-buck-bunny.mp4" label="Big Buck Bunny" />
 }
 ```
 
@@ -55,7 +55,7 @@ service or send audio anywhere by itself:
 
 ```tsx
 import { AudioInput, type AudioTranscriber } from 'tint/audio-input'
-import { AudioPlayer } from 'tint/audio-player'
+import { MediaPlayer } from 'tint/media-player'
 
 <AudioInput
   transcriber={transcriber satisfies AudioTranscriber}
@@ -63,7 +63,8 @@ import { AudioPlayer } from 'tint/audio-player'
   onValueChange={setDraft}
   onCapture={(blob, meta) => saveVoiceNote(blob, meta.duration)}
 />
-<AudioPlayer
+<MediaPlayer
+  kind="audio"
   src="/recordings/briefing.webm"
   label="Project briefing"
   title="Project briefing"
@@ -73,8 +74,9 @@ import { AudioPlayer } from 'tint/audio-player'
 />
 ```
 
-`AudioPlayer` scales to the width of its containing slot: full rails retain queue and volume
-controls, while narrow chat slots reduce to artwork, playback, metadata, and seek. The optional
+`MediaPlayer` scales to the width of its containing slot: wide rails render the full hero
+layout with queue and volume controls, while narrow chat slots reduce to artwork, playback,
+metadata, and seek. An explicit `size` prop overrides the auto-detected tier. The optional
 offset shadow is enabled with `shadow`; it is disabled by default for embedded rows.
 
 The Web Speech adapter on the docs page is only a demo. Browser support is limited and a
@@ -277,7 +279,7 @@ Every icon in tint renders through one seam — `Icon`, a thin wrapper around
 [`lucide-react`](https://lucide.dev) (the library's sole icon dependency) with a fixed size
 scale and a decorative-by-default accessibility posture. `StatusIcon` layers a shared
 loading/success/error/… registry on top, so a status indicator is defined once and reused
-across chat, table, and video-player instead of reimplemented per feature.
+across chat, table, and media-player instead of reimplemented per feature.
 
 ```tsx
 import { Icon, StatusIcon, Spinner } from 'tint/icon'
@@ -314,9 +316,8 @@ Swap to `<Icon icon={Sun} size="sm" />` to stay aligned with the rest of the lib
 
 ```
 src/
-  components/video-player/     # reusable VideoPlayer
-  components/media/            # shared scrubber, volume control, and time formatting
-  components/audio-player/     # compact accessible audio player
+  components/media-player/     # unified audio/video MediaPlayer
+  components/media/            # shared scrubber, volume control, waveform, placeholder, and time formatting
   components/audio-input/      # controlled microphone/transcriber seam
   components/settings-popout/  # searchable settings popout
   components/chat/             # controlled chat primitives and rich parts
