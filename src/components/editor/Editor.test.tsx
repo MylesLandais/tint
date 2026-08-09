@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import { Editor } from './Editor'
 import { defaultSlashCommands } from './extensions'
+import { codeTabsContent, DEFAULT_EDITOR_CODE_TABS } from './codeTabs'
 import { editorDocumentToHTML, editorHTMLToDocument } from './serialize'
 import type { EditorDocument } from './types'
 
@@ -123,6 +124,37 @@ describe('Editor', () => {
     const html = editorDocumentToHTML(SECOND_DOCUMENT)
     expect(html).toContain('<h2>External update</h2>')
     expect(editorHTMLToDocument(html)).toEqual(SECOND_DOCUMENT)
+  })
+
+  it('round-trips a tabbed code block through JSON and HTML', () => {
+    const document: EditorDocument = {
+      type: 'doc',
+      content: [codeTabsContent()],
+    }
+    const html = editorDocumentToHTML(document)
+    expect(html).toContain('data-tint-code-tabs')
+    expect(editorHTMLToDocument(html)).toEqual(document)
+    expect(DEFAULT_EDITOR_CODE_TABS).toHaveLength(6)
+  })
+
+  it('inserts a tabbed code block from the built-in slash commands', async () => {
+    let instance: TiptapEditor | null = null
+    render(
+      <Editor
+        value={{ type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: '/' }] }] }}
+        onValueChange={() => {}}
+        expanded
+        onExpandedChange={() => {}}
+        editorRef={(editor) => {
+          instance = editor
+        }}
+      />,
+    )
+    await screen.findByRole('textbox')
+    const command = defaultSlashCommands().find((item) => item.id === 'tabbed-code')
+    act(() => command?.command({ editor: instance!, range: { from: 1, to: 2 } }))
+    expect(instance).not.toBeNull()
+    expect(instance!.getJSON().content?.[0]?.type).toBe('codeTabs')
   })
 
   it('rejects a duplicate raw extension unless defaults are disabled', () => {

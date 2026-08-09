@@ -1,16 +1,17 @@
 import { useState } from 'react'
 import { Check, Copy } from 'lucide-react'
 import { cn } from '../../lib/utils'
-import { HighlightedCode } from '../../components/code'
+import { HighlightedCode, type HighlightedCodeProps } from '../../components/code'
 import { Icon } from '../../components/icon'
 
-type CodeBlockProps = {
+type CodeBlockProps = Pick<HighlightedCodeProps, 'lineNumbers' | 'startLine' | 'highlightLines' | 'highlightWords'> & {
   code: string
   language?: string
+  title?: string
   className?: string
 }
 
-export function CodeBlock({ code, language = 'tsx', className }: CodeBlockProps) {
+export function CodeBlock({ code, language = 'tsx', title, lineNumbers, startLine, highlightLines, highlightWords, className }: CodeBlockProps) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = async () => {
@@ -27,7 +28,7 @@ export function CodeBlock({ code, language = 'tsx', className }: CodeBlockProps)
       )}
     >
       <div className="flex items-center justify-between border-b border-tint-code-border px-4 py-2 text-xs text-tint-code-muted">
-        <span className="uppercase tracking-[0.08em]">{language}</span>
+        <span className="uppercase tracking-[0.08em]">{title ?? language}</span>
         <button
           type="button"
           onClick={handleCopy}
@@ -38,7 +39,7 @@ export function CodeBlock({ code, language = 'tsx', className }: CodeBlockProps)
         </button>
       </div>
       <pre className="overflow-x-auto p-4 text-[13px] leading-6">
-        <HighlightedCode code={code} language={language} />
+        <HighlightedCode code={code} language={language} lineNumbers={lineNumbers} startLine={startLine} highlightLines={highlightLines} highlightWords={highlightWords} />
       </pre>
     </div>
   )

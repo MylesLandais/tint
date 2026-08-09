@@ -39,10 +39,28 @@ describe('HighlightedCode', () => {
 
     expect(container.textContent).toBe(code)
   })
+
+  it('supports Erlang and line metadata', () => {
+    const { container } = render(
+      <HighlightedCode
+        code={'greet(Name) -> ok.\nnext().'}
+        language="erl"
+        lineNumbers
+        highlightLines={[2]}
+      />,
+    )
+
+    expect(container.querySelectorAll('[data-code-line]')).toHaveLength(2)
+    expect(container.querySelector('[data-code-line="2"]')).toHaveAttribute(
+      'data-highlighted',
+      'true',
+    )
+    expect(container.textContent).toContain('greet(Name) -> ok.')
+  })
 })
 
 describe('isSupportedLanguage', () => {
-  it.each(['typescript', 'ts', 'tsx', 'js', 'json', 'bash', 'sh', 'html', 'python', 'py'])(
+  it.each(['typescript', 'ts', 'tsx', 'js', 'json', 'bash', 'sh', 'html', 'python', 'py', 'erlang', 'erl'])(
     'recognises %s',
     (language) => {
       expect(isSupportedLanguage(language)).toBe(true)

@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
   type ReactNode,
+  type PointerEvent as ReactPointerEvent,
   type UIEvent,
 } from 'react'
 import { cn } from '../../lib/utils'
@@ -77,6 +78,13 @@ export function DataTable<TRow>({
   onExpandedChange,
   renderExpanded,
   hiddenColumns,
+  resizing,
+  columnWidths,
+  rowHeights,
+  onColumnWidthsChange,
+  onRowHeightsChange,
+  onResize,
+  editing,
   className,
   onScroll,
   ref,
@@ -84,6 +92,14 @@ export function DataTable<TRow>({
 }: DataTableProps<TRow>) {
   const viewportRef = useRef<HTMLDivElement>(null)
   const [scrolledRight, setScrolledRight] = useState(false)
+  const [localColumnWidths, setLocalColumnWidths] = useState<Record<string, number>>({})
+  const [localRowHeights, setLocalRowHeights] = useState<Record<string, number>>({})
+  const [editBusy, setEditBusy] = useState(false)
+
+  const resolvedColumnWidths = columnWidths ?? localColumnWidths
+  const resolvedRowHeights = rowHeights ?? localRowHeights
+  const widthFor = (column: TableColumn<TRow>) =>
+    resolvedColumnWidths[column.id] ?? column.width
 
   // Either source works. An instance means the engine owns filtering, sorting,
   // and paging — which is what lets this grid and a `DataMasonry` render the
@@ -110,7 +126,80 @@ export function DataTable<TRow>({
   const selectable = Boolean(selection && onSelectionChange)
   const expandable = Boolean(expanded && onExpandedChange && renderExpanded)
   const gutter = selectable ? SELECTION_GUTTER : 0
-  const offsets = useMemo(() => pinnedOffsets(shown, gutter), [shown, gutter])
+  const offsets = useMemo(
+    () => pinnedOffsets(shown.map((column) => ({ ...column, width: widthFor(column) })), gutter),
+    [shown, gutter, resolvedColumnWidths],
+  )
+
+  const updateColumnWidth = (id: string, size: number) => {
+    const next = { ...resolvedColumnWidths, [id]: size }
+    if (columnWidths === undefined) setLocalColumnWidths(next)
+    onColumnWidthsChange?.(next)
+  }
+
+  const updateRowHeight = (id: string, size: number) => {
+    const next = { ...resolvedRowHeights, [id]: size }
+    if (rowHeights === undefined) setLocalRowHeights(next)
+    onRowHeightsChange?.(next)
+  }
+
+  const resize = (event: ReactPointerEvent<HTMLElement>, axis: 'column' | 'row', id: string, initial: number, minimum: number) => {
+    event.preventDefault()
+    event.stopPropagation()
+    const start = axis === 'column' ? event.clientX : event.clientY
+    const emit = (phase: 'start' | 'move' | 'end', size: number) => onResize?.({ axis, id, size, phase })
+    emit('start', initial)
+    const target = event.currentTarget
+    target.setPointerCapture?.(event.pointerId)
+    const move = (moveEvent: PointerEvent) => {
+      const delta = (axis === 'column' ? moveEvent.clientX : moveEvent.clientY) - start
+      const size = Math.max(minimum, initial + delta)
+      if (axis === 'column') updateColumnWidth(id, size)
+      else updateRowHeight(id, size)
+      emit('move', size)
+    }
+    const end = (endEvent: PointerEvent) => {
+      const delta = (axis === 'column' ? endEvent.clientX : endEvent.clientY) - start
+      const size = Math.max(minimum, initial + delta)
+      if (axis === 'column') updateColumnWidth(id, size)
+      else updateRowHeight(id, size)
+      emit('end', size)
+      target.releasePointerCapture?.(endEvent.pointerId)
+      target.removeEventListener('pointermove', move)
+      target.removeEventListener('pointerup', end)
+      target.removeEventListener('pointercancel', end)
+    }
+    target.addEventListener('pointermove', move)
+    target.addEventListener('pointerup', end)
+    target.addEventListener('pointercancel', end)
+  }
+
+  const createRow = async () => {
+    if (!editing?.adapter.create) return
+    setEditBusy(true)
+    try {
+      const draft = Object.fromEntries(shown.map((column) => [column.id, ''])) as Partial<TRow>
+      const row = await editing.adapter.create(draft)
+      editing.onCreate?.(row)
+    } catch (error) {
+      editing.onError?.(error instanceof Error ? error : new Error('Unable to create row'))
+    } finally {
+      setEditBusy(false)
+    }
+  }
+
+  const deleteRow = async (id: TableRowId) => {
+    if (!editing?.adapter.delete) return
+    setEditBusy(true)
+    try {
+      await editing.adapter.delete(id)
+      editing.onDelete?.(id)
+    } catch (error) {
+      editing.onError?.(error instanceof Error ? error : new Error('Unable to delete row'))
+    } finally {
+      setEditBusy(false)
+    }
+  }
 
   const selectedSet = useMemo(() => new Set(selection ?? []), [selection])
   const expandedSet = useMemo(() => new Set(expanded ?? []), [expanded])
@@ -183,6 +272,18 @@ export function DataTable<TRow>({
       style={{ ['--tint-table-row-h' as string]: DENSITY_ROW_HEIGHT[density] }}
       {...props}
     >
+      {editing?.adapter.create ? (
+        <div className="flex justify-end border-b border-tint-border bg-tint-surface/60 px-3 py-2">
+          <button
+            type="button"
+            onClick={() => void createRow()}
+            disabled={editBusy}
+            className="rounded-md border border-tint-border bg-tint-panel px-2.5 py-1.5 text-xs font-medium text-tint-ink hover:bg-tint-surface disabled:cursor-wait disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-tint-accent"
+          >
+            {editBusy ? 'Creating…' : 'New row'}
+          </button>
+        </div>
+      ) : null}
       {/*
         A real <table>, and deliberately not role="grid". The grid role promises
         arrow-key cell navigation; announcing it without implementing it leaves a
@@ -247,11 +348,12 @@ export function DataTable<TRow>({
                   }
                   style={
                     column.pinned
-                      ? { left: offset, width: column.width }
-                      : { width: column.width }
+                      ? { left: offset, width: widthFor(column) }
+                      : { width: widthFor(column) }
                   }
                   className={cn(
                     'px-3 py-2 font-medium text-tint-muted',
+                    resizing?.columns && 'relative',
                     align === 'end' && 'text-right',
                     column.pinned &&
                       'sticky z-20 bg-tint-surface after:absolute after:inset-y-0 after:right-0 after:w-px after:bg-tint-border',
@@ -293,6 +395,18 @@ export function DataTable<TRow>({
                   ) : (
                     (column.header ?? column.id)
                   )}
+                  {resizing?.columns ? (
+                    <span
+                      role="separator"
+                      aria-orientation="vertical"
+                      tabIndex={0}
+                      data-column-resize-handle={column.id}
+                      onPointerDown={(event) =>
+                        resize(event, 'column', column.id, widthFor(column) ?? 120, resizing.minColumnWidth ?? 75)
+                      }
+                      className="absolute inset-y-0 -right-1 z-30 w-2 cursor-col-resize opacity-0 transition-opacity hover:opacity-100 focus-visible:opacity-100"
+                    />
+                  ) : null}
                 </th>
               )
             })}
@@ -314,6 +428,12 @@ export function DataTable<TRow>({
                 row={row}
                 columns={shown}
                 offsets={offsets}
+                widthFor={widthFor}
+                rowHeight={resolvedRowHeights[id]}
+                resizing={resizing}
+                onResize={resize}
+                editing={editing}
+                onDelete={editing?.adapter.delete ? deleteRow : undefined}
                 headerColumn={headerColumn}
                 selectable={selectable}
                 isSelected={isSelected}
@@ -346,6 +466,12 @@ function FragmentRow<TRow>({
   row,
   columns,
   offsets,
+  widthFor,
+  rowHeight,
+  resizing,
+  onResize,
+  editing,
+  onDelete,
   headerColumn,
   selectable,
   isSelected,
@@ -361,6 +487,12 @@ function FragmentRow<TRow>({
   row: TRow
   columns: readonly TableColumn<TRow>[]
   offsets: Map<string, number>
+  widthFor: (column: TableColumn<TRow>) => number | undefined
+  rowHeight?: number
+  resizing?: DataTableProps<TRow>['resizing']
+  onResize: (event: ReactPointerEvent<HTMLElement>, axis: 'column' | 'row', id: string, initial: number, minimum: number) => void
+  editing?: DataTableProps<TRow>['editing']
+  onDelete?: (rowId: TableRowId) => Promise<void>
   headerColumn?: string
   selectable: boolean
   isSelected: boolean
@@ -385,6 +517,7 @@ function FragmentRow<TRow>({
         data-row-id={id}
         data-selected={isSelected || undefined}
         data-expanded={isExpanded || undefined}
+        style={rowHeight ? { height: rowHeight } : undefined}
         className="group/row transition-colors hover:bg-tint-accent-soft/40 data-[selected=true]:bg-tint-accent-soft [&>*]:border-t [&>*]:border-tint-border/70"
       >
         {expandable ? (
@@ -421,7 +554,7 @@ function FragmentRow<TRow>({
           </td>
         ) : null}
 
-        {columns.map((column) => {
+        {columns.map((column, columnIndex) => {
           const value = getCellValue(row, column)
           const align = columnAlign(column)
           const field = resolveFieldType(column.type)
@@ -431,14 +564,15 @@ function FragmentRow<TRow>({
 
           const shared = cn(
             'px-3 align-middle',
+            resizing?.rows && columnIndex === columns.length - 1 && 'relative',
             align === 'end' && 'text-right',
             field.mono && 'font-mono tabular-nums',
             column.pinned &&
               'sticky z-10 bg-tint-panel transition-colors group-hover/row:bg-tint-accent-soft/40 group-data-[selected=true]/row:bg-tint-accent-soft after:absolute after:inset-y-0 after:right-0 after:w-px after:bg-tint-border',
           )
           const style = column.pinned
-            ? { left: offsets.get(column.id), width: column.width }
-            : { width: column.width }
+            ? { left: offsets.get(column.id), width: widthFor(column) }
+            : { width: widthFor(column) }
 
           // The row's identifying column is a header cell, so a screen reader
           // announces "Allen Mock, 30" rather than a bare "30".
@@ -450,7 +584,27 @@ function FragmentRow<TRow>({
               style={style}
               className={cn(shared, 'py-2 text-left font-medium text-tint-ink')}
             >
-              {content}
+              <EditableCell
+                row={row}
+                rowId={id}
+                column={column}
+                content={content}
+                editing={editing}
+                onDelete={onDelete}
+                showDelete={Boolean(onDelete && columnIndex === columns.length - 1)}
+              />
+              {resizing?.rows && columnIndex === columns.length - 1 ? (
+                <span
+                  role="separator"
+                  aria-orientation="horizontal"
+                  tabIndex={0}
+                  data-row-resize-handle={id}
+                  onPointerDown={(event) =>
+                    onResize(event, 'row', id, rowHeight ?? 40, resizing.minRowHeight ?? 32)
+                  }
+                  className="absolute inset-x-0 -bottom-1 z-30 h-2 cursor-row-resize opacity-0 transition-opacity hover:opacity-100 focus-visible:opacity-100"
+                />
+              ) : null}
             </th>
           ) : (
             <td
@@ -459,7 +613,27 @@ function FragmentRow<TRow>({
               style={style}
               className={cn(shared, 'py-2 text-tint-ink')}
             >
-              {content}
+              <EditableCell
+                row={row}
+                rowId={id}
+                column={column}
+                content={content}
+                editing={editing}
+                onDelete={onDelete}
+                showDelete={Boolean(onDelete && columnIndex === columns.length - 1)}
+              />
+              {resizing?.rows && columnIndex === columns.length - 1 ? (
+                <span
+                  role="separator"
+                  aria-orientation="horizontal"
+                  tabIndex={0}
+                  data-row-resize-handle={id}
+                  onPointerDown={(event) =>
+                    onResize(event, 'row', id, rowHeight ?? 40, resizing.minRowHeight ?? 32)
+                  }
+                  className="absolute inset-x-0 -bottom-1 z-30 h-2 cursor-row-resize opacity-0 transition-opacity hover:opacity-100 focus-visible:opacity-100"
+                />
+              ) : null}
             </td>
           )
         })}
@@ -478,5 +652,100 @@ function FragmentRow<TRow>({
         </tr>
       ) : null}
     </>
+  )
+}
+
+function EditableCell<TRow>({
+  row,
+  rowId,
+  column,
+  content,
+  editing,
+  onDelete,
+  showDelete = false,
+}: {
+  row: TRow
+  rowId: TableRowId
+  column: TableColumn<TRow>
+  content: ReactNode
+  editing?: DataTableProps<TRow>['editing']
+  onDelete?: (rowId: TableRowId) => Promise<void>
+  showDelete?: boolean
+}) {
+  const [active, setActive] = useState(false)
+  const [draft, setDraft] = useState('')
+  const [pending, setPending] = useState(false)
+  const value = getCellValue(row, column)
+  const canEdit = Boolean(editing?.adapter.update && (typeof column.editable === 'function' ? column.editable(row) : column.editable))
+
+  if (!canEdit && !showDelete) return content
+
+  const begin = () => {
+    setDraft(value == null ? '' : String(value))
+    setActive(true)
+  }
+  const finish = async (cancel = false) => {
+    if (cancel || !editing?.adapter.update) {
+      setActive(false)
+      return
+    }
+    const parsed = column.parseEditValue ? column.parseEditValue(draft, value, row) : draft
+    if (String(parsed) === String(value ?? '')) {
+      setActive(false)
+      return
+    }
+    setPending(true)
+    try {
+      const next = await editing.adapter.update(rowId, { [column.id]: parsed } as Partial<TRow>)
+      editing.onCommit?.({ rowId, column: column.id, value: parsed, row: next })
+      setActive(false)
+    } catch (error) {
+      const normalized = error instanceof Error ? error : new Error('Unable to update row')
+      editing.onError?.(normalized)
+      setActive(false)
+    } finally {
+      setPending(false)
+    }
+  }
+
+  if (!canEdit) {
+    return (
+      <span className="flex items-center justify-between gap-2">
+        {content}
+        <button
+          type="button"
+          disabled={!onDelete}
+          onClick={() => void onDelete?.(rowId)}
+          className="rounded px-1.5 py-0.5 text-[0.6875rem] text-tint-danger-ink hover:bg-tint-danger/10 focus-visible:outline-2 focus-visible:outline-tint-danger disabled:opacity-50"
+        >
+          Delete
+        </button>
+      </span>
+    )
+  }
+
+  return active ? (
+    <input
+      autoFocus
+      value={draft}
+      disabled={pending}
+      onChange={(event) => setDraft(event.target.value)}
+      onBlur={() => void finish()}
+      onKeyDown={(event) => {
+        if (event.key === 'Escape') {
+          event.preventDefault()
+          void finish(true)
+        } else if (event.key === 'Enter') {
+          event.preventDefault()
+          void finish()
+        }
+      }}
+      className="w-full min-w-0 rounded border border-tint-accent bg-tint-panel px-1.5 py-1 text-inherit outline-none"
+      aria-label={`Edit ${column.label ?? column.id}`}
+    />
+  ) : (
+    <button type="button" onDoubleClick={begin} onKeyDown={(event) => event.key === 'Enter' && begin()} className="w-full cursor-text text-left focus-visible:outline-2 focus-visible:outline-tint-accent">
+      {content}
+    </button>
   )
 }

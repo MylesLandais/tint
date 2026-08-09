@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { CODE_LANGUAGES } from '../code'
+import { codeTabsContent } from './codeTabs'
 import { Icon } from '../icon'
 import { cn } from '../../lib/utils'
 
@@ -175,6 +176,13 @@ export function EditorToolbar({
           icon={Braces}
           pressed={state.codeBlock}
           onPress={() => editor.chain().focus().toggleCodeBlock().run()}
+        />
+      ) : null}
+      {extensions.has('codeTabs') ? (
+        <ToolbarButton
+          label="Tabbed code"
+          icon={Braces}
+          onPress={() => editor.chain().focus().insertContent(codeTabsContent()).run()}
         />
       ) : null}
       {/* Only meaningful inside a code block, so it appears with the caret rather

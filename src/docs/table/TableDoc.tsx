@@ -155,6 +155,26 @@ const dataTableProps = [
     type: '(event: UIEvent<HTMLDivElement>) => void',
     description: 'Additional scroll handler, called alongside the internal pinned-column-shadow logic.',
   },
+  {
+    name: 'resizing',
+    type: 'TableResizeConfig',
+    description: 'Enables column/row drag handles with minimum dimensions.',
+  },
+  {
+    name: 'columnWidths / rowHeights',
+    type: 'Readonly<Record<string, number>>',
+    description: 'Optional controlled dimensions reported by the resize callbacks.',
+  },
+  {
+    name: 'onResize',
+    type: '(event: TableResizeEvent) => void',
+    description: 'Reports start, move, and end phases for column or row drags.',
+  },
+  {
+    name: 'editing',
+    type: 'TableEditConfig<TRow>',
+    description: 'Optional typed create/update/delete adapter for editable columns.',
+  },
 ]
 
 const tableToolbarProps = [
@@ -287,6 +307,11 @@ const tableColumnProps = [
     name: 'label',
     type: 'string',
     description: 'Accessible name for the sort control when `header` is not a plain string.',
+  },
+  {
+    name: 'editable',
+    type: 'boolean | ((row: TRow) => boolean)',
+    description: 'Allows a cell to enter the inline editor on double-click or Enter.',
   },
 ]
 

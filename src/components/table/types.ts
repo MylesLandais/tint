@@ -59,6 +59,47 @@ export type TableColumn<TRow> = {
   align?: TableAlign
   /** Accessible name for the sort control when `header` is not a plain string. */
   label?: string
+  /** Allow inline editing for this column. */
+  editable?: boolean | ((row: TRow) => boolean)
+  /** Convert the editor's string value before it is sent to the adapter. */
+  parseEditValue?: (value: string, previous: unknown, row: TRow) => unknown
+}
+
+export type TableResizeAxis = 'column' | 'row'
+export type TableResizePhase = 'start' | 'move' | 'end'
+export type TableResizeEvent = {
+  axis: TableResizeAxis
+  id: string
+  size: number
+  phase: TableResizePhase
+}
+
+export type TableResizeConfig = {
+  columns?: boolean
+  rows?: boolean
+  minColumnWidth?: number
+  minRowHeight?: number
+}
+
+export type TableEditAdapter<TRow> = {
+  create?: (values: Partial<TRow>) => Promise<TRow>
+  update?: (rowId: TableRowId, changes: Partial<TRow>) => Promise<TRow>
+  delete?: (rowId: TableRowId) => Promise<void>
+}
+
+export type TableEditCommit<TRow> = {
+  rowId: TableRowId
+  column: string
+  value: unknown
+  row: TRow
+}
+
+export type TableEditConfig<TRow> = {
+  adapter: TableEditAdapter<TRow>
+  onCommit?: (event: TableEditCommit<TRow>) => void
+  onCreate?: (row: TRow) => void
+  onDelete?: (rowId: TableRowId) => void
+  onError?: (error: Error) => void
 }
 
 /** Row height scale. Matches `ChatConversation`'s vocabulary. */
@@ -119,6 +160,14 @@ export type DataTableProps<TRow> = Omit<
   /** Ids hidden from view. The table never hides the last visible column. */
   hiddenColumns?: readonly string[]
   onHiddenColumnsChange?: (hidden: readonly string[]) => void
+
+  resizing?: TableResizeConfig
+  columnWidths?: Readonly<Record<string, number>>
+  rowHeights?: Readonly<Record<TableRowId, number>>
+  onColumnWidthsChange?: (widths: Readonly<Record<string, number>>) => void
+  onRowHeightsChange?: (heights: Readonly<Record<TableRowId, number>>) => void
+  onResize?: (event: TableResizeEvent) => void
+  editing?: TableEditConfig<TRow>
 
   /** Access to the scroll viewport. */
   ref?: Ref<HTMLDivElement>

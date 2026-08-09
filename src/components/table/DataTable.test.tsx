@@ -39,6 +39,25 @@ function renderTable(props: Partial<React.ComponentProps<typeof DataTable<Artist
 }
 
 describe('DataTable semantics', () => {
+  it('supports controlled column and row resizing with drag events', () => {
+    const onResize = vi.fn()
+    const { container } = renderTable({
+      resizing: { columns: true, rows: true, minColumnWidth: 75, minRowHeight: 32 },
+      columnWidths: { name: 200 },
+      rowHeights: { 'allen-mock': 40 },
+      onResize,
+    })
+
+    const columnHandle = container.querySelector('[data-column-resize-handle="name"]') as HTMLElement
+    fireEvent.pointerDown(columnHandle, { clientX: 100, pointerId: 1 })
+    fireEvent.pointerMove(columnHandle, { clientX: 140, pointerId: 1 })
+    fireEvent.pointerUp(columnHandle, { clientX: 140, pointerId: 1 })
+
+    expect(onResize).toHaveBeenCalledWith({ axis: 'column', id: 'name', size: 200, phase: 'start' })
+    expect(onResize).toHaveBeenLastCalledWith({ axis: 'column', id: 'name', size: 240, phase: 'end' })
+    expect(container.querySelector('[data-row-resize-handle="allen-mock"]')).toBeInTheDocument()
+  })
+
   it('renders a real accessible table with row headers', () => {
     renderTable()
 
@@ -208,6 +227,32 @@ describe('DataTable selection', () => {
   it('omits selection entirely when no handler is supplied', () => {
     renderTable()
     expect(screen.queryByRole('checkbox')).toBeNull()
+  })
+})
+
+describe('DataTable editing', () => {
+  it('commits an editable cell through the typed adapter', async () => {
+    const update = vi.fn().mockResolvedValue({ ...artists[0], name: 'Renamed' })
+    const onCommit = vi.fn()
+    renderTable({
+      editing: { adapter: { update }, onCommit },
+      columns: columns.map((column) =>
+        column.id === 'name' ? { ...column, editable: true } : column,
+      ),
+    })
+
+    fireEvent.doubleClick(screen.getByText('Allen Mock'))
+    const input = screen.getByRole('textbox', { name: 'Edit name' })
+    fireEvent.change(input, { target: { value: 'Renamed' } })
+    fireEvent.keyDown(input, { key: 'Enter' })
+
+    await vi.waitFor(() => expect(update).toHaveBeenCalledWith('allen-mock', { name: 'Renamed' }))
+    expect(onCommit).toHaveBeenCalledWith({
+      rowId: 'allen-mock',
+      column: 'name',
+      value: 'Renamed',
+      row: { ...artists[0], name: 'Renamed' },
+    })
   })
 })
 

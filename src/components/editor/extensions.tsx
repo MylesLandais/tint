@@ -10,9 +10,11 @@ import { Placeholder } from '@tiptap/extensions'
 import { ReactRenderer } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { lowlight } from '../code'
+import { CodeTabsExtension, codeTabsContent } from './codeTabs'
 import Suggestion, { type SuggestionProps } from '@tiptap/suggestion'
 import {
   Braces,
+  Code2,
   Heading1,
   Heading2,
   Heading3,
@@ -205,6 +207,16 @@ export function defaultSlashCommands(): EditorSlashCommand[] {
         replaceRange(editor, range).setCodeBlock().run(),
     },
     {
+      id: 'tabbed-code',
+      label: 'Tabbed code',
+      description: 'Insert a multi-language code container.',
+      keywords: ['tabs', 'polyglot', 'examples'],
+      icon: Code2,
+      isEnabled: (editor) => hasExtension(editor, 'codeTabs'),
+      command: ({ editor, range }) =>
+        replaceRange(editor, range).insertContent(codeTabsContent()).run(),
+    },
+    {
       id: 'horizontal-rule',
       label: 'Divider',
       description: 'Separate sections with a rule.',
@@ -312,6 +324,7 @@ export function createEditorSchemaExtensions(
             codeBlock: false,
           }),
           CodeBlockLowlight.configure({ lowlight, defaultLanguage: null }),
+          CodeTabsExtension,
         ]
       : []),
     Placeholder.configure({ placeholder, includeChildren: true }),

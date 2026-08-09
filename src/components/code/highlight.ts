@@ -1,6 +1,7 @@
 import { createLowlight } from 'lowlight'
 import bash from 'highlight.js/lib/languages/bash'
 import css from 'highlight.js/lib/languages/css'
+import erlang from 'highlight.js/lib/languages/erlang'
 import go from 'highlight.js/lib/languages/go'
 import java from 'highlight.js/lib/languages/java'
 import javascript from 'highlight.js/lib/languages/javascript'
@@ -26,6 +27,7 @@ export const lowlight = createLowlight()
 lowlight.register({
   bash,
   css,
+  erlang,
   go,
   java,
   javascript,
@@ -42,6 +44,7 @@ lowlight.register({
 // `xml` covers HTML; the rest are the aliases people actually type in a fence.
 lowlight.registerAlias({
   bash: ['sh', 'shell', 'zsh'],
+  erlang: ['erl'],
   javascript: ['js', 'jsx', 'mjs', 'cjs'],
   markdown: ['md'],
   python: ['py'],
@@ -57,6 +60,7 @@ export const CODE_LANGUAGES = [
   { value: 'css', label: 'CSS' },
   { value: 'go', label: 'Go' },
   { value: 'html', label: 'HTML' },
+  { value: 'erlang', label: 'Erlang' },
   { value: 'java', label: 'Java' },
   { value: 'javascript', label: 'JavaScript' },
   { value: 'json', label: 'JSON' },
