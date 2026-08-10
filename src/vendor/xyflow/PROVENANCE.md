@@ -11,7 +11,7 @@
 | React SHA-256 | `ddfb74037a3979ed98c8784034071f24040b5a6b7d560254fcb6c6676946da47` |
 | System tarball | `xyflow-system-0.0.79.tgz` |
 | System SHA-256 | `1b099ccb0022753fa8185647a9ad2dff9f02872ec6be7b40a052a89ba7d9e87a` |
-| Bundle SHA-256 | `9d186202dde62f475c2366cd7c8c776aea8c58a68c9aadbd4772eb8a736d5502` |
+| Bundle SHA-256 | `84ef5bbdcaa1a0a049e98bb9e718d38ee5d755f931f5135fe67786a985c4106d` |
 | Bundled with | `@xyflow/system@0.0.79`, `zustand@^4.4`, `classcat@^5`, `d3-drag`, `d3-selection`, `d3-zoom`, `d3-interpolate` (and their transitive d3 deps) |
 | Vendored | 2026-08-10 |
 
@@ -37,13 +37,17 @@ Dropped: CJS/UMD builds, source maps, tests, and the unbundled multi-file ESM tr
 
 ## Local modifications
 
-Mechanical only. No xyflow behavior is patched.
+Mechanical only — no intentional xyflow behavior changes.
 
 1. `@xyflow/react` + transitive runtime deps → single `index.js` via esbuild
    (`--bundle --format=esm`, react externals).
 2. `//# sourceMappingURL=` comments stripped. Maps are not vendored.
 3. Focused `index.d.ts` written for the adapter surface (not a fork of upstream
    behavior).
+4. **ESM React shim:** esbuild's CJS helper leaves `__require("react")` calls
+   from bundled `use-sync-external-store`. Vite ESM rejects those at runtime.
+   After bundling, prepend `import ReactExports from "react"` and replace
+   `__require("react")` with `ReactExports`.
 
 If behavior is ever patched, say so here. A silently modified vendor directory
 is how a dependency becomes a fork nobody remembers making.
@@ -54,10 +58,19 @@ is how a dependency becomes a fork nobody remembers making.
 npm pack @xyflow/react@<version>
 npm install --prefix /tmp/xyflow-pack --no-save @xyflow/react@<version> esbuild
 npx esbuild node_modules/@xyflow/react/dist/esm/index.js \
-  --bundle --format=esm --outfile=src/vendor/xyflow/index.js \
+  --bundle --format=esm --outfile=/tmp/xyflow-pack/bundled.js \
   --external:react --external:react-dom \
   --external:react/jsx-runtime --external:react/jsx-dev-runtime
-# copy style.css, base.css, LICENSE; strip sourceMappingURL; update this file
+python3 - <<'PY'
+from pathlib import Path
+text = Path('/tmp/xyflow-pack/bundled.js').read_text()
+if 'import ReactExports from "react"' not in text:
+    text = 'import ReactExports from "react";\n' + text
+text = text.replace('__require("react")', 'ReactExports').replace("__require('react')", 'ReactExports')
+lines = [ln for ln in text.splitlines() if 'sourceMappingURL' not in ln]
+Path('src/vendor/xyflow/index.js').write_text('\n'.join(lines) + '\n')
+PY
+# copy style.css, base.css, LICENSE; update checksums in this file
 ```
 
 Then update versions, checksums, and date above. Run `src/components/graph/` tests

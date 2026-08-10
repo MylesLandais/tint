@@ -1,14 +1,7 @@
 import type { CSSProperties } from 'react'
 import { Handle, Position, type NodeProps } from '../../../vendor/xyflow'
-import type { GraphDocument, NodeDefinition, NodeRegistry } from '../contracts'
+import { useGraphAdapter } from './GraphAdapterContext'
 import { findGraphNode, type GraphFlowNodeData } from './mappers'
-
-type TintFlowNodeProps = NodeProps<GraphFlowNodeData> & {
-  document: GraphDocument
-  registry: NodeRegistry
-  readonly: boolean
-  dispatch: (command: import('../contracts').GraphCommand) => void
-}
 
 /**
  * xyflow node shell. Application node views never import xyflow — they receive
@@ -18,13 +11,10 @@ export function TintFlowNode({
   id,
   data,
   selected,
-  document,
-  registry,
-  readonly,
-  dispatch,
-}: TintFlowNodeProps) {
+}: NodeProps<GraphFlowNodeData>) {
+  const { document, registry, readonly, dispatch } = useGraphAdapter()
   const graphNode = findGraphNode(document, id)
-  const definition: NodeDefinition | undefined = registry.get(data.kind)
+  const definition = registry.get(data.kind)
   const Render = definition?.render
 
   const inputPorts =

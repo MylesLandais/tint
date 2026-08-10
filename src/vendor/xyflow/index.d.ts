@@ -140,6 +140,8 @@ export type ReactFlowProps = {
   onEdgesChange?: OnEdgesChange
   onConnect?: OnConnect
   onNodeClick?: (event: ReactMouseEvent, node: Node) => void
+  onNodeDragStart?: (event: ReactMouseEvent, node: Node, nodes: Node[]) => void
+  onNodeDragStop?: (event: ReactMouseEvent, node: Node, nodes: Node[]) => void
   onEdgeClick?: (event: ReactMouseEvent, edge: Edge) => void
   onPaneClick?: (event: ReactMouseEvent) => void
   onSelectionChange?: (params: OnSelectionChangeParams) => void

@@ -33,12 +33,12 @@ import type {
   Point,
 } from '../contracts'
 import { emptySelection } from '../contracts'
+import { GraphAdapterProvider } from './GraphAdapterContext'
 import { TintFlowNode } from './TintFlowNode'
 import {
   selectionFromFlow,
   toFlowEdges,
   toFlowNodes,
-  type GraphFlowNodeData,
 } from './mappers'
 
 export type XyflowCanvasProps = {
@@ -51,6 +51,11 @@ export type XyflowCanvasProps = {
   onNodePositionsCommit?: (positions: Record<string, Point>) => void
   onCommand?: (command: GraphCommand) => void
   className?: string
+}
+
+/** Stable nodeTypes map — reads document/registry via context, not closures. */
+const nodeTypes: Record<string, ComponentType<NodeProps>> = {
+  tint: TintFlowNode as ComponentType<NodeProps>,
 }
 
 function XyflowCanvasInner({
@@ -70,14 +75,27 @@ function XyflowCanvasInner({
   const nodesRef = useRef(nodes)
   const dragBaseline = useRef<Map<string, Point>>(new Map())
   const lastSelectionKey = useRef('')
+  const documentRef = useRef(document)
+  documentRef.current = document
+
+  const dispatch = useCallback(
+    (command: GraphCommand) => {
+      onCommand?.(command)
+    },
+    [onCommand],
+  )
+
+  const adapterValue = useMemo(
+    () => ({ document, registry, readonly, dispatch }),
+    [document, dispatch, readonly, registry],
+  )
 
   useEffect(() => {
-    nodesRef.current = nodes
-  }, [nodes])
-
-  useEffect(() => {
-    setNodes(toFlowNodes(document))
-    setEdges(toFlowEdges(document))
+    const nextNodes = toFlowNodes(document)
+    const nextEdges = toFlowEdges(document)
+    nodesRef.current = nextNodes
+    setNodes(nextNodes)
+    setEdges(nextEdges)
   }, [document])
 
   useEffect(() => {
@@ -90,12 +108,14 @@ function XyflowCanvasInner({
 
   useEffect(() => {
     if (!selection) return
-    setNodes((current) =>
-      current.map((node) => ({
+    setNodes((current) => {
+      const next = current.map((node) => ({
         ...node,
         selected: selection.nodeIds.has(node.id),
-      })),
-    )
+      }))
+      nodesRef.current = next
+      return next
+    })
     setEdges((current) =>
       current.map((edge) => ({
         ...edge,
@@ -104,59 +124,42 @@ function XyflowCanvasInner({
     )
   }, [selection])
 
-  const nodeTypes = useMemo(() => {
-    const TintNode = (props: NodeProps<GraphFlowNodeData>) => (
-      <TintFlowNode
-        {...props}
-        document={document}
-        registry={registry}
-        readonly={readonly}
-        dispatch={(command) => onCommand?.(command)}
-      />
+  const onNodesChange = useCallback((changes: NodeChange[]) => {
+    setNodes((current) => {
+      const latest = applyNodeChanges(changes, current)
+      nodesRef.current = latest
+      return latest
+    })
+  }, [])
+
+  const handleNodeDragStart = useCallback((_event: ReactMouseEvent, _node: Node, dragNodes: Node[]) => {
+    dragBaseline.current = new Map(
+      dragNodes.map((node) => {
+        const docNode = documentRef.current.nodes.find((item) => item.id === node.id)
+        const origin = docNode?.position ?? node.position
+        return [node.id, { ...origin }] as const
+      }),
     )
-    TintNode.displayName = 'TintGraphNode'
-    return { tint: TintNode as ComponentType<NodeProps> }
-  }, [document, onCommand, readonly, registry])
+  }, [])
 
-  const onNodesChange = useCallback(
-    (changes: NodeChange[]) => {
-      setNodes((current) => applyNodeChanges(changes, current))
-
-      for (const change of changes) {
-        if (change.type !== 'position') continue
-
-        if (change.dragging) {
-          if (!dragBaseline.current.has(change.id)) {
-            const existing = nodesRef.current.find((node) => node.id === change.id)
-            if (existing) {
-              dragBaseline.current.set(change.id, { ...existing.position })
-            }
-          }
-          continue
+  const handleNodeDragStop = useCallback(
+    (_event: ReactMouseEvent, _node: Node, dragNodes: Node[]) => {
+      const positions: Record<string, Point> = {}
+      for (const node of dragNodes) {
+        const origin = dragBaseline.current.get(node.id)
+        if (!origin) continue
+        if (node.position.x !== origin.x || node.position.y !== origin.y) {
+          positions[node.id] = { ...node.position }
         }
-
-        // Drag ended (or a non-drag position update). Commit moved nodes.
-        if (dragBaseline.current.size === 0) continue
-
-        const latest = applyNodeChanges(changes, nodesRef.current)
-        const positions: Record<string, Point> = {}
-        for (const [id, origin] of dragBaseline.current) {
-          const next = latest.find((node) => node.id === id)?.position
-          if (!next) continue
-          if (next.x !== origin.x || next.y !== origin.y) {
-            positions[id] = { ...next }
-          }
-        }
-        dragBaseline.current.clear()
-
-        if (Object.keys(positions).length === 0) continue
-        onNodePositionsCommit?.(positions)
-        onCommand?.({
-          type: 'node.move',
-          nodeIds: Object.keys(positions),
-          positions,
-        })
       }
+      dragBaseline.current.clear()
+      if (Object.keys(positions).length === 0) return
+      onNodePositionsCommit?.(positions)
+      onCommand?.({
+        type: 'node.move',
+        nodeIds: Object.keys(positions),
+        positions,
+      })
     },
     [onCommand, onNodePositionsCommit],
   )
@@ -196,33 +199,37 @@ function XyflowCanvasInner({
   )
 
   return (
-    <ReactFlow
-      className={className}
-      nodes={nodes}
-      edges={edges}
-      nodeTypes={nodeTypes}
-      onNodesChange={readonly ? undefined : onNodesChange}
-      onEdgesChange={onEdgesChange}
-      onSelectionChange={handleSelectionChange}
-      onMoveEnd={handleMoveEnd}
-      onPaneClick={handlePaneClick}
-      nodesDraggable={!readonly}
-      nodesConnectable={!readonly}
-      elementsSelectable
-      fitView={!document.viewport}
-      fitViewOptions={{ padding: 0.2 }}
-      minZoom={0.25}
-      maxZoom={2}
-      proOptions={{ hideAttribution: true }}
-      deleteKeyCode={readonly ? null : ['Backspace', 'Delete']}
-      onInit={() => {
-        onViewportChange?.(getViewport())
-      }}
-    >
-      <Background gap={18} size={1} />
-      <Controls showInteractive={false} />
-      <MiniMap pannable zoomable nodeStrokeWidth={2} />
-    </ReactFlow>
+    <GraphAdapterProvider value={adapterValue}>
+      <ReactFlow
+        className={className}
+        nodes={nodes}
+        edges={edges}
+        nodeTypes={nodeTypes}
+        onNodesChange={readonly ? undefined : onNodesChange}
+        onNodeDragStart={readonly ? undefined : handleNodeDragStart}
+        onNodeDragStop={readonly ? undefined : handleNodeDragStop}
+        onEdgesChange={onEdgesChange}
+        onSelectionChange={handleSelectionChange}
+        onMoveEnd={handleMoveEnd}
+        onPaneClick={handlePaneClick}
+        nodesDraggable={!readonly}
+        nodesConnectable={!readonly}
+        elementsSelectable
+        fitView={!document.viewport}
+        fitViewOptions={{ padding: 0.2 }}
+        minZoom={0.25}
+        maxZoom={2}
+        proOptions={{ hideAttribution: true }}
+        deleteKeyCode={readonly ? null : ['Backspace', 'Delete']}
+        onInit={() => {
+          onViewportChange?.(getViewport())
+        }}
+      >
+        <Background gap={18} size={1} />
+        <Controls showInteractive={false} />
+        <MiniMap pannable zoomable nodeStrokeWidth={2} />
+      </ReactFlow>
+    </GraphAdapterProvider>
   )
 }
 

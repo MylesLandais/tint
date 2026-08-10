@@ -34,7 +34,16 @@ export function GraphDoc() {
   const [readonly, setReadonly] = useState(false)
 
   const onCommand = useCallback((command: GraphCommand) => {
-    setLastCommand(command)
+    // Viewport updates stream while panning; ignore them in the status strip.
+    if (command.type === 'viewport.set') return
+    setLastCommand((previous) => {
+      // Drag-stop often emits selection.replace immediately after node.move —
+      // keep the move visible for UAT.
+      if (command.type === 'selection.replace' && previous?.type === 'node.move') {
+        return previous
+      }
+      return command
+    })
   }, [])
 
   return (
@@ -94,6 +103,7 @@ export function GraphDoc() {
             <StatusCard
               label="Revision"
               value={document.revision}
+              testId="graph-status-revision"
             />
             <StatusCard
               label="Viewport"
@@ -102,10 +112,12 @@ export function GraphDoc() {
                   ? `${Math.round(viewport.x)}, ${Math.round(viewport.y)} · ${viewport.zoom.toFixed(2)}×`
                   : '—'
               }
+              testId="graph-status-viewport"
             />
             <StatusCard
               label="Last command"
               value={lastCommand?.type ?? '—'}
+              testId="graph-status-command"
             />
           </div>
         </section>
@@ -145,9 +157,20 @@ export function GraphDoc() {
   )
 }
 
-function StatusCard({ label, value }: { label: string; value: string }) {
+function StatusCard({
+  label,
+  value,
+  testId,
+}: {
+  label: string
+  value: string
+  testId?: string
+}) {
   return (
-    <div className="rounded-lg border border-tint-border bg-tint-panel px-3 py-2">
+    <div
+      data-testid={testId}
+      className="rounded-lg border border-tint-border bg-tint-panel px-3 py-2"
+    >
       <p className="m-0 text-[0.68rem] font-semibold tracking-[0.08em] text-tint-muted uppercase">
         {label}
       </p>
