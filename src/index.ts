@@ -79,6 +79,8 @@ export type * from './components/dice'
 export { Panel } from './components/panel'
 export type * from './components/panel'
 
+export type { Socket, SocketSpec, SocketType } from './components/socket'
+
 export { CodeTabs, HighlightedCode } from './components/code'
 export type { CodeTab, CodeTabsProps, HighlightedCodeProps, TabItem } from './components/code'
 
