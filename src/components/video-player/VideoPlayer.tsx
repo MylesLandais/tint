@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type VideoHTMLAttributes } from 'react'
-import { Maximize, Minimize, Settings } from 'lucide-react'
+import { Maximize, Minimize, Pause, Play, Settings } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { cn } from '../../lib/utils'
 import { Icon } from '../icon'
@@ -52,6 +52,7 @@ export function VideoPlayer({
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(durationHint ?? 0)
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const [failed, setFailed] = useState(false)
 
   useEffect(() => {
     const onFullscreenChange = () => {
@@ -91,6 +92,7 @@ export function VideoPlayer({
     setProgress(0)
     setDuration(durationHint ?? 0)
     setIsPlaying(false)
+    setFailed(false)
   }, [src, durationHint])
 
   const updateTime = () => {
@@ -104,14 +106,19 @@ export function VideoPlayer({
     setCurrentTime(video.currentTime)
   }
 
-  const togglePlay = async () => {
+  // `play()` rejects on autoplay policy or a bad source. Left unhandled it became
+  // an unhandled rejection and the chrome kept claiming the video was playing.
+  const togglePlay = () => {
     const video = videoRef.current
     if (!video) return
-    if (video.paused) {
-      await video.play()
-    } else {
+    if (!video.paused) {
       video.pause()
+      return
     }
+    void Promise.resolve(video.play()).catch(() => {
+      setIsPlaying(false)
+      setFailed(true)
+    })
   }
 
   const handleVolumeChange = (value: number) => {
@@ -180,19 +187,27 @@ export function VideoPlayer({
         }
       }}
     >
+      {/*
+        The label names the media, not an action. It used to read "Play {label}" /
+        "Pause {label}", which announced the video element itself as a button —
+        while the only actual way to start playback was clicking it, with no
+        keyboard equivalent anywhere. The transport button in the control bar is
+        now the real control; this click handler is a mouse convenience on top.
+      */}
       <video
         ref={videoRef}
         className="w-full cursor-pointer rounded-lg bg-black"
         src={src}
         poster={poster}
         {...videoProps}
-        aria-label={isPlaying ? `Pause ${label}` : `Play ${label}`}
-        onClick={() => void togglePlay()}
+        aria-label={label}
+        onClick={togglePlay}
         onTimeUpdate={updateTime}
         onLoadedMetadata={updateTime}
         onPlay={() => { setIsPlaying(true); onPlay?.() }}
         onPause={() => { setIsPlaying(false); onPause?.() }}
         onEnded={() => setIsPlaying(false)}
+        onError={() => { setIsPlaying(false); setFailed(true) }}
       />
 
       <AnimatePresence>
@@ -205,8 +220,29 @@ export function VideoPlayer({
             transition={{ duration: 0.45, ease: 'circInOut', type: 'spring' }}
           >
             <p className="m-0 truncate text-xs font-medium text-tint-chrome-ink/85">{title}</p>
+            {failed ? (
+              <p role="alert" className="m-0 truncate text-xs text-tint-danger-ink">
+                This video could not be played.
+              </p>
+            ) : null}
 
             <div className="flex items-center gap-2 text-tint-chrome-ink">
+              <motion.button
+                type="button"
+                data-video-transport=""
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.94 }}
+                onClick={togglePlay}
+                disabled={failed}
+                aria-label={isPlaying ? `Pause ${label}` : `Play ${label}`}
+                className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-tint-chrome-ink transition-colors hover:bg-tint-chrome-ink/12 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <Icon
+                  icon={isPlaying ? Pause : Play}
+                  size="sm"
+                  className={isPlaying ? undefined : 'translate-x-px'}
+                />
+              </motion.button>
               <span className="min-w-9 text-xs tabular-nums">{formatTime(currentTime)}</span>
               <Slider value={progress} onChange={handleSeek} className="flex-1 text-tint-chrome-ink" aria-label={`Seek ${label}`} />
               <span className="min-w-9 text-right text-xs tabular-nums">{formatTime(duration)}</span>

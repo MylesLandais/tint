@@ -4,6 +4,21 @@
 @import './styles/themes/tint.css';
 @import './styles/code-highlight.css';
 
+/*
+ * tint ships raw source, and every component is styled with Tailwind utilities.
+ * Tailwind v4 excludes node_modules from automatic content detection, so without
+ * this an app that installs the package and imports `tint/styles.css` gets the
+ * token contract and the @layer components blocks below — and none of the
+ * utility classes the components actually use, which renders them nearly
+ * unstyled.
+ *
+ * The path is relative to this file, so it resolves both in this repo and inside
+ * a consumer's node_modules. Scoped to `components` rather than the whole `src`
+ * directory because that is where every utility-styled file lives; widening it
+ * would drag `vendor/` and `docs/` into every consumer's content scan.
+ */
+@source "./components";
+
 @theme {
   --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
@@ -36,10 +51,9 @@
     box-shadow: 6px 6px 0 color-mix(in srgb, var(--tint-ink) 20%, transparent);
   }
 
-  [data-tint-media-player][data-kind='video'] [data-media-surface] {
-    aspect-ratio: 16 / 9;
-  }
-
+  /* Only the audio branch carries [data-tint-media-player]; the video branch
+     renders VideoPlayer, which stamps [data-tint-video-player] and owns its own
+     chrome. Rules written against [data-kind='video'] here never matched. */
   [data-tint-media-player][data-kind='audio'] [data-media-surface] {
     aspect-ratio: 1;
     max-width: 14rem;
@@ -61,10 +75,6 @@
       height: 3.5rem !important;
       max-width: none !important;
       aspect-ratio: auto !important;
-    }
-
-    [data-tint-media-player]:not([data-size]) [data-media-settings] {
-      display: none !important;
     }
 
     [data-tint-media-player]:not([data-size]) [data-media-transport] {
@@ -114,10 +124,6 @@
     aspect-ratio: auto !important;
   }
 
-  [data-tint-media-player][data-size='md'] [data-media-settings] {
-    display: none !important;
-  }
-
   [data-tint-media-player][data-size='md'] [data-media-transport] {
     gap: 0 !important;
   }
@@ -141,7 +147,6 @@
     gap: 0.625rem !important;
   }
 
-  [data-tint-media-player][data-size='sm'] [data-media-settings],
   [data-tint-media-player][data-size='sm'] [data-media-previous],
   [data-tint-media-player][data-size='sm'] [data-media-next],
   [data-tint-media-player][data-size='sm'] [data-media-divider],

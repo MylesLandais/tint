@@ -8,7 +8,6 @@ export type MediaPlaybackState = {
   muted: boolean
   buffering: boolean
   failed: boolean
-  playbackRate: number
 }
 
 export type MediaPlaybackActions = {
@@ -16,7 +15,6 @@ export type MediaPlaybackActions = {
   seek: (percentage: number) => void
   changeVolume: (percentage: number) => void
   toggleMute: () => void
-  setPlaybackRate: (rate: number) => void
 }
 
 export type MediaEventHandlers = {
@@ -57,7 +55,6 @@ export function useMediaPlayback(
   const [muted, setMuted] = useState(false)
   const [buffering, setBuffering] = useState(false)
   const [failed, setFailed] = useState(false)
-  const [playbackRate, setPlaybackRateState] = useState(1)
 
   // A new source is a new clip: drop the old clip's progress and error state.
   useEffect(() => {
@@ -109,20 +106,14 @@ export function useMediaPlayback(
     if (media) media.muted = next
   }
 
-  const setPlaybackRate = (rate: number) => {
-    setPlaybackRateState(rate)
-    const media = mediaRef.current
-    if (media) media.playbackRate = rate
-  }
-
   const readDuration = (event: SyntheticEvent<HTMLMediaElement>) => {
     const next = event.currentTarget.duration
     if (Number.isFinite(next)) setDuration(next)
   }
 
   return {
-    state: { playing, currentTime, duration, volume, muted, buffering, failed, playbackRate },
-    actions: { toggle, seek, changeVolume, toggleMute, setPlaybackRate },
+    state: { playing, currentTime, duration, volume, muted, buffering, failed },
+    actions: { toggle, seek, changeVolume, toggleMute },
     mediaEventHandlers: {
       onLoadedMetadata: readDuration,
       onDurationChange: readDuration,

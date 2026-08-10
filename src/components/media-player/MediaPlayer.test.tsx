@@ -133,19 +133,23 @@ describe('MediaPlayer (video)', () => {
 
     const video = container.querySelector('video')
     expect(video).toHaveAttribute('src', 'clip.mp4')
-    expect(video).toHaveAttribute('aria-label', 'Play Product walkthrough')
+    expect(video).toHaveAttribute('aria-label', 'Product walkthrough')
   })
 
-  it('toggles play/pause state from media events', () => {
+  it('toggles the transport control from media events', () => {
     const { container } = render(<MediaPlayer kind="video" src="clip.mp4" label="Clip" autoHideControls={false} />)
     const video = container.querySelector('video')
     if (!video) throw new Error('Expected the video element')
 
+    // The keyboard-reachable transport button carries the action label — the
+    // video element only names the media.
+    expect(screen.getByRole('button', { name: 'Play Clip' })).toBeInTheDocument()
+
     fireEvent.play(video)
-    expect(video).toHaveAttribute('aria-label', 'Pause Clip')
+    expect(screen.getByRole('button', { name: 'Pause Clip' })).toBeInTheDocument()
 
     fireEvent.pause(video)
-    expect(video).toHaveAttribute('aria-label', 'Play Clip')
+    expect(screen.getByRole('button', { name: 'Play Clip' })).toBeInTheDocument()
   })
 
   it('keeps the original video surface when the source errors', () => {
@@ -168,5 +172,28 @@ describe('MediaPlayer (video)', () => {
       <MediaPlayer kind="video" src="clip.mp4" label="Clip" poster="poster.jpg" />,
     )
     expect(container.querySelector('video')).toHaveAttribute('poster', 'poster.jpg')
+  })
+})
+
+describe('MediaPlayer (kind changes)', () => {
+  // Each presentation is its own component, so a `kind` change is an ordinary
+  // unmount/mount rather than one body running two different hook orders. The
+  // rules-of-hooks lint rule is what guards the arrangement; this covers the
+  // swap itself, which nothing exercised before.
+  it('swaps between audio and video on a mounted player', () => {
+    const { container, rerender } = render(
+      <MediaPlayer kind="audio" src="track.mp3" label="Track" />,
+    )
+    expect(container.querySelector('[data-tint-media-player]')).toBeInTheDocument()
+
+    expect(() =>
+      rerender(<MediaPlayer kind="video" src="clip.mp4" label="Clip" />),
+    ).not.toThrow()
+    expect(container.querySelector('[data-tint-video-player] video')).toBeInTheDocument()
+
+    expect(() =>
+      rerender(<MediaPlayer kind="audio" src="track.mp3" label="Track" />),
+    ).not.toThrow()
+    expect(container.querySelector('[data-tint-media-player]')).toBeInTheDocument()
   })
 })

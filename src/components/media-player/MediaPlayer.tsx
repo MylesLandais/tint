@@ -106,14 +106,7 @@ function MediaPlayerVideo(props: MediaPlayerVideoProps) {
   )
 }
 
-/**
- * Unified media entry point with intentionally distinct presentations:
- * audio uses the compact responsive rail, while video uses the immersive
- * VideoPlayer chrome. Both retain the shared media primitives and callback API.
- */
-export function MediaPlayer(props: MediaPlayerProps) {
-  if (props.kind === 'video') return <MediaPlayerVideo {...props} />
-
+function MediaPlayerAudio(props: MediaPlayerAudioProps) {
   const {
     src,
     label,
@@ -333,5 +326,30 @@ export function MediaPlayer(props: MediaPlayerProps) {
         </div>
       </div>
     </div>
+  )
+}
+
+/**
+ * Unified media entry point with intentionally distinct presentations:
+ * audio uses the compact responsive rail, while video uses the immersive
+ * VideoPlayer chrome. Both retain the shared media primitives and callback API.
+ *
+ * The two presentations are separate components rather than two branches of one
+ * body on purpose. This used to return the video branch early and then call the
+ * audio branch's eight hooks below it — a rules-of-hooks violation that happened
+ * not to fault, because React only reports "fewer hooks than expected" when at
+ * least one hook runs on the shorter path, and the video path ran none. Adding a
+ * single hook to the video branch, or anywhere above the discriminator, would
+ * have turned a `kind` change into a hard render error. Each branch now owns its
+ * own hook order, so that trap is gone rather than merely dormant.
+ *
+ * Neither branch renders a `<track>`: tint has no captions API yet, so a video
+ * carrying subtitles has to be composed by the host for now.
+ */
+export function MediaPlayer(props: MediaPlayerProps) {
+  return props.kind === 'video' ? (
+    <MediaPlayerVideo {...props} />
+  ) : (
+    <MediaPlayerAudio {...props} />
   )
 }

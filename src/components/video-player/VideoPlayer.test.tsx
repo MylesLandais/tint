@@ -32,9 +32,12 @@ describe('VideoPlayer', () => {
       />,
     )
     const video = screen.getByTestId('walkthrough-video')
-    expect(video).toHaveAttribute('aria-label', 'Play Walkthrough')
+    // The media element names the media; the transport button names the action.
+    expect(video).toHaveAttribute('aria-label', 'Walkthrough')
+    expect(screen.getByRole('button', { name: 'Play Walkthrough' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Settings' })).toBeInTheDocument()
     fireEvent.play(video)
+    expect(screen.getByRole('button', { name: 'Pause Walkthrough' })).toBeInTheDocument()
     fireEvent.pause(video)
     expect(onPlay).toHaveBeenCalledOnce()
     expect(onPause).toHaveBeenCalledOnce()

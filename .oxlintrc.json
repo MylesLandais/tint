@@ -1,3 +1,9 @@
 {
-  "ignorePatterns": ["src/vendor/**"]
+  "ignorePatterns": ["src/vendor/**"],
+  "plugins": ["react", "jsx-a11y", "import"],
+  "rules": {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "jsx-a11y/prefer-tag-over-role": "off"
+  }
 }
