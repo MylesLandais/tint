@@ -11,6 +11,7 @@
 | Tarball | `yjs-13.6.32.tgz` |
 | SHA-256 | `dbca91b1729235d44dce944813c800dd910ec2e2c5f6acf55ccbda3bbb828009` |
 | Bundled with | `lib0@0.2.99` (MIT) |
+| Bundle SHA-256 | `35ba16aefdfdfb0496c733651fed5409d9261532034db9b46cf9f71c90baef3d` |
 | Vendored | 2026-08-07 |
 
 ## Why vendored rather than depended on

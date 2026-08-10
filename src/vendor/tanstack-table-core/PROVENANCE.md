@@ -9,6 +9,7 @@
 | Upstream | https://github.com/TanStack/table |
 | Tarball | `tanstack-table-core-8.21.3.tgz` |
 | SHA-256 | `1e5b2f4f04c8c31100ebd0b966fae5eadbb1d11bd45517edb9fc15fbd6a8f2a0` |
+| Bundle SHA-256 | `611d637e1af96e212fb58fb4aa564d1d7ccefa7fa9a02fb05bc54984843c781e` |
 | Vendored | 2026-08-02 |
 
 ## Why vendored rather than depended on

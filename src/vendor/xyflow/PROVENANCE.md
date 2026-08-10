@@ -1,0 +1,96 @@
+# @xyflow/react + @xyflow/system — vendored
+
+| | |
+| --- | --- |
+| Packages | `@xyflow/react@12.11.2`, `@xyflow/system@0.0.79` |
+| License | MIT — see `LICENSE`, retained verbatim |
+| Copyright | © 2019-2025 webkid GmbH |
+| Upstream | https://github.com/xyflow/xyflow |
+| Docs | https://reactflow.dev |
+| React tarball | `xyflow-react-12.11.2.tgz` |
+| React SHA-256 | `ddfb74037a3979ed98c8784034071f24040b5a6b7d560254fcb6c6676946da47` |
+| System tarball | `xyflow-system-0.0.79.tgz` |
+| System SHA-256 | `1b099ccb0022753fa8185647a9ad2dff9f02872ec6be7b40a052a89ba7d9e87a` |
+| Bundle SHA-256 | `84ef5bbdcaa1a0a049e98bb9e718d38ee5d755f931f5135fe67786a985c4106d` |
+| Bundled with | `@xyflow/system@0.0.79`, `zustand@^4.4`, `classcat@^5`, `d3-drag`, `d3-selection`, `d3-zoom`, `d3-interpolate` (and their transitive d3 deps) |
+| Vendored | 2026-08-10 |
+
+## Why vendored rather than depended on
+
+Same deliberate choice as `yjs` and `@tanstack/table-core`: hold the graph-canvas
+engine in-tree rather than track it as a dependency. Upgrades are a manual
+re-vendor, not a version bump. The Application graph contracts stay independent
+of xyflow types; only `src/components/graph/adapter/` imports this directory.
+
+## What is here, and why a bundle
+
+- `index.js` — esbuild ESM bundle of `@xyflow/react` with `@xyflow/system`,
+  `zustand`, `classcat`, and d3 interaction deps inlined. Externals: `react`,
+  `react-dom`, `react/jsx-runtime`.
+- `*.d.ts` — the upstream declaration trees, verbatim: `@xyflow/react`'s at the
+  root and `@xyflow/system`'s under `system/`.
+- `module-shims.d.ts` — ambient `declare module` blocks for the specifiers the
+  bundle inlined (`@xyflow/system`, `zustand`, `d3-*`) and for the
+  `@xyflow/react` self-reference the upstream tree uses. Same role as
+  `lib0-shims.d.ts` in the yjs vendor.
+- `style.css` — the upstream React Flow stylesheet, re-exported to hosts as
+  `tint/graph/styles.css`. (`base.css` is not vendored: nothing imported it.)
+- `LICENSE` — unmodified upstream MIT text.
+
+Dropped: CJS/UMD builds, source maps, tests, and the unbundled multi-file ESM tree.
+
+## Local modifications
+
+Mechanical only — no intentional xyflow behavior changes.
+
+1. `@xyflow/react` + transitive runtime deps → single `index.js` via esbuild
+   (`--bundle --format=esm`, react externals).
+2. `//# sourceMappingURL=` comments stripped. Maps are not vendored.
+3. `module-shims.d.ts` added so the vendored declarations resolve the module IDs
+   that no longer exist after bundling. The declarations themselves are verbatim.
+
+   This replaced a hand-written 232-line `index.d.ts` covering "the subset the
+   adapter uses". It declared `Node` with `width`/`height` and no `measured`,
+   which xyflow v12 had already moved; the adapter read `measured`, and the build
+   broke on the first PR that used it. A shim with no mechanical relationship to
+   the bundle it describes drifts silently, and the only thing that notices is
+   CI. Vendoring the real tree also immediately surfaced a second latent bug —
+   the drag handlers were typed `React.MouseEvent` where xyflow passes
+   `MouseEvent | TouchEvent`.
+4. **ESM React shim:** esbuild's CJS helper leaves `__require("react")` calls
+   from bundled `use-sync-external-store`. Vite ESM rejects those at runtime.
+   After bundling, prepend `import ReactExports from "react"` and replace
+   `__require("react")` with `ReactExports`.
+
+If behavior is ever patched, say so here. A silently modified vendor directory
+is how a dependency becomes a fork nobody remembers making.
+
+## Upgrading
+
+```bash
+npm pack @xyflow/react@<version>
+npm install --prefix /tmp/xyflow-pack --no-save @xyflow/react@<version> esbuild
+npx esbuild node_modules/@xyflow/react/dist/esm/index.js \
+  --bundle --format=esm --outfile=/tmp/xyflow-pack/bundled.js \
+  --external:react --external:react-dom \
+  --external:react/jsx-runtime --external:react/jsx-dev-runtime
+python3 - <<'PY'
+from pathlib import Path
+text = Path('/tmp/xyflow-pack/bundled.js').read_text()
+if 'import ReactExports from "react"' not in text:
+    text = 'import ReactExports from "react";\n' + text
+text = text.replace('__require("react")', 'ReactExports').replace("__require('react')", 'ReactExports')
+lines = [ln for ln in text.splitlines() if 'sourceMappingURL' not in ln]
+Path('src/vendor/xyflow/index.js').write_text('\n'.join(lines) + '\n')
+PY
+# copy style.css, base.css, LICENSE; update checksums in this file
+```
+
+Then update versions, checksums, and date above. Run `src/components/graph/` tests
+and the docs graph page.
+
+## How tint uses it
+
+Only through `src/components/graph/adapter/`. Application code and the docs site
+never import this directory directly — `InteractiveGraphView` is the seam, so a
+future engine swap touches the adapter package.

@@ -18,9 +18,10 @@ import { VideoPlayerDoc } from './VideoPlayerDoc'
  * Path -> page component, kept apart from `routes.ts` so that the route data
  * stays importable from `DocsNav` without closing an import cycle.
  *
- * The three heavy pages load lazily: Editor pulls in Tiptap, Terminal pulls in
- * xterm, and Auth pulls in its own stylesheet. Everything else is small enough
- * to ship in the entry chunk.
+ * The four heavy pages load lazily: Editor pulls in Tiptap, Terminal pulls in
+ * xterm, Auth pulls in its own stylesheet, and Graph pulls in the vendored
+ * xyflow bundle, its stylesheet, and a ComfyUI workflow fixture. Everything else
+ * is small enough to ship in the entry chunk.
  */
 const EditorDoc = lazy(() =>
   import('./editor/EditorDoc').then((module) => ({ default: module.EditorDoc })),
@@ -29,6 +30,9 @@ const TerminalDoc = lazy(() =>
   import('./terminal/TerminalDoc').then((module) => ({ default: module.TerminalDoc })),
 )
 const AuthDoc = lazy(() => import('./auth/AuthDoc').then((module) => ({ default: module.AuthDoc })))
+const GraphDoc = lazy(() =>
+  import('./graph/GraphDoc').then((module) => ({ default: module.GraphDoc })),
+)
 
 /**
  * `satisfies` is load-bearing: adding a route to the registry without a page
@@ -41,6 +45,7 @@ export const DOC_PAGES = {
   'components/table': TableDoc,
   'components/editor': EditorDoc,
   'components/terminal': TerminalDoc,
+  'components/graph': GraphDoc,
   'components/collab': CollabDoc,
   'components/auth': AuthDoc,
   'components/video-player': VideoPlayerDoc,
