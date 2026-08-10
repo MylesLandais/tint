@@ -85,6 +85,43 @@ export type ComfyWorkflow = {
   version?: number | string
 }
 
+export type ComfyReferenceImage = {
+  name: string
+  mimeType: string
+  /** data: URL for local preview — never uploaded by tint itself */
+  dataUrl: string
+}
+
+export type ComfyEditableField =
+  | {
+      role: 'prompt'
+      label: string
+      widgetIndex: number
+    }
+  | {
+      role: 'int'
+      label: string
+      key: string
+      widgetIndex: number
+      min?: number
+      max?: number
+      step?: number
+    }
+  | {
+      role: 'latentSize'
+      label: string
+      widthIndex: number
+      heightIndex: number
+      framesIndex?: number
+    }
+  | {
+      role: 'image'
+      label: string
+      accept: string
+      widthIndex?: number
+      heightIndex?: number
+    }
+
 export type ComfyNodeConfiguration = {
   classType: string
   comfyId: number | string
@@ -99,6 +136,10 @@ export type ComfyNodeConfiguration = {
   modelName?: string
   color?: string
   bgcolor?: string
+  /** In-node editor surfaces derived at parse time. */
+  editableFields?: ComfyEditableField[]
+  /** Local reference image dropped onto an image-capable node. */
+  referenceImage?: ComfyReferenceImage | null
 }
 
 export type ParseComfyWorkflowOptions = {

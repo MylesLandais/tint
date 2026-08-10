@@ -79,6 +79,10 @@
   box-shadow: 0 1px 0 color-mix(in srgb, var(--tint-ink) 6%, transparent);
 }
 
+.tint-graph-node--comfy[data-expanded='true'] {
+  width: 22rem;
+}
+
 .tint-graph-node[data-selected='true'] {
   border-color: var(--tint-accent);
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--tint-accent) 55%, transparent);
@@ -356,6 +360,186 @@
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 0.7rem;
   line-height: 1.4;
+}
+
+.tint-graph-node__title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.tint-graph-node__expand {
+  flex: none;
+  border: 1px solid var(--tint-border);
+  border-radius: 999px;
+  background: var(--tint-surface);
+  padding: 0.15rem 0.55rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--tint-ink);
+  cursor: pointer;
+}
+
+.tint-graph-node__prompt-preview,
+.tint-graph-node__param-chip {
+  margin: 0.45rem 0 0;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: var(--tint-muted);
+}
+
+.tint-graph-node__param-chip {
+  display: inline-flex;
+  border-radius: 999px;
+  background: var(--tint-surface);
+  padding: 0.2rem 0.55rem;
+  color: var(--tint-ink);
+  font-family: var(--font-mono, ui-monospace, monospace);
+}
+
+.tint-graph-node__image-thumb {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+
+.tint-graph-node__image-thumb img {
+  display: block;
+  width: 100%;
+  max-height: 7rem;
+  object-fit: cover;
+  border-radius: 0.4rem;
+  border: 1px solid var(--tint-border);
+}
+
+.tint-graph-node__image-thumb span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.68rem;
+  color: var(--tint-muted);
+}
+
+.tint-graph-node__drawer {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 0.65rem;
+  border-top: 1px solid var(--tint-border);
+  padding-top: 0.65rem;
+  animation: tint-graph-drawer-in 160ms ease-out;
+}
+
+@keyframes tint-graph-drawer-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tint-graph-field {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+}
+
+.tint-graph-field > span {
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--tint-muted);
+}
+
+.tint-graph-field textarea,
+.tint-graph-field input[type='number'] {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--tint-border);
+  border-radius: 0.45rem;
+  background: var(--tint-surface);
+  padding: 0.45rem 0.55rem;
+  color: var(--tint-ink);
+  font: inherit;
+}
+
+.tint-graph-field textarea {
+  min-height: 6rem;
+  resize: vertical;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+.tint-graph-field--inline {
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+.tint-graph-field__row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+
+.tint-graph-field__row label {
+  display: grid;
+  gap: 0.2rem;
+  color: var(--tint-muted);
+}
+
+.tint-graph-field__apply {
+  justify-self: start;
+  border: 1px solid var(--tint-border-strong);
+  border-radius: 0.4rem;
+  background: var(--tint-accent);
+  padding: 0.35rem 0.65rem;
+  color: var(--tint-on-accent);
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tint-graph-field__apply:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.tint-graph-drop {
+  display: grid;
+  place-items: center;
+  gap: 0.35rem;
+  min-height: 7rem;
+  border: 1px dashed var(--tint-border-strong);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--tint-surface) 88%, transparent);
+  padding: 0.65rem;
+  text-align: center;
+  color: var(--tint-muted);
+  cursor: pointer;
+}
+
+.tint-graph-drop--active {
+  border-color: var(--tint-accent);
+  background: var(--tint-accent-soft);
+  color: var(--tint-ink);
+}
+
+.tint-graph-drop img {
+  width: 100%;
+  max-height: 6.5rem;
+  object-fit: cover;
+  border-radius: 0.35rem;
+}
+
+.tint-graph-drop__meta {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.65rem;
 }
 
 @media (max-width: 900px) {

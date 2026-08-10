@@ -1,12 +1,18 @@
 import { describe, expect, it } from 'vitest'
 import { loadComfyLtx23WithMockDiagnostics } from '../fixtures/comfy/loadComfyFixture'
 import {
+  configureComfyNode,
+  deriveEditableFields,
   findComfyPromptNode,
   flattenValidationIssues,
   parseComfyWorkflow,
   updateComfyPrompt,
 } from './index'
-import type { ComfyWorkflow } from './types'
+import type { ComfyNode, ComfyNodeConfiguration, ComfyWorkflow } from './types'
+
+function configOf(node: { configuration: unknown }): ComfyNodeConfiguration {
+  return node.configuration as ComfyNodeConfiguration
+}
 
 describe('parseComfyWorkflow', () => {
   it('expands the LTX-2.3 subgraph into nodes and edges', () => {
@@ -46,6 +52,50 @@ describe('parseComfyWorkflow', () => {
     expect(
       issues.find((issue) => issue.code === 'COMFY_MODEL_NOT_FOUND')?.severity,
     ).toBe('warning')
+  })
+
+  it('marks prompt, resolution, latent, and image nodes as editable', () => {
+    const { document } = loadComfyLtx23WithMockDiagnostics()
+    const byClass = (classType: string) =>
+      document.nodes.find((node) => configOf(node).classType === classType)
+
+    const prompt = findComfyPromptNode(document)
+    expect(prompt?.configuration.editableFields?.some((field) => field.role === 'prompt')).toBe(
+      true,
+    )
+
+    const width = document.nodes.find((node) => configOf(node).title === 'Width')
+    expect(configOf(width!).editableFields?.[0]?.role).toBe('int')
+
+    const latent = byClass('EmptyLTXVLatentVideo')
+    expect(configOf(latent!).editableFields?.[0]?.role).toBe('latentSize')
+
+    const image = byClass('EmptyImage')
+    expect(image?.presentation?.label).toBe('Reference image')
+    expect(configOf(image!).editableFields?.[0]?.role).toBe('image')
+
+    const fields = deriveEditableFields({
+      id: 1,
+      type: 'PrimitiveInt',
+      title: 'Height',
+      pos: [0, 0],
+      widgets_values: [720, 'fixed'],
+    } satisfies ComfyNode)
+    expect(fields[0]).toMatchObject({ role: 'int', key: 'Height' })
+  })
+
+  it('configures latent resolution through widget patches', () => {
+    const { document } = loadComfyLtx23WithMockDiagnostics()
+    const latent = document.nodes.find(
+      (node) => configOf(node).classType === 'EmptyLTXVLatentVideo',
+    )
+    expect(latent).toBeDefined()
+
+    const next = configureComfyNode(document, latent!.id, {
+      widgetPatches: { 0: 1024, 1: 576, 2: 121 },
+    })
+    const updated = next.nodes.find((node) => node.id === latent!.id)
+    expect(configOf(updated!).widgets.slice(0, 3)).toEqual([1024, 576, 121])
   })
 
   it('parses classic array-shaped root links when subgraphs are disabled', () => {

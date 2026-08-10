@@ -83,9 +83,20 @@ export function InteractiveGraphView({
 
   const handleCommand = useCallback(
     (command: GraphCommand) => {
+      if (command.type === 'node.configure' && onDocumentChange) {
+        onDocumentChange({
+          ...document,
+          revision: nextRevision(document.revision),
+          nodes: document.nodes.map((node) =>
+            node.id === command.nodeId
+              ? { ...node, configuration: command.configuration }
+              : node,
+          ),
+        })
+      }
       onCommand?.(command)
     },
-    [onCommand],
+    [document, onCommand, onDocumentChange],
   )
 
   const selectedNodes = document.nodes.filter((node) =>

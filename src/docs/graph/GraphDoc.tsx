@@ -2,10 +2,8 @@ import { useCallback, useMemo, useState, type ReactNode } from 'react'
 import {
   InteractiveGraphView,
   demoGraphDocument,
-  findComfyPromptNode,
   flattenValidationIssues,
   loadComfyLtx23WithMockDiagnostics,
-  updateComfyPrompt,
   type GraphCommand,
   type GraphDocument,
   type GraphSelection,
@@ -18,7 +16,6 @@ import { DocsNav } from '../components/DocsNav'
 const usageCode = `import {
   InteractiveGraphView,
   loadComfyLtx23WithMockDiagnostics,
-  updateComfyPrompt,
 } from 'tint/graph'
 
 const { document, validationByNodeId } = loadComfyLtx23WithMockDiagnostics()
@@ -27,7 +24,9 @@ const { document, validationByNodeId } = loadComfyLtx23WithMockDiagnostics()
   document={document}
   validationByNodeId={validationByNodeId}
   onDocumentChange={setDocument}
-/>`
+/>
+
+// Edit prompt / resolution / reference image from the node drawer (Edit).`
 
 type DemoMode = 'comfy' | 'demo'
 
@@ -46,12 +45,6 @@ export function GraphDoc() {
   const [viewport, setViewport] = useState<GraphViewport | undefined>()
   const [lastCommand, setLastCommand] = useState<GraphCommand | null>(null)
   const [readonly, setReadonly] = useState(false)
-
-  const promptNode = useMemo(() => findComfyPromptNode(document), [document])
-  const committedPrompt =
-    (promptNode?.configuration as { promptText?: string } | undefined)?.promptText ??
-    ''
-  const [promptDraft, setPromptDraft] = useState(committedPrompt)
 
   const allIssues = useMemo(
     () => flattenValidationIssues(validationByNodeId),
@@ -79,26 +72,11 @@ export function GraphDoc() {
       setDocument(loaded.document)
       setValidationByNodeId(loaded.validationByNodeId)
       setViewport(undefined)
-      const prompt = findComfyPromptNode(loaded.document)
-      setPromptDraft(
-        (prompt?.configuration as { promptText?: string } | undefined)?.promptText ?? '',
-      )
       return
     }
     setDocument(demoGraphDocument)
     setValidationByNodeId(new Map())
     setViewport(demoGraphDocument.viewport)
-    setPromptDraft('')
-  }
-
-  const applyPrompt = () => {
-    if (!promptNode || promptDraft === committedPrompt) return
-    setDocument((current) => updateComfyPrompt(current, promptDraft))
-    setLastCommand({
-      type: 'node.configure',
-      nodeId: promptNode.id,
-      configuration: { promptText: promptDraft },
-    })
   }
 
   return (
@@ -115,8 +93,8 @@ export function GraphDoc() {
           </h1>
           <p className="m-0 text-base leading-7 text-tint-muted">
             Interactive node canvas for domain-neutral graph documents — including
-            parsed ComfyUI workflows. Spatial interaction stays behind the xyflow
-            adapter; diagnostics and prompt edits are application concerns.
+            parsed ComfyUI workflows. Edit prompts, latent resolution, and reference
+            images from the node drawer; diagnostics stay outside the canvas engine.
           </p>
         </section>
 
@@ -149,57 +127,27 @@ export function GraphDoc() {
           </div>
 
           {mode === 'comfy' ? (
-            <div className="mb-3 grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,20rem)]">
-              <div className="grid gap-2 rounded-xl border border-tint-border bg-tint-panel p-3">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-xs font-semibold tracking-[0.08em] text-tint-muted uppercase">
-                    Prompt (PrimitiveStringMultiline)
-                  </span>
-                  <button
-                    type="button"
-                    data-testid="comfy-prompt-apply"
-                    disabled={readonly || !promptNode || promptDraft === committedPrompt}
-                    onClick={applyPrompt}
-                    className="ml-auto rounded-md border border-tint-border bg-tint-surface px-3 py-1 text-xs font-semibold text-tint-ink disabled:opacity-50"
-                  >
-                    Apply prompt
-                  </button>
-                </div>
-                <textarea
-                  data-testid="comfy-prompt-editor"
-                  value={promptDraft}
-                  disabled={readonly || !promptNode}
-                  onChange={(event) => setPromptDraft(event.target.value)}
-                  rows={5}
-                  className="min-h-28 resize-y rounded-lg border border-tint-border bg-tint-surface px-3 py-2 font-mono text-sm text-tint-ink outline-none focus:border-tint-accent focus:ring-3 focus:ring-tint-accent-soft disabled:opacity-60"
-                />
-              </div>
-
-              <aside
-                data-testid="comfy-diagnostics"
-                className="grid content-start gap-2 rounded-xl border border-tint-border bg-tint-panel p-3"
-              >
-                <p className="m-0 text-xs font-semibold tracking-[0.08em] text-tint-muted uppercase">
-                  Mock diagnostics
-                </p>
-                <IssueList
-                  title={`ERROR (${errorIssues.length})`}
-                  issues={errorIssues}
-                  empty="No errors"
-                  tone="error"
-                />
-                <IssueList
-                  title={`WARN (${warnIssues.length})`}
-                  issues={warnIssues}
-                  empty="No warnings"
-                  tone="warning"
-                />
-                <p className="m-0 text-xs leading-5 text-tint-muted">
-                  Mock inventory: custom node <code>TextGenerateLTX2Prompt</code> missing;
-                  model <code>ltx-2.3-22b-dev-fp8.safetensors</code> not found.
-                </p>
-              </aside>
-            </div>
+            <aside
+              data-testid="comfy-diagnostics"
+              className="mb-3 grid gap-2 rounded-xl border border-tint-border bg-tint-panel p-3 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(12rem,16rem)]"
+            >
+              <IssueList
+                title={`ERROR (${errorIssues.length})`}
+                issues={errorIssues}
+                empty="No errors"
+                tone="error"
+              />
+              <IssueList
+                title={`WARN (${warnIssues.length})`}
+                issues={warnIssues}
+                empty="No warnings"
+                tone="warning"
+              />
+              <p className="m-0 self-center text-xs leading-5 text-tint-muted">
+                Select a Prompt, Width/Height, Latent, or Reference image node and use{' '}
+                <strong>Edit</strong> to draw out in-node controls.
+              </p>
+            </aside>
           ) : null}
 
           <InteractiveGraphView
@@ -242,9 +190,10 @@ export function GraphDoc() {
         <section id="usage" className="mb-10 max-w-3xl">
           <h2 className="mt-0 mb-3 text-lg font-semibold text-tint-ink">Usage</h2>
           <p className="mb-4 text-sm leading-6 text-tint-muted">
-            Parse a ComfyUI workflow (subgraph expanded by default) into{' '}
-            <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">GraphDocument</code>,
-            attach mock or real diagnostics, and edit prompt widgets without executing the graph.
+            Parse a ComfyUI workflow into{' '}
+            <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">GraphDocument</code>.
+            Common parameters open from the node itself — prompt text, latent/output
+            resolution, and reference-image drop — without leaving the canvas.
           </p>
           <CodeBlock code={usageCode} language="tsx" />
         </section>
@@ -253,22 +202,19 @@ export function GraphDoc() {
           <h2 className="mt-0 mb-3 text-lg font-semibold text-tint-ink">API notes</h2>
           <ul className="m-0 list-disc space-y-2 pl-5 text-sm leading-6 text-tint-muted">
             <li>
-              Fixture:{' '}
-              <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">
-                video_ltx2_3_t2v.json
-              </code>{' '}
-              from Comfy-Org/workflow_templates
+              In-node editors use xyflow <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">nodrag</code> /{' '}
+              <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">nowheel</code> so typing and dropping
+              do not pan the canvas.
             </li>
             <li>
-              <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">parseComfyWorkflow</code>{' '}
-              expands <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">definitions.subgraphs</code>
+              Prompt → <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">PrimitiveStringMultiline</code>;
+              resolution → Width/Height primitives +{' '}
+              <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">EmptyLTXVLatentVideo</code>;
+              reference image → <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">EmptyImage</code> drop zone.
             </li>
             <li>
-              Mock ERROR = custom_node missing; mock WARN = Model not found
-            </li>
-            <li>
-              <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">updateComfyPrompt</code>{' '}
-              patches the PrimitiveStringMultiline prompt widget immutably
+              Edits dispatch <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">node.configure</code> and
+              update the document through <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">onDocumentChange</code>.
             </li>
           </ul>
         </section>

@@ -55,16 +55,21 @@ export {
 } from './fixtures/comfy/loadComfyFixture'
 
 export {
+  configureComfyNode,
+  deriveEditableFields,
   findComfyPromptNode,
   flattenValidationIssues,
   isComfyWorkflow,
   mockComfyDiagnostics,
   defaultMockComfyInventory,
   parseComfyWorkflow,
+  patchComfyConfiguration,
   updateComfyPrompt,
 } from './comfy'
 export type {
+  ComfyEditableField,
   ComfyNodeConfiguration,
+  ComfyReferenceImage,
   ComfyWorkflow,
   MockComfyInventory,
   NodeValidationMap,

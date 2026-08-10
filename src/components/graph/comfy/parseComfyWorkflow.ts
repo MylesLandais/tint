@@ -5,6 +5,7 @@ import type {
   GraphPort,
   Point,
 } from '../contracts'
+import { deriveEditableFields, patchComfyConfiguration } from './editableFields'
 import type {
   ComfyLink,
   ComfyLinkArray,
@@ -92,6 +93,7 @@ function isPromptNode(node: ComfyNode): boolean {
 function toConfiguration(node: ComfyNode): ComfyNodeConfiguration {
   const widgets = widgetList(node.widgets_values)
   const prompt = isPromptNode(node) && typeof widgets[0] === 'string' ? widgets[0] : undefined
+  const editableFields = deriveEditableFields(node)
   return {
     classType: node.type,
     comfyId: node.id,
@@ -105,6 +107,8 @@ function toConfiguration(node: ComfyNode): ComfyNodeConfiguration {
     modelName: extractModelName(node.type, widgets),
     color: node.color,
     bgcolor: node.bgcolor,
+    editableFields,
+    referenceImage: null,
   }
 }
 
@@ -170,13 +174,20 @@ export function parseComfyWorkflow(
         y: position.y - originY,
       },
       presentation: {
-        label: configuration.title ?? configuration.classType,
+        label:
+          configuration.classType === 'EmptyImage'
+            ? 'Reference image'
+            : (configuration.title ?? configuration.classType),
         description: configuration.classType,
         accent: configuration.isPrompt
           ? '#175cd3'
-          : configuration.modelName
-            ? '#0f6e56'
-            : undefined,
+          : configuration.editableFields?.some((field) => field.role === 'image')
+            ? '#b54708'
+            : configuration.editableFields?.some((field) => field.role === 'latentSize')
+              ? '#175cd3'
+            : configuration.modelName
+              ? '#0f6e56'
+              : undefined,
       },
       configuration,
       ports: buildPorts(node),
@@ -184,7 +195,7 @@ export function parseComfyWorkflow(
         movable: true,
         connectable: false,
         deletable: false,
-        editable: Boolean(configuration.isPrompt),
+        editable: (configuration.editableFields?.length ?? 0) > 0,
       },
     }
   })
@@ -255,23 +266,30 @@ export function updateComfyPrompt(
 ): GraphDocument {
   const promptNode = findComfyPromptNode(document)
   if (!promptNode) return document
+  return configureComfyNode(document, promptNode.id, {
+    widgetPatches: { 0: promptText },
+  })
+}
 
+/** Apply a Comfy widget / reference-image patch to one node. */
+export function configureComfyNode(
+  document: GraphDocument,
+  nodeId: string,
+  patch: {
+    widgetPatches?: Record<number, unknown>
+    referenceImage?: ComfyNodeConfiguration['referenceImage']
+  },
+): GraphDocument {
   return {
     ...document,
     revision: nextRevision(document.revision),
     nodes: document.nodes.map((node) => {
-      if (node.id !== promptNode.id) return node
-      const configuration = node.configuration as ComfyNodeConfiguration
-      const widgets = [...configuration.widgets]
-      widgets[0] = promptText
-      return {
-        ...node,
-        configuration: {
-          ...configuration,
-          widgets,
-          promptText,
-        },
-      }
+      if (node.id !== nodeId || node.kind !== 'comfy.node') return node
+      const configuration = patchComfyConfiguration(
+        node.configuration as ComfyNodeConfiguration,
+        patch,
+      )
+      return { ...node, configuration }
     }),
   }
 }
