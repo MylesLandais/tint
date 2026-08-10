@@ -3,8 +3,10 @@ import {
   useId,
   useRef,
   useState,
+  useSyncExternalStore,
   type ChangeEvent,
   type DragEvent,
+  type MouseEvent,
 } from 'react'
 import type { NodeViewProps } from '../contracts'
 import { patchComfyConfiguration, readIntWidget } from '../comfy/editableFields'
@@ -13,6 +15,30 @@ import type {
   ComfyNodeConfiguration,
   ComfyReferenceImage,
 } from '../comfy/types'
+
+/** Survives React Flow remounts when selection / document updates. */
+const poppedNodeIds = new Set<string>()
+const popListeners = new Set<() => void>()
+
+function subscribePopped(onStoreChange: () => void) {
+  popListeners.add(onStoreChange)
+  return () => {
+    popListeners.delete(onStoreChange)
+  }
+}
+
+function isPopped(nodeId: string) {
+  return poppedNodeIds.has(nodeId)
+}
+
+function setPopped(nodeId: string, next: boolean) {
+  const had = poppedNodeIds.has(nodeId)
+  if (next && !had) poppedNodeIds.add(nodeId)
+  if (!next && had) poppedNodeIds.delete(nodeId)
+  if (next !== had) {
+    for (const listener of popListeners) listener()
+  }
+}
 
 function roleKind(fields: readonly ComfyEditableField[] | undefined): string {
   if (!fields?.length) return 'comfy'
@@ -33,16 +59,16 @@ export function ComfyNodeView({
   const configuration = node.configuration
   const fields = configuration.editableFields ?? []
   const editable = fields.length > 0 && !readonly
-  const [expanded, setExpanded] = useState(false)
+  const popped = useSyncExternalStore(
+    subscribePopped,
+    () => isPopped(node.id),
+    () => false,
+  )
   const status = validation.some((issue) => issue.severity === 'error')
     ? 'error'
     : validation.some((issue) => issue.severity === 'warning')
       ? 'warn'
       : 'ready'
-
-  useEffect(() => {
-    if (selected && editable) setExpanded(true)
-  }, [editable, selected])
 
   const commit = (patch: {
     widgetPatches?: Record<number, unknown>
@@ -56,13 +82,20 @@ export function ComfyNodeView({
     })
   }
 
+  const togglePop = (event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation()
+    event.preventDefault()
+    setPopped(node.id, !popped)
+  }
+
   return (
     <article
       data-tint-graph-node
       data-kind="comfy.node"
       data-comfy-class={configuration.classType}
       data-selected={selected ? 'true' : 'false'}
-      data-expanded={expanded ? 'true' : 'false'}
+      data-popped={popped ? 'true' : 'false'}
+      data-editable={editable ? 'true' : 'false'}
       data-status={status}
       className="tint-graph-node tint-graph-node--comfy"
     >
@@ -82,29 +115,34 @@ export function ComfyNodeView({
             type="button"
             className="nodrag nowheel tint-graph-node__expand"
             data-testid={`comfy-expand-${node.id}`}
-            aria-expanded={expanded}
-            onClick={() => setExpanded((value) => !value)}
+            aria-expanded={popped}
+            onClick={togglePop}
+            onPointerDown={(event) => event.stopPropagation()}
           >
-            {expanded ? 'Collapse' : 'Edit'}
+            {popped ? 'Dock' : 'Pop out'}
           </button>
         ) : null}
       </div>
       <p className="tint-graph-node__description">{configuration.classType}</p>
 
-      {!expanded ? <CollapsedSummary configuration={configuration} fields={fields} /> : null}
-
-      {expanded && editable ? (
-        <div className="nodrag nowheel tint-graph-node__drawer" data-testid={`comfy-drawer-${node.id}`}>
+      {editable && !popped ? (
+        <div
+          className="nodrag nowheel tint-graph-node__widgets"
+          data-testid={`comfy-widgets-${node.id}`}
+        >
           {fields.map((field) => (
             <FieldEditor
               key={`${field.role}-${field.label}`}
               field={field}
               configuration={configuration}
+              compact
               onCommit={commit}
             />
           ))}
         </div>
       ) : null}
+
+      {!editable ? <CollapsedSummary configuration={configuration} fields={fields} /> : null}
 
       {validation.length ? (
         <ul className="tint-graph-node__issues" aria-label="Validation issues">
@@ -129,6 +167,34 @@ export function ComfyNodeView({
           <li className="tint-graph-node__ports-more">+{node.ports.length - 4} ports</li>
         ) : null}
       </ul>
+
+      {editable && popped ? (
+        <div
+          className="nodrag nowheel tint-graph-node__popout"
+          data-testid={`comfy-drawer-${node.id}`}
+          onPointerDown={(event) => event.stopPropagation()}
+        >
+          <div className="tint-graph-node__popout-head">
+            <span>Edit parameters</span>
+            <button
+              type="button"
+              className="nodrag tint-graph-node__expand"
+              onClick={togglePop}
+            >
+              Dock
+            </button>
+          </div>
+          {fields.map((field) => (
+            <FieldEditor
+              key={`pop-${field.role}-${field.label}`}
+              field={field}
+              configuration={configuration}
+              compact={false}
+              onCommit={commit}
+            />
+          ))}
+        </div>
+      ) : null}
     </article>
   )
 }
@@ -200,10 +266,12 @@ function CollapsedSummary({
 function FieldEditor({
   field,
   configuration,
+  compact,
   onCommit,
 }: {
   field: ComfyEditableField
   configuration: ComfyNodeConfiguration
+  compact: boolean
   onCommit: (patch: {
     widgetPatches?: Record<number, unknown>
     referenceImage?: ComfyNodeConfiguration['referenceImage']
@@ -214,6 +282,7 @@ function FieldEditor({
       <PromptField
         label={field.label}
         value={String(configuration.widgets[field.widgetIndex] ?? '')}
+        compact={compact}
         onCommit={(value) =>
           onCommit({ widgetPatches: { [field.widgetIndex]: value } })
         }
@@ -293,10 +362,12 @@ function FieldEditor({
 function PromptField({
   label,
   value,
+  compact,
   onCommit,
 }: {
   label: string
   value: string
+  compact: boolean
   onCommit: (value: string) => void
 }) {
   const [draft, setDraft] = useState(value)
@@ -308,7 +379,7 @@ function PromptField({
       <textarea
         className="nodrag nowheel"
         data-testid="comfy-inline-prompt"
-        rows={5}
+        rows={compact ? 3 : 8}
         value={draft}
         onChange={(event) => setDraft(event.target.value)}
         onBlur={() => {
@@ -322,6 +393,7 @@ function PromptField({
         data-testid="comfy-inline-prompt-apply"
         disabled={draft === value}
         onClick={() => onCommit(draft)}
+        onPointerDown={(event) => event.stopPropagation()}
       >
         Apply prompt
       </button>
@@ -446,6 +518,7 @@ function LatentSizeField({
         onClick={() =>
           onCommit(frames != null ? { width: w, height: h, frames: f } : { width: w, height: h })
         }
+        onPointerDown={(event) => event.stopPropagation()}
       >
         Apply size
       </button>
@@ -565,6 +638,7 @@ function ImageDropField({
             event.stopPropagation()
             onClear()
           }}
+          onPointerDown={(event) => event.stopPropagation()}
         >
           Clear image
         </button>

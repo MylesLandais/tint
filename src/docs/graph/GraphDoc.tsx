@@ -26,7 +26,7 @@ const { document, validationByNodeId } = loadComfyLtx23WithMockDiagnostics()
   onDocumentChange={setDocument}
 />
 
-// Edit prompt / resolution / reference image from the node drawer (Edit).`
+// Prompt, latent size, and reference image edit on the node (or Pop out).`
 
 type DemoMode = 'comfy' | 'demo'
 
@@ -56,7 +56,11 @@ export function GraphDoc() {
   const onCommand = useCallback((command: GraphCommand) => {
     if (command.type === 'viewport.set') return
     setLastCommand((previous) => {
-      if (command.type === 'selection.replace' && previous?.type === 'node.move') {
+      // Selection events often follow drag / configure; keep the edit visible.
+      if (
+        command.type === 'selection.replace' &&
+        (previous?.type === 'node.move' || previous?.type === 'node.configure')
+      ) {
         return previous
       }
       return command
@@ -93,8 +97,8 @@ export function GraphDoc() {
           </h1>
           <p className="m-0 text-base leading-7 text-tint-muted">
             Interactive node canvas for domain-neutral graph documents — including
-            parsed ComfyUI workflows. Edit prompts, latent resolution, and reference
-            images from the node drawer; diagnostics stay outside the canvas engine.
+            parsed ComfyUI workflows. Prompt text, latent resolution, and reference
+            image drops edit on the node itself; diagnostics stay outside the canvas engine.
           </p>
         </section>
 
@@ -144,8 +148,8 @@ export function GraphDoc() {
                 tone="warning"
               />
               <p className="m-0 self-center text-xs leading-5 text-tint-muted">
-                Select a Prompt, Width/Height, Latent, or Reference image node and use{' '}
-                <strong>Edit</strong> to draw out in-node controls.
+                Prompt, Width/Height, Latent, and Reference image nodes expose editors
+                on the node. Use <strong>Pop out</strong> to draw a larger panel beside it.
               </p>
             </aside>
           ) : null}
@@ -192,8 +196,8 @@ export function GraphDoc() {
           <p className="mb-4 text-sm leading-6 text-tint-muted">
             Parse a ComfyUI workflow into{' '}
             <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">GraphDocument</code>.
-            Common parameters open from the node itself — prompt text, latent/output
-            resolution, and reference-image drop — without leaving the canvas.
+            Common parameters stay on the node — prompt text, latent/output
+            resolution, and reference-image drop — with an optional side pop-out.
           </p>
           <CodeBlock code={usageCode} language="tsx" />
         </section>

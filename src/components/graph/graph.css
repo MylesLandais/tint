@@ -67,6 +67,7 @@
 
 .tint-graph-flow-node {
   position: relative;
+  overflow: visible;
 }
 
 .tint-graph-node {
@@ -79,8 +80,21 @@
   box-shadow: 0 1px 0 color-mix(in srgb, var(--tint-ink) 6%, transparent);
 }
 
-.tint-graph-node--comfy[data-expanded='true'] {
-  width: 22rem;
+.tint-graph-node--comfy {
+  position: relative;
+  overflow: visible;
+}
+
+.tint-graph-node--comfy[data-editable='true'] {
+  width: 18.5rem;
+}
+
+.tint-graph-node--comfy[data-popped='true'] {
+  width: 15.5rem;
+}
+
+.tint-graph-view__canvas .react-flow__node {
+  overflow: visible;
 }
 
 .tint-graph-node[data-selected='true'] {
@@ -423,13 +437,44 @@
   color: var(--tint-muted);
 }
 
-.tint-graph-node__drawer {
+.tint-graph-node__widgets {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 0.6rem;
+  border-top: 1px solid var(--tint-border);
+  padding-top: 0.55rem;
+  animation: tint-graph-drawer-in 160ms ease-out;
+}
+
+.tint-graph-node__popout {
+  position: absolute;
+  top: 0;
+  left: calc(100% + 0.65rem);
+  z-index: 5;
   display: grid;
   gap: 0.65rem;
-  margin-top: 0.65rem;
-  border-top: 1px solid var(--tint-border);
-  padding-top: 0.65rem;
-  animation: tint-graph-drawer-in 160ms ease-out;
+  width: 20rem;
+  border: 1px solid var(--tint-border-strong);
+  border-radius: 0.7rem;
+  background: color-mix(in srgb, var(--tint-panel) 97%, transparent);
+  padding: 0.75rem;
+  box-shadow:
+    0 10px 28px color-mix(in srgb, var(--tint-ink) 12%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--tint-accent) 18%, transparent);
+  animation: tint-graph-popout-in 180ms ease-out;
+  transform-origin: left center;
+}
+
+.tint-graph-node__popout-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tint-muted);
 }
 
 @keyframes tint-graph-drawer-in {
@@ -440,6 +485,17 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes tint-graph-popout-in {
+  from {
+    opacity: 0;
+    transform: translateX(-0.55rem) scaleX(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scaleX(1);
   }
 }
 
