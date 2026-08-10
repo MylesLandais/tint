@@ -136,9 +136,20 @@ export {
   emptySelection,
   GenericNodeView,
   ScriptNodeView,
+  ComfyNodeView,
   defaultNodeDefinitions,
+  findComfyPromptNode,
+  flattenValidationIssues,
+  isComfyWorkflow,
+  loadComfyLtx23Document,
+  loadComfyLtx23WithMockDiagnostics,
+  mockComfyDiagnostics,
+  parseComfyWorkflow,
+  updateComfyPrompt,
 } from './components/graph'
 export type {
+  ComfyNodeConfiguration,
+  ComfyWorkflow,
   GraphCommand,
   GraphCommandBus,
   GraphCommandEnvelope,
@@ -152,5 +163,7 @@ export type {
   NodeDefinition,
   NodeRegistry,
   NodeViewProps,
+  NodeValidationMap,
   ScriptNodeConfiguration,
+  ValidationIssue,
 } from './components/graph'

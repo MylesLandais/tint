@@ -117,12 +117,101 @@
 }
 
 .tint-graph-node__status[data-status='invalid'],
-.tint-graph-node__status[data-status='failed'] {
+.tint-graph-node__status[data-status='failed'],
+.tint-graph-node__status[data-status='error'] {
   color: var(--tint-danger-ink);
+}
+
+.tint-graph-node__status[data-status='warn'],
+.tint-graph-node__status[data-status='warning'] {
+  color: var(--tint-warning-ink);
 }
 
 .tint-graph-node__status[data-status='running'] {
   color: var(--tint-info-ink);
+}
+
+.tint-graph-node--comfy[data-status='error'] {
+  border-color: var(--tint-danger);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--tint-danger) 40%, transparent);
+}
+
+.tint-graph-node--comfy[data-status='warn'] {
+  border-color: var(--tint-warning);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--tint-warning) 35%, transparent);
+}
+
+.tint-graph-node__widget-summary {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tint-graph-node__widget-summary code {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.68rem;
+  color: var(--tint-muted);
+}
+
+.tint-graph-node__issues {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0.55rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tint-graph-node__issues li {
+  border-radius: 0.35rem;
+  padding: 0.35rem 0.45rem;
+  font-size: 0.68rem;
+  line-height: 1.35;
+}
+
+.tint-graph-node__issues li[data-severity='error'] {
+  background: var(--tint-danger-soft);
+  color: var(--tint-danger-ink);
+}
+
+.tint-graph-node__issues li[data-severity='warning'] {
+  background: var(--tint-warning-soft);
+  color: var(--tint-warning-ink);
+}
+
+.tint-graph-node__ports-more {
+  font-size: 0.68rem;
+  color: var(--tint-muted);
+}
+
+.tint-graph-view__inspector-issues {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tint-graph-view__inspector-issues li {
+  border-radius: 0.35rem;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.tint-graph-view__inspector-issues li[data-severity='error'] {
+  background: var(--tint-danger-soft);
+  color: var(--tint-danger-ink);
+}
+
+.tint-graph-view__inspector-issues li[data-severity='warning'] {
+  background: var(--tint-warning-soft);
+  color: var(--tint-warning-ink);
 }
 
 .tint-graph-node__title {

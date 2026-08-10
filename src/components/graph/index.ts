@@ -48,3 +48,27 @@ export { ScriptNodeView } from './nodes/ScriptNodeView'
 export type { ScriptNodeConfiguration } from './nodes/ScriptNodeView'
 
 export { demoGraphDocument } from './fixtures/demoDocument'
+export {
+  loadComfyLtx23Document,
+  loadComfyLtx23WithMockDiagnostics,
+  comfyLtx23Workflow,
+} from './fixtures/comfy/loadComfyFixture'
+
+export {
+  findComfyPromptNode,
+  flattenValidationIssues,
+  isComfyWorkflow,
+  mockComfyDiagnostics,
+  defaultMockComfyInventory,
+  parseComfyWorkflow,
+  updateComfyPrompt,
+} from './comfy'
+export type {
+  ComfyNodeConfiguration,
+  ComfyWorkflow,
+  MockComfyInventory,
+  NodeValidationMap,
+  ParseComfyWorkflowOptions,
+} from './comfy'
+
+export { ComfyNodeView } from './nodes/ComfyNodeView'

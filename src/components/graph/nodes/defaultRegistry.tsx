@@ -1,5 +1,7 @@
 import type { GraphPort } from '../contracts'
 import { createNodeRegistry, type NodeDefinition } from '../contracts'
+import type { ComfyNodeConfiguration } from '../comfy/types'
+import { ComfyNodeView } from './ComfyNodeView'
 import { GenericNodeView } from './GenericNodeView'
 import { ScriptNodeView, type ScriptNodeConfiguration } from './ScriptNodeView'
 
@@ -88,11 +90,30 @@ const ontologyDefinition: NodeDefinition = {
   render: GenericNodeView,
 }
 
+const comfyDefinition: NodeDefinition<ComfyNodeConfiguration> = {
+  kind: 'comfy.node',
+  version: '1',
+  displayName: 'Comfy node',
+  category: 'comfy',
+  createDefault: () => ({
+    classType: 'Unknown',
+    comfyId: 0,
+    widgets: [],
+    mode: 0,
+    order: 0,
+    properties: {},
+  }),
+  derivePorts: () => [],
+  validate: async () => [],
+  render: ComfyNodeView,
+}
+
 export const defaultNodeDefinitions: readonly NodeDefinition[] = [
   triggerDefinition,
   actionDefinition,
   scriptDefinition as NodeDefinition,
   ontologyDefinition,
+  comfyDefinition as NodeDefinition,
 ]
 
 export function createDefaultNodeRegistry() {

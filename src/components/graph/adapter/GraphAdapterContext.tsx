@@ -1,11 +1,17 @@
 import { createContext, useContext, type ReactNode } from 'react'
-import type { GraphCommand, GraphDocument, NodeRegistry } from '../contracts'
+import type {
+  GraphCommand,
+  GraphDocument,
+  NodeRegistry,
+  ValidationIssue,
+} from '../contracts'
 
 export type GraphAdapterContextValue = {
   document: GraphDocument
   registry: NodeRegistry
   readonly: boolean
   dispatch: (command: GraphCommand) => void
+  validationByNodeId: ReadonlyMap<string, readonly ValidationIssue[]>
 }
 
 const GraphAdapterContext = createContext<GraphAdapterContextValue | null>(null)

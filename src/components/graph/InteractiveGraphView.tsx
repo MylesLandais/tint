@@ -7,6 +7,7 @@ import type {
   GraphViewport,
   NodeRegistry,
   Point,
+  ValidationIssue,
 } from './contracts'
 import { emptySelection } from './contracts'
 import { createDefaultNodeRegistry } from './nodes/defaultRegistry'
@@ -18,6 +19,8 @@ export type InteractiveGraphViewProps = {
   registry?: NodeRegistry
   readonly?: boolean
   selection?: GraphSelection
+  /** Per-node validation issues (ERROR / WARN chrome on nodes + inspector). */
+  validationByNodeId?: ReadonlyMap<string, readonly ValidationIssue[]>
   className?: string
   /** When true, renders a side inspector listing the current selection. */
   showInspector?: boolean
@@ -36,6 +39,7 @@ export function InteractiveGraphView({
   registry,
   readonly = false,
   selection: controlledSelection,
+  validationByNodeId,
   className,
   showInspector = true,
   onDocumentChange,
@@ -103,6 +107,7 @@ export function InteractiveGraphView({
           registry={resolvedRegistry}
           readonly={readonly}
           selection={selection}
+          validationByNodeId={validationByNodeId}
           onSelectionChange={handleSelectionChange}
           onViewportChange={onViewportChange}
           onNodePositionsCommit={handlePositionsCommit}
@@ -128,7 +133,9 @@ export function InteractiveGraphView({
             </p>
           ) : null}
 
-          {selectedNodes.map((node) => (
+          {selectedNodes.map((node) => {
+            const issues = validationByNodeId?.get(node.id) ?? []
+            return (
             <section key={node.id} className="tint-graph-view__inspector-card">
               <h3>{node.presentation?.label ?? node.kind}</h3>
               <dl>
@@ -152,6 +159,20 @@ export function InteractiveGraphView({
                   <dt>Ports</dt>
                   <dd>{node.ports.map((port) => port.key).join(', ') || 'none'}</dd>
                 </div>
+                {issues.length ? (
+                  <div>
+                    <dt>Issues</dt>
+                    <dd>
+                      <ul className="tint-graph-view__inspector-issues">
+                        {issues.map((issue) => (
+                          <li key={issue.code} data-severity={issue.severity}>
+                            {issue.message}
+                          </li>
+                        ))}
+                      </ul>
+                    </dd>
+                  </div>
+                ) : null}
                 <div>
                   <dt>Configuration</dt>
                   <dd>
@@ -160,7 +181,8 @@ export function InteractiveGraphView({
                 </div>
               </dl>
             </section>
-          ))}
+            )
+          })}
 
           {selectedEdges.map((edge) => (
             <section key={edge.id} className="tint-graph-view__inspector-card">

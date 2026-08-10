@@ -31,6 +31,7 @@ import type {
   GraphViewport,
   NodeRegistry,
   Point,
+  ValidationIssue,
 } from '../contracts'
 import { emptySelection } from '../contracts'
 import { GraphAdapterProvider } from './GraphAdapterContext'
@@ -46,6 +47,7 @@ export type XyflowCanvasProps = {
   registry: NodeRegistry
   readonly?: boolean
   selection?: GraphSelection
+  validationByNodeId?: ReadonlyMap<string, readonly ValidationIssue[]>
   onSelectionChange?: (selection: GraphSelection) => void
   onViewportChange?: (viewport: GraphViewport) => void
   onNodePositionsCommit?: (positions: Record<string, Point>) => void
@@ -63,6 +65,7 @@ function XyflowCanvasInner({
   registry,
   readonly = false,
   selection,
+  validationByNodeId,
   onSelectionChange,
   onViewportChange,
   onNodePositionsCommit,
@@ -78,6 +81,11 @@ function XyflowCanvasInner({
   const documentRef = useRef(document)
   documentRef.current = document
 
+  const resolvedValidation = useMemo(
+    () => validationByNodeId ?? new Map<string, readonly ValidationIssue[]>(),
+    [validationByNodeId],
+  )
+
   const dispatch = useCallback(
     (command: GraphCommand) => {
       onCommand?.(command)
@@ -86,8 +94,14 @@ function XyflowCanvasInner({
   )
 
   const adapterValue = useMemo(
-    () => ({ document, registry, readonly, dispatch }),
-    [document, dispatch, readonly, registry],
+    () => ({
+      document,
+      registry,
+      readonly,
+      dispatch,
+      validationByNodeId: resolvedValidation,
+    }),
+    [dispatch, document, readonly, registry, resolvedValidation],
   )
 
   useEffect(() => {
