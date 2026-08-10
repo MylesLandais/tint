@@ -76,10 +76,14 @@ function XyflowCanvasInner({
   const [nodes, setNodes] = useState<Node[]>(() => toFlowNodes(document))
   const [edges, setEdges] = useState<Edge[]>(() => toFlowEdges(document))
   const nodesRef = useRef(nodes)
+  const edgesRef = useRef(edges)
   const dragBaseline = useRef<Map<string, Point>>(new Map())
   const lastSelectionKey = useRef('')
+  const lastViewportGraphId = useRef<string | null>(null)
   const documentRef = useRef(document)
   documentRef.current = document
+  nodesRef.current = nodes
+  edgesRef.current = edges
 
   const resolvedValidation = useMemo(
     () => validationByNodeId ?? new Map<string, readonly ValidationIssue[]>(),
@@ -104,39 +108,78 @@ function XyflowCanvasInner({
     [dispatch, document, readonly, registry, resolvedValidation],
   )
 
+  // Sync graph document → flow nodes/edges. Preserve measured dimensions so
+  // xyflow does not re-measure in a loop after every configure/move revision.
   useEffect(() => {
-    const nextNodes = toFlowNodes(document)
-    const nextEdges = toFlowEdges(document)
-    nodesRef.current = nextNodes
-    setNodes(nextNodes)
-    setEdges(nextEdges)
+    setNodes((current) => {
+      const previous = new Map(current.map((node) => [node.id, node]))
+      const next = toFlowNodes(document).map((node) => {
+        const prior = previous.get(node.id)
+        return {
+          ...prior,
+          ...node,
+          selected: prior?.selected ?? false,
+          width: prior?.width,
+          height: prior?.height,
+          measured: prior?.measured,
+        }
+      })
+      nodesRef.current = next
+      return next
+    })
+    setEdges((current) => {
+      const previous = new Map(current.map((edge) => [edge.id, edge]))
+      const next = toFlowEdges(document).map((edge) => {
+        const prior = previous.get(edge.id)
+        return {
+          ...prior,
+          ...edge,
+          selected: prior?.selected ?? false,
+        }
+      })
+      edgesRef.current = next
+      return next
+    })
   }, [document])
 
   useEffect(() => {
+    if (!selection) return
+    const key = selectionKey(selection)
+    setNodes((current) => {
+      let changed = false
+      const next = current.map((node) => {
+        const selected = selection.nodeIds.has(node.id)
+        if (node.selected === selected) return node
+        changed = true
+        return { ...node, selected }
+      })
+      if (changed) nodesRef.current = next
+      return changed ? next : current
+    })
+    setEdges((current) => {
+      let changed = false
+      const next = current.map((edge) => {
+        const selected = selection.edgeIds.has(edge.id)
+        if (edge.selected === selected) return edge
+        changed = true
+        return { ...edge, selected }
+      })
+      if (changed) edgesRef.current = next
+      return changed ? next : current
+    })
+    lastSelectionKey.current = key
+  }, [selection])
+
+  // Fit / apply authored viewport only when the graph identity changes.
+  useEffect(() => {
+    if (lastViewportGraphId.current === document.id && !document.viewport) return
+    lastViewportGraphId.current = document.id
     if (!document.viewport) {
       void fitView({ padding: 0.2 })
       return
     }
     void setViewport(document.viewport, { duration: 0 })
-  }, [document.id, document.revision, document.viewport, fitView, setViewport])
-
-  useEffect(() => {
-    if (!selection) return
-    setNodes((current) => {
-      const next = current.map((node) => ({
-        ...node,
-        selected: selection.nodeIds.has(node.id),
-      }))
-      nodesRef.current = next
-      return next
-    })
-    setEdges((current) =>
-      current.map((edge) => ({
-        ...edge,
-        selected: selection.edgeIds.has(edge.id),
-      })),
-    )
-  }, [selection])
+  }, [document.id, document.viewport, fitView, setViewport])
 
   const onNodesChange = useCallback((changes: NodeChange[]) => {
     setNodes((current) => {
@@ -179,7 +222,11 @@ function XyflowCanvasInner({
   )
 
   const onEdgesChange = useCallback((changes: EdgeChange[]) => {
-    setEdges((current) => applyEdgeChanges(changes, current))
+    setEdges((current) => {
+      const latest = applyEdgeChanges(changes, current)
+      edgesRef.current = latest
+      return latest
+    })
   }, [])
 
   const handleSelectionChange = useCallback(
@@ -229,13 +276,15 @@ function XyflowCanvasInner({
         nodesDraggable={!readonly}
         nodesConnectable={!readonly}
         elementsSelectable
-        fitView={!document.viewport}
-        fitViewOptions={{ padding: 0.2 }}
+        fitView={false}
         minZoom={0.25}
         maxZoom={2}
         proOptions={{ hideAttribution: true }}
         deleteKeyCode={readonly ? null : ['Backspace', 'Delete']}
         onInit={() => {
+          if (!documentRef.current.viewport) {
+            void fitView({ padding: 0.2 })
+          }
           onViewportChange?.(getViewport())
         }}
       >
