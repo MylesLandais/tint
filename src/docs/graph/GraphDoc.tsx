@@ -65,6 +65,7 @@ export function GraphDoc() {
   const followRunRef = useRef(followRun)
   followRunRef.current = followRun
   const runRef = useRef<ReturnType<typeof createMockI2VRun> | null>(null)
+  const previewRef = useRef<HTMLDivElement>(null)
 
   const allIssues = useMemo(
     () => flattenValidationIssues(validationByNodeId),
@@ -90,7 +91,13 @@ export function GraphDoc() {
         setRunSnapshot(snapshot)
         setRuntimeByNodeId(snapshot.runtimeByNodeId)
         if (followRunRef.current && snapshot.current) {
-          const next = viewportForNode(document, snapshot.current.nodeId)
+          // Measured, not assumed: the camera has to know how big the canvas
+          // actually is, or it centres nodes correctly at one breakpoint only.
+          const canvas = previewRef.current?.getBoundingClientRect()
+          const next = viewportForNode(document, snapshot.current.nodeId, {
+            width: canvas?.width ?? 0,
+            height: canvas?.height ?? 0,
+          })
           if (next) setFollowViewport(next)
         }
         if (snapshot.phase === 'completed' || snapshot.phase === 'failed') {
@@ -258,18 +265,20 @@ export function GraphDoc() {
             </div>
           ) : null}
 
-          <InteractiveGraphView
-            document={document}
-            readonly={readonly}
-            selection={selection}
-            validationByNodeId={validationByNodeId}
-            runtimeByNodeId={runtimeByNodeId}
-            viewport={followViewport}
-            onDocumentChange={setDocument}
-            onSelectionChange={setSelection}
-            onViewportChange={setViewport}
-            onCommand={onCommand}
-          />
+          <div ref={previewRef}>
+            <InteractiveGraphView
+              document={document}
+              readonly={readonly}
+              selection={selection}
+              validationByNodeId={validationByNodeId}
+              runtimeByNodeId={runtimeByNodeId}
+              viewport={followViewport}
+              onDocumentChange={setDocument}
+              onSelectionChange={setSelection}
+              onViewportChange={setViewport}
+              onCommand={onCommand}
+            />
+          </div>
 
           <div className="mt-3 grid gap-3 md:grid-cols-4">
             <StatusCard label="Mode" value={mode === 'comfy' ? 'Comfy LTX-2.3' : 'Demo'} />

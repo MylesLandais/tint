@@ -2,7 +2,13 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { InteractiveGraphView } from './InteractiveGraphView'
 import { demoGraphDocument } from '../../docs/graph/fixtures/demoDocument'
-import { toFlowEdges, toFlowNodes, selectionFromFlow } from './adapter/mappers'
+import {
+  handleId,
+  portIdFromHandle,
+  selectionFromFlow,
+  toFlowEdges,
+  toFlowNodes,
+} from './adapter/mappers'
 import { createDefaultNodeRegistry } from './nodes/defaultRegistry'
 
 describe('graph mappers', () => {
@@ -14,7 +20,27 @@ describe('graph mappers', () => {
     expect(edges).toHaveLength(demoGraphDocument.edges.length)
     expect(nodes.every((node) => node.type === 'tint')).toBe(true)
     expect(edges[0]?.source).toBe('n-trigger')
-    expect(edges[0]?.sourceHandle).toBe('out:output')
+    expect(edges[0]?.sourceHandle).toBe(handleId('out:output', 'source'))
+  })
+
+  /**
+   * xyflow identifies a handle by id alone. A `'bidirectional'` port renders as
+   * both a target and a source, and both carried the bare `port.id` — so the two
+   * were indistinguishable and a connection landing on one could resolve to the
+   * other. The document's own `portId` must survive the round trip untouched.
+   */
+  it('gives each side of a bidirectional port a distinct handle', () => {
+    const source = handleId('io:bidirectional', 'source')
+    const target = handleId('io:bidirectional', 'target')
+
+    expect(source).not.toBe(target)
+    expect(portIdFromHandle(source)).toBe('io:bidirectional')
+    expect(portIdFromHandle(target)).toBe('io:bidirectional')
+  })
+
+  it('leaves an unsuffixed handle alone, and survives an empty one', () => {
+    expect(portIdFromHandle('out:output')).toBe('out:output')
+    expect(portIdFromHandle(null)).toBe('')
   })
 
   it('builds selection from selected flow elements', () => {

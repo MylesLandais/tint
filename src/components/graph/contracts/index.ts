@@ -41,3 +41,4 @@ export type {
   ValidationIssue,
 } from './registry'
 export { createNodeRegistry, flattenValidationIssues } from './registry'
+export { applyCommand, nextRevision } from './applyCommand'

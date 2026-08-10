@@ -88,8 +88,19 @@ export type ComfyWorkflow = {
 export type ComfyReferenceImage = {
   name: string
   mimeType: string
-  /** data: URL for local preview — never uploaded by tint itself */
-  dataUrl: string
+  /** Bytes, for display — the document records the file, not its contents. */
+  size: number
+  /**
+   * Object URL for local preview. Never uploaded by tint itself, and
+   * session-scoped: it is a handle to a blob this tab is holding, not data.
+   *
+   * This used to be a `data:` URL — the whole image, base64-encoded, inside the
+   * graph document. It was then copied on every configuration patch and, when
+   * the node was selected, `JSON.stringify`d into the inspector's `<pre>`, so a
+   * 4 MB reference image became a multi-megabyte DOM text node. Hosts that need
+   * to persist the image should upload it and store their own reference.
+   */
+  url: string
 }
 
 export type ComfyEditableField =

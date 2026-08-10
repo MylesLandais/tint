@@ -5,6 +5,7 @@ import type {
   GraphPort,
   Point,
 } from '../contracts'
+import { nextRevision } from '../contracts'
 import { deriveEditableFields, patchComfyConfiguration } from './editableFields'
 import type {
   ComfyLink,
@@ -292,12 +293,6 @@ export function configureComfyNode(
       return { ...node, configuration }
     }),
   }
-}
-
-function nextRevision(revision: string): string {
-  const match = /^r(\d+)$/.exec(revision)
-  if (!match) return `r${Date.now()}`
-  return `r${Number(match[1]) + 1}`
 }
 
 export function isComfyWorkflow(value: unknown): value is ComfyWorkflow {

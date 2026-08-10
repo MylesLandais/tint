@@ -104,10 +104,12 @@ function topoOrderIds(document: GraphDocument): string[] {
     queue.sort()
   }
 
-  // Cycles / disconnected leftovers keep stable document order.
+  // Cycles / disconnected leftovers keep stable document order. Membership is a
+  // Set: `ordered.includes` inside this loop made the tail O(n^2).
   if (ordered.length < document.nodes.length) {
+    const seen = new Set(ordered)
     for (const node of document.nodes) {
-      if (!ordered.includes(node.id)) ordered.push(node.id)
+      if (!seen.has(node.id)) ordered.push(node.id)
     }
   }
   return ordered
@@ -328,10 +330,14 @@ export function createMockI2VRun(
   let phase: MockI2VRunPhase = 'idle'
   let timer: ReturnType<typeof setInterval> | null = null
 
+  /** Current state. Pure — safe to call from a render or a store subscription. */
+  const snapshot = () => snapshotMockI2VRun({ queue, stepIndex, phase, failNodeIds })
+
+  /** Advance-and-notify. Every state change goes through here. */
   const emit = () => {
-    const snapshot = snapshotMockI2VRun({ queue, stepIndex, phase, failNodeIds })
-    options.onUpdate?.(snapshot)
-    return snapshot
+    const next = snapshot()
+    options.onUpdate?.(next)
+    return next
   }
 
   const stop = () => {
@@ -383,24 +389,39 @@ export function createMockI2VRun(
         emit()
       }
     },
-    getSnapshot: emit,
+    // Reads state; it does not notify. `getSnapshot: emit` called
+    // `options.onUpdate` and returned a fresh object every time, so wiring this
+    // to `useSyncExternalStore` would have looped forever.
+    getSnapshot: snapshot,
   }
 }
 
-/** Camera helper — centers a node in the canvas viewport. */
+/**
+ * Centre a node in a canvas of the given size.
+ *
+ * `width`/`height` describe the canvas the camera is for, so callers measure
+ * their container and pass it. They defaulted to a fixed 900x520, which made the
+ * follow camera correct at exactly one breakpoint and progressively wronger at
+ * every other.
+ */
 export function viewportForNode(
   document: GraphDocument,
   nodeId: string,
-  options?: { zoom?: number; width?: number; height?: number },
+  size: { width: number; height: number },
+  options?: { zoom?: number },
 ): { x: number; y: number; zoom: number } | undefined {
   const node = document.nodes.find((item) => item.id === nodeId)
   if (!node) return undefined
   const zoom = options?.zoom ?? 1.05
-  const width = options?.width ?? 900
-  const height = options?.height ?? 520
+  // Half a default node, so the camera centres the node's middle, not its corner.
+  const halfWidth = (node.size?.width ?? DEFAULT_NODE_WIDTH) / 2
+  const halfHeight = (node.size?.height ?? DEFAULT_NODE_HEIGHT) / 2
   return {
-    x: width / 2 - (node.position.x + 140) * zoom,
-    y: height / 2 - (node.position.y + 90) * zoom,
+    x: size.width / 2 - (node.position.x + halfWidth) * zoom,
+    y: size.height / 2 - (node.position.y + halfHeight) * zoom,
     zoom,
   }
 }
+
+const DEFAULT_NODE_WIDTH = 280
+const DEFAULT_NODE_HEIGHT = 180

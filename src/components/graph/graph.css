@@ -24,8 +24,13 @@
   grid-template-columns: minmax(0, 1fr);
 }
 
-.tint-graph-view:fullscreen,
-.tint-graph-view:-webkit-full-screen,
+/*
+ * `:is()` is load-bearing. A selector list is not forgiving — one compound the
+ * browser cannot parse drops the whole rule — so listing `:-webkit-full-screen`
+ * beside `:fullscreen` meant Firefox, which knows neither that spelling nor a
+ * reason to keep reading, discarded the standard selector along with it.
+ */
+.tint-graph-view:is(:fullscreen, :-webkit-full-screen, :-moz-full-screen),
 .tint-graph-view[data-fullscreen='true'] {
   width: 100%;
   height: 100%;
@@ -41,6 +46,11 @@
   position: fixed;
   inset: 0;
   z-index: 60;
+  /* `position: fixed` resolves against the nearest transformed ancestor, not the
+     viewport. A host wrapping the graph in a `motion.div` or a `backdrop-blur`
+     container would otherwise get a theater mode that fills its parent, with the
+     page scroll locked and no visible way out. */
+  transform: none;
   width: 100vw;
   height: 100dvh;
   max-height: none;
@@ -719,4 +729,58 @@
   .tint-graph-view:not([data-fullscreen='true']) .tint-graph-view__canvas {
     height: 26rem;
   }
+}
+
+/*
+ * Focus.
+ *
+ * The canvas is a keyboard surface — nodes are focusable, the toolbar is a
+ * button, and every on-node editor is a real control — and the stylesheet had no
+ * `:focus` rule at all, so the focus ring was whatever the user agent happened
+ * to draw over a dark node. `:focus-visible` so a pointer click on a node does
+ * not leave a ring behind it.
+ */
+.tint-graph-view :focus-visible,
+.tint-graph-flow-node:focus-visible,
+.tint-graph-view__fullscreen:focus-visible,
+.tint-graph-drop:focus-visible {
+  outline: 2px solid var(--tint-accent);
+  outline-offset: 2px;
+  border-radius: 0.35rem;
+}
+
+/*
+ * Motion.
+ *
+ * Three animations and a viewport tween shipped with no reduced-motion
+ * behaviour. The running-node pulse is the one that matters: it repeats
+ * indefinitely, right where a user watching a long run has to look.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .tint-graph-view *,
+  .tint-graph-view *::before,
+  .tint-graph-view *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /* The pulse conveys "running", so it degrades to a static state rather than
+     disappearing along with the information it carried. */
+  .tint-graph-node[data-status='running'] {
+    outline: 2px solid var(--tint-accent);
+  }
+}
+
+/* Available to a screen reader, absent for everyone else. */
+.tint-graph-view__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }

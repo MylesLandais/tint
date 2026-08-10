@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react'
 import { Handle, Position, type NodeProps } from '../../../vendor/xyflow'
 import { useGraphAdapter } from './GraphAdapterContext'
-import { findGraphNode, type GraphFlowNodeData } from './mappers'
+import { handleId, type GraphFlowNodeData } from './mappers'
 
 /**
  * xyflow node shell. Application node views never import xyflow — they receive
@@ -13,14 +13,16 @@ export function TintFlowNode({
   selected,
 }: NodeProps<GraphFlowNodeData>) {
   const {
-    document,
     registry,
     readonly,
     dispatch,
     validationByNodeId,
     runtimeByNodeId,
+    nodesById,
   } = useGraphAdapter()
-  const graphNode = findGraphNode(document, id)
+  // Indexed by the provider: this was a linear scan through every node, run once
+  // per node on every revision, so a document change cost O(n^2) comparisons.
+  const graphNode = nodesById.get(id)
   const definition = registry.get(data.kind)
   const Render = definition?.render
   const validation = validationByNodeId.get(id) ?? []
@@ -44,7 +46,7 @@ export function TintFlowNode({
       {inputPorts.map((port, index) => (
         <Handle
           key={port.id}
-          id={port.id}
+          id={handleId(port.id, 'target')}
           type="target"
           position={Position.Left}
           isConnectable={!readonly && graphNode?.capabilities?.connectable !== false}
@@ -81,7 +83,7 @@ export function TintFlowNode({
       {outputPorts.map((port, index) => (
         <Handle
           key={port.id}
-          id={port.id}
+          id={handleId(port.id, 'source')}
           type="source"
           position={Position.Right}
           isConnectable={!readonly && graphNode?.capabilities?.connectable !== false}

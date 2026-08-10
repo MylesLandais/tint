@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 import { Maximize2, Minimize2 } from 'lucide-react'
 import { Icon } from '../icon'
 import { XyflowCanvas } from './adapter/XyflowCanvas'
@@ -12,7 +12,7 @@ import type {
   Point,
   ValidationIssue,
 } from './contracts'
-import { emptySelection } from './contracts'
+import { applyCommand, emptySelection } from './contracts'
 import { createDefaultNodeRegistry } from './nodes/defaultRegistry'
 import { useFullscreen } from '../../lib/useFullscreen'
 import { cn } from '../../lib/utils'
@@ -63,13 +63,35 @@ export function InteractiveGraphView({
   onCommand,
 }: InteractiveGraphViewProps) {
   const rootRef = useRef<HTMLDivElement>(null)
+  const keyboardHelpId = useId()
   const resolvedRegistry = useMemo(
     () => registry ?? createDefaultNodeRegistry(),
     [registry],
   )
+  /**
+   * Controlled-ness is latched on the first render, not re-derived per render.
+   *
+   * `controlledSelection ?? uncontrolledSelection` let a component boot
+   * uncontrolled, become controlled on the host's first `setSelection`, and then
+   * fall back to the *stale* internal value the moment the host passed
+   * `undefined` again — resurrecting the first selection ever made, often from a
+   * document that no longer existed.
+   */
+  const isControlled = useRef(controlledSelection != null).current
   const [uncontrolledSelection, setUncontrolledSelection] =
     useState<GraphSelection>(emptySelection)
-  const selection = controlledSelection ?? uncontrolledSelection
+
+  if (import.meta.env.DEV && isControlled !== (controlledSelection != null)) {
+    console.error(
+      'InteractiveGraphView: `selection` switched between controlled and uncontrolled. ' +
+        'Pass a selection for the component\'s whole lifetime, or never — use ' +
+        '`emptySelection()` rather than `undefined` to clear it.',
+    )
+  }
+
+  const selection = isControlled
+    ? (controlledSelection ?? emptySelection())
+    : uncontrolledSelection
 
   /**
    * React Flow measures its container on resize, and a fullscreen transition
@@ -97,46 +119,40 @@ export function InteractiveGraphView({
 
   const handleSelectionChange = useCallback(
     (next: GraphSelection) => {
-      if (controlledSelection == null) {
-        setUncontrolledSelection(next)
-      }
+      if (!isControlled) setUncontrolledSelection(next)
       onSelectionChange?.(next)
     },
-    [controlledSelection, onSelectionChange],
+    [isControlled, onSelectionChange],
+  )
+
+  /**
+   * Every mutating command takes the same route: report it, then offer the
+   * document it produces. `node.configure` and `node.move` used to be applied
+   * inline here while the other six were only reported, so a host wiring
+   * `onCommand` into its own store double-applied those two and dropped the rest.
+   */
+  const handleCommand = useCallback(
+    (command: GraphCommand) => {
+      onCommand?.(command)
+      if (!onDocumentChange) return
+      const next = applyCommand(document, command, resolvedRegistry)
+      if (next !== document) onDocumentChange(next)
+    },
+    [document, onCommand, onDocumentChange, resolvedRegistry],
   )
 
   const handlePositionsCommit = useCallback(
     (positions: Record<string, Point>) => {
       if (!onDocumentChange) return
-      onDocumentChange({
-        ...document,
-        revision: nextRevision(document.revision),
-        nodes: document.nodes.map((node) =>
-          positions[node.id]
-            ? { ...node, position: positions[node.id]! }
-            : node,
+      onDocumentChange(
+        applyCommand(
+          document,
+          { type: 'node.move', nodeIds: Object.keys(positions), positions },
+          resolvedRegistry,
         ),
-      })
+      )
     },
-    [document, onDocumentChange],
-  )
-
-  const handleCommand = useCallback(
-    (command: GraphCommand) => {
-      if (command.type === 'node.configure' && onDocumentChange) {
-        onDocumentChange({
-          ...document,
-          revision: nextRevision(document.revision),
-          nodes: document.nodes.map((node) =>
-            node.id === command.nodeId
-              ? { ...node, configuration: command.configuration }
-              : node,
-          ),
-        })
-      }
-      onCommand?.(command)
-    },
-    [document, onCommand, onDocumentChange],
+    [document, onDocumentChange, resolvedRegistry],
   )
 
   const selectedNodes = document.nodes.filter((node) =>
@@ -165,7 +181,16 @@ export function InteractiveGraphView({
         className,
       )}
     >
-      <div className="tint-graph-view__canvas" role="application" aria-label="Graph canvas">
+      <div
+        className="tint-graph-view__canvas"
+        role="application"
+        aria-label="Graph canvas"
+        aria-describedby={keyboardHelpId}
+      >
+        <p id={keyboardHelpId} className="tint-graph-view__sr-only">
+          Press Tab to move between nodes and edges, arrow keys to move a focused
+          node, and Enter to select. Press Escape to leave fullscreen.
+        </p>
         {showFullscreenControl ? (
           <div className="tint-graph-view__toolbar">
             <button
@@ -254,8 +279,13 @@ export function InteractiveGraphView({
                     <dt>Issues</dt>
                     <dd>
                       <ul className="tint-graph-view__inspector-issues">
-                        {issues.map((issue) => (
-                          <li key={issue.code} data-severity={issue.severity}>
+                        {/* Two issues can share a code — one per offending
+                            path — so the code alone is not a key. */}
+                        {issues.map((issue, index) => (
+                          <li
+                            key={`${issue.code}:${issue.path ?? index}`}
+                            data-severity={issue.severity}
+                          >
                             {issue.message}
                           </li>
                         ))}
@@ -307,10 +337,4 @@ export function InteractiveGraphView({
       ) : null}
     </div>
   )
-}
-
-function nextRevision(revision: string): string {
-  const match = /^r(\d+)$/.exec(revision)
-  if (!match) return `r${Date.now()}`
-  return `r${Number(match[1]) + 1}`
 }

@@ -3,42 +3,18 @@ import {
   useId,
   useRef,
   useState,
-  useSyncExternalStore,
   type ChangeEvent,
   type DragEvent,
   type MouseEvent,
 } from 'react'
 import type { NodeViewProps } from '../contracts'
+import { useGraphAdapter } from '../adapter/GraphAdapterContext'
 import { patchComfyConfiguration, readIntWidget } from '../comfy/editableFields'
 import type {
   ComfyEditableField,
   ComfyNodeConfiguration,
   ComfyReferenceImage,
 } from '../comfy/types'
-
-/** Survives React Flow remounts when selection / document updates. */
-const poppedNodeIds = new Set<string>()
-const popListeners = new Set<() => void>()
-
-function subscribePopped(onStoreChange: () => void) {
-  popListeners.add(onStoreChange)
-  return () => {
-    popListeners.delete(onStoreChange)
-  }
-}
-
-function isPopped(nodeId: string) {
-  return poppedNodeIds.has(nodeId)
-}
-
-function setPopped(nodeId: string, next: boolean) {
-  const had = poppedNodeIds.has(nodeId)
-  if (next && !had) poppedNodeIds.add(nodeId)
-  if (!next && had) poppedNodeIds.delete(nodeId)
-  if (next !== had) {
-    for (const listener of popListeners) listener()
-  }
-}
 
 function roleKind(fields: readonly ComfyEditableField[] | undefined): string {
   if (!fields?.length) return 'comfy'
@@ -95,11 +71,8 @@ export function ComfyNodeView({
   const configuration = node.configuration
   const fields = configuration.editableFields ?? []
   const editable = fields.length > 0 && !readonly
-  const popped = useSyncExternalStore(
-    subscribePopped,
-    () => isPopped(node.id),
-    () => false,
-  )
+  const { poppedNodeIds, togglePopped } = useGraphAdapter()
+  const popped = poppedNodeIds.has(node.id)
   const status = resolveComfyStatus(validation, runtime)
 
   const commit = (patch: {
@@ -117,7 +90,7 @@ export function ComfyNodeView({
   const togglePop = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation()
     event.preventDefault()
-    setPopped(node.id, !popped)
+    togglePopped(node.id)
   }
 
   return (
@@ -138,7 +111,7 @@ export function ComfyNodeView({
         </span>
       </header>
       {runtime?.detail && (status === 'running' || status === 'failed') ? (
-        <p className="tint-graph-node__runtime-detail" data-testid="comfy-runtime-detail">
+        <p className="tint-graph-node__runtime-detail">
           {runtime.detail}
         </p>
       ) : null}
@@ -151,7 +124,6 @@ export function ComfyNodeView({
           <button
             type="button"
             className="nodrag nowheel tint-graph-node__expand"
-            data-testid={`comfy-expand-${node.id}`}
             aria-expanded={popped}
             onClick={togglePop}
             onPointerDown={(event) => event.stopPropagation()}
@@ -165,7 +137,6 @@ export function ComfyNodeView({
       {editable && !popped ? (
         <div
           className="nodrag nowheel tint-graph-node__widgets"
-          data-testid={`comfy-widgets-${node.id}`}
         >
           {fields.map((field) => (
             <FieldEditor
@@ -183,8 +154,10 @@ export function ComfyNodeView({
 
       {validation.length ? (
         <ul className="tint-graph-node__issues" aria-label="Validation issues">
-          {validation.map((issue) => (
-            <li key={issue.code} data-severity={issue.severity}>
+          {/* Two issues can share a code — one per offending path — so the code
+              alone is not a key. */}
+          {validation.map((issue, index) => (
+            <li key={`${issue.code}:${issue.path ?? index}`} data-severity={issue.severity}>
               {issue.message}
             </li>
           ))}
@@ -208,7 +181,6 @@ export function ComfyNodeView({
       {editable && popped ? (
         <div
           className="nodrag nowheel tint-graph-node__popout"
-          data-testid={`comfy-drawer-${node.id}`}
           onPointerDown={(event) => event.stopPropagation()}
         >
           <div className="tint-graph-node__popout-head">
@@ -246,7 +218,7 @@ function CollapsedSummary({
   if (configuration.referenceImage) {
     return (
       <div className="tint-graph-node__image-thumb">
-        <img src={configuration.referenceImage.dataUrl} alt={configuration.referenceImage.name} />
+        <img src={configuration.referenceImage.url} alt={configuration.referenceImage.name} />
         <span>{configuration.referenceImage.name}</span>
       </div>
     )
@@ -409,13 +381,19 @@ function PromptField({
 }) {
   const [draft, setDraft] = useState(value)
   useEffect(() => setDraft(value), [value])
+  const fieldId = useId()
 
+  /*
+   * Explicitly associated rather than wrapped. The apply button used to sit
+   * inside the <label>, so its text was part of the textarea's accessible name
+   * ("Prompt Apply prompt") and clicking it also redirected focus to the field.
+   */
   return (
-    <label className="tint-graph-field">
-      <span>{label}</span>
+    <div className="tint-graph-field">
+      <label htmlFor={fieldId}>{label}</label>
       <textarea
+        id={fieldId}
         className="nodrag nowheel"
-        data-testid="comfy-inline-prompt"
         rows={compact ? 3 : 8}
         value={draft}
         onChange={(event) => setDraft(event.target.value)}
@@ -427,14 +405,13 @@ function PromptField({
       <button
         type="button"
         className="nodrag tint-graph-field__apply"
-        data-testid="comfy-inline-prompt-apply"
         disabled={draft === value}
         onClick={() => onCommit(draft)}
         onPointerDown={(event) => event.stopPropagation()}
       >
         Apply prompt
       </button>
-    </label>
+    </div>
   )
 }
 
@@ -453,6 +430,34 @@ function IntField({
   step?: number
   onCommit: (value: number) => void
 }) {
+  /**
+   * Edited as a draft, committed on blur or Enter.
+   *
+   * It used to dispatch `node.configure` on every keystroke, which bumped the
+   * document revision and rebuilt every node in the graph per character. Worse,
+   * it committed `Number(event.target.value)` whenever that was finite — and
+   * `Number('') === 0` is finite, so clearing the field to retype a value wrote
+   * a 0 and the field could never be emptied.
+   */
+  const [draft, setDraft] = useState(String(value))
+  const committed = useRef(value)
+  if (committed.current !== value) {
+    committed.current = value
+    setDraft(String(value))
+  }
+
+  const commitDraft = () => {
+    const next = Number(draft)
+    // An empty or unparseable field reverts rather than committing a zero.
+    if (draft.trim() === '' || !Number.isFinite(next)) {
+      setDraft(String(value))
+      return
+    }
+    const clamped = Math.min(max, Math.max(min, next))
+    setDraft(String(clamped))
+    if (clamped !== value) onCommit(clamped)
+  }
+
   return (
     <label className="tint-graph-field tint-graph-field--inline">
       <span>{label}</span>
@@ -462,11 +467,15 @@ function IntField({
         min={min}
         max={max}
         step={step}
-        value={value}
-        data-testid={`comfy-inline-int-${label}`}
-        onChange={(event) => {
-          const next = Number(event.target.value)
-          if (Number.isFinite(next)) onCommit(next)
+        value={draft}
+        onChange={(event) => setDraft(event.target.value)}
+        onBlur={commitDraft}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') {
+            event.preventDefault()
+            commitDraft()
+          }
+          if (event.key === 'Escape') setDraft(String(value))
         }}
         onPointerDown={(event) => event.stopPropagation()}
       />
@@ -511,7 +520,6 @@ function LatentSizeField({
             max={4096}
             step={8}
             value={w}
-            data-testid="comfy-inline-latent-w"
             onChange={(event) => setW(Number(event.target.value))}
             onPointerDown={(event) => event.stopPropagation()}
           />
@@ -525,7 +533,6 @@ function LatentSizeField({
             max={4096}
             step={8}
             value={h}
-            data-testid="comfy-inline-latent-h"
             onChange={(event) => setH(Number(event.target.value))}
             onPointerDown={(event) => event.stopPropagation()}
           />
@@ -540,7 +547,6 @@ function LatentSizeField({
               max={257}
               step={1}
               value={f}
-              data-testid="comfy-inline-latent-frames"
               onChange={(event) => setF(Number(event.target.value))}
               onPointerDown={(event) => event.stopPropagation()}
             />
@@ -550,7 +556,6 @@ function LatentSizeField({
       <button
         type="button"
         className="nodrag tint-graph-field__apply"
-        data-testid="comfy-inline-latent-apply"
         disabled={!dirty}
         onClick={() =>
           onCommit(frames != null ? { width: w, height: h, frames: f } : { width: w, height: h })
@@ -583,28 +588,41 @@ function ImageDropField({
   ) => void
   onClear: () => void
 }) {
-  const inputId = useId()
+  const fieldId = useId()
+  const labelId = `${fieldId}-label`
+  const valueId = `${fieldId}-value`
   const inputRef = useRef<HTMLInputElement>(null)
   const [dragging, setDragging] = useState(false)
 
+  /**
+   * Object URLs this field created, revoked when it is replaced or unmounted.
+   * Without this each drop leaks its blob for the lifetime of the page.
+   */
+  const ownedUrls = useRef<string[]>([])
+  useEffect(
+    () => () => {
+      for (const url of ownedUrls.current) URL.revokeObjectURL(url)
+      ownedUrls.current = []
+    },
+    [],
+  )
+
   const readFile = (file: File) => {
     if (!file.type.startsWith('image/')) return
-    const reader = new FileReader()
-    reader.onload = () => {
-      const dataUrl = String(reader.result ?? '')
-      const img = new Image()
-      img.onload = () => {
-        onImage(
-          { name: file.name, mimeType: file.type, dataUrl },
-          { width: img.naturalWidth, height: img.naturalHeight },
-        )
-      }
-      img.onerror = () => {
-        onImage({ name: file.name, mimeType: file.type, dataUrl })
-      }
-      img.src = dataUrl
+    const url = URL.createObjectURL(file)
+    ownedUrls.current.push(url)
+    const reference: ComfyReferenceImage = {
+      name: file.name,
+      mimeType: file.type,
+      size: file.size,
+      url,
     }
-    reader.readAsDataURL(file)
+    // Natural size is a nicety; a decode failure still records the file.
+    const probe = new Image()
+    probe.onload = () =>
+      onImage(reference, { width: probe.naturalWidth, height: probe.naturalHeight })
+    probe.onerror = () => onImage(reference)
+    probe.src = url
   }
 
   const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -622,10 +640,9 @@ function ImageDropField({
 
   return (
     <div className="tint-graph-field">
-      <span>{label}</span>
+      <span id={labelId}>{label}</span>
       <div
         className={`nodrag nowheel tint-graph-drop${dragging ? ' tint-graph-drop--active' : ''}`}
-        data-testid="comfy-inline-image-drop"
         onDragEnter={(event) => {
           event.preventDefault()
           setDragging(true)
@@ -640,14 +657,22 @@ function ImageDropField({
         onPointerDown={(event) => event.stopPropagation()}
         role="button"
         tabIndex={0}
+        // Names the control after what it sets, and after what it currently
+        // holds — the `useId` here was previously computed, put on the hidden
+        // <input>, and referenced by nothing, leaving the file picker unnamed.
+        aria-labelledby={labelId}
+        aria-describedby={image ? valueId : undefined}
         onKeyDown={(event) => {
-          if (event.key === 'Enter' || event.key === ' ') inputRef.current?.click()
+          if (event.key !== 'Enter' && event.key !== ' ') return
+          // Space scrolls the page unless the default is taken.
+          event.preventDefault()
+          inputRef.current?.click()
         }}
       >
         {image ? (
           <>
-            <img src={image.dataUrl} alt={image.name} />
-            <span>{image.name}</span>
+            <img src={image.url} alt="" />
+            <span id={valueId}>{image.name}</span>
             {width && height ? (
               <span className="tint-graph-drop__meta">
                 {width}×{height}
@@ -659,11 +684,11 @@ function ImageDropField({
         )}
       </div>
       <input
-        id={inputId}
         ref={inputRef}
         className="nodrag"
         type="file"
         accept={accept}
+        aria-labelledby={labelId}
         hidden
         onChange={onInputChange}
       />

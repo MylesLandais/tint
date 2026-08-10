@@ -14,7 +14,13 @@
 export { InteractiveGraphView } from './InteractiveGraphView'
 export type { InteractiveGraphViewProps } from './InteractiveGraphView'
 
-export { createNodeRegistry, emptySelection, flattenValidationIssues } from './contracts'
+export {
+  applyCommand,
+  createNodeRegistry,
+  emptySelection,
+  flattenValidationIssues,
+  nextRevision,
+} from './contracts'
 export type {
   CommandCommitResult,
   CommandValidationResult,

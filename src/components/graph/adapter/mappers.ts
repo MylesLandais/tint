@@ -1,15 +1,18 @@
 import type { Edge, Node } from '../../../vendor/xyflow'
-import type { GraphDocument, GraphEdge, GraphNode, GraphSelection } from '../contracts'
+import type { GraphDocument, GraphNode, GraphSelection } from '../contracts'
 
+/**
+ * What the shell needs to render before the node view takes over.
+ *
+ * Deliberately small. It used to carry `graphNodeId` (the flow node's own `id`),
+ * `description`, `category`, `portSummary` and the whole `configuration`, none
+ * of which anything read — and `configuration` in particular meant every node's
+ * full config was copied into flow state on every document revision.
+ */
 export type GraphFlowNodeData = {
-  graphNodeId: string
   kind: string
   label: string
-  description?: string
   accent?: string
-  category?: string
-  portSummary: string
-  configuration: unknown
 }
 
 export type GraphFlowNode = Node<GraphFlowNodeData, 'tint'>
@@ -21,13 +24,9 @@ export function toFlowNodes(document: GraphDocument): GraphFlowNode[] {
     type: 'tint',
     position: { ...node.position },
     data: {
-      graphNodeId: node.id,
       kind: node.kind,
       label: node.presentation?.label ?? node.kind,
-      description: node.presentation?.description,
       accent: node.presentation?.accent,
-      portSummary: formatPortSummary(node),
-      configuration: node.configuration,
     },
     draggable: node.capabilities?.movable !== false,
     selectable: true,
@@ -44,8 +43,8 @@ export function toFlowEdges(document: GraphDocument): GraphFlowEdge[] {
     id: edge.id,
     source: edge.source.nodeId,
     target: edge.target.nodeId,
-    sourceHandle: edge.source.portId,
-    targetHandle: edge.target.portId,
+    sourceHandle: handleId(edge.source.portId, 'source'),
+    targetHandle: handleId(edge.target.portId, 'target'),
     type: 'default',
     data: edge.metadata ? { kind: edge.kind, ...edge.metadata } : { kind: edge.kind },
     markerEnd: { type: 'arrowclosed', width: 18, height: 18 },
@@ -70,22 +69,36 @@ export function selectionFromFlow(
   return { nodeIds, edgeIds, groupIds: new Set(), primary }
 }
 
-export function findGraphNode(
-  document: GraphDocument,
-  nodeId: string,
-): GraphNode | undefined {
-  return document.nodes.find((node) => node.id === nodeId)
+/**
+ * xyflow identifies a handle by id alone, so a `'bidirectional'` port — which
+ * renders as both a target and a source — put the same id on two handles, and a
+ * connection landing on one could resolve to the other.
+ *
+ * Every handle is suffixed with its side rather than only the ambiguous ones:
+ * the id a handle carries then never depends on the port's direction, so
+ * changing a port to bidirectional cannot silently renumber its neighbours.
+ * Document-level `portId`s are untouched — {@link portIdFromHandle} converts back.
+ */
+export function handleId(portId: string, side: HandleSide): string {
+  return `${portId}${SIDE_SEPARATOR}${side}`
 }
 
-export function findGraphEdge(
-  document: GraphDocument,
-  edgeId: string,
-): GraphEdge | undefined {
-  return document.edges.find((edge) => edge.id === edgeId)
+/** Undo {@link handleId} — what an incoming connection means in document terms. */
+export function portIdFromHandle(handle: string | null | undefined): string {
+  if (!handle) return ''
+  for (const side of HANDLE_SIDES) {
+    const suffix = `${SIDE_SEPARATOR}${side}`
+    if (handle.endsWith(suffix)) return handle.slice(0, -suffix.length)
+  }
+  return handle
 }
 
-function formatPortSummary(node: GraphNode): string {
-  const inputs = node.ports.filter((port) => port.direction !== 'output').length
-  const outputs = node.ports.filter((port) => port.direction !== 'input').length
-  return `${inputs} in · ${outputs} out`
+type HandleSide = (typeof HANDLE_SIDES)[number]
+const HANDLE_SIDES = ['source', 'target'] as const
+const SIDE_SEPARATOR = '::'
+
+export function indexNodesById(
+  document: GraphDocument,
+): ReadonlyMap<string, GraphNode> {
+  return new Map(document.nodes.map((node) => [node.id, node]))
 }
