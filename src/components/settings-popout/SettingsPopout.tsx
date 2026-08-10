@@ -1,4 +1,5 @@
 import {
+  useCallback,
   useEffect,
   useId,
   useMemo,
@@ -13,33 +14,44 @@ import { cn } from '../../lib/utils'
 import { Icon } from '../icon'
 
 export type SettingsPopoutItem = {
+  /** Stable id. What `value` matches and `onSelect` reports. */
   id: string
+  /** Visible text. Also searched. */
   label: string
+  /** Collects the item under a heading. Groups keep first-seen order. */
   group?: string
+  /** Shown right-aligned as a `<kbd>`. Presentational — tint binds nothing. */
   shortcut?: string
+  /** Not rendered, but searched, so an item can be found by what it does. */
   description?: string
 }
 
 export type SettingsPopoutProps = {
-  /** Whether the popout is visible */
+  /** Whether the popout is visible. */
   isOpen: boolean
-  /** Called when open state should change */
+  /**
+   * Called when the popout should close — Escape, an outside click, or a
+   * selection. Escape and selection also restore focus to the trigger.
+   */
   onOpenChange: (isOpen: boolean) => void
-  /** Selectable settings items */
-  items: SettingsPopoutItem[]
-  /** Currently selected item id (picker mode) */
+  /** Selectable entries, optionally grouped. */
+  items: readonly SettingsPopoutItem[]
+  /** Currently selected id. Highlighted on open and marked with a check. */
   value?: string
-  /** Called when an item is chosen */
+  /** Called with the chosen id. The popout closes itself afterwards. */
   onSelect?: (id: string) => void
-  /** Accessible label for the dialog */
+  /** Accessible name for the dialog and its listbox. */
   label?: string
-  /** Search input placeholder */
+  /** Search input placeholder. */
   placeholder?: string
-  /** Optional footer content; defaults to keyboard hints */
+  /** Replaces the default keyboard hints. */
   footer?: ReactNode
-  /** Empty search results text */
+  /** Shown when the query matches nothing. */
   emptySearchText?: ReactNode
-  /** Additional class names for the panel */
+  /**
+   * Extra classes for the panel. It is positioned absolutely against the
+   * nearest positioned ancestor, so it and its trigger need a `relative` parent.
+   */
   className?: string
 }
 
@@ -48,7 +60,7 @@ type GroupedItems = {
   items: SettingsPopoutItem[]
 }
 
-function groupItems(items: SettingsPopoutItem[]): GroupedItems[] {
+function groupItems(items: readonly SettingsPopoutItem[]): GroupedItems[] {
   const order: string[] = []
   const groups = new Map<string, SettingsPopoutItem[]>()
   const ungrouped: SettingsPopoutItem[] = []
@@ -71,7 +83,7 @@ function groupItems(items: SettingsPopoutItem[]): GroupedItems[] {
   ]
 }
 
-function filterItems(items: SettingsPopoutItem[], query: string) {
+function filterItems(items: readonly SettingsPopoutItem[], query: string) {
   const normalized = query.trim().toLowerCase()
   if (!normalized) return items
   return items.filter((item) => {
@@ -95,12 +107,19 @@ export function SettingsPopout({
   const listId = useId()
   const inputRef = useRef<HTMLInputElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLElement | null>(null)
   const [query, setQuery] = useState('')
   const [activeIndex, setActiveIndex] = useState(0)
 
   const filtered = useMemo(() => filterItems(items, query), [items, query])
   const grouped = useMemo(() => groupItems(filtered), [filtered])
   const flat = useMemo(() => grouped.flatMap((group) => group.items), [grouped])
+
+  /** Close and hand focus back to whatever opened the popout. */
+  const close = useCallback(() => {
+    onOpenChange(false)
+    triggerRef.current?.focus()
+  }, [onOpenChange])
 
   useEffect(() => {
     if (!isOpen) {
@@ -109,18 +128,33 @@ export function SettingsPopout({
       return
     }
 
-    const selectedIndex = items.findIndex((item) => item.id === value)
+    // Off `flat`, not `items`: grouping reorders the list, so the raw `items`
+    // index pointed at whatever happened to sit at that position after
+    // regrouping — highlighting one row on open and selecting a different one
+    // on Enter.
+    const selectedIndex = flat.findIndex((item) => item.id === value)
     setActiveIndex(selectedIndex >= 0 ? selectedIndex : 0)
+
+    // Remember where focus came from so Escape or a selection can hand it back
+    // instead of dropping the reader on <body>.
+    triggerRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null
 
     const frame = window.requestAnimationFrame(() => {
       inputRef.current?.focus()
     })
     return () => window.cancelAnimationFrame(frame)
-  }, [isOpen, value, items])
+    // `flat` is deliberately absent: this positions the highlight at open time,
+    // and re-running it as the reader types would drag the highlight back.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, value])
 
   useEffect(() => {
     if (!isOpen) return
 
+    // An outside click moves focus on its own, so this closes without the
+    // focus restore `close()` performs — yanking focus back to the trigger
+    // would fight whatever the reader just clicked.
     const onPointerDown = (event: MouseEvent) => {
       if (!panelRef.current?.contains(event.target as Node)) {
         onOpenChange(false)
@@ -130,7 +164,7 @@ export function SettingsPopout({
     const onKeyDown = (event: globalThis.KeyboardEvent) => {
       if (event.key === 'Escape') {
         event.preventDefault()
-        onOpenChange(false)
+        close()
       }
     }
 
@@ -140,7 +174,7 @@ export function SettingsPopout({
       document.removeEventListener('mousedown', onPointerDown)
       document.removeEventListener('keydown', onKeyDown)
     }
-  }, [isOpen, onOpenChange])
+  }, [isOpen, onOpenChange, close])
 
   useEffect(() => {
     if (activeIndex > flat.length - 1) {
@@ -150,7 +184,7 @@ export function SettingsPopout({
 
   const selectItem = (id: string) => {
     onSelect?.(id)
-    onOpenChange(false)
+    close()
   }
 
   const onInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -192,7 +226,11 @@ export function SettingsPopout({
           ref={panelRef}
           role="dialog"
           aria-label={label}
-          aria-modal="true"
+          // Deliberately not `aria-modal`. Nothing here traps focus or inerts the
+          // page, and claiming otherwise tells a screen reader the rest of the
+          // document is unavailable while Tab walks straight out of the popout.
+          // It is a non-modal popover: Escape closes it and focus returns to the
+          // trigger.
           initial={{ opacity: 0, y: 8, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 8, scale: 0.98 }}
@@ -214,6 +252,12 @@ export function SettingsPopout({
               }}
               onKeyDown={onInputKeyDown}
               placeholder={placeholder}
+              // The full combobox pattern. It already carried `aria-controls`,
+              // `aria-autocomplete`, and `aria-activedescendant`, but without
+              // the role a screen reader treats it as a plain text field and
+              // never announces the option the arrow keys are moving over.
+              role="combobox"
+              aria-expanded
               aria-controls={listId}
               aria-autocomplete="list"
               aria-activedescendant={
