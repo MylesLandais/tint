@@ -65,6 +65,10 @@ export function ThemeToggle({
   }
 
   return (
+    // The tab stop is the checked radio below (roving tabindex), which is the
+    // WAI-ARIA radiogroup pattern; making the group focusable too would add a
+    // second, silent stop.
+    // oxlint-disable-next-line jsx-a11y/interactive-supports-focus
     <div
       ref={groupRef}
       role="radiogroup"

@@ -265,6 +265,9 @@ export function ChatMessageList<TCustomPart extends ChatCustomPart = never>({
 
   return (
     <div className="relative min-h-0 flex-1">
+      {/* Scroll, roving focus, and key handling are delegated from the viewport
+          on purpose — see the roving-focus notes above. */}
+      {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
       <div
         ref={(node) => {
           viewportRef.current = node

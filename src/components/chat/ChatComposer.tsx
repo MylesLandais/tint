@@ -230,6 +230,9 @@ export function ChatComposer({
   }
 
   return (
+    // Drag-and-drop lands on the form because the drop target is the whole
+    // composer, not one control inside it.
+    // oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     <form
       data-chat-composer=""
       data-state={state}

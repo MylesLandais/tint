@@ -10,16 +10,32 @@ import { cn } from '../../lib/utils'
 export type PanelProps = Omit<HTMLAttributes<HTMLDivElement>, 'title'> & {
   /** Always-visible label for the panel disclosure. */
   title: ReactNode
-  /** Decorative content rendered before the title. */
+  /** Decorative content rendered before the title, inside the toggle button. */
   icon?: ReactNode
-  /** Connection or document state rendered beside the title. */
+  /** Connection or document state rendered beside the title, outside the button. */
   status?: ReactNode
-  /** Controls rendered outside the disclosure button. */
+  /**
+   * Controls rendered outside the disclosure button, so they stay
+   * independently clickable rather than also toggling the panel.
+   */
   actions?: ReactNode
-  /** Controlled disclosure state. The body stays mounted while collapsed. */
+  /**
+   * Controlled disclosure state. The body stays mounted while collapsed, which
+   * is what preserves scroll position, focus, and any editor or terminal state
+   * living inside it.
+   */
   expanded: boolean
   onExpandedChange: (expanded: boolean) => void
+  /** Extra classes for the header row. */
   headerClassName?: string
+  /**
+   * Extra classes for the body wrapper.
+   *
+   * Avoid `display` utilities here. Collapsing sets the `hidden` attribute,
+   * which only yields `display: none` at user-agent priority — any `flex`,
+   * `grid`, or `block` class outranks it and leaves a "collapsed" panel fully
+   * visible. Put layout on an element inside the body instead.
+   */
   bodyClassName?: string
 }
 
