@@ -30,6 +30,15 @@ describe('docs routing', () => {
   it('does not resolve an unknown path', () => {
     expect(findRoute('nope')).toBeUndefined()
   })
+
+  it('never lets an alias shadow a real path', () => {
+    const paths = new Set(DOC_ROUTES.map((route) => route.path))
+    for (const route of DOC_ROUTES) {
+      for (const alias of route.aliases ?? []) {
+        expect(paths, `${alias} is both an alias and a live route`).not.toContain(alias)
+      }
+    }
+  })
 })
 
 describe('HomeDoc', () => {

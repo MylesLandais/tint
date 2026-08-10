@@ -7,6 +7,12 @@ import { MediaPlayerDoc } from './MediaPlayerDoc'
 import { TableDoc } from './table/TableDoc'
 import { ThemeDoc } from './ThemeDoc'
 import { AudioInputDoc } from './AudioInputDoc'
+import { CodeDoc } from './CodeDoc'
+import { DiceDoc } from './DiceDoc'
+import { MediaPrimitivesDoc } from './MediaPrimitivesDoc'
+import { PanelDoc } from './PanelDoc'
+import { SettingsPopoutDoc } from './SettingsPopoutDoc'
+import { VideoPlayerDoc } from './VideoPlayerDoc'
 
 /**
  * Path -> page component, kept apart from `routes.ts` so that the route data
@@ -37,6 +43,12 @@ export const DOC_PAGES = {
   'components/terminal': TerminalDoc,
   'components/collab': CollabDoc,
   'components/auth': AuthDoc,
+  'components/video-player': VideoPlayerDoc,
+  'components/media': MediaPrimitivesDoc,
+  'components/code': CodeDoc,
+  'components/panel': PanelDoc,
+  'components/settings-popout': SettingsPopoutDoc,
+  'components/dice': DiceDoc,
   'components/icon': IconsDoc,
   'components/theme': ThemeDoc,
 } satisfies Record<DocRoutePath, ComponentType>

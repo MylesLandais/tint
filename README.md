@@ -10,7 +10,38 @@ each component. The research that informed Chat's controlled architecture, acces
 contract, and exported TypeScript API lives in the author's personal notes rather than this
 repo.
 
-## Quick start
+## Installation
+
+```bash
+npm install tint
+```
+
+Tint ships **raw TypeScript source** rather than a compiled bundle — every export
+points at a `.ts`/`.tsx` file under `src/`. Three consequences worth knowing before
+you start:
+
+| Requirement | Why |
+| --- | --- |
+| React ≥ 19 | Peer dependency. Components use the React 19 ref-as-prop form. |
+| Tailwind CSS v4 | Components are styled with Tailwind utilities, not shipped CSS. |
+| A bundler that transpiles the package | There is no prebuilt JS. Frameworks that pre-bundle `node_modules` (Next.js, for one) need tint added to their transpile list. |
+
+Import the stylesheet once, at your app's entry. It is **required**, not optional —
+every surface reads a `--tint-*` custom property and there is nothing to render
+against without it:
+
+```tsx
+import 'tint/styles.css'
+```
+
+That single import carries the token contract, the default palette, and — via a
+`@source` directive inside it — instructions for your Tailwind build to scan
+tint's own components. That last part matters: Tailwind v4 excludes `node_modules`
+from automatic content detection, so without it you would get the tokens and none
+of the utility classes the components use, and everything would render nearly
+unstyled. Tint declares this for you; you do not need an `@source` line of your own.
+
+## Quick start (this repo)
 
 ```bash
 npm install
@@ -24,8 +55,11 @@ browser entrypoint.
 
 Open `http://tint.localhost/` for the component index — every documented component
 is linked from there, including `#/components/editor` (the rich-text buffer),
-`#/components/terminal` (the mock PTY-backed terminal), `#/components/auth`, and
-`#/components/chat`, `#/components/media-player`, and `#/components/audio-input`.
+`#/components/terminal` (the mock PTY-backed terminal), `#/components/auth`,
+`#/components/chat`, `#/components/media-player`, `#/components/video-player`,
+`#/components/media` (the primitives the players are built from),
+`#/components/code`, `#/components/panel`, `#/components/settings-popout`,
+`#/components/dice`, and `#/components/audio-input`.
 
 Doc pages are declared once in `src/docs/routes.ts`; the router, the page title, the
 breadcrumb, and the index cards all read from that list, so a new entry appears
@@ -317,11 +351,14 @@ Swap to `<Icon icon={Sun} size="sm" />` to stay aligned with the rest of the lib
 ```
 src/
   components/media-player/     # unified audio/video MediaPlayer
+  components/video-player/     # the immersive video surface MediaPlayer kind="video" delegates to
   components/media/            # shared scrubber, volume control, waveform, placeholder, and time formatting
   components/audio-input/      # controlled microphone/transcriber seam
   components/settings-popout/  # searchable settings popout
   components/chat/             # controlled chat primitives and rich parts
+  components/code/             # highlighted code blocks and tabbed examples
   components/table/            # controlled DataTable and its pure behavior core
+  vendor/tanstack-table-core/  # vendored TanStack table engine
   components/collab/           # Yjs CollabConfig + createCollabSession
   vendor/yjs/                  # vendored Yjs v13 CRDT engine
   components/theme/            # scheme/theme hooks and controlled toggles
@@ -332,6 +369,7 @@ src/
   components/terminal/         # xterm emulator with a consumer-owned runtime adapter
   components/auth/             # controlled sign-in form and OAuth links
   auth/client/                 # transport-agnostic session client
+  lib/                         # internal cross-component helpers — not a public subpath
   styles/contract.css          # the annotated token contract
   styles/themes/               # tint, solarized, gruvbox
   docs/                        # component docs and demos

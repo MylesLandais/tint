@@ -37,7 +37,10 @@ const ROUTE_DATA = [
     path: 'components/media-player',
     label: 'Media Player',
     blurb: 'One container-responsive surface for audio and video: transport, waveform seek, volume, and a settings popout.',
-    aliases: ['components/audio-player', 'components/video-player'],
+    // `components/video-player` was an alias here while video had no page of its
+    // own. It is a real route again, so it is not listed — an alias that shadows
+    // a live path would make the page unreachable.
+    aliases: ['components/audio-player'],
     sections: [
       { id: 'preview', label: 'Preview' },
       { id: 'usage', label: 'Usage' },
@@ -100,6 +103,60 @@ const ROUTE_DATA = [
     ],
   },
   {
+    path: 'components/video-player',
+    label: 'Video Player',
+    blurb: 'The immersive video surface behind MediaPlayer kind="video", with speed, fullscreen, and auto-hiding chrome.',
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      ...USAGE_AND_API,
+    ],
+  },
+  {
+    path: 'components/media',
+    label: 'Media Primitives',
+    blurb: 'Slider, VolumeControl, Waveform, and the artwork placeholder every media surface is built from.',
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      ...USAGE_AND_API,
+    ],
+  },
+  {
+    path: 'components/code',
+    label: 'Code',
+    blurb: 'Syntax-highlighted code and tabbed examples, sharing one lowlight instance with the editor and chat.',
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      ...USAGE_AND_API,
+    ],
+  },
+  {
+    path: 'components/panel',
+    label: 'Panel',
+    blurb: 'The controlled disclosure shell the Editor and Terminal are mounted inside.',
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      ...USAGE_AND_API,
+    ],
+  },
+  {
+    path: 'components/settings-popout',
+    label: 'Settings Popout',
+    blurb: 'A searchable, keyboard-driven picker for player settings and other grouped choices.',
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      ...USAGE_AND_API,
+    ],
+  },
+  {
+    path: 'components/dice',
+    label: 'Dice',
+    blurb: 'A controlled dice roller, and the worked example of extending Icon past lucide’s catalog.',
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      ...USAGE_AND_API,
+    ],
+  },
+  {
     path: 'components/icon',
     label: 'Icons',
     blurb: 'One seam over lucide-react, with a fixed size scale and a status glyph registry.',
@@ -130,8 +187,12 @@ export const DOC_ROUTES: readonly DocRoute[] = ROUTE_DATA
  * keeps `path` narrowed to `DocRoutePath` so callers can index the page map.
  */
 export function findRoute(path: string): DocRoute | undefined {
-  return DOC_ROUTES.find(
-    (route) => route.path === path || route.aliases?.some((alias) => alias === path),
+  // Real paths win over aliases, in both passes rather than one combined test:
+  // a retired alias that later becomes a live page would otherwise shadow it,
+  // depending only on which entry happened to come first in the list.
+  return (
+    DOC_ROUTES.find((route) => route.path === path) ??
+    DOC_ROUTES.find((route) => route.aliases?.some((alias) => alias === path))
   )
 }
 
