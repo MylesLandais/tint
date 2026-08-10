@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { InteractiveGraphView } from './InteractiveGraphView'
 import { demoGraphDocument } from './fixtures/demoDocument'
 import { toFlowEdges, toFlowNodes, selectionFromFlow } from './adapter/mappers'
@@ -40,6 +40,10 @@ describe('default node registry', () => {
 })
 
 describe('InteractiveGraphView', () => {
+  afterEach(() => {
+    Reflect.deleteProperty(HTMLElement.prototype, 'requestFullscreen')
+  })
+
   it('renders the canvas and inspector chrome', () => {
     render(<InteractiveGraphView document={demoGraphDocument} />)
 
@@ -48,6 +52,7 @@ describe('InteractiveGraphView', () => {
     expect(screen.getByText('Webhook received')).toBeInTheDocument()
     expect(screen.getByText('Enrich entities')).toBeInTheDocument()
     expect(screen.getByText('Score candidates')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Enter fullscreen' })).toBeInTheDocument()
   })
 
   it('shows script source refs without embedding an editor runtime', () => {
@@ -56,5 +61,24 @@ describe('InteractiveGraphView', () => {
     expect(screen.getByText('scripts/enrich-entities.ts')).toBeInTheDocument()
     expect(screen.getByText('scripts/score.py')).toBeInTheDocument()
     expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+  })
+
+  it('enters theater fullscreen when the Fullscreen API rejects', async () => {
+    HTMLElement.prototype.requestFullscreen = vi.fn().mockRejectedValue(new Error('blocked'))
+
+    const { container } = render(<InteractiveGraphView document={demoGraphDocument} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Enter fullscreen' }))
+
+    await waitFor(() => {
+      expect(container.querySelector('[data-tint-graph-view]')).toHaveAttribute(
+        'data-fullscreen',
+        'true',
+      )
+    })
+    expect(container.querySelector('[data-tint-graph-view]')).toHaveAttribute(
+      'data-theater',
+      'true',
+    )
+    expect(screen.getByRole('button', { name: 'Exit fullscreen' })).toBeInTheDocument()
   })
 })

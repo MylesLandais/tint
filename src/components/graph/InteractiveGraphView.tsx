@@ -1,4 +1,5 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Maximize2, Minimize2 } from 'lucide-react'
 import { XyflowCanvas } from './adapter/XyflowCanvas'
 import type {
   GraphCommand,
@@ -12,6 +13,12 @@ import type {
 } from './contracts'
 import { emptySelection } from './contracts'
 import { createDefaultNodeRegistry } from './nodes/defaultRegistry'
+import {
+  FULLSCREEN_EVENTS,
+  exitElementFullscreen,
+  getFullscreenElement,
+  requestElementFullscreen,
+} from '../../lib/fullscreen'
 import { cn } from '../../lib/utils'
 import './graph.css'
 
@@ -29,6 +36,8 @@ export type InteractiveGraphViewProps = {
   className?: string
   /** When true, renders a side inspector listing the current selection. */
   showInspector?: boolean
+  /** Show the canvas fullscreen control. Defaults to true. */
+  showFullscreenControl?: boolean
   onDocumentChange?: (document: GraphDocument) => void
   onSelectionChange?: (selection: GraphSelection) => void
   onViewportChange?: (viewport: GraphViewport) => void
@@ -49,11 +58,13 @@ export function InteractiveGraphView({
   viewport,
   className,
   showInspector = true,
+  showFullscreenControl = true,
   onDocumentChange,
   onSelectionChange,
   onViewportChange,
   onCommand,
 }: InteractiveGraphViewProps) {
+  const rootRef = useRef<HTMLDivElement>(null)
   const resolvedRegistry = useMemo(
     () => registry ?? createDefaultNodeRegistry(),
     [registry],
@@ -61,6 +72,66 @@ export function InteractiveGraphView({
   const [uncontrolledSelection, setUncontrolledSelection] =
     useState<GraphSelection>(emptySelection)
   const selection = controlledSelection ?? uncontrolledSelection
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const [theaterMode, setTheaterMode] = useState(false)
+
+  useEffect(() => {
+    const onFullscreenChange = () => {
+      const active = getFullscreenElement() === rootRef.current
+      setIsFullscreen(active || theaterMode)
+      if (active) setTheaterMode(false)
+      // React Flow measures on resize; nudge after the browser settles.
+      window.setTimeout(() => {
+        window.dispatchEvent(new Event('resize'))
+      }, 50)
+    }
+    for (const eventName of FULLSCREEN_EVENTS) {
+      globalThis.document.addEventListener(eventName, onFullscreenChange)
+    }
+    return () => {
+      for (const eventName of FULLSCREEN_EVENTS) {
+        globalThis.document.removeEventListener(eventName, onFullscreenChange)
+      }
+    }
+  }, [theaterMode])
+
+  useEffect(() => {
+    if (!theaterMode) return
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setTheaterMode(false)
+        setIsFullscreen(false)
+        window.setTimeout(() => window.dispatchEvent(new Event('resize')), 50)
+      }
+    }
+    const previousOverflow = globalThis.document.body.style.overflow
+    globalThis.document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', onKeyDown)
+    window.setTimeout(() => window.dispatchEvent(new Event('resize')), 50)
+    return () => {
+      globalThis.document.body.style.overflow = previousOverflow
+      window.removeEventListener('keydown', onKeyDown)
+    }
+  }, [theaterMode])
+
+  const toggleFullscreen = useCallback(() => {
+    const root = rootRef.current
+    if (!root) return
+
+    const apiActive = getFullscreenElement() === root
+    if (apiActive || theaterMode) {
+      if (apiActive) void exitElementFullscreen().catch(() => undefined)
+      setTheaterMode(false)
+      setIsFullscreen(false)
+      window.setTimeout(() => window.dispatchEvent(new Event('resize')), 50)
+      return
+    }
+
+    void requestElementFullscreen(root).catch(() => {
+      setTheaterMode(true)
+      setIsFullscreen(true)
+    })
+  }, [theaterMode])
 
   const handleSelectionChange = useCallback(
     (next: GraphSelection) => {
@@ -115,11 +186,37 @@ export function InteractiveGraphView({
 
   return (
     <div
+      ref={rootRef}
       data-tint-graph-view
       data-readonly={readonly ? 'true' : 'false'}
-      className={cn('tint-graph-view', className)}
+      data-fullscreen={isFullscreen ? 'true' : 'false'}
+      data-theater={theaterMode ? 'true' : 'false'}
+      className={cn(
+        'tint-graph-view',
+        theaterMode && 'tint-graph-view--theater',
+        className,
+      )}
     >
       <div className="tint-graph-view__canvas" role="application" aria-label="Graph canvas">
+        {showFullscreenControl ? (
+          <div className="tint-graph-view__toolbar">
+            <button
+              type="button"
+              className="tint-graph-view__fullscreen"
+              data-testid="graph-fullscreen"
+              aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+              aria-pressed={isFullscreen}
+              onClick={toggleFullscreen}
+            >
+              {isFullscreen ? (
+                <Minimize2 size={16} aria-hidden="true" />
+              ) : (
+                <Maximize2 size={16} aria-hidden="true" />
+              )}
+              <span>{isFullscreen ? 'Exit' : 'Fullscreen'}</span>
+            </button>
+          </div>
+        ) : null}
         <XyflowCanvas
           document={document}
           registry={resolvedRegistry}

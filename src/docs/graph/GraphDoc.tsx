@@ -148,8 +148,8 @@ export function GraphDoc() {
           </h1>
           <p className="m-0 text-base leading-7 text-tint-muted">
             Interactive node canvas for domain-neutral graph documents — including
-            parsed ComfyUI workflows. Edit prompts and latent size on the node, or
-            mock an image→video pass to watch runtime state move through the graph.
+            parsed ComfyUI workflows. Edit prompts and latent size on the node, mock
+            an image→video pass, or fullscreen the graph view from the canvas toolbar.
           </p>
         </section>
 
