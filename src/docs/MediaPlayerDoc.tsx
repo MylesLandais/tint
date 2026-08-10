@@ -150,12 +150,18 @@ const videoOnlyProps = [
     defaultValue: '[0.5, 1, 1.5, 2]',
     description: 'Selectable rates in the settings popout (lg tier only).',
   },
+  {
+    name: 'autoHideControls',
+    type: 'boolean',
+    defaultValue: 'true',
+    description: 'Hide the control overlay until hover or focus. Set false to pin it open.',
+  },
 ]
 
 const settingsProps = [
   { name: 'isOpen', type: 'boolean', required: true, description: 'Whether the settings popout is visible.' },
   { name: 'onOpenChange', type: '(isOpen: boolean) => void', required: true, description: 'Called when the popout should open or close.' },
-  { name: 'items', type: 'SettingsPopoutItem[]', required: true, description: 'Selectable settings items, optionally grouped.' },
+  { name: 'items', type: 'readonly SettingsPopoutItem[]', required: true, description: 'Selectable settings items, optionally grouped.' },
   { name: 'value', type: 'string', description: 'Currently selected item id in picker mode.' },
   { name: 'onSelect', type: '(id: string) => void', description: 'Called when an item is selected.' },
 ]

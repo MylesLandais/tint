@@ -21,6 +21,7 @@
     "./media": "./src/components/media/index.ts",
     "./code": "./src/components/code/index.ts",
     "./audio-input": "./src/components/audio-input/index.ts",
+    "./settings-popout": "./src/components/settings-popout/index.ts",
     "./chat": "./src/components/chat/index.ts",
     "./table": "./src/components/table/index.ts",
     "./collab": "./src/components/collab/index.ts",

@@ -291,6 +291,16 @@ export function EditorDoc() {
         <section id="usage" className="mb-14 max-w-3xl scroll-mt-24">
           <h2 className="mb-3 text-2xl font-semibold tracking-tight text-tint-ink">Usage</h2>
           <CodeBlock code={usageCode} language="tsx" />
+          <div className="mt-4 rounded-xl border border-tint-warning/40 bg-tint-warning-soft p-4 text-sm leading-6 text-tint-warning-ink">
+            <strong className="font-semibold">
+              Keep <code>extensions</code> and <code>slashCommands</code> stable.
+            </strong>{' '}
+            Both feed the dependency array that builds the Tiptap instance, so a fresh
+            array literal on every render tears the editor down and rebuilds it — losing
+            the caret, the selection, and the undo history as you type. Hoist them to
+            module scope, or wrap them in <code>useMemo</code>. Omitting them entirely is
+            safe.
+          </div>
         </section>
 
         <section className="mb-14 max-w-3xl">

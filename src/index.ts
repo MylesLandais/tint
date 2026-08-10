@@ -6,6 +6,8 @@ export type {
   WaveformProps,
 } from './components/media'
 export { MediaPlayer } from './components/media-player'
+export { MEDIA_SIZES, MEDIA_SIZE_MD_MAX_REM, MEDIA_SIZE_SM_MAX_REM } from './components/media-player'
+export type { MediaSize } from './components/media-player'
 export type {
   MediaPlayerAudioProps,
   MediaPlayerProps,
@@ -80,10 +82,14 @@ export { Panel } from './components/panel'
 export type * from './components/panel'
 
 export { CodeTabs, HighlightedCode } from './components/code'
+export { CODE_LANGUAGES, isSupportedLanguage, lowlight } from './components/code'
 export type { CodeTab, CodeTabsProps, HighlightedCodeProps, TabItem } from './components/code'
 
 export {
+  CodeTabsExtension,
+  DEFAULT_EDITOR_CODE_TABS,
   Editor,
+  codeTabsContent,
   defaultSlashCommands,
   editorDocumentToHTML,
   editorHTMLToDocument,
@@ -108,21 +114,34 @@ export type {
 } from './components/collab'
 
 export {
+  DataFilterControls,
+  DataMasonry,
   DataTable,
+  InfiniteRows,
   TableColumnsMenu,
   TablePager,
   TableToolbar,
   TABLE_FIELD_TYPES,
+  columnsFor,
   compareValues,
   deriveFilteredSortedRows,
   deriveRows,
+  evaluateFilterItem,
   formatFieldValue,
   getCellValue,
   isReservedFieldType,
   listFieldTypes,
   matchesFilter,
   nextSort,
+  originalOf,
   resolveFieldType,
+  tintFilter,
+  tintNatural,
+  toColumnFilters,
+  toDataSortingState,
+  toDeriveFilters,
+  toTableSort,
+  useDataTable,
   useTableView,
   visibleColumns,
 } from './components/table'

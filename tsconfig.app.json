@@ -32,5 +32,10 @@
   "include": ["src"],
   // Typechecked by tsconfig.node.json instead — they need Node's fs, and the app
   // project deliberately has no Node types so browser code cannot reach for them.
-  "exclude": ["src/styles/themes.test.ts", "src/components/icon/no-raw-lucide-imports.test.ts"]
+  "exclude": [
+    "src/styles/themes.test.ts",
+    "src/components/icon/no-raw-lucide-imports.test.ts",
+    "src/exports.test.ts",
+    "src/docs/propsTable.test.ts"
+  ]
 }

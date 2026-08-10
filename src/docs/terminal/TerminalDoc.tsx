@@ -141,7 +141,13 @@ const terminalProps = [
   { name: 'onExpandedChange', type: '(expanded: boolean) => void', required: true, description: 'Reports disclosure intent.' },
   { name: 'onReconnect', type: '() => void', description: 'Shows a reconnect action while disconnected or errored.' },
   { name: 'onClear', type: '() => void', description: 'Observes a local viewport clear.' },
-  { name: 'options', type: 'Terminal options', description: 'Initial xterm options except theme and disableStdin.' },
+  { name: 'options', type: 'Terminal options', description: 'Initial xterm options except theme and disableStdin. Read once on mount — later changes are ignored.' },
+  { name: 'title', type: 'ReactNode', defaultValue: "'Terminal'", description: 'Panel disclosure label.' },
+  { name: 'statusMessage', type: 'string', description: 'Replaces the derived status text, and titles the status element.' },
+  { name: 'label', type: 'string', defaultValue: "'Interactive terminal'", description: 'Accessible name for the terminal viewport, which is a role="application" region.' },
+  { name: 'className', type: 'string', description: 'Extra classes for the Panel root.' },
+  { name: 'bodyClassName', type: 'string', description: 'Extra classes for the Panel body. Avoid display utilities — they defeat the collapsed state.' },
+  { name: 'viewportClassName', type: 'string', description: 'Extra classes for the terminal viewport, which defaults to a 24rem tall surface.' },
 ]
 
 const panelProps = [
@@ -210,6 +216,13 @@ export function TerminalDoc() {
         <section id="usage" className="mb-14 max-w-3xl scroll-mt-24">
           <h2 className="mb-3 text-2xl font-semibold tracking-tight text-tint-ink">Usage</h2>
           <CodeBlock code={usageCode} language="tsx" />
+          <div className="mt-4 rounded-xl border border-tint-border bg-tint-surface/60 p-4 text-sm leading-6 text-tint-muted">
+            <strong className="font-semibold text-tint-ink">Two lifecycle notes.</strong>{' '}
+            <code>options</code> is read once on mount; later changes are ignored, because
+            rebuilding the terminal would discard scrollback and the cursor. And a new{' '}
+            <code>session</code> object <em>resets</em> the emulator — keep it
+            referentially stable unless a reset is what you want.
+          </div>
         </section>
 
         <section id="api" className="scroll-mt-24">

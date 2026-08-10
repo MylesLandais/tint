@@ -20,6 +20,8 @@ const props = [
   { name: 'onValueChange', type: '(value: string) => void', required: true, description: 'Receives interim previews and committed transcript text.' },
   { name: 'onCapture', type: '(blob, meta) => void', description: 'Optionally receives a voice-note Blob and elapsed duration after Stop.' },
   { name: 'onActiveChange', type: '(active: boolean) => void', description: 'Lets a host lock adjacent text editing during a recording.' },
+  { name: 'disabled', type: 'boolean', defaultValue: 'false', description: 'Blocks starting a recording. Has no effect on one already running.' },
+  { name: 'label', type: 'string', defaultValue: "'Voice input'", description: 'Names the start, stop, and cancel controls — “Start voice input”, and so on.' },
 ]
 
 export function AudioInputDoc() {

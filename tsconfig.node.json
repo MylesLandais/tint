@@ -25,6 +25,8 @@
     "vite.config.ts",
     "vitest.config.ts",
     "src/styles/themes.test.ts",
-    "src/components/icon/no-raw-lucide-imports.test.ts"
+    "src/components/icon/no-raw-lucide-imports.test.ts",
+    "src/exports.test.ts",
+    "src/docs/propsTable.test.ts"
   ]
 }
