@@ -1,8 +1,12 @@
-import { fireEvent, render, screen } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { VideoPlayer } from './VideoPlayer'
 
 describe('VideoPlayer', () => {
+  afterEach(() => {
+    Reflect.deleteProperty(HTMLElement.prototype, 'requestFullscreen')
+  })
+
   it('restores the dark immersive surface and hides controls by default', () => {
     const { container } = render(<VideoPlayer src="clip.mp4" />)
     expect(container.querySelector('[data-tint-video-player]')).toBeInTheDocument()
@@ -39,5 +43,25 @@ describe('VideoPlayer', () => {
     expect(onPlay).toHaveBeenCalledOnce()
     expect(onPause).toHaveBeenCalledOnce()
     expect(container.querySelector('[data-tint-video-player]')).toHaveClass('rounded-lg')
+  })
+
+  it('enters theater mode when the Fullscreen API rejects', async () => {
+    const requestFullscreen = vi.fn().mockRejectedValue(new Error('blocked'))
+    HTMLElement.prototype.requestFullscreen = requestFullscreen
+
+    const { container } = render(<VideoPlayer src="clip.mp4" autoHideControls={false} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Enter fullscreen' }))
+
+    await waitFor(() => {
+      expect(container.querySelector('[data-tint-video-player]')).toHaveAttribute(
+        'data-fullscreen',
+        'true',
+      )
+    })
+    expect(container.querySelector('[data-tint-video-player]')).toHaveAttribute(
+      'data-theater',
+      'true',
+    )
+    expect(screen.getByRole('button', { name: 'Exit fullscreen' })).toBeInTheDocument()
   })
 })

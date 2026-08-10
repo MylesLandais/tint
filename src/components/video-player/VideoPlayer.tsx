@@ -5,6 +5,12 @@ import { cn } from '../../lib/utils'
 import { Icon } from '../icon'
 import { SettingsPopout, type SettingsPopoutItem } from '../settings-popout'
 import { Slider, VolumeControl, formatTime } from '../media'
+import {
+  FULLSCREEN_EVENTS,
+  exitElementFullscreen,
+  getFullscreenElement,
+  requestElementFullscreen,
+} from './fullscreen'
 
 const DEFAULT_PLAYBACK_SPEEDS = [0.5, 1, 1.5, 2] as const
 
@@ -52,24 +58,60 @@ export function VideoPlayer({
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(durationHint ?? 0)
   const [isFullscreen, setIsFullscreen] = useState(false)
+  /** In-page theater mode when the Fullscreen API is blocked or unavailable. */
+  const [theaterMode, setTheaterMode] = useState(false)
 
   useEffect(() => {
     const onFullscreenChange = () => {
-      setIsFullscreen(document.fullscreenElement === containerRef.current)
+      const active = getFullscreenElement() === containerRef.current
+      setIsFullscreen(active || theaterMode)
+      if (active) setTheaterMode(false)
     }
-    document.addEventListener('fullscreenchange', onFullscreenChange)
-    return () => document.removeEventListener('fullscreenchange', onFullscreenChange)
-  }, [])
+    for (const eventName of FULLSCREEN_EVENTS) {
+      document.addEventListener(eventName, onFullscreenChange)
+    }
+    return () => {
+      for (const eventName of FULLSCREEN_EVENTS) {
+        document.removeEventListener(eventName, onFullscreenChange)
+      }
+    }
+  }, [theaterMode])
+
+  useEffect(() => {
+    if (!theaterMode) return
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setTheaterMode(false)
+        setIsFullscreen(false)
+      }
+    }
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.body.style.overflow = previousOverflow
+      window.removeEventListener('keydown', onKeyDown)
+    }
+  }, [theaterMode])
 
   const toggleFullscreen = () => {
-    if (document.fullscreenElement) {
-      void document.exitFullscreen()
+    const container = containerRef.current
+    if (!container) return
+
+    const apiActive = getFullscreenElement() === container
+    if (apiActive || theaterMode) {
+      if (apiActive) void exitElementFullscreen().catch(() => undefined)
+      setTheaterMode(false)
+      setIsFullscreen(false)
       return
     }
-    // Fullscreening the container (not the raw <video>) keeps the custom
-    // control bar working — the browser's native fullscreen video UI would
-    // otherwise replace it.
-    void containerRef.current?.requestFullscreen()
+
+    // Fullscreen the container (not the raw <video>) so the custom control bar
+    // stays available — native video fullscreen would replace it.
+    void requestElementFullscreen(container).catch(() => {
+      setTheaterMode(true)
+      setIsFullscreen(true)
+    })
   }
 
   const settingsItems = useMemo<SettingsPopoutItem[]>(
@@ -162,10 +204,14 @@ export function VideoPlayer({
       ref={containerRef}
       data-tint-video-player=""
       data-size={size}
+      data-fullscreen={isFullscreen ? 'true' : 'false'}
+      data-theater={theaterMode ? 'true' : 'false'}
       className={cn(
         'relative mx-auto w-full rounded-lg bg-tint-chrome shadow-[0_0_20px_var(--tint-shadow-color)] backdrop-blur-sm',
-        size === 'sm' ? 'max-w-xl' : size === 'md' ? 'max-w-3xl' : 'max-w-4xl',
-        shadow && 'shadow-[6px_6px_0_var(--tint-shadow-color)]',
+        !isFullscreen && (size === 'sm' ? 'max-w-xl' : size === 'md' ? 'max-w-3xl' : 'max-w-4xl'),
+        shadow && !isFullscreen && 'shadow-[6px_6px_0_var(--tint-shadow-color)]',
+        theaterMode &&
+          'fixed inset-0 z-50 m-0 h-dvh max-h-dvh w-screen max-w-none rounded-none shadow-none',
         className,
       )}
       initial={{ opacity: 0, y: 20 }}
@@ -182,7 +228,10 @@ export function VideoPlayer({
     >
       <video
         ref={videoRef}
-        className="w-full cursor-pointer rounded-lg bg-black"
+        className={cn(
+          'w-full cursor-pointer bg-black',
+          isFullscreen ? 'h-full rounded-none object-contain' : 'rounded-lg',
+        )}
         src={src}
         poster={poster}
         {...videoProps}
