@@ -34,7 +34,7 @@ import { MediaPlayer } from '../media-player'
 import { Icon, Spinner, StatusIcon, STATUS_ICONS } from '../icon'
 import type { StatusName } from '../icon'
 import { safeHref, stripBidi } from './sanitize'
-import { useCopied } from './useCopied'
+import { useCopied } from '../../lib/useCopied'
 import type {
   ChatApprovalPart,
   ChatArtifactPart,

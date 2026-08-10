@@ -5,7 +5,7 @@ import { Icon, Spinner } from '../icon'
 import { ChatMessageActions, ChatMessageContent } from './ChatPrimitives'
 import { ChatMessagePartView } from './ChatParts'
 import { stripBidi } from './sanitize'
-import { useCopied } from './useCopied'
+import { useCopied } from '../../lib/useCopied'
 import type {
   ChatCustomPart,
   ChatMessageData,

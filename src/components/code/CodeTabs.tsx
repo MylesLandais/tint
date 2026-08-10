@@ -1,6 +1,7 @@
 import { Check, Copy } from 'lucide-react'
 import { useId, useState, type HTMLAttributes, type ReactNode } from 'react'
 import { cn } from '../../lib/utils'
+import { useCopied } from '../../lib/useCopied'
 import { Icon } from '../icon'
 import type { IconGlyph } from '../icon'
 import { HighlightedCode } from './HighlightedCode'
@@ -131,12 +132,11 @@ export function CodeTabs({
 }
 
 function CodeTabPanel({ tab }: { tab: CodeTab }) {
-  const [copied, setCopied] = useState(false)
-  const copy = async () => {
-    await navigator.clipboard.writeText(tab.code)
-    setCopied(true)
-    window.setTimeout(() => setCopied(false), 1600)
-  }
+  // Shared with chat's copy buttons: only reports success once the write
+  // actually resolves, and clears its own timer. Rolling this by hand here meant
+  // an unhandled rejection whenever the clipboard was denied or the page was
+  // served over http.
+  const { copied, copy } = useCopied(tab.code)
 
   return (
     <>

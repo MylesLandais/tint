@@ -1,6 +1,6 @@
-import { useState } from 'react'
 import { Check, Copy } from 'lucide-react'
 import { cn } from '../../lib/utils'
+import { useCopied } from '../../lib/useCopied'
 import { HighlightedCode, type HighlightedCodeProps } from '../../components/code'
 import { Icon } from '../../components/icon'
 
@@ -12,13 +12,7 @@ type CodeBlockProps = Pick<HighlightedCodeProps, 'lineNumbers' | 'startLine' | '
 }
 
 export function CodeBlock({ code, language = 'tsx', title, lineNumbers, startLine, highlightLines, highlightWords, className }: CodeBlockProps) {
-  const [copied, setCopied] = useState(false)
-
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(code)
-    setCopied(true)
-    window.setTimeout(() => setCopied(false), 1600)
-  }
+  const { copied, copy } = useCopied(code)
 
   return (
     <div
@@ -31,7 +25,8 @@ export function CodeBlock({ code, language = 'tsx', title, lineNumbers, startLin
         <span className="uppercase tracking-[0.08em]">{title ?? language}</span>
         <button
           type="button"
-          onClick={handleCopy}
+          onClick={() => void copy()}
+          aria-label={copied ? 'Code copied' : 'Copy code'}
           className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-tint-code-ink transition-colors hover:bg-tint-code-ink/10"
         >
           {copied ? <Icon icon={Check} size="sm" /> : <Icon icon={Copy} size="sm" />}

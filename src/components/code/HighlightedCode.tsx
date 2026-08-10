@@ -67,7 +67,7 @@ export function HighlightedCode({
     }
     return (
       <code className={className}>
-        {renderLines(code.split('\n'), undefined, lineNumbers, startLine, highlightLines, highlightWords)}
+        {renderLines(code, undefined, lineNumbers, startLine, highlightLines, highlightWords)}
       </code>
     )
   }
@@ -82,7 +82,7 @@ export function HighlightedCode({
   return (
     <code className={className}>
       {renderLines(
-        code.split('\n'),
+        code,
         language,
         lineNumbers,
         startLine,
@@ -93,8 +93,79 @@ export function HighlightedCode({
   )
 }
 
+/**
+ * A leaf run of text plus the `.hljs-*` classes of every element enclosing it.
+ *
+ * The stack is kept rather than flattened into one class list because
+ * `code-highlight.css` carries a descendant rule (`.hljs-meta .hljs-string`);
+ * collapsing the ancestry onto a single element would stop it matching.
+ */
+type Token = { text: string; stack: readonly string[] }
+
+function tokenize(nodes: readonly HastNode[], stack: readonly string[], out: Token[]) {
+  for (const node of nodes) {
+    if (node.type === 'text') {
+      out.push({ text: (node as HastText).value, stack })
+      continue
+    }
+    if (node.type === 'element') {
+      const element = node as HastElement
+      const raw = element.properties?.className
+      const className = Array.isArray(raw) ? raw.join(' ') : raw
+      tokenize(element.children, className ? [...stack, className] : stack, out)
+      continue
+    }
+    tokenize((node as { children?: HastNode[] }).children ?? [], stack, out)
+  }
+}
+
+/** Break a token stream on newlines, so each line keeps its enclosing classes. */
+function tokensByLine(tokens: readonly Token[]): Token[][] {
+  const lines: Token[][] = [[]]
+  for (const token of tokens) {
+    const segments = token.text.split('\n')
+    segments.forEach((segment, index) => {
+      if (index > 0) lines.push([])
+      if (segment) lines[lines.length - 1].push({ text: segment, stack: token.stack })
+    })
+  }
+  return lines
+}
+
+/** Re-nest one token's ancestor stack around its text. */
+function renderToken(token: Token, key: number, words: readonly string[]): ReactNode {
+  let node: ReactNode = words.length ? markWords(token.text, words) : token.text
+  for (let index = token.stack.length - 1; index >= 0; index -= 1) {
+    node = <span className={token.stack[index]}>{node}</span>
+  }
+  return <Fragment key={key}>{node}</Fragment>
+}
+
+function markWords(value: string, words: readonly string[]): ReactNode {
+  const pattern = new RegExp(`(${words.map(escapeRegExp).join('|')})`, 'gi')
+  return value.split(pattern).map((part, index) =>
+    words.some((word) => word.toLowerCase() === part.toLowerCase()) ? (
+      <mark key={index} className="bg-tint-accent-soft text-inherit">
+        {part}
+      </mark>
+    ) : (
+      <Fragment key={index}>{part}</Fragment>
+    ),
+  )
+}
+
+/**
+ * Render `code` as addressable lines.
+ *
+ * The whole source is highlighted in one pass and the resulting tree is then
+ * split on newlines. Highlighting each line separately — which this used to do —
+ * hands the grammar one line of context at a time, so any construct that spans
+ * lines (a block comment, a template literal, a triple-quoted string) restarts
+ * its state on every row and colours as if the opening delimiter were never
+ * there.
+ */
 function renderLines(
-  lines: string[],
+  code: string,
   language: string | undefined,
   lineNumbers: boolean,
   startLine: number,
@@ -103,13 +174,18 @@ function renderLines(
 ) {
   const highlighted = new Set(highlightLines)
   const words = highlightWords.filter(Boolean)
-  return lines.map((line, index) => {
+
+  const tokens: Token[] = []
+  if (language && isSupportedLanguage(language)) {
+    tokenize(lowlight.highlight(language, code).children as HastNode[], [], tokens)
+  } else {
+    tokens.push({ text: code, stack: [] })
+  }
+
+  return tokensByLine(tokens).map((lineTokens, index) => {
     const lineNumber = startLine + index
-    const tree = language && isSupportedLanguage(language)
-      ? lowlight.highlight(language, line)
-      : { children: [{ type: 'text', value: line }] }
-    const content = (tree.children as HastNode[]).map((node, nodeIndex) =>
-      toReactWithWords(node, nodeIndex, words),
+    const content = lineTokens.map((token, tokenIndex) =>
+      renderToken(token, tokenIndex, words),
     )
     return (
       <span
@@ -127,32 +203,6 @@ function renderLines(
       </span>
     )
   })
-}
-
-function toReactWithWords(node: HastNode, key: number, words: readonly string[]): ReactNode {
-  if (!words.length) return toReact(node, key)
-  if (node.type === 'element') {
-    const element = node as HastElement
-    const raw = element.properties?.className
-    const className = Array.isArray(raw) ? raw.join(' ') : raw
-    return (
-      <span key={key} className={className}>
-        {element.children.map((child, index) => toReactWithWords(child, index, words))}
-      </span>
-    )
-  }
-  if (node.type !== 'text') return toReact(node, key)
-  const value = (node as HastText).value
-  const pattern = new RegExp(`(${words.map(escapeRegExp).join('|')})`, 'gi')
-  return value.split(pattern).map((part, index) =>
-    words.some((word) => word.toLowerCase() === part.toLowerCase()) ? (
-      <mark key={`${key}-${index}`} className="bg-tint-accent-soft text-inherit">
-        {part}
-      </mark>
-    ) : (
-      <Fragment key={`${key}-${index}`}>{part}</Fragment>
-    ),
-  )
 }
 
 function escapeRegExp(value: string) {

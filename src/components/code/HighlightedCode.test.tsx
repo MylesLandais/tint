@@ -59,6 +59,49 @@ describe('HighlightedCode', () => {
   })
 })
 
+describe('HighlightedCode multi-line constructs', () => {
+  const blockComment = ['const a = 1', '/* opens here', '   still comment', '*/', 'const b = 2'].join('\n')
+
+  it('keeps a block comment commented on every line it spans', () => {
+    const { container } = render(
+      <HighlightedCode code={blockComment} language="typescript" lineNumbers />,
+    )
+
+    // Each line used to be highlighted in isolation, so the grammar restarted
+    // with no memory of the opening `/*` and lines 3-4 came back uncoloured.
+    const lines = [3, 4].map((line) =>
+      container.querySelector(`[data-code-line="${line}"]`),
+    )
+    for (const line of lines) {
+      expect(line?.querySelector('.hljs-comment')).not.toBeNull()
+    }
+  })
+
+  it('splits without dropping or duplicating source text', () => {
+    const { container } = render(
+      <HighlightedCode code={blockComment} language="typescript" lineNumbers />,
+    )
+    const rendered = Array.from(container.querySelectorAll('[data-code-line]'))
+      .map((line) => line.textContent?.replace(/^\d+/, ''))
+      .join('\n')
+    expect(rendered).toBe(blockComment)
+  })
+
+  it('marks highlighted words both inside and outside a spanning construct', () => {
+    const { container } = render(
+      <HighlightedCode
+        code={blockComment}
+        language="typescript"
+        highlightWords={['const', 'comment']}
+      />,
+    )
+    // `const` twice on the code lines, `comment` once inside the block comment.
+    expect(
+      Array.from(container.querySelectorAll('mark')).map((mark) => mark.textContent),
+    ).toEqual(['const', 'comment', 'const'])
+  })
+})
+
 describe('isSupportedLanguage', () => {
   it.each(['typescript', 'ts', 'tsx', 'js', 'json', 'bash', 'sh', 'html', 'python', 'py', 'erlang', 'erl'])(
     'recognises %s',
