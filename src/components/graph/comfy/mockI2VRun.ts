@@ -282,7 +282,7 @@ export function snapshotMockI2VRun(args: {
       ? 0
       : phase === 'completed'
         ? 1
-        : Math.min(1, Math.max(0, stepIndex / queue.length))
+        : Math.min(1, Math.max(0, (stepIndex + (phase === 'running' ? 1 : 0)) / queue.length))
 
   let detail = 'Idle'
   if (phase === 'running' && current) {
