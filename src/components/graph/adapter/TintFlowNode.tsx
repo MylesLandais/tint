@@ -12,12 +12,19 @@ export function TintFlowNode({
   data,
   selected,
 }: NodeProps<GraphFlowNodeData>) {
-  const { document, registry, readonly, dispatch, validationByNodeId } =
-    useGraphAdapter()
+  const {
+    document,
+    registry,
+    readonly,
+    dispatch,
+    validationByNodeId,
+    runtimeByNodeId,
+  } = useGraphAdapter()
   const graphNode = findGraphNode(document, id)
   const definition = registry.get(data.kind)
   const Render = definition?.render
   const validation = validationByNodeId.get(id) ?? []
+  const runtime = runtimeByNodeId.get(id)
 
   const inputPorts =
     graphNode?.ports.filter((port) => port.direction !== 'output') ?? []
@@ -53,6 +60,7 @@ export function TintFlowNode({
           focused={Boolean(selected)}
           readonly={readonly}
           validation={validation}
+          runtime={runtime}
           dispatch={dispatch}
         />
       ) : (

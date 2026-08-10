@@ -55,7 +55,10 @@ export {
 } from './fixtures/comfy/loadComfyFixture'
 
 export {
+  buildMockI2VRuntimeMap,
   configureComfyNode,
+  createMockI2VRun,
+  defaultFailNodeIds,
   deriveEditableFields,
   findComfyPromptNode,
   flattenValidationIssues,
@@ -64,7 +67,10 @@ export {
   defaultMockComfyInventory,
   parseComfyWorkflow,
   patchComfyConfiguration,
+  selectMockI2VRunQueue,
+  snapshotMockI2VRun,
   updateComfyPrompt,
+  viewportForNode,
 } from './comfy'
 export type {
   ComfyEditableField,
@@ -72,6 +78,11 @@ export type {
   ComfyReferenceImage,
   ComfyWorkflow,
   MockComfyInventory,
+  MockI2VRunController,
+  MockI2VRunOptions,
+  MockI2VRunPhase,
+  MockI2VRunSnapshot,
+  MockI2VRunStep,
   NodeValidationMap,
   ParseComfyWorkflowOptions,
 } from './comfy'

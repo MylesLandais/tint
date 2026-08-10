@@ -3,6 +3,7 @@ import type {
   GraphCommand,
   GraphDocument,
   NodeRegistry,
+  NodeRuntimeSummary,
   ValidationIssue,
 } from '../contracts'
 
@@ -12,6 +13,7 @@ export type GraphAdapterContextValue = {
   readonly: boolean
   dispatch: (command: GraphCommand) => void
   validationByNodeId: ReadonlyMap<string, readonly ValidationIssue[]>
+  runtimeByNodeId: ReadonlyMap<string, NodeRuntimeSummary>
 }
 
 const GraphAdapterContext = createContext<GraphAdapterContextValue | null>(null)

@@ -1,13 +1,24 @@
-import { useCallback, useMemo, useState, type ReactNode } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react'
 import {
   InteractiveGraphView,
+  createMockI2VRun,
   demoGraphDocument,
   flattenValidationIssues,
   loadComfyLtx23WithMockDiagnostics,
+  viewportForNode,
   type GraphCommand,
   type GraphDocument,
   type GraphSelection,
   type GraphViewport,
+  type MockI2VRunSnapshot,
+  type NodeRuntimeSummary,
   type ValidationIssue,
 } from '../../components/graph'
 import { CodeBlock } from '../components/CodeBlock'
@@ -15,18 +26,15 @@ import { DocsNav } from '../components/DocsNav'
 
 const usageCode = `import {
   InteractiveGraphView,
+  createMockI2VRun,
   loadComfyLtx23WithMockDiagnostics,
 } from 'tint/graph'
 
 const { document, validationByNodeId } = loadComfyLtx23WithMockDiagnostics()
-
-<InteractiveGraphView
-  document={document}
-  validationByNodeId={validationByNodeId}
-  onDocumentChange={setDocument}
-/>
-
-// Prompt, latent size, and reference image edit on the node (or Pop out).`
+const run = createMockI2VRun(document, {
+  onUpdate: (snapshot) => setRuntimeByNodeId(snapshot.runtimeByNodeId),
+})
+run.start() // mock image→video pass; canvas stays presentation-only`
 
 type DemoMode = 'comfy' | 'demo'
 
@@ -43,8 +51,17 @@ export function GraphDoc() {
   )
   const [selection, setSelection] = useState<GraphSelection | undefined>()
   const [viewport, setViewport] = useState<GraphViewport | undefined>()
+  const [followViewport, setFollowViewport] = useState<GraphViewport | undefined>()
   const [lastCommand, setLastCommand] = useState<GraphCommand | null>(null)
   const [readonly, setReadonly] = useState(false)
+  const [runtimeByNodeId, setRuntimeByNodeId] = useState<
+    ReadonlyMap<string, NodeRuntimeSummary>
+  >(new Map())
+  const [runSnapshot, setRunSnapshot] = useState<MockI2VRunSnapshot | null>(null)
+  const [followRun, setFollowRun] = useState(true)
+  const followRunRef = useRef(followRun)
+  followRunRef.current = followRun
+  const runRef = useRef<ReturnType<typeof createMockI2VRun> | null>(null)
 
   const allIssues = useMemo(
     () => flattenValidationIssues(validationByNodeId),
@@ -52,11 +69,44 @@ export function GraphDoc() {
   )
   const errorIssues = allIssues.filter((issue) => issue.severity === 'error')
   const warnIssues = allIssues.filter((issue) => issue.severity === 'warning')
+  const runActive = runSnapshot?.phase === 'running'
+
+  const stopMockRun = useCallback(() => {
+    runRef.current?.stop()
+    runRef.current = null
+    setRunSnapshot(null)
+    setRuntimeByNodeId(new Map())
+    setFollowViewport(undefined)
+  }, [])
+
+  const startMockI2VRun = useCallback(() => {
+    stopMockRun()
+    const controller = createMockI2VRun(document, {
+      intervalMs: 520,
+      onUpdate: (snapshot) => {
+        setRunSnapshot(snapshot)
+        setRuntimeByNodeId(snapshot.runtimeByNodeId)
+        if (followRunRef.current && snapshot.current) {
+          const next = viewportForNode(document, snapshot.current.nodeId)
+          if (next) setFollowViewport(next)
+        }
+        if (snapshot.phase === 'completed' || snapshot.phase === 'failed') {
+          runRef.current = null
+        }
+      },
+    })
+    runRef.current = controller
+    controller.start()
+  }, [document, stopMockRun])
+
+  useEffect(() => () => {
+    runRef.current?.stop()
+    runRef.current = null
+  }, [])
 
   const onCommand = useCallback((command: GraphCommand) => {
     if (command.type === 'viewport.set') return
     setLastCommand((previous) => {
-      // Selection events often follow drag / configure; keep the edit visible.
       if (
         command.type === 'selection.replace' &&
         (previous?.type === 'node.move' || previous?.type === 'node.configure')
@@ -68,6 +118,7 @@ export function GraphDoc() {
   }, [])
 
   const switchMode = (next: DemoMode) => {
+    stopMockRun()
     setMode(next)
     setSelection(undefined)
     setLastCommand(null)
@@ -97,8 +148,8 @@ export function GraphDoc() {
           </h1>
           <p className="m-0 text-base leading-7 text-tint-muted">
             Interactive node canvas for domain-neutral graph documents — including
-            parsed ComfyUI workflows. Prompt text, latent resolution, and reference
-            image drops edit on the node itself; diagnostics stay outside the canvas engine.
+            parsed ComfyUI workflows. Edit prompts and latent size on the node, or
+            mock an image→video pass to watch runtime state move through the graph.
           </p>
         </section>
 
@@ -133,7 +184,7 @@ export function GraphDoc() {
           {mode === 'comfy' ? (
             <aside
               data-testid="comfy-diagnostics"
-              className="mb-3 grid gap-2 rounded-xl border border-tint-border bg-tint-panel p-3 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(12rem,16rem)]"
+              className="mb-3 grid gap-2 rounded-xl border border-tint-border bg-tint-panel p-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(16rem,20rem)]"
             >
               <IssueList
                 title={`ERROR (${errorIssues.length})`}
@@ -147,11 +198,61 @@ export function GraphDoc() {
                 empty="No warnings"
                 tone="warning"
               />
-              <p className="m-0 self-center text-xs leading-5 text-tint-muted">
-                Prompt, Width/Height, Latent, and Reference image nodes expose editors
-                on the node. Use <strong>Pop out</strong> to draw a larger panel beside it.
-              </p>
+              <div className="grid gap-2 self-center">
+                <p className="m-0 text-xs leading-5 text-tint-muted">
+                  Mock a Comfy image→video pass to see idle → running → done on
+                  Reference image, latent, sampler, and output nodes.
+                </p>
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    data-testid="comfy-mock-i2v-run"
+                    className="rounded-md border border-tint-border-strong bg-tint-accent px-3 py-1.5 text-sm font-medium text-tint-on-accent disabled:opacity-50"
+                    disabled={runActive}
+                    onClick={startMockI2VRun}
+                  >
+                    {runActive ? 'Running…' : 'Mock I2V run'}
+                  </button>
+                  <button
+                    type="button"
+                    data-testid="comfy-mock-i2v-stop"
+                    className="rounded-md border border-tint-border bg-tint-surface px-3 py-1.5 text-sm text-tint-ink disabled:opacity-40"
+                    disabled={!runActive && !runSnapshot}
+                    onClick={stopMockRun}
+                  >
+                    Stop
+                  </button>
+                  <label className="inline-flex items-center gap-1.5 text-xs text-tint-muted">
+                    <input
+                      type="checkbox"
+                      checked={followRun}
+                      onChange={(event) => setFollowRun(event.target.checked)}
+                    />
+                    Follow camera
+                  </label>
+                </div>
+              </div>
             </aside>
+          ) : null}
+
+          {runSnapshot ? (
+            <div
+              data-testid="comfy-mock-i2v-progress"
+              className="mb-3 rounded-xl border border-tint-border bg-tint-panel px-3 py-2"
+            >
+              <div className="mb-1.5 flex flex-wrap items-baseline justify-between gap-2">
+                <p className="m-0 text-sm text-tint-ink">{runSnapshot.detail}</p>
+                <p className="m-0 font-mono text-xs text-tint-muted">
+                  {Math.round(runSnapshot.progress * 100)}% · {runSnapshot.phase}
+                </p>
+              </div>
+              <div className="h-1.5 overflow-hidden rounded bg-tint-surface">
+                <div
+                  className="h-full bg-tint-accent transition-[width] duration-300"
+                  style={{ width: `${Math.round(runSnapshot.progress * 100)}%` }}
+                />
+              </div>
+            </div>
           ) : null}
 
           <InteractiveGraphView
@@ -159,6 +260,8 @@ export function GraphDoc() {
             readonly={readonly}
             selection={selection}
             validationByNodeId={validationByNodeId}
+            runtimeByNodeId={runtimeByNodeId}
+            viewport={followViewport}
             onDocumentChange={setDocument}
             onSelectionChange={setSelection}
             onViewportChange={setViewport}
@@ -196,8 +299,8 @@ export function GraphDoc() {
           <p className="mb-4 text-sm leading-6 text-tint-muted">
             Parse a ComfyUI workflow into{' '}
             <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">GraphDocument</code>.
-            Common parameters stay on the node — prompt text, latent/output
-            resolution, and reference-image drop — with an optional side pop-out.
+            Pass <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">runtimeByNodeId</code>{' '}
+            for read-only execution chrome — the canvas never talks to Comfy.
           </p>
           <CodeBlock code={usageCode} language="tsx" />
         </section>
@@ -217,8 +320,9 @@ export function GraphDoc() {
               reference image → <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">EmptyImage</code> drop zone.
             </li>
             <li>
-              Edits dispatch <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">node.configure</code> and
-              update the document through <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">onDocumentChange</code>.
+              <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">createMockI2VRun</code> walks an
+              image→video-ish queue and emits <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">NodeRuntimeSummary</code>{' '}
+              maps. Missing custom nodes (e.g. TextGenerateLTX2Prompt) mark as failed then continue.
             </li>
           </ul>
         </section>

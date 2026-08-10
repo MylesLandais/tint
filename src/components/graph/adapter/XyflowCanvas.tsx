@@ -30,6 +30,7 @@ import type {
   GraphSelection,
   GraphViewport,
   NodeRegistry,
+  NodeRuntimeSummary,
   Point,
   ValidationIssue,
 } from '../contracts'
@@ -48,6 +49,9 @@ export type XyflowCanvasProps = {
   readonly?: boolean
   selection?: GraphSelection
   validationByNodeId?: ReadonlyMap<string, readonly ValidationIssue[]>
+  runtimeByNodeId?: ReadonlyMap<string, NodeRuntimeSummary>
+  /** Optional host-driven camera (e.g. follow a mock execution). */
+  viewport?: GraphViewport
   onSelectionChange?: (selection: GraphSelection) => void
   onViewportChange?: (viewport: GraphViewport) => void
   onNodePositionsCommit?: (positions: Record<string, Point>) => void
@@ -66,6 +70,8 @@ function XyflowCanvasInner({
   readonly = false,
   selection,
   validationByNodeId,
+  runtimeByNodeId,
+  viewport,
   onSelectionChange,
   onViewportChange,
   onNodePositionsCommit,
@@ -80,6 +86,7 @@ function XyflowCanvasInner({
   const dragBaseline = useRef<Map<string, Point>>(new Map())
   const lastSelectionKey = useRef('')
   const lastViewportGraphId = useRef<string | null>(null)
+  const lastFollowKey = useRef('')
   const documentRef = useRef(document)
   documentRef.current = document
   nodesRef.current = nodes
@@ -88,6 +95,10 @@ function XyflowCanvasInner({
   const resolvedValidation = useMemo(
     () => validationByNodeId ?? new Map<string, readonly ValidationIssue[]>(),
     [validationByNodeId],
+  )
+  const resolvedRuntime = useMemo(
+    () => runtimeByNodeId ?? new Map<string, NodeRuntimeSummary>(),
+    [runtimeByNodeId],
   )
 
   const dispatch = useCallback(
@@ -104,8 +115,9 @@ function XyflowCanvasInner({
       readonly,
       dispatch,
       validationByNodeId: resolvedValidation,
+      runtimeByNodeId: resolvedRuntime,
     }),
-    [dispatch, document, readonly, registry, resolvedValidation],
+    [dispatch, document, readonly, registry, resolvedRuntime, resolvedValidation],
   )
 
   // Sync graph document → flow nodes/edges. Preserve measured dimensions so
@@ -180,6 +192,15 @@ function XyflowCanvasInner({
     }
     void setViewport(document.viewport, { duration: 0 })
   }, [document.id, document.viewport, fitView, setViewport])
+
+  // Host-driven camera (mock run follow). Keyed so identical frames no-op.
+  useEffect(() => {
+    if (!viewport) return
+    const key = `${viewport.x}:${viewport.y}:${viewport.zoom}`
+    if (key === lastFollowKey.current) return
+    lastFollowKey.current = key
+    void setViewport(viewport, { duration: 180 })
+  }, [setViewport, viewport])
 
   const onNodesChange = useCallback((changes: NodeChange[]) => {
     setNodes((current) => {

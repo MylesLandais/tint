@@ -149,6 +149,21 @@
   color: var(--tint-info-ink);
 }
 
+.tint-graph-node__status[data-status='succeeded'] {
+  color: var(--tint-success-ink);
+}
+
+.tint-graph-node__status[data-status='idle'] {
+  color: var(--tint-muted);
+}
+
+.tint-graph-node__runtime-detail {
+  margin: 0.2rem 0 0;
+  font-size: 0.68rem;
+  line-height: 1.3;
+  color: var(--tint-muted);
+}
+
 .tint-graph-node--comfy[data-status='error'] {
   border-color: var(--tint-danger);
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--tint-danger) 40%, transparent);
@@ -157,6 +172,36 @@
 .tint-graph-node--comfy[data-status='warn'] {
   border-color: var(--tint-warning);
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--tint-warning) 35%, transparent);
+}
+
+.tint-graph-node--comfy[data-status='running'] {
+  border-color: var(--tint-info, var(--tint-accent));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--tint-info, var(--tint-accent)) 45%, transparent);
+  animation: tint-graph-running-pulse 1.1s ease-in-out infinite;
+}
+
+.tint-graph-node--comfy[data-status='succeeded'] {
+  border-color: color-mix(in srgb, var(--tint-success, #3f8f6b) 70%, var(--tint-border));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--tint-success, #3f8f6b) 30%, transparent);
+}
+
+.tint-graph-node--comfy[data-status='failed'] {
+  border-color: var(--tint-danger);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--tint-danger) 45%, transparent);
+}
+
+.tint-graph-node--comfy[data-status='idle'] {
+  opacity: 0.78;
+}
+
+@keyframes tint-graph-running-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--tint-info, var(--tint-accent)) 35%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--tint-info, var(--tint-accent)) 22%, transparent);
+  }
 }
 
 .tint-graph-node__widget-summary {

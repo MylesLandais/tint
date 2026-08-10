@@ -6,6 +6,7 @@ import type {
   GraphSelection,
   GraphViewport,
   NodeRegistry,
+  NodeRuntimeSummary,
   Point,
   ValidationIssue,
 } from './contracts'
@@ -21,6 +22,10 @@ export type InteractiveGraphViewProps = {
   selection?: GraphSelection
   /** Per-node validation issues (ERROR / WARN chrome on nodes + inspector). */
   validationByNodeId?: ReadonlyMap<string, readonly ValidationIssue[]>
+  /** Optional read-only execution summary chrome (idle/running/succeeded/failed). */
+  runtimeByNodeId?: ReadonlyMap<string, NodeRuntimeSummary>
+  /** Optional host-driven camera (e.g. follow a mock execution). */
+  viewport?: GraphViewport
   className?: string
   /** When true, renders a side inspector listing the current selection. */
   showInspector?: boolean
@@ -40,6 +45,8 @@ export function InteractiveGraphView({
   readonly = false,
   selection: controlledSelection,
   validationByNodeId,
+  runtimeByNodeId,
+  viewport,
   className,
   showInspector = true,
   onDocumentChange,
@@ -119,6 +126,8 @@ export function InteractiveGraphView({
           readonly={readonly}
           selection={selection}
           validationByNodeId={validationByNodeId}
+          runtimeByNodeId={runtimeByNodeId}
+          viewport={viewport}
           onSelectionChange={handleSelectionChange}
           onViewportChange={onViewportChange}
           onNodePositionsCommit={handlePositionsCommit}
@@ -146,6 +155,7 @@ export function InteractiveGraphView({
 
           {selectedNodes.map((node) => {
             const issues = validationByNodeId?.get(node.id) ?? []
+            const runtime = runtimeByNodeId?.get(node.id)
             return (
             <section key={node.id} className="tint-graph-view__inspector-card">
               <h3>{node.presentation?.label ?? node.kind}</h3>
@@ -160,6 +170,15 @@ export function InteractiveGraphView({
                   <dt>Kind</dt>
                   <dd>{node.kind}</dd>
                 </div>
+                {runtime ? (
+                  <div>
+                    <dt>Runtime</dt>
+                    <dd>
+                      {runtime.status}
+                      {runtime.detail ? ` — ${runtime.detail}` : ''}
+                    </dd>
+                  </div>
+                ) : null}
                 <div>
                   <dt>Position</dt>
                   <dd>
