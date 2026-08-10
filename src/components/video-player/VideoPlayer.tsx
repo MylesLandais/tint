@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState, type VideoHTMLAttributes } from '
 import { Maximize, Minimize, Pause, Play, Settings } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { cn } from '../../lib/utils'
+import { useFullscreen } from '../../lib/useFullscreen'
 import { Icon } from '../icon'
 import { SettingsPopout, type SettingsPopoutItem } from '../settings-popout'
 import { Slider, VolumeControl, formatTime } from '../media'
@@ -51,27 +52,13 @@ export function VideoPlayer({
   const [volumeOpen, setVolumeOpen] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(durationHint ?? 0)
-  const [isFullscreen, setIsFullscreen] = useState(false)
   const [failed, setFailed] = useState(false)
 
-  useEffect(() => {
-    const onFullscreenChange = () => {
-      setIsFullscreen(document.fullscreenElement === containerRef.current)
-    }
-    document.addEventListener('fullscreenchange', onFullscreenChange)
-    return () => document.removeEventListener('fullscreenchange', onFullscreenChange)
-  }, [])
-
-  const toggleFullscreen = () => {
-    if (document.fullscreenElement) {
-      void document.exitFullscreen()
-      return
-    }
-    // Fullscreening the container (not the raw <video>) keeps the custom
-    // control bar working — the browser's native fullscreen video UI would
-    // otherwise replace it.
-    void containerRef.current?.requestFullscreen()
-  }
+  // Fullscreening the container (not the raw <video>) keeps the custom control
+  // bar working — the browser's native fullscreen video UI would replace it.
+  // Where the platform refuses element fullscreen entirely, the hook falls back
+  // to an in-page theater mode that keeps the same chrome.
+  const { isFullscreen, theaterMode, toggle: toggleFullscreen } = useFullscreen(containerRef)
 
   const settingsItems = useMemo<SettingsPopoutItem[]>(
     () => playbackSpeeds.map((speed) => ({
@@ -169,9 +156,20 @@ export function VideoPlayer({
       ref={containerRef}
       data-tint-video-player=""
       data-size={size}
+      data-fullscreen={isFullscreen ? 'true' : undefined}
+      data-theater={theaterMode ? 'true' : undefined}
+      // Theater mode covers the page, so it is announced as one: the hook moves
+      // focus in, cycles Tab inside, and restores focus on the way out.
+      role={theaterMode ? 'dialog' : undefined}
+      aria-modal={theaterMode ? true : undefined}
+      aria-label={theaterMode ? title : undefined}
+      tabIndex={theaterMode ? -1 : undefined}
       className={cn(
         'relative mx-auto w-full rounded-lg bg-tint-chrome shadow-[0_0_20px_var(--tint-shadow-color)] backdrop-blur-sm',
         size === 'sm' ? 'max-w-xl' : size === 'md' ? 'max-w-3xl' : 'max-w-4xl',
+        // Letterbox bars, matching the <video> element's own backdrop. Chrome
+        // colour either side of a fullscreen video reads as a rendering fault.
+        isFullscreen && 'bg-black',
         shadow && 'shadow-[6px_6px_0_var(--tint-shadow-color)]',
         className,
       )}
@@ -196,7 +194,10 @@ export function VideoPlayer({
       */}
       <video
         ref={videoRef}
-        className="w-full cursor-pointer rounded-lg bg-black"
+        className={cn(
+          'w-full cursor-pointer bg-black',
+          isFullscreen ? 'h-full rounded-none object-contain' : 'rounded-lg',
+        )}
         src={src}
         poster={poster}
         {...videoProps}

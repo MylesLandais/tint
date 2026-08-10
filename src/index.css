@@ -269,6 +269,45 @@
   [data-terminal-viewport] .xterm-viewport {
     scrollbar-color: var(--tint-code-muted) var(--tint-code);
   }
+
+  /*
+   * The player keeps its `max-w-*`, radius and margin in fullscreen, so
+   * requesting it produced a postcard centred on a black screen. These override
+   * utilities, hence `!important` — they lose to Tailwind's layer otherwise.
+   *
+   * `:is()` is load-bearing, not tidiness. A selector list is not forgiving: one
+   * compound a browser cannot parse drops the whole rule, so listing
+   * `:-webkit-full-screen` beside `:fullscreen` meant Firefox — which knows
+   * neither that spelling nor a reason to keep reading — discarded the standard
+   * selector too, and the fix did nothing on the browser most likely to need it.
+   * `:is()` is forgiving, so unknown spellings inside it are skipped alone.
+   */
+  [data-tint-video-player]:is(:fullscreen, :-webkit-full-screen, :-moz-full-screen),
+  [data-tint-video-player][data-theater='true'] {
+    width: 100%;
+    max-width: none !important;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    /* The container is a motion.div; a leftover transform would make a fixed
+       theater mode resolve against itself rather than the viewport. */
+    transform: none !important;
+  }
+
+  [data-tint-video-player][data-theater='true'] {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+  }
+
+  [data-tint-video-player]:is(:fullscreen, :-webkit-full-screen, :-moz-full-screen) video,
+  [data-tint-video-player][data-theater='true'] video {
+    height: 100%;
+    max-height: 100dvh;
+    object-fit: contain;
+  }
 }
 
 @layer base {
