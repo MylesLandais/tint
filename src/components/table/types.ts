@@ -127,6 +127,7 @@ export type DataTableProps<TRow> = Omit<
   rows?: readonly TRow[]
   /** A `useDataTable` instance. Supplies rows in place of the `rows` prop. */
   table?: TableInstance<TRow>
+  /** Column definitions, in display order. Hiding is separate — see `hiddenColumns`. */
   columns: readonly TableColumn<TRow>[]
   /** How to identify a row. A key name, or a function for composite ids. */
   rowId: (keyof TRow & string) | ((row: TRow) => TableRowId)
@@ -135,6 +136,7 @@ export type DataTableProps<TRow> = Omit<
   label?: string
   /** Visible caption. Prefer this over `label` when the name should be seen. */
   caption?: ReactNode
+  /** Row height scale: `compact` 1.75rem, `comfortable` 2.5rem, `spacious` 3.25rem. */
   density?: TableDensity
   /** Shown in place of the body when `rows` is empty. */
   emptyState?: ReactNode
@@ -142,16 +144,22 @@ export type DataTableProps<TRow> = Omit<
   /** Column whose value labels the row for assistive tech. Renders as `<th scope="row">`. */
   rowHeaderColumn?: string
 
+  /** Controlled sort. Sorting the rows is the caller's job — see `deriveRows`. */
   sort?: TableSort | null
+  /** Receives the next sort as the header cycles asc -> desc -> none. */
   onSortChange?: (sort: TableSort | null) => void
 
-  /** Omit to disable selection entirely. */
+  /** Selected row ids. Omit — or omit `onSelectionChange` — to disable selection. */
   selection?: readonly TableRowId[]
+  /**
+   * Receives the full next selection plus which row changed. `rowId` is null
+   * when the header checkbox toggled every visible row at once.
+   */
   onSelectionChange?: (change: TableSelectionChange) => void
   /** Accessible label for a row's checkbox. Defaults to the row header value. */
   selectionLabel?: (row: TRow) => string
 
-  /** Omit to disable expansion. */
+  /** Expanded row ids. Expansion needs all three of these props to appear. */
   expanded?: readonly TableRowId[]
   onExpandedChange?: (expanded: readonly TableRowId[], rowId: TableRowId) => void
   /** Body of an expanded row. Returning null renders an empty-detail notice. */
@@ -161,12 +169,33 @@ export type DataTableProps<TRow> = Omit<
   hiddenColumns?: readonly string[]
   onHiddenColumnsChange?: (hidden: readonly string[]) => void
 
+  /**
+   * Enables drag and keyboard resizing, per axis, with optional minimums.
+   * Handles are focusable and respond to arrow keys (Shift for a coarse step).
+   */
   resizing?: TableResizeConfig
+  /**
+   * Controlled column widths, in pixels, keyed by column id. Omit to let the
+   * table hold them internally — `onColumnWidthsChange` still fires either way,
+   * so a host can persist them without taking ownership.
+   */
   columnWidths?: Readonly<Record<string, number>>
+  /** Controlled row heights, in pixels, keyed by row id. Same contract as above. */
   rowHeights?: Readonly<Record<TableRowId, number>>
+  /** Fires on every change during a drag, not only at the end. */
   onColumnWidthsChange?: (widths: Readonly<Record<string, number>>) => void
   onRowHeightsChange?: (heights: Readonly<Record<TableRowId, number>>) => void
+  /**
+   * Lower-level resize signal carrying the `start` / `move` / `end` phase —
+   * for hosts that want to persist only on `end`.
+   */
   onResize?: (event: TableResizeEvent) => void
+  /**
+   * Inline editing. The adapter's `update`, `create`, and `delete` are async and
+   * own persistence; the table only drives the cell UI and reports outcomes.
+   * A cell is editable only when `adapter.update` exists *and* the column opts
+   * in via `editable`. Double-click or press Enter on a cell to begin.
+   */
   editing?: TableEditConfig<TRow>
 
   /** Access to the scroll viewport. */

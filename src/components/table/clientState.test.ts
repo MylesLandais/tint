@@ -93,6 +93,8 @@ describe('toColumnFilters', () => {
     expect(columnFilters).toHaveLength(1)
     expect(columnFilters[0]?.id).toBe('name')
     expect(typeof columnFilters[0]?.value).toBe('function')
-    expect((columnFilters[0]?.value as (v: unknown) => boolean)('Alpha')).toBe(true)
+    // Non-null rather than `?.`: the length assertion above already guarantees
+    // the entry, and optional chaining here would call `undefined`.
+    expect((columnFilters[0]!.value as (v: unknown) => boolean)('Alpha')).toBe(true)
   })
 })

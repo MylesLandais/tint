@@ -32,8 +32,67 @@ const DEFAULT_PINNED_WIDTH = 96
 /** Gutter reserved at the left edge for the selection checkbox. */
 const SELECTION_GUTTER = 44
 
+/** Keyboard resize step, and the coarse step Shift selects. */
+const RESIZE_STEP = 8
+const RESIZE_STEP_COARSE = 32
+
 function columnAlign<TRow>(column: TableColumn<TRow>): TableAlign {
   return column.align ?? resolveFieldType(column.type).align
+}
+
+/**
+ * The drag affordance on a column edge or row bottom.
+ *
+ * It was previously three copies of a bare `<span role="separator" tabIndex={0}>`
+ * with no name and no key handling — a focus stop that did nothing, which is a
+ * worse outcome than not being focusable at all. Arrow keys now resize it, and
+ * it announces what it resizes and its current size.
+ */
+function ResizeHandle({
+  axis,
+  targetId,
+  label,
+  size,
+  minimum,
+  onPointerDown,
+  onResize,
+  className,
+}: {
+  axis: 'column' | 'row'
+  /** Feeds `data-column-resize-handle` / `data-row-resize-handle`. */
+  targetId: string
+  label: string
+  size: number
+  minimum: number
+  onPointerDown: (event: ReactPointerEvent<HTMLElement>) => void
+  onResize: (size: number) => void
+  className: string
+}) {
+  const horizontal = axis === 'column'
+  const grow = horizontal ? 'ArrowRight' : 'ArrowDown'
+  const shrink = horizontal ? 'ArrowLeft' : 'ArrowUp'
+
+  return (
+    <span
+      role="separator"
+      aria-orientation={horizontal ? 'vertical' : 'horizontal'}
+      aria-label={`Resize ${label}`}
+      aria-valuenow={Math.round(size)}
+      aria-valuemin={minimum}
+      tabIndex={0}
+      data-column-resize-handle={horizontal ? targetId : undefined}
+      data-row-resize-handle={horizontal ? undefined : targetId}
+      onPointerDown={onPointerDown}
+      onKeyDown={(event) => {
+        if (event.key !== grow && event.key !== shrink) return
+        event.preventDefault()
+        const step = event.shiftKey ? RESIZE_STEP_COARSE : RESIZE_STEP
+        const delta = event.key === grow ? step : -step
+        onResize(Math.max(minimum, size + delta))
+      }}
+      className={className}
+    />
+  )
 }
 
 function headerLabel<TRow>(column: TableColumn<TRow>): string {
@@ -126,21 +185,45 @@ export function DataTable<TRow>({
   const selectable = Boolean(selection && onSelectionChange)
   const expandable = Boolean(expanded && onExpandedChange && renderExpanded)
   const gutter = selectable ? SELECTION_GUTTER : 0
+  // Reads `resolvedColumnWidths` directly rather than through `widthFor`, whose
+  // identity changes every render and would defeat the memo.
   const offsets = useMemo(
-    () => pinnedOffsets(shown.map((column) => ({ ...column, width: widthFor(column) })), gutter),
+    () =>
+      pinnedOffsets(
+        shown.map((column) => ({
+          ...column,
+          width: resolvedColumnWidths[column.id] ?? column.width,
+        })),
+        gutter,
+      ),
     [shown, gutter, resolvedColumnWidths],
   )
 
+  // Functional updates, because a drag's `pointermove` closure is created once at
+  // `pointerdown` and would otherwise keep folding new sizes into the width map
+  // as it looked at the moment the drag started.
   const updateColumnWidth = (id: string, size: number) => {
-    const next = { ...resolvedColumnWidths, [id]: size }
-    if (columnWidths === undefined) setLocalColumnWidths(next)
-    onColumnWidthsChange?.(next)
+    if (columnWidths === undefined) {
+      setLocalColumnWidths((current) => {
+        const next = { ...current, [id]: size }
+        onColumnWidthsChange?.(next)
+        return next
+      })
+      return
+    }
+    onColumnWidthsChange?.({ ...columnWidths, [id]: size })
   }
 
   const updateRowHeight = (id: string, size: number) => {
-    const next = { ...resolvedRowHeights, [id]: size }
-    if (rowHeights === undefined) setLocalRowHeights(next)
-    onRowHeightsChange?.(next)
+    if (rowHeights === undefined) {
+      setLocalRowHeights((current) => {
+        const next = { ...current, [id]: size }
+        onRowHeightsChange?.(next)
+        return next
+      })
+      return
+    }
+    onRowHeightsChange?.({ ...rowHeights, [id]: size })
   }
 
   const resize = (event: ReactPointerEvent<HTMLElement>, axis: 'column' | 'row', id: string, initial: number, minimum: number) => {
@@ -307,7 +390,13 @@ export function DataTable<TRow>({
 
         <thead>
           <tr className="bg-tint-surface text-left [&>th]:border-b [&>th]:border-tint-border">
-            {expandable ? <th scope="col" className="w-9 px-1" /> : null}
+            {/* Named for screen readers even though it shows nothing: an unnamed
+                column header leaves the expand buttons under it unattributed. */}
+            {expandable ? (
+              <th scope="col" className="w-9 px-1">
+                <span className="sr-only">Expand row</span>
+              </th>
+            ) : null}
 
             {selectable ? (
               <th scope="col" className="sticky left-0 z-20 w-11 bg-tint-surface px-2">
@@ -396,14 +485,16 @@ export function DataTable<TRow>({
                     (column.header ?? column.id)
                   )}
                   {resizing?.columns ? (
-                    <span
-                      role="separator"
-                      aria-orientation="vertical"
-                      tabIndex={0}
-                      data-column-resize-handle={column.id}
+                    <ResizeHandle
+                      axis="column"
+                      targetId={column.id}
+                      label={headerLabel(column)}
+                      size={widthFor(column) ?? 120}
+                      minimum={resizing.minColumnWidth ?? 75}
                       onPointerDown={(event) =>
                         resize(event, 'column', column.id, widthFor(column) ?? 120, resizing.minColumnWidth ?? 75)
                       }
+                      onResize={(size) => updateColumnWidth(column.id, size)}
                       className="absolute inset-y-0 -right-1 z-30 w-2 cursor-col-resize opacity-0 transition-opacity hover:opacity-100 focus-visible:opacity-100"
                     />
                   ) : null}
@@ -432,6 +523,7 @@ export function DataTable<TRow>({
                 rowHeight={resolvedRowHeights[id]}
                 resizing={resizing}
                 onResize={resize}
+                onRowHeightChange={updateRowHeight}
                 editing={editing}
                 onDelete={editing?.adapter.delete ? deleteRow : undefined}
                 headerColumn={headerColumn}
@@ -470,6 +562,7 @@ function FragmentRow<TRow>({
   rowHeight,
   resizing,
   onResize,
+  onRowHeightChange,
   editing,
   onDelete,
   headerColumn,
@@ -491,6 +584,7 @@ function FragmentRow<TRow>({
   rowHeight?: number
   resizing?: DataTableProps<TRow>['resizing']
   onResize: (event: ReactPointerEvent<HTMLElement>, axis: 'column' | 'row', id: string, initial: number, minimum: number) => void
+  onRowHeightChange: (id: TableRowId, size: number) => void
   editing?: DataTableProps<TRow>['editing']
   onDelete?: (rowId: TableRowId) => Promise<void>
   headerColumn?: string
@@ -594,14 +688,16 @@ function FragmentRow<TRow>({
                 showDelete={Boolean(onDelete && columnIndex === columns.length - 1)}
               />
               {resizing?.rows && columnIndex === columns.length - 1 ? (
-                <span
-                  role="separator"
-                  aria-orientation="horizontal"
-                  tabIndex={0}
-                  data-row-resize-handle={id}
+                <ResizeHandle
+                  axis="row"
+                  targetId={id}
+                  label={selectLabel}
+                  size={rowHeight ?? 40}
+                  minimum={resizing.minRowHeight ?? 32}
                   onPointerDown={(event) =>
                     onResize(event, 'row', id, rowHeight ?? 40, resizing.minRowHeight ?? 32)
                   }
+                  onResize={(size) => onRowHeightChange(id, size)}
                   className="absolute inset-x-0 -bottom-1 z-30 h-2 cursor-row-resize opacity-0 transition-opacity hover:opacity-100 focus-visible:opacity-100"
                 />
               ) : null}
@@ -623,14 +719,16 @@ function FragmentRow<TRow>({
                 showDelete={Boolean(onDelete && columnIndex === columns.length - 1)}
               />
               {resizing?.rows && columnIndex === columns.length - 1 ? (
-                <span
-                  role="separator"
-                  aria-orientation="horizontal"
-                  tabIndex={0}
-                  data-row-resize-handle={id}
+                <ResizeHandle
+                  axis="row"
+                  targetId={id}
+                  label={selectLabel}
+                  size={rowHeight ?? 40}
+                  minimum={resizing.minRowHeight ?? 32}
                   onPointerDown={(event) =>
                     onResize(event, 'row', id, rowHeight ?? 40, resizing.minRowHeight ?? 32)
                   }
+                  onResize={(size) => onRowHeightChange(id, size)}
                   className="absolute inset-x-0 -bottom-1 z-30 h-2 cursor-row-resize opacity-0 transition-opacity hover:opacity-100 focus-visible:opacity-100"
                 />
               ) : null}
@@ -714,7 +812,6 @@ function EditableCell<TRow>({
         {content}
         <button
           type="button"
-          disabled={!onDelete}
           onClick={() => void onDelete?.(rowId)}
           className="rounded px-1.5 py-0.5 text-[0.6875rem] text-tint-danger-ink hover:bg-tint-danger/10 focus-visible:outline-2 focus-visible:outline-tint-danger disabled:opacity-50"
         >
@@ -726,6 +823,9 @@ function EditableCell<TRow>({
 
   return active ? (
     <input
+      // The reader just asked to edit this cell; not focusing it would make them
+      // click twice. This is the narrow case the rule exists to allow.
+      // oxlint-disable-next-line jsx-a11y/no-autofocus
       autoFocus
       value={draft}
       disabled={pending}
