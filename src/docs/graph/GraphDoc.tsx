@@ -48,9 +48,10 @@ export function GraphDoc() {
   const [readonly, setReadonly] = useState(false)
 
   const promptNode = useMemo(() => findComfyPromptNode(document), [document])
-  const promptText =
+  const committedPrompt =
     (promptNode?.configuration as { promptText?: string } | undefined)?.promptText ??
     ''
+  const [promptDraft, setPromptDraft] = useState(committedPrompt)
 
   const allIssues = useMemo(
     () => flattenValidationIssues(validationByNodeId),
@@ -78,19 +79,25 @@ export function GraphDoc() {
       setDocument(loaded.document)
       setValidationByNodeId(loaded.validationByNodeId)
       setViewport(undefined)
+      const prompt = findComfyPromptNode(loaded.document)
+      setPromptDraft(
+        (prompt?.configuration as { promptText?: string } | undefined)?.promptText ?? '',
+      )
       return
     }
     setDocument(demoGraphDocument)
     setValidationByNodeId(new Map())
     setViewport(demoGraphDocument.viewport)
+    setPromptDraft('')
   }
 
-  const onPromptChange = (next: string) => {
-    setDocument((current) => updateComfyPrompt(current, next))
+  const applyPrompt = () => {
+    if (!promptNode || promptDraft === committedPrompt) return
+    setDocument((current) => updateComfyPrompt(current, promptDraft))
     setLastCommand({
       type: 'node.configure',
-      nodeId: promptNode?.id ?? 'comfy-prompt',
-      configuration: { promptText: next },
+      nodeId: promptNode.id,
+      configuration: { promptText: promptDraft },
     })
   }
 
@@ -143,19 +150,30 @@ export function GraphDoc() {
 
           {mode === 'comfy' ? (
             <div className="mb-3 grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,20rem)]">
-              <label className="grid gap-2 rounded-xl border border-tint-border bg-tint-panel p-3">
-                <span className="text-xs font-semibold tracking-[0.08em] text-tint-muted uppercase">
-                  Prompt (PrimitiveStringMultiline)
-                </span>
+              <div className="grid gap-2 rounded-xl border border-tint-border bg-tint-panel p-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-xs font-semibold tracking-[0.08em] text-tint-muted uppercase">
+                    Prompt (PrimitiveStringMultiline)
+                  </span>
+                  <button
+                    type="button"
+                    data-testid="comfy-prompt-apply"
+                    disabled={readonly || !promptNode || promptDraft === committedPrompt}
+                    onClick={applyPrompt}
+                    className="ml-auto rounded-md border border-tint-border bg-tint-surface px-3 py-1 text-xs font-semibold text-tint-ink disabled:opacity-50"
+                  >
+                    Apply prompt
+                  </button>
+                </div>
                 <textarea
                   data-testid="comfy-prompt-editor"
-                  value={promptText}
+                  value={promptDraft}
                   disabled={readonly || !promptNode}
-                  onChange={(event) => onPromptChange(event.target.value)}
+                  onChange={(event) => setPromptDraft(event.target.value)}
                   rows={5}
                   className="min-h-28 resize-y rounded-lg border border-tint-border bg-tint-surface px-3 py-2 font-mono text-sm text-tint-ink outline-none focus:border-tint-accent focus:ring-3 focus:ring-tint-accent-soft disabled:opacity-60"
                 />
-              </label>
+              </div>
 
               <aside
                 data-testid="comfy-diagnostics"
