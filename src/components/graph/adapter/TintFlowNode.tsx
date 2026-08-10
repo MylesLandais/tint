@@ -69,7 +69,7 @@ export function TintFlowNode({
         <article className="tint-graph-node tint-graph-node--unknown">
           <header className="tint-graph-node__header">
             <span className="tint-graph-node__kind">{data.kind}</span>
-            <span className="tint-graph-node__status" data-status="invalid">
+            <span className="tint-graph-node__status" data-status="error">
               unknown
             </span>
           </header>

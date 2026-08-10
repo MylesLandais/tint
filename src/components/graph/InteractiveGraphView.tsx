@@ -9,8 +9,8 @@ import type {
   GraphViewport,
   NodeRegistry,
   NodeRuntimeSummary,
+  NodeValidationMap,
   Point,
-  ValidationIssue,
 } from './contracts'
 import { applyCommand, emptySelection } from './contracts'
 import { createDefaultNodeRegistry } from './nodes/defaultRegistry'
@@ -25,20 +25,34 @@ export type InteractiveGraphViewProps = {
   registry?: NodeRegistry
   readonly?: boolean
   selection?: GraphSelection
-  /** Per-node validation issues (ERROR / WARN chrome on nodes + inspector). */
-  validationByNodeId?: ReadonlyMap<string, readonly ValidationIssue[]>
-  /** Optional read-only execution summary chrome (idle/running/succeeded/failed). */
+  /** Per-node validation. Drives the ERROR / WARN chrome on nodes and inspector. */
+  validationByNodeId?: NodeValidationMap
+  /** Read-only execution state, if something is running the graph. */
   runtimeByNodeId?: ReadonlyMap<string, NodeRuntimeSummary>
-  /** Optional host-driven camera (e.g. follow a mock execution). */
+  /**
+   * Move the camera. Each distinct value is applied once, so this drives the
+   * view without owning it: the user is free to pan away afterwards, and
+   * re-sending the same value moves them back.
+   *
+   * Distinct from `document.viewport`, which is the graph's *authored* camera
+   * and is applied only when the graph identity changes.
+   */
   viewport?: GraphViewport
   className?: string
   /** When true, renders a side inspector listing the current selection. */
   showInspector?: boolean
   /** Show the canvas fullscreen control. Defaults to true. */
   showFullscreenControl?: boolean
+  /**
+   * The document a command produced. This component owns no document state, so
+   * a host that wants edits to stick must return the new document through
+   * `document`. Hosts running their own store can ignore this and reduce
+   * `onCommand` with `applyCommand` instead — it is the same function.
+   */
   onDocumentChange?: (document: GraphDocument) => void
   onSelectionChange?: (selection: GraphSelection) => void
   onViewportChange?: (viewport: GraphViewport) => void
+  /** Every user intent, before it is applied. Fires for `selection.replace` too. */
   onCommand?: (command: GraphCommand) => void
 }
 
@@ -296,7 +310,7 @@ export function InteractiveGraphView({
                 <div>
                   <dt>Configuration</dt>
                   <dd>
-                    <pre>{JSON.stringify(node.configuration, null, 2)}</pre>
+                    <pre>{describeConfiguration(node.configuration)}</pre>
                   </dd>
                 </div>
               </dl>
@@ -336,5 +350,27 @@ export function InteractiveGraphView({
         </aside>
       ) : null}
     </div>
+  )
+}
+
+/**
+ * The node's configuration, with anything unreasonable to print elided.
+ *
+ * A raw `JSON.stringify` put whatever a node held into the DOM as text. That was
+ * fine until reference images arrived carrying base64 `data:` URLs, at which
+ * point selecting a node with a 4 MB image rendered a multi-megabyte text node.
+ * Images no longer embed their bytes, but the inspector shows host-supplied
+ * configuration of any shape, so it clamps rather than trusting it.
+ */
+const MAX_INSPECTED_VALUE = 120
+
+function describeConfiguration(configuration: unknown): string {
+  return JSON.stringify(
+    configuration,
+    (_key, value: unknown) =>
+      typeof value === 'string' && value.length > MAX_INSPECTED_VALUE
+        ? `${value.slice(0, MAX_INSPECTED_VALUE)}… (${value.length} chars)`
+        : value,
+    2,
   )
 }

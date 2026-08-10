@@ -55,7 +55,7 @@ export type GraphNode<TConfig = unknown> = {
   parentId?: string
   presentation?: NodePresentation
   configuration: TConfig
-  ports: GraphPort[]
+  ports: readonly GraphPort[]
   capabilities?: NodeCapabilities
 }
 
@@ -70,17 +70,26 @@ export type GraphEdge = {
 export type GraphGroup = {
   id: string
   label?: string
-  childIds: string[]
+  childIds: readonly string[]
   bounds?: Rect
 }
 
+/**
+ * The whole graph, as the host owns it.
+ *
+ * The collections are `readonly` because the document is replaced, never
+ * mutated: `revision` is what tells a host something changed, and an in-place
+ * `nodes.push` leaves it stale. `derivePorts` and validation already returned
+ * `readonly` arrays while these did not, so the discipline stopped exactly where
+ * it mattered most.
+ */
 export type GraphDocument = {
   schemaVersion: string
   id: GraphId
   revision: RevisionToken
-  nodes: GraphNode[]
-  edges: GraphEdge[]
-  groups: GraphGroup[]
+  nodes: readonly GraphNode[]
+  edges: readonly GraphEdge[]
+  groups: readonly GraphGroup[]
   viewport?: GraphViewport
   metadata: Record<string, unknown>
 }

@@ -20,16 +20,12 @@ export type {
 export { emptySelection } from './document'
 
 export type {
-  CommandCommitResult,
-  CommandValidationResult,
   GraphCommand,
-  GraphCommandBus,
-  GraphCommandEnvelope,
 } from './commands'
 
 export type {
   GraphValidationContext,
-  NodeCreationContext,
+  NodeContext,
   NodeDefinition,
   NodeDefinitionFilter,
   NodeInspectorProps,
@@ -37,7 +33,6 @@ export type {
   NodeRuntimeSummary,
   NodeValidationMap,
   NodeViewProps,
-  PortDerivationContext,
   ValidationIssue,
 } from './registry'
 export { createNodeRegistry, flattenValidationIssues } from './registry'

@@ -1,11 +1,12 @@
 import type { NodeViewProps } from '../contracts'
+import { nodeStatusLabel, resolveNodeStatus } from './nodeStatus'
 
 export type ScriptNodeConfiguration = {
   language: 'lua' | 'python' | 'typescript'
   sourceRef: string
   entrypoint?: string
   runtimeProfileId?: string
-  permissions: string[]
+  permissions: readonly string[]
 }
 
 export function ScriptNodeView({
@@ -15,10 +16,7 @@ export function ScriptNodeView({
   runtime,
 }: NodeViewProps<ScriptNodeConfiguration>) {
   const label = node.presentation?.label ?? 'Script'
-  const status =
-    validation.some((issue) => issue.severity === 'error')
-      ? 'invalid'
-      : (runtime?.status ?? 'ready')
+  const status = resolveNodeStatus(validation, runtime)
   const { language, sourceRef, entrypoint, runtimeProfileId, permissions } =
     node.configuration
 
@@ -33,7 +31,7 @@ export function ScriptNodeView({
       <header className="tint-graph-node__header">
         <span className="tint-graph-node__kind">script · {language}</span>
         <span className="tint-graph-node__status" data-status={status}>
-          {status}
+          {nodeStatusLabel(status)}
         </span>
       </header>
       <h3 className="tint-graph-node__title">{label}</h3>

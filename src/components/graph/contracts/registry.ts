@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react'
+import type { GraphCommand } from './commands'
 import type { GraphNode, GraphPort } from './document'
 
 export type ValidationIssue = {
@@ -28,16 +29,22 @@ export function flattenValidationIssues(
   return [...validationByNodeId.values()].flat()
 }
 
-export type NodeCreationContext = {
+/**
+ * What a definition knows about the graph it is working in.
+ *
+ * One type, not three: `NodeCreationContext` and `PortDerivationContext` were
+ * separate declarations of the identical `{ graphId: string }`, and
+ * `GraphValidationContext` was that plus `nodes` — three names for one idea, of
+ * which only the third was reachable from the barrel, so a consumer writing a
+ * `NodeDefinition` could not name the argument its own `validate` receives.
+ */
+export type NodeContext = {
   graphId: string
+  /** Present where the whole graph is in scope, as it is for validation. */
+  nodes?: readonly GraphNode[]
 }
 
-export type PortDerivationContext = {
-  graphId: string
-}
-
-export type GraphValidationContext = {
-  graphId: string
+export type GraphValidationContext = NodeContext & {
   nodes: readonly GraphNode[]
 }
 
@@ -48,14 +55,14 @@ export type NodeViewProps<TConfiguration = unknown> = {
   readonly: boolean
   validation: readonly ValidationIssue[]
   runtime?: NodeRuntimeSummary
-  dispatch: (command: import('./commands').GraphCommand) => void
+  dispatch: (command: GraphCommand) => void
 }
 
 export type NodeInspectorProps<TConfiguration = unknown> = {
   node: GraphNode<TConfiguration>
   readonly: boolean
   validation: readonly ValidationIssue[]
-  dispatch: (command: import('./commands').GraphCommand) => void
+  dispatch: (command: GraphCommand) => void
 }
 
 export type NodeDefinition<TConfiguration = unknown> = {
@@ -63,10 +70,10 @@ export type NodeDefinition<TConfiguration = unknown> = {
   version: string
   displayName: string
   category: string
-  createDefault: (context: NodeCreationContext) => TConfiguration
+  createDefault: (context: NodeContext) => TConfiguration
   derivePorts: (
     configuration: TConfiguration,
-    context: PortDerivationContext,
+    context: NodeContext,
   ) => readonly GraphPort[]
   validate: (
     node: GraphNode<TConfiguration>,

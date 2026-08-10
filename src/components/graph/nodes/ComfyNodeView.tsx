@@ -9,6 +9,7 @@ import {
 } from 'react'
 import type { NodeViewProps } from '../contracts'
 import { useGraphAdapter } from '../adapter/GraphAdapterContext'
+import { nodeStatusLabel, resolveNodeStatus } from './nodeStatus'
 import { patchComfyConfiguration, readIntWidget } from '../comfy/editableFields'
 import type {
   ComfyEditableField,
@@ -25,41 +26,6 @@ function roleKind(fields: readonly ComfyEditableField[] | undefined): string {
   return 'comfy'
 }
 
-function resolveComfyStatus(
-  validation: NodeViewProps['validation'],
-  runtime: NodeViewProps['runtime'],
-): string {
-  const hasError = validation.some((issue) => issue.severity === 'error')
-  const hasWarn = validation.some((issue) => issue.severity === 'warning')
-
-  if (runtime?.status === 'running') return 'running'
-  if (runtime?.status === 'failed') return 'failed'
-  if (runtime?.status === 'succeeded') return 'succeeded'
-  if (hasError) return 'error'
-  if (hasWarn) return 'warn'
-  if (runtime?.status === 'idle') return 'idle'
-  return 'ready'
-}
-
-function statusLabel(status: string): string {
-  switch (status) {
-    case 'error':
-      return 'ERROR'
-    case 'warn':
-      return 'WARN'
-    case 'running':
-      return 'RUN'
-    case 'succeeded':
-      return 'DONE'
-    case 'failed':
-      return 'FAIL'
-    case 'idle':
-      return 'queue'
-    default:
-      return 'ready'
-  }
-}
-
 export function ComfyNodeView({
   node,
   selected,
@@ -73,7 +39,7 @@ export function ComfyNodeView({
   const editable = fields.length > 0 && !readonly
   const { poppedNodeIds, togglePopped } = useGraphAdapter()
   const popped = poppedNodeIds.has(node.id)
-  const status = resolveComfyStatus(validation, runtime)
+  const status = resolveNodeStatus(validation, runtime)
 
   const commit = (patch: {
     widgetPatches?: Record<number, unknown>
@@ -107,7 +73,7 @@ export function ComfyNodeView({
       <header className="tint-graph-node__header">
         <span className="tint-graph-node__kind">{roleKind(fields)}</span>
         <span className="tint-graph-node__status" data-status={status}>
-          {statusLabel(status)}
+          {nodeStatusLabel(status)}
         </span>
       </header>
       {runtime?.detail && (status === 'running' || status === 'failed') ? (

@@ -211,13 +211,11 @@
   color: var(--tint-success-ink);
 }
 
-.tint-graph-node__status[data-status='invalid'],
 .tint-graph-node__status[data-status='failed'],
 .tint-graph-node__status[data-status='error'] {
   color: var(--tint-danger-ink);
 }
 
-.tint-graph-node__status[data-status='warn'],
 .tint-graph-node__status[data-status='warning'] {
   color: var(--tint-warning-ink);
 }
@@ -246,7 +244,7 @@
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--tint-danger) 40%, transparent);
 }
 
-.tint-graph-node--comfy[data-status='warn'] {
+.tint-graph-node--comfy[data-status='warning'] {
   border-color: var(--tint-warning);
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--tint-warning) 35%, transparent);
 }

@@ -1,4 +1,5 @@
 import type { NodeViewProps } from '../contracts'
+import { nodeStatusLabel, resolveNodeStatus } from './nodeStatus'
 
 export function GenericNodeView({
   node,
@@ -7,10 +8,7 @@ export function GenericNodeView({
   runtime,
 }: NodeViewProps) {
   const label = node.presentation?.label ?? node.kind
-  const status =
-    validation.some((issue) => issue.severity === 'error')
-      ? 'invalid'
-      : (runtime?.status ?? 'ready')
+  const status = resolveNodeStatus(validation, runtime)
 
   return (
     <article
@@ -23,7 +21,7 @@ export function GenericNodeView({
       <header className="tint-graph-node__header">
         <span className="tint-graph-node__kind">{node.kind}</span>
         <span className="tint-graph-node__status" data-status={status}>
-          {status}
+          {nodeStatusLabel(status)}
         </span>
       </header>
       <h3 className="tint-graph-node__title">{label}</h3>

@@ -23,16 +23,13 @@ export function deriveEditableFields(node: ComfyNode): ComfyEditableField[] {
 
   if (classType === 'PrimitiveInt') {
     const key = titleOf(node) || 'value'
-    const normalized = key.toLowerCase()
-    fields.push({
-      role: 'int',
-      key,
-      widgetIndex: 0,
-      label: key,
-      min: normalized.includes('frame') || normalized.includes('duration') ? 1 : 16,
-      max: normalized.includes('frame') ? 120 : normalized.includes('duration') ? 60 : 4096,
-      step: normalized.includes('width') || normalized.includes('height') ? 8 : 1,
-    })
+    /*
+     * A ComfyUI `PrimitiveInt` carries no range, so the bounds are guessed from
+     * the node's title. This is a heuristic tuned to English titles, and it is
+     * only ever a nicety: the field still accepts what the workflow already
+     * contains, and a wrong guess widens or narrows the spinner, nothing more.
+     */
+    fields.push({ role: 'int', key, widgetIndex: 0, label: key, ...intRange(key) })
   }
 
   if (classType === 'EmptyLTXVLatentVideo' || classType === 'EmptyLatentImage') {
@@ -48,7 +45,7 @@ export function deriveEditableFields(node: ComfyNode): ComfyEditableField[] {
   if (classType === 'EmptyImage' || classType === 'LoadImage') {
     fields.push({
       role: 'image',
-      label: classType === 'LoadImage' ? 'Reference image' : 'Reference image',
+      label: 'Reference image',
       accept: 'image/*',
       widthIndex: classType === 'EmptyImage' ? 0 : undefined,
       heightIndex: classType === 'EmptyImage' ? 1 : undefined,
@@ -100,4 +97,15 @@ export function patchComfyConfiguration(
 export function readIntWidget(widgets: unknown[], index: number, fallback = 0): number {
   const value = widgets[index]
   return typeof value === 'number' && Number.isFinite(value) ? value : fallback
+}
+
+/** Best-effort bounds for an untyped integer widget. See the call site. */
+function intRange(title: string): { min: number; max: number; step: number } {
+  const normalized = title.toLowerCase()
+  const has = (word: string) => normalized.includes(word)
+
+  if (has('frame')) return { min: 1, max: 120, step: 1 }
+  if (has('duration')) return { min: 1, max: 60, step: 1 }
+  if (has('width') || has('height')) return { min: 16, max: 4096, step: 8 }
+  return { min: 16, max: 4096, step: 1 }
 }
