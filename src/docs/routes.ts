@@ -85,6 +85,16 @@ const ROUTE_DATA = [
     sections: USAGE_AND_API,
   },
   {
+    path: 'components/graph',
+    label: 'Graph',
+    blurb: 'Interactive node canvas over a vendored xyflow engine, with a host-owned graph document.',
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      { id: 'usage', label: 'Usage' },
+      { id: 'api', label: 'API' },
+    ],
+  },
+  {
     path: 'components/collab',
     label: 'Collab',
     blurb: 'CRDT text sync over a vendored Yjs, with presence awareness and a pluggable transport.',

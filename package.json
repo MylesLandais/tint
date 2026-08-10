@@ -24,6 +24,7 @@
     "./chat": "./src/components/chat/index.ts",
     "./table": "./src/components/table/index.ts",
     "./collab": "./src/components/collab/index.ts",
+    "./graph": "./src/components/graph/index.ts",
     "./theme": "./src/components/theme/index.ts",
     "./icon": "./src/components/icon/index.ts",
     "./dice": "./src/components/dice/index.ts",

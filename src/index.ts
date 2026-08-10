@@ -127,3 +127,30 @@ export {
   visibleColumns,
 } from './components/table'
 export type * from './components/table'
+
+export {
+  InteractiveGraphView,
+  createDefaultNodeRegistry,
+  createNodeRegistry,
+  demoGraphDocument,
+  emptySelection,
+  GenericNodeView,
+  ScriptNodeView,
+  defaultNodeDefinitions,
+} from './components/graph'
+export type {
+  GraphCommand,
+  GraphCommandBus,
+  GraphCommandEnvelope,
+  GraphDocument,
+  GraphEdge,
+  GraphNode,
+  GraphPort,
+  GraphSelection,
+  GraphViewport,
+  InteractiveGraphViewProps,
+  NodeDefinition,
+  NodeRegistry,
+  NodeViewProps,
+  ScriptNodeConfiguration,
+} from './components/graph'

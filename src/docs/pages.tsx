@@ -7,6 +7,7 @@ import { MediaPlayerDoc } from './MediaPlayerDoc'
 import { TableDoc } from './table/TableDoc'
 import { ThemeDoc } from './ThemeDoc'
 import { AudioInputDoc } from './AudioInputDoc'
+import { GraphDoc } from './graph/GraphDoc'
 
 /**
  * Path -> page component, kept apart from `routes.ts` so that the route data
@@ -35,6 +36,7 @@ export const DOC_PAGES = {
   'components/table': TableDoc,
   'components/editor': EditorDoc,
   'components/terminal': TerminalDoc,
+  'components/graph': GraphDoc,
   'components/collab': CollabDoc,
   'components/auth': AuthDoc,
   'components/icon': IconsDoc,
