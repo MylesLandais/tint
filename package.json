@@ -29,6 +29,7 @@
     "./icon": "./src/components/icon/index.ts",
     "./dice": "./src/components/dice/index.ts",
     "./panel": "./src/components/panel/index.ts",
+    "./socket": "./src/components/socket/index.ts",
     "./editor": "./src/components/editor/index.ts",
     "./terminal": "./src/components/terminal/index.ts",
     "./auth-client": "./src/auth/client/index.ts",
