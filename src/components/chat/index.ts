@@ -10,6 +10,7 @@ export {
   ChatApproval,
   ChatArtifact,
   ChatAudio,
+  ChatBuiltInPart,
   ChatCodeBlock,
   ChatError,
   ChatFile,
@@ -22,6 +23,8 @@ export {
   ChatTool,
 } from './ChatParts'
 export type { ChatApprovalProps, ChatErrorProps } from './ChatParts'
+export { ChatPreference } from './ChatPreference'
+export type { ChatPreferenceProps } from './ChatPreference'
 export {
   ChatComposerAttachments,
   ChatComposerFooter,

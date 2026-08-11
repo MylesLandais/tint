@@ -1,13 +1,23 @@
 import type {
   ChatActor,
+  ChatCustomPart,
   ChatMessageData,
+  ChatPreferenceData,
 } from '../../../components/chat'
+
+export type PreferencePart = ChatCustomPart & {
+  kind: 'preference'
+  data: ChatPreferenceData
+}
+
+export type ChatDemoMessage = ChatMessageData<PreferencePart>
 
 export type ChatDemoScenarioId =
   | 'research'
   | 'streaming'
   | 'error'
   | 'attachment'
+  | 'preference'
 
 export type ChatDemoScenario = {
   id: ChatDemoScenarioId
@@ -54,9 +64,16 @@ export const chatDemoScenarios: readonly ChatDemoScenario[] = [
     description: 'Local file progress followed by a mocked analysis result.',
     prompt: 'Review this attachment and call out the important details.',
   },
+  {
+    id: 'preference',
+    label: 'Response preference',
+    description:
+      'Two candidate answers side by side — a layout shell over ordinary built-in parts.',
+    prompt: 'Show me two ways to debounce a search input.',
+  },
 ] as const
 
-export const initialDemoMessages: readonly ChatMessageData[] = [
+export const initialDemoMessages: readonly ChatDemoMessage[] = [
   {
     id: 'demo-welcome',
     actor: demoAssistant,
@@ -68,13 +85,13 @@ export const initialDemoMessages: readonly ChatMessageData[] = [
         type: 'text',
         format: 'markdown',
         text:
-          'This is a **client-only Tint demo**. Pick a scenario or send the suggested prompt to exercise streaming, tools, approvals, attachments, errors, and transcript behavior.',
+          'This is a **client-only Tint demo**. Pick a scenario or send the suggested prompt to exercise streaming, tools, approvals, attachments, preference splits, errors, and transcript behavior.',
       },
     ],
   },
 ]
 
-export const earlierDemoMessages: readonly ChatMessageData[] = [
+export const earlierDemoMessages: readonly ChatDemoMessage[] = [
   {
     id: 'demo-earlier-user',
     actor: demoHuman,

@@ -2,8 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import type {
   ChatAttachmentData,
   ChatComposerState,
+  ChatId,
   ChatMessageActionPayload,
-  ChatMessageData,
   ChatMessagePart,
   ChatSubmitPayload,
   ChatToolApprovalPayload,
@@ -14,25 +14,29 @@ import {
   demoHuman,
   earlierDemoMessages,
   initialDemoMessages,
+  type ChatDemoMessage,
   type ChatDemoScenarioId,
+  type PreferencePart,
 } from './scenarios'
 
 const STREAM_DELAY = 84
 const DEMO_BASE_TIME = Date.parse('2026-08-02T15:01:00Z')
 
+type DemoPart = ChatMessagePart<PreferencePart>
+
 function replaceMessage(
-  messages: readonly ChatMessageData[],
+  messages: readonly ChatDemoMessage[],
   id: string,
-  update: (message: ChatMessageData) => ChatMessageData,
+  update: (message: ChatDemoMessage) => ChatDemoMessage,
 ) {
   return messages.map((message) => (message.id === id ? update(message) : message))
 }
 
 function replacePart(
-  message: ChatMessageData,
+  message: ChatDemoMessage,
   partId: string,
-  update: (part: ChatMessagePart) => ChatMessagePart,
-): ChatMessageData {
+  update: (part: DemoPart) => DemoPart,
+): ChatDemoMessage {
   return {
     ...message,
     parts: message.parts.map((part) => (part.id === partId ? update(part) : part)),
@@ -40,10 +44,10 @@ function replacePart(
 }
 
 function appendText(
-  message: ChatMessageData,
+  message: ChatDemoMessage,
   partId: string,
   chunk: string,
-): ChatMessageData {
+): ChatDemoMessage {
   return replacePart(message, partId, (part) =>
     part.type === 'text'
       ? {
@@ -59,8 +63,8 @@ function userMessage(
   id: string,
   payload: ChatSubmitPayload,
   createdAt: number,
-): ChatMessageData {
-  const parts: ChatMessagePart[] = []
+): ChatDemoMessage {
+  const parts: DemoPart[] = []
   if (payload.text) {
     parts.push({
       id: `${id}-text`,
@@ -93,7 +97,7 @@ function pendingAssistantMessage(
   id: string,
   title: string,
   createdAt: number,
-): ChatMessageData {
+): ChatDemoMessage {
   return {
     id,
     actor: demoAssistant,
@@ -115,7 +119,7 @@ export function useChatDemo() {
   const [scenarioId, setScenarioIdState] =
     useState<ChatDemoScenarioId>('research')
   const [messages, setMessages] =
-    useState<readonly ChatMessageData[]>(initialDemoMessages)
+    useState<readonly ChatDemoMessage[]>(initialDemoMessages)
   const [draft, setDraft] = useState(
     chatDemoScenarios.find((scenario) => scenario.id === 'research')?.prompt ?? '',
   )
@@ -147,7 +151,7 @@ export function useChatDemo() {
   useEffect(() => clearTimers, [clearTimers])
 
   const updateMessage = useCallback(
-    (messageId: string, update: (message: ChatMessageData) => ChatMessageData) => {
+    (messageId: string, update: (message: ChatDemoMessage) => ChatDemoMessage) => {
       setMessages((current) => replaceMessage(current, messageId, update))
     },
     [],
@@ -158,7 +162,7 @@ export function useChatDemo() {
       messageId: string,
       partId: string,
       chunks: readonly string[],
-      endingParts: readonly ChatMessagePart[] = [],
+      endingParts: readonly DemoPart[] = [],
     ) => {
       chunks.forEach((chunk, index) => {
         schedule(() => {
@@ -405,11 +409,101 @@ export function useChatDemo() {
     [schedule, streamAnswer, updateMessage],
   )
 
+  const runPreferenceScenario = useCallback(
+    (messageId: string) => {
+      schedule(() => {
+        updateMessage(messageId, (message) => ({
+          ...message,
+          status: 'complete',
+          parts: [
+            {
+              ...message.parts[0]!,
+              status: 'complete',
+              durationMs: 480,
+              text: 'Drafted two candidate answers that reuse ordinary text and code parts.',
+            },
+            {
+              id: `${messageId}-preference`,
+              type: 'custom',
+              kind: 'preference',
+              data: {
+                status: 'pending',
+                options: [
+                  {
+                    id: `${messageId}-option-a`,
+                    label: 'Response 1',
+                    parts: [
+                      {
+                        id: `${messageId}-option-a-text`,
+                        type: 'text',
+                        format: 'markdown',
+                        text:
+                          'Use a **timeout ref** so each keystroke resets the wait before calling search.',
+                      },
+                      {
+                        id: `${messageId}-option-a-code`,
+                        type: 'code',
+                        language: 'tsx',
+                        filename: 'useDebouncedSearch.ts',
+                        code: `function useDebouncedSearch(query: string) {
+  const [results, setResults] = useState([])
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      void search(query).then(setResults)
+    }, 300)
+    return () => window.clearTimeout(id)
+  }, [query])
+  return results
+}`,
+                      },
+                    ],
+                  },
+                  {
+                    id: `${messageId}-option-b`,
+                    label: 'Response 2',
+                    parts: [
+                      {
+                        id: `${messageId}-option-b-text`,
+                        type: 'text',
+                        format: 'markdown',
+                        text:
+                          'Wrap the fetch in a small **debounced callback** so the component stays declarative.',
+                      },
+                      {
+                        id: `${messageId}-option-b-code`,
+                        type: 'code',
+                        language: 'tsx',
+                        filename: 'SearchField.tsx',
+                        code: `const runSearch = useDebouncedCallback((value: string) => {
+  void search(value).then(setResults)
+}, 300)
+
+<input
+  value={query}
+  onChange={(event) => {
+    setQuery(event.target.value)
+    runSearch(event.target.value)
+  }}
+/>`,
+                      },
+                    ],
+                  },
+                ],
+              },
+            } satisfies PreferencePart,
+          ],
+        }))
+        setComposerState('idle')
+      }, 480)
+    },
+    [schedule, updateMessage],
+  )
+
   const beginRun = useCallback(
     (
       payload: ChatSubmitPayload,
       options?: {
-        baseMessages?: readonly ChatMessageData[]
+        baseMessages?: readonly ChatDemoMessage[]
         scenario?: ChatDemoScenarioId
       },
     ) => {
@@ -422,7 +516,11 @@ export function useChatDemo() {
       const runTime = DEMO_BASE_TIME + sequence * 60_000
       const assistant = pendingAssistantMessage(
         assistantId,
-        activeScenario === 'attachment' ? 'Inspecting attachment metadata' : 'Planning response',
+        activeScenario === 'attachment'
+          ? 'Inspecting attachment metadata'
+          : activeScenario === 'preference'
+            ? 'Preparing candidate responses'
+            : 'Planning response',
         runTime + 1_000,
       )
       const next = [
@@ -444,12 +542,14 @@ export function useChatDemo() {
       if (activeScenario === 'attachment') {
         runAttachmentScenario(assistantId, payload.attachments)
       }
+      if (activeScenario === 'preference') runPreferenceScenario(assistantId)
     },
     [
       clearTimers,
       messages,
       runAttachmentScenario,
       runErrorScenario,
+      runPreferenceScenario,
       runResearchScenario,
       runStreamingScenario,
       scenarioId,
@@ -503,6 +603,8 @@ export function useChatDemo() {
         runResearchScenario(messageId)
       } else if (scenarioId === 'attachment') {
         runAttachmentScenario(messageId, lastPayloadRef.current?.attachments ?? [])
+      } else if (scenarioId === 'preference') {
+        runPreferenceScenario(messageId)
       } else {
         runStreamingScenario(messageId)
       }
@@ -511,6 +613,7 @@ export function useChatDemo() {
       clearTimers,
       runAttachmentScenario,
       runErrorScenario,
+      runPreferenceScenario,
       runResearchScenario,
       runStreamingScenario,
       scenarioId,
@@ -522,6 +625,26 @@ export function useChatDemo() {
       if (payload.action === 'retry') retryMessage(payload.messageId)
     },
     [retryMessage],
+  )
+
+  const selectPreference = useCallback(
+    (messageId: ChatId, partId: ChatId, optionId: ChatId) => {
+      updateMessage(messageId, (message) =>
+        replacePart(message, partId, (part) => {
+          if (part.type !== 'custom' || part.kind !== 'preference') return part
+          if (part.data.status === 'selected') return part
+          return {
+            ...part,
+            data: {
+              ...part.data,
+              status: 'selected',
+              selectedOptionId: optionId,
+            },
+          }
+        }),
+      )
+    },
+    [updateMessage],
   )
 
   const toolApproval = useCallback(
@@ -767,6 +890,7 @@ export function useChatDemo() {
     stop,
     messageAction,
     toolApproval,
+    selectPreference,
     addAttachments,
     removeAttachment,
     loadEarlier,

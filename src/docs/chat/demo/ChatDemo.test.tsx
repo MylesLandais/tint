@@ -67,4 +67,30 @@ describe('ChatDemo scenario runner', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Reset conversation' }))
     expect(screen.queryByText('Local analysis result')).not.toBeInTheDocument()
   })
+
+  it('renders a preference split and locks the chosen response', () => {
+    render(<ChatDemo />)
+    fireEvent.change(screen.getByRole('combobox', { name: 'Demo scenario' }), {
+      target: { value: 'preference' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Replay' }))
+    act(() => vi.advanceTimersByTime(2000))
+
+    expect(screen.getByText('Which response do you prefer?')).toBeInTheDocument()
+    expect(screen.getByText('Response 1')).toBeInTheDocument()
+    expect(screen.getByText('Response 2')).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('radio', { name: /Response 1/i }))
+    expect(screen.getByText('Preference recorded')).toBeInTheDocument()
+    expect(screen.getByRole('radio', { name: /Response 1/i })).toHaveAttribute(
+      'aria-checked',
+      'true',
+    )
+
+    fireEvent.click(screen.getByRole('radio', { name: /Response 2/i }))
+    expect(screen.getByRole('radio', { name: /Response 2/i })).toHaveAttribute(
+      'aria-checked',
+      'false',
+    )
+  })
 })

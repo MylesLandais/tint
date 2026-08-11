@@ -709,7 +709,8 @@ export function ChatError({
   )
 }
 
-function BuiltInPart({
+/** Shared dispatcher for built-in part types (message body and preference columns). */
+export function ChatBuiltInPart({
   part,
   onApproval,
   onRetry,
@@ -862,7 +863,7 @@ export function ChatMessagePartView<TCustomPart extends ChatCustomPart = never>(
     )
   } else {
     content = (
-      <BuiltInPart
+      <ChatBuiltInPart
         part={part}
         onRetry={onRetry}
         // Only approval parts can produce a decision, so the handler exists only
