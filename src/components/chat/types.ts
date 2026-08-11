@@ -249,6 +249,26 @@ export type ChatBuiltInMessagePart =
   | ChatArtifactPart
   | ChatErrorPart
 
+/** One selectable column inside a preference comparison shell. */
+export type ChatPreferenceOption = {
+  id: ChatId
+  label: string
+  /** Ordinary built-in parts — the shell does not invent new content types. */
+  parts: readonly ChatBuiltInMessagePart[]
+}
+
+/**
+ * Layout payload for a side-by-side response preference UI.
+ * Typically carried on a `type: "custom"` part with `kind: "preference"`.
+ */
+export type ChatPreferenceData = {
+  title?: string
+  subtitle?: string
+  status: 'pending' | 'selected'
+  selectedOptionId?: ChatId
+  options: readonly [ChatPreferenceOption, ChatPreferenceOption]
+}
+
 export type ChatMessagePart<TCustomPart extends ChatCustomPart = never> =
   | ChatBuiltInMessagePart
   | TCustomPart

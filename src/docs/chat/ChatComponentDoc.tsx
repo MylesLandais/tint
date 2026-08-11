@@ -463,12 +463,43 @@ const features = [
   {
     icon: FlaskConical,
     title: 'Controlled interaction',
-    text: 'Submit, stop, retry, approval, attachment, and pagination events report intent only.',
+    text: 'Submit, stop, retry, approval, attachment, preference, and pagination events report intent only.',
   },
   {
     icon: Accessibility,
     title: 'Transcript ergonomics',
     text: 'Sticky follow, history anchoring, roving focus, IME-safe submission, and live status.',
+  },
+]
+
+const preferencePartProps = [
+  {
+    name: 'options',
+    type: 'readonly ChatPreferenceOption[]',
+    required: true,
+    description:
+      'Two (or more) columns. Each option stacks ordinary built-in parts — text, code, and friends — via ChatBuiltInPart.',
+  },
+  {
+    name: 'selectedOptionId',
+    type: 'ChatId',
+    description: 'Controlled selection. Pair with status="selected" after the reader chooses.',
+  },
+  {
+    name: 'status',
+    type: "'pending' | 'selected'",
+    description: 'When selected, further picks are locked and the chosen card keeps the accent border.',
+  },
+  {
+    name: 'onSelect',
+    type: '(optionId: ChatId) => void',
+    description: 'Fired when a pending card is chosen. Wire this from renderPart for a custom preference part.',
+  },
+  {
+    name: 'title / subtitle',
+    type: 'string',
+    description:
+      'Header copy above the split. Defaults to “Which response do you prefer?” plus a short helper line.',
   },
 ]
 
@@ -497,7 +528,7 @@ export function ChatComponentDoc() {
               <h2 className="text-2xl font-semibold tracking-tight">Interactive preview</h2>
               <p className="mt-1 max-w-2xl text-tint-muted">
                 Choose a scenario, send the suggested prompt, then stop, retry, approve, deny,
-                attach a file, or load earlier history.
+                pick a preferred response, attach a file, or load earlier history.
               </p>
             </div>
             <span className="rounded-md bg-tint-accent-soft px-2.5 py-1 text-xs font-medium text-tint-accent">
@@ -621,6 +652,17 @@ export function ChatComponentDoc() {
           <div>
             <h3 className="mb-3 text-lg font-semibold">ChatApproval</h3>
             <PropsTable rows={approvalPartProps} />
+          </div>
+          <div>
+            <h3 className="mb-3 text-lg font-semibold">ChatPreference</h3>
+            <p className="mb-3 max-w-2xl text-sm text-tint-muted">
+              A layout shell for side-by-side response comparison. It is not a built-in message
+              part — mount it from <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">renderPart</code> on
+              a <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">type: &quot;custom&quot;</code> part
+              (see the Response preference demo scenario). Nested bodies reuse existing part
+              renderers rather than inventing new content types.
+            </p>
+            <PropsTable rows={preferencePartProps} />
           </div>
           <div>
             <h3 className="mb-3 text-lg font-semibold">ChatError</h3>

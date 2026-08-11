@@ -9,11 +9,12 @@ import {
   ChatComposer,
   ChatConversation,
   ChatMessageList,
+  ChatPreference,
 } from '../../../components/chat'
 import { Icon } from '../../../components/icon'
 import { cn } from '../../../lib/utils'
 import { useChatDemo } from './useChatDemo'
-import type { ChatDemoScenarioId } from './scenarios'
+import type { ChatDemoScenarioId, PreferencePart } from './scenarios'
 
 export function ChatDemo() {
   const demo = useChatDemo()
@@ -94,7 +95,7 @@ export function ChatDemo() {
         label="Tint chat component demonstration"
         className="h-[min(72vh,46rem)] min-h-[34rem]"
       >
-        <ChatMessageList
+        <ChatMessageList<PreferencePart>
           messages={demo.messages}
           currentActorId="demo-human"
           hasEarlier={demo.hasEarlier}
@@ -102,6 +103,21 @@ export function ChatDemo() {
           onLoadEarlier={demo.loadEarlier}
           onMessageAction={demo.messageAction}
           onToolApproval={demo.toolApproval}
+          renderPart={(part, context) => {
+            if (part.type !== 'custom' || part.kind !== 'preference') return undefined
+            return (
+              <ChatPreference
+                title={part.data.title}
+                subtitle={part.data.subtitle}
+                options={part.data.options}
+                selectedOptionId={part.data.selectedOptionId}
+                status={part.data.status}
+                onSelect={(optionId) =>
+                  demo.selectPreference(context.message.id, part.id, optionId)
+                }
+              />
+            )
+          }}
         />
         <ChatComposer
           value={demo.draft}
