@@ -97,6 +97,12 @@ const ROUTE_DATA = [
     ],
   },
   {
+    path: 'components/socket',
+    label: 'Socket',
+    blurb: 'Types-only contracts for graph and workbench socket wiring.',
+    sections: USAGE_AND_API,
+  },
+  {
     path: 'components/collab',
     label: 'Collab',
     blurb: 'CRDT text sync over a vendored Yjs, with presence awareness and a pluggable transport.',

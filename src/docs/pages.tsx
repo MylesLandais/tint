@@ -12,6 +12,7 @@ import { DiceDoc } from './DiceDoc'
 import { MediaPrimitivesDoc } from './MediaPrimitivesDoc'
 import { PanelDoc } from './PanelDoc'
 import { SettingsPopoutDoc } from './SettingsPopoutDoc'
+import { SocketDoc } from './SocketDoc'
 import { VideoPlayerDoc } from './VideoPlayerDoc'
 
 /**
@@ -46,6 +47,7 @@ export const DOC_PAGES = {
   'components/editor': EditorDoc,
   'components/terminal': TerminalDoc,
   'components/graph': GraphDoc,
+  'components/socket': SocketDoc,
   'components/collab': CollabDoc,
   'components/auth': AuthDoc,
   'components/video-player': VideoPlayerDoc,
