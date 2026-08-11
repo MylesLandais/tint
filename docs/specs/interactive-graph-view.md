@@ -1,543 +1,213 @@
 ---
-title: Interactive Graph View Developer Specification
+title: Interactive Graph View
 document_id: APP-GRAPH-CLIENT-001
-version: 0.1.0
-status: draft
+version: 1.0.0
+status: as-built
 owners:
   - tint-client
-  - application-platform
-  - data-platform
-reviewers:
-  - security-architecture
-  - developer-experience
-  - database-engineering
 created: 2026-08-10
 updated: 2026-08-10
 target_runtime:
   client: React 19 and TypeScript
   library: tint (Vite component library)
-  database: PostgreSQL 19 Beta 2
-  graph_query: SQL/PGQ (GRAPH_TABLE)
 primary_vendor:
   repository: https://github.com/xyflow/xyflow
   packages:
-    - packages/system
     - packages/react
+    - packages/system
   license: MIT
 architecture:
-  rendering: DOM nodes with SVG edges
-  persistence: host-injected GraphRepository
-  graph_projection: PostgreSQL property graph (server-side)
-  query_transport: structured intents over application API
-  execution: external runtime services
+  rendering: DOM nodes with SVG edges, behind an adapter
+  state: controlled — the host owns the document
 stability:
   client_contract: pre-1.0
-  database_feature: beta
-references:
-  - https://github.com/xyflow/xyflow
-  - https://github.com/retejs
-  - https://github.com/newcat/baklavajs
-  - https://github.com/didi/logicflow
-  - https://github.com/excalidraw/excalidraw
-  - https://github.com/Flipboard/react-canvas
 ---
 
-# Interactive Graph View Developer Specification
+# Interactive Graph View
+
+**Status: as-built.** This describes `src/components/graph` as it ships. Design
+material that was specified but not built is in [Appendix A](#appendix-a--future-direction),
+clearly separated — the first version of this document mixed the two, and
+disagreed with the code on the component's props, its directory layout, the
+adapter's shape, and the existence of a repository, a query service, and a
+command bus. A spec that contradicts the code teaches the wrong thing to
+everyone who reads it, including its own authors.
 
 ## 1. Purpose
 
-This specification defines the contracts, component boundaries, vendoring process,
-promise semantics, persistence interfaces, and delivery plan for an interactive graph
-view in the tint React TypeScript client.
+An interactive node canvas for graph documents the host owns. It renders nodes
+and edges, reports what the user did, and computes the document that results. It
+does not persist anything, execute anything, or know what a node means.
 
-The graph view MUST support:
+`tint/graph` is domain-neutral. A ComfyUI workflow parser ships alongside it as a
+worked example of mapping an external format onto the contracts — it is opt-in,
+not part of the default registry.
 
-- Interactive node, edge, port, group, and annotation rendering
-- Domain-neutral graph documents
-- Ontology-grounded node and connection constraints
-- Automation workflows without coupling the canvas to an execution engine
-- Custom node definitions, including Lua, Python, and TypeScript script nodes
-- Graph expansion and pattern queries backed by PostgreSQL 19 SQL/PGQ through a
-  host-injected query service
-- Read-only, editable, and presentation modes
-- Replaceable rendering and persistence adapters
-- Versioned contracts across the client, host API, and database
+## 2. Architecture
 
-The graph view MUST NOT treat the rendering library, execution engine, or PostgreSQL
-property graph definition as the canonical application model.
+```
+src/components/graph/
+  contracts/     document, commands, applyCommand, registry — no React, no xyflow
+  adapter/       the only code that imports src/vendor/xyflow
+  nodes/         node views + the default registry
+  comfy/         ComfyUI workflow parsing (a consumer of the contracts)
+  graph.css      shipped to hosts as `tint/graph/styles.css`
+src/vendor/xyflow/  the vendored engine — see PROVENANCE.md
+src/docs/graph/     the demo: fixtures, mock run, and the docs page
+```
 
-Tint is a single-service Vite + React 19 component library with no backend. Persistence,
-SQL/PGQ translation, and script execution MUST remain host-supplied seams, following the
-same pattern as `AudioTranscriber`, collab network providers, and auth transports.
+Three rules hold this together, and each is enforced by a test rather than a
+comment:
 
----
-
-## 2. Architectural Decision
-
-### 2.1 Rendering pattern selection
-
-Candidate libraries were evaluated as client interface patterns:
-
-| Candidate | Primary pattern | React fit | Execution coupling | Recommendation |
-| --- | --- | --- | --- | --- |
-| xyflow | React DOM nodes + SVG edges + interaction system | Excellent | Low | **Primary substrate** |
-| Rete.js | Plugin-based visual programming core | Good | Medium–high | Architecture reference |
-| LogicFlow | Business diagram models + plugins (Preact) | Moderate | Optional | Architecture reference |
-| Baklava.js | Typed graph core + optional engine + Vue renderer | Poor for React UI | Optional | Concept reference |
-| Excalidraw | Whiteboard / drawing scene | Poor for rich graph nodes | None | UX reference |
-| React Canvas | React-to-canvas rendering (archived) | Poor | None | **Reject** |
-
-**Decision:** Vendor xyflow (`@xyflow/system` + `@xyflow/react`) as the implementation
-dependency for spatial interaction. Keep Rete, Baklava, LogicFlow, and Excalidraw as
-pattern references only.
-
-**Rejected composition:** Do not combine Rete editor state, Baklava node classes, xyflow
-interactions, and LogicFlow history into one runtime. That creates overlapping graph
-authorities and incompatible mutation semantics.
-
-### 2.2 Core principle
-
-> The canvas owns spatial interaction. The Application owns graph meaning.
-> PostgreSQL owns durable graph facts and graph-query evaluation.
-
-| Owner | Responsibilities |
+| Rule | Enforced by |
 | --- | --- |
-| Canvas (xyflow adapter) | Pan/zoom, placement, selection gestures, marquee, connection gestures, edge presentation, coordinate conversion, viewport culling, measurement, resize |
-| Application (tint graph package) | Node kinds, ports, ontology refs, connection policy, commands, transactions, validation presentation, permissions metadata, script metadata, inspector UI |
-| Host / server | Durable records, revision concurrency, property graph definitions, SQL/PGQ evaluation, authorization-aware queries |
-| Execution services | Lua / Python / TypeScript runtimes — never the canvas |
+| Only `adapter/` imports `src/vendor/xyflow` (including from CSS) | `src/vendor/boundary.test.ts` |
+| No barrel re-exports a vendored type | `src/vendor/boundary.test.ts` |
+| The vendored bundle matches its recorded checksum | `src/vendor/checksums.test.ts` |
+| The root barrel re-exports everything `tint/graph` exposes | `src/exports.test.ts` |
 
-### 2.3 Tint package layout
+`contracts/` is React-free and xyflow-free: it is the part a host can depend on
+without inheriting a rendering engine.
 
-Align with existing vendor + adapter seams (`src/vendor/yjs` → `createCollabSession`,
-`src/vendor/tanstack-table-core` → `useDataTable`):
+## 3. The graph document
 
-```text
-src/
-├── vendor/
-│   └── xyflow/
-│       ├── PROVENANCE.md
-│       ├── LICENSE
-│       ├── system/                 # @xyflow/system
-│       ├── react/                  # @xyflow/react
-│       └── patches/                # optional patch series
-└── components/
-    └── graph/
-        ├── contracts/              # GraphDocument, commands, queries, errors
-        ├── registry/               # NodeDefinition registry
-        ├── adapter/                # ONLY place that imports vendor/xyflow
-        ├── components/             # InteractiveGraphView, NodeShell, ports, edges
-        ├── nodes/                  # generic + script node presentations
-        ├── hooks/                  # selection, viewport, dispatch
-        ├── testing/                # fake adapters, fixtures, contract tests
-        ├── SPEC.md                 # pointer to this document
-        └── index.ts                # public exports
-```
+Defined in `contracts/document.ts` — read the types there rather than a copy
+here. The previous version of this document reproduced them inline and had
+already drifted.
 
-Public import surface:
+What matters about the shape:
 
-```ts
-import {
-  InteractiveGraphView,
-  type GraphDocument,
-  type GraphCommand,
-  type GraphRepository,
-  type GraphQueryService,
-  type NodeDefinition,
-} from 'tint/graph'
-```
+- **Replaced, never mutated.** All collections are `readonly`, and `revision` is
+  what tells a host something changed. An in-place mutation leaves it stale.
+- **`configuration` is `unknown`.** The document does not know what a node means;
+  the `NodeDefinition` registered for its `kind` does.
+- **Ports are declared on the node.** A `'bidirectional'` port renders as two
+  handles; document-level `portId`s are unaffected (see `adapter/mappers.ts`).
+- **`metadata` is the host's.** Nothing in tint reads it.
 
-### 2.4 Import rule
+## 4. Component contract
 
-The following import is forbidden outside `src/components/graph/adapter/`:
+`InteractiveGraphView` is a controlled component. It holds no document state.
 
-```ts
-import { ReactFlow } from '../../../vendor/xyflow/react'
-// or any @xyflow/* path
-```
+| Prop | Meaning |
+| --- | --- |
+| `document` | The graph to render. Required. |
+| `registry` | Node kinds. Defaults to `createDefaultNodeRegistry()` — trigger, action, script, ontology. Comfy is composed in, not included. |
+| `readonly` | Disables movement, connection and deletion. **Selection still works.** |
+| `selection` / `onSelectionChange` | Controlled selection. Controlled-ness is latched on first render; pass `emptySelection()` to clear, not `undefined`. |
+| `validationByNodeId` | Per-node issues, driving node and inspector chrome. |
+| `runtimeByNodeId` | Read-only execution state, if something is running the graph. |
+| `viewport` | Moves the camera; each distinct value applied once. Distinct from `document.viewport`, the graph's authored camera, applied when the graph identity changes. |
+| `onCommand` | Every user intent, before it is applied. |
+| `onDocumentChange` | The document that intent produces. |
+| `showInspector`, `showFullscreenControl`, `className` | Presentation. |
 
-Application and docs code MUST import only from `tint/graph` / `src/components/graph`.
-Enforce with oxlint / dependency-boundary checks (tint uses oxlint, not ESLint).
+### Ownership
 
----
+There is exactly one rule, and it is the one the first implementation broke:
+**the component applies nothing.** It reports a command through `onCommand` and
+offers the resulting document through `onDocumentChange`. A host either
 
-## 3. Canonical Graph Document
+- returns the new document through `document` (the simple path), or
+- ignores `onDocumentChange` and reduces `onCommand` itself with `applyCommand`,
+  which is the same function the component would have used.
 
-The canonical graph document MUST remain independent of React, xyflow, SQL/PGQ, and
-execution runtimes. xyflow `Node` / `Edge` types are adapter outputs, never the persisted
-document.
+Both are correct. What is not available — deliberately — is a mode where the
+component mutates some commands and reports others, which is what made a host
+running its own store double-apply moves and configures while silently dropping
+deletes and connections.
 
-```ts
-export type GraphId = string
-export type RevisionToken = string
+## 5. Node registry
 
-export type Point = { x: number; y: number }
-export type Size = { width: number; height: number }
-export type Rect = Point & Size
+`NodeDefinition` (see `contracts/registry.ts`) describes a node kind: how to
+create one (`createDefault`), what ports it has (`derivePorts`), what is wrong
+with it (`validate`), and how to draw it (`render`, and optionally `inspector`).
 
-export type GraphDocument = {
-  schemaVersion: string
-  id: GraphId
-  revision: RevisionToken
-  nodes: GraphNode[]
-  edges: GraphEdge[]
-  groups: GraphGroup[]
-  viewport?: GraphViewport
-  metadata: Record<string, unknown>
-}
+`createDefault` and `derivePorts` are called by `applyCommand` for `node.create`.
+This matters: they were previously declared on every definition and invoked
+nowhere, while the demo fixture hand-wrote the ports its own registry claimed to
+derive — two sources of truth kept in step by hand.
 
-export type GraphNode<TConfig = unknown> = {
-  id: string
-  kind: string
-  position: Point
-  size?: Size
-  parentId?: string
-  presentation?: NodePresentation
-  configuration: TConfig
-  ports: GraphPort[]
-  capabilities?: NodeCapabilities
-}
+`validate` is host-invoked; the component renders `validationByNodeId` rather
+than running validation on a timer it does not own.
 
-export type GraphPort = {
-  id: string
-  key: string
-  direction: 'input' | 'output' | 'bidirectional'
-  cardinality: 'single' | 'multiple'
-  dataType?: TypeReference
-  required?: boolean
-}
+## 6. Canvas adapter
 
-export type EndpointReference = {
-  nodeId: string
-  portId: string
-}
+`adapter/XyflowCanvas` is a React component, not a session object with
+`mount`/`dispose`. It:
 
-export type GraphEdge = {
-  id: string
-  source: EndpointReference
-  target: EndpointReference
-  kind?: string
-  metadata?: Record<string, unknown>
-}
+- maps the document to flow nodes and edges (`adapter/mappers.ts`),
+- keeps `nodeTypes` at module scope and passes node data through
+  `GraphAdapterContext`, so node views are not rebuilt on every render,
+- commits drags on `onNodeDragStop` against a baseline captured on
+  `onNodeDragStart`, so a pointer drag is one document revision and not one per
+  frame,
+- translates xyflow's events into `GraphCommand`s.
 
-export type GraphGroup = {
-  id: string
-  label?: string
-  childIds: string[]
-  bounds?: Rect
-}
+Swapping the engine means rewriting this directory **and** `graph.css`, which
+styles eight xyflow-internal class names. The stylesheet is part of the seam.
 
-export type GraphViewport = {
-  x: number
-  y: number
-  zoom: number
-}
+## 7. Vendoring
 
-export type NodePresentation = {
-  label?: string
-  description?: string
-  icon?: string
-  accent?: string
-  collapsed?: boolean
-}
+`@xyflow/react` and `@xyflow/system` are vendored, matching the existing
+decisions for `yjs` and `@tanstack/table-core`: the engine is held in-tree and
+upgrades are a manual re-vendor. `src/vendor/xyflow/PROVENANCE.md` records
+versions, checksums, local modifications, and the upgrade recipe.
 
-export type NodeCapabilities = {
-  movable?: boolean
-  connectable?: boolean
-  deletable?: boolean
-  resizable?: boolean
-  editable?: boolean
-}
+The declaration trees are vendored **verbatim**. An earlier attempt hand-wrote
+"the subset the adapter uses", which drifted from the bundle immediately — it
+declared `Node` with `width`/`height` and no `measured`, and the build broke on
+the first change that used it.
 
-export type TypeReference = {
-  ontologyIri?: string
-  localName?: string
-  mediaType?: string
-}
-```
+## 8. Performance
 
-### 3.1 Persistence rule
+Holds at the ~50-node scale the demo exercises, with these properties:
 
-The client document MUST NOT be the only opaque JSON blob in durable storage.
+- Node lookup is indexed, not a scan per node per revision.
+- `onlyRenderVisibleElements` is on.
+- Drags commit once, on release.
+- Flow node `data` carries three fields, not the whole configuration.
 
-Hosts SHOULD store nodes, edges, ports, revisions, and ontology references in relational
-tables. JSONB MAY store node-specific configuration and presentation data. This lets
-PostgreSQL 19 property graph definitions map relational tables to vertices and edges
-without a second graph store.
+Not yet measured at the 1,000-visible / 5,000-loaded scale Appendix A targets.
+Treat that as unproven rather than met.
 
-### 3.2 Script configuration
+## 9. Accessibility
 
-Keep large script payloads out of high-frequency canvas state:
+- Nodes and edges are focusable; arrows move a focused node; Enter selects. The
+  canvas carries `role="application"`, which is only honest because that keyboard
+  model exists — `nodesFocusable`, `edgesFocusable` and `disableKeyboardA11y` are
+  set explicitly for that reason, and a visually-hidden description states the
+  keys.
+- `:focus-visible` styling, and a `prefers-reduced-motion` block that degrades
+  the running-node pulse to a static outline rather than removing the signal.
+- Fullscreen falls back to an in-page theater mode where the platform refuses it
+  (iOS Safari has no element fullscreen at all). Theater mode is a real modal:
+  focus moves in, Tab cycles, focus is restored.
 
-```ts
-export type ScriptLanguage = 'lua' | 'python' | 'typescript'
+Known gap: there is no keyboard path for *creating* a connection, and no
+non-spatial list of entities. Both are in Appendix A.
 
-export type ScriptNodeConfiguration = {
-  language: ScriptLanguage
-  /** External source artifact id — prefer over inlining large source strings. */
-  sourceRef: string
-  entrypoint?: string
-  runtimeProfileId?: string
-  permissions: string[]
-  inputSchema?: JsonSchemaReference
-  outputSchema?: JsonSchemaReference
-}
-```
+## 10. Testing
 
-`sourceRef` avoids forcing the canvas store, undo history, and collaboration channel to
-repeatedly copy large source strings.
+Co-located, plus the repo-invariant suites named in §2. The reducer
+(`contracts/applyCommand.test.ts`) is where the ownership rules are pinned; the
+parser tests use the LTX-2.3 fixture from `src/docs/graph/`, which is demo
+content and is not published.
 
 ---
 
-## 4. Public React Component Contract
+# Appendix A — Future direction
 
-### 4.1 `InteractiveGraphView`
+**Nothing below is implemented.** It is the original design intent, retained as a
+design record. It describes a host application — persistence, a command bus, and
+a PostgreSQL property-graph projection — that does not exist in this repository,
+and the component deliberately does not assume it: `onCommand` reports plain
+commands, not envelopes, and there is no `commandBus`, `repository`, or
+`queryService` prop.
 
-```ts
-export type GraphViewMode = 'select' | 'connect' | 'pan' | 'annotate' | 'readonly' | 'present'
+If any of this is built, move the section up into the body and delete it here.
 
-export type InteractiveGraphViewProps = {
-  document: GraphDocument
-  mode?: GraphViewMode
-  selection?: GraphSelection
-  registry: NodeRegistry
-  repository?: GraphRepository
-  queryService?: GraphQueryService
-  commandBus?: GraphCommandBus
-  readonly?: boolean
-  className?: string
-  onSelectionChange?: (selection: GraphSelection) => void
-  onViewportChange?: (viewport: GraphViewport) => void
-  onCommand?: (envelope: GraphCommandEnvelope<GraphCommand>) => void
-  onError?: (error: GraphError) => void
-}
-```
-
-### 4.2 Component promises
-
-`InteractiveGraphView` SHALL provide the following behavioral promises:
-
-1. It SHALL NOT execute Lua, Python, or TypeScript code.
-2. It SHALL NOT construct raw SQL or SQL/PGQ queries.
-3. It SHALL NOT expose xyflow node or edge objects through its public API.
-4. It SHALL render optimistic local movement without waiting for a server response.
-5. It SHALL submit durable mutations through the command bus (when provided).
-6. It SHALL reconcile server-authoritative revisions without silently discarding local changes.
-7. It SHALL surface rejected commands as typed errors.
-8. It SHALL preserve selection when a refresh returns the same entity identifiers.
-9. It SHALL isolate embedded controls from canvas drag, wheel, and keyboard gestures.
-10. It SHALL remain operable in read-only mode without constructing mutation commands.
-
----
-
-## 5. Node Registry Contract
-
-```ts
-export type NodeDefinition<TConfiguration = unknown> = {
-  kind: string
-  version: string
-  displayName: string
-  category: string
-
-  createDefault(context: NodeCreationContext): TConfiguration
-
-  derivePorts(
-    configuration: TConfiguration,
-    context: PortDerivationContext,
-  ): readonly GraphPort[]
-
-  validate(
-    node: GraphNode<TConfiguration>,
-    context: GraphValidationContext,
-  ): Promise<readonly ValidationIssue[]>
-
-  render: React.ComponentType<NodeViewProps<TConfiguration>>
-
-  inspector?: React.ComponentType<NodeInspectorProps<TConfiguration>>
-
-  migrate?: NodeConfigurationMigrator<TConfiguration>
-}
-
-export type NodeViewProps<TConfiguration = unknown> = {
-  node: GraphNode<TConfiguration>
-  selected: boolean
-  focused: boolean
-  readonly: boolean
-  validation: readonly ValidationIssue[]
-  runtime?: NodeRuntimeSummary
-  dispatch(command: GraphCommand): void
-}
-
-export type NodeRegistry = {
-  get(kind: string): NodeDefinition | undefined
-  require(kind: string): NodeDefinition
-  list(filter?: NodeDefinitionFilter): readonly NodeDefinition[]
-  register(definition: NodeDefinition): void
-}
-```
-
-### 5.1 Node rendering rules
-
-Node view components:
-
-- MUST be presentation-focused
-- MUST receive commands rather than mutable graph state
-- MUST NOT import the graph repository directly
-- MUST NOT execute scripts
-- MUST NOT issue SQL/PGQ queries
-- MUST NOT persist their own position
-- MUST declare interactive regions through the node interaction contract
-- MUST support compact, normal, and detailed zoom detail levels
-
-### 5.2 Script node rule
-
-A full code editor SHOULD open in an inspector or dedicated editor surface — not inside
-every visible node body.
-
-The normal canvas node SHOULD display:
-
-- Language
-- Source reference
-- Entry point
-- Validation state
-- Runtime profile
-- Permission profile
-- Input / output ports
-- Execution summary (read-only presentation)
-
-This avoids multiple Monaco / CodeMirror instances inside zoom-transformed node bodies,
-and avoids keyboard / wheel / drag conflicts with the canvas.
-
-```tsx
-function ScriptNodeView({ node, validation }: NodeViewProps<ScriptNodeConfiguration>) {
-  return (
-    <NodeShell>
-      <NodeHeader
-        title={node.presentation?.label ?? 'Script'}
-        status={validation.length ? 'invalid' : 'ready'}
-      />
-      <ScriptSummary
-        language={node.configuration.language}
-        sourceRef={node.configuration.sourceRef}
-        entrypoint={node.configuration.entrypoint}
-      />
-      <PortList ports={node.ports} />
-    </NodeShell>
-  )
-}
-```
-
-### 5.3 Adapter wrapper (anti-lock-in)
-
-xyflow-specific props stay inside the adapter. Node implementations never import xyflow:
-
-```tsx
-function XyflowNodeAdapter(props: { id: string; selected?: boolean }) {
-  const node = useGraphNode(props.id)
-  const definition = useNodeDefinition(node.kind)
-
-  return (
-    <ApplicationNodeShell node={node}>
-      <definition.render
-        node={node}
-        selected={Boolean(props.selected)}
-        focused={useNodeFocus(node.id)}
-        readonly={useGraphReadonly()}
-        validation={useNodeValidation(node.id)}
-        runtime={useNodeRuntimeSummary(node.id)}
-        dispatch={useGraphDispatch()}
-      />
-    </ApplicationNodeShell>
-  )
-}
-```
-
----
-
-## 6. Canvas Adapter Contract
-
-```ts
-export type GraphCanvasCapabilities = {
-  panZoom: boolean
-  marqueeSelect: boolean
-  connectPorts: boolean
-  keyboardNavigation: boolean
-  fitBounds: boolean
-  nodeResize: boolean
-}
-
-export type GraphCanvasAdapter = {
-  readonly id: string
-  readonly version: string
-  readonly capabilities: GraphCanvasCapabilities
-  mount(context: GraphCanvasMountContext): Promise<GraphCanvasSession>
-}
-
-export type GraphCanvasSession = {
-  setDocument(document: GraphDocument): Promise<CanvasUpdateResult>
-  applyChanges(changes: readonly GraphCanvasChange[]): Promise<CanvasUpdateResult>
-  setMode(mode: GraphViewMode): Promise<void>
-  setSelection(selection: GraphSelection): Promise<void>
-  setViewport(
-    viewport: GraphViewport,
-    options?: ViewportTransitionOptions,
-  ): Promise<ViewportResult>
-  fitBounds(bounds: Rect, options?: FitGraphOptions): Promise<ViewportResult>
-  graphToScreen(point: Point): Point
-  screenToGraph(point: Point): Point
-  dispose(): Promise<void>
-}
-```
-
-### 6.1 Adapter guarantees
-
-The adapter MUST:
-
-- Resolve `mount()` only after the viewport container is measurable
-- Resolve `setDocument()` only after internal indexes are synchronized
-- Resolve viewport promises after the requested transform is applied
-- Reject operations after `dispose()` with `GRAPH_SESSION_DISPOSED`
-- Keep rendering-library identifiers internal
-- Deliver interaction changes through typed events
-- Avoid durable persistence
-- Avoid domain-specific validation
-- Avoid direct execution-state mutations
-
-### 6.2 Selection (application concept)
-
-```ts
-export type GraphEntityReference =
-  | { kind: 'node'; id: string }
-  | { kind: 'edge'; id: string }
-  | { kind: 'group'; id: string }
-
-export type GraphSelection = {
-  nodeIds: ReadonlySet<string>
-  edgeIds: ReadonlySet<string>
-  groupIds: ReadonlySet<string>
-  primary?: GraphEntityReference
-}
-```
-
-Selection drives inspector routing, bulk editing, deletion, clipboard, keyboard commands,
-command history, and collaborative presence. It MUST NOT be only a local React boolean on
-a node component.
-
-### 6.3 Viewport API
-
-```ts
-export type CanvasViewportApi = {
-  getViewport(): GraphViewport
-  setViewport(viewport: GraphViewport, options?: ViewportTransitionOptions): Promise<ViewportResult>
-  fitBounds(bounds: Rect, options?: FitGraphOptions): Promise<ViewportResult>
-  screenToGraph(point: Point): Point
-  graphToScreen(point: Point): Point
-}
-```
-
----
-
-## 7. Promise and Cancellation Semantics
+## A.1 Promise and Cancellation Semantics
 
 All asynchronous graph contracts MUST accept cancellation where the operation may cross a
 network, worker, layout engine, or animation boundary.
@@ -602,7 +272,7 @@ export type GraphError = {
 
 ---
 
-## 8. Commands and Transactions
+## A.2 Commands and Transactions
 
 Canvas callbacks MUST be translated into application commands. Node components MUST NOT
 mutate graph state directly.
@@ -659,7 +329,7 @@ committed when the gesture ends — not on every pointer move.
 
 ---
 
-## 9. Repository and Query Contracts
+## A.3 Repository and Query Contracts
 
 ### 9.1 Repository
 
@@ -753,7 +423,7 @@ type ForbiddenRawQuery = {
 
 ---
 
-## 10. PostgreSQL 19 SQL/PGQ Boundary
+## A.4 PostgreSQL 19 SQL/PGQ Boundary
 
 PostgreSQL 19 Beta 2 (announced 2026-07-16) adds SQL/PGQ property graph queries:
 `CREATE PROPERTY GRAPH` over existing relational tables, and `GRAPH_TABLE` / `MATCH`
@@ -815,325 +485,3 @@ The server MUST:
 - Record query diagnostics without logging sensitive property values
 
 ---
-
-## 11. Vendoring Specification
-
-Follow tint's established vendor provenance pattern (`src/vendor/*/PROVENANCE.md`).
-
-### 11.1 Directory layout
-
-```text
-src/vendor/xyflow/
-├── PROVENANCE.md
-├── LICENSE
-├── SECURITY.md                 # if present upstream / mirrored
-├── system/                     # published @xyflow/system artifact or packages/system
-├── react/                      # published @xyflow/react artifact or packages/react
-├── patches/
-│   ├── 0001-tint-build-integration.patch
-│   └── 0002-tint-accessibility-fixes.patch
-└── verification/
-    ├── checksums.json
-    └── provenance.json
-```
-
-### 11.2 `PROVENANCE.md` requirements
-
-Record at minimum:
-
-| Field | Example |
-| --- | --- |
-| Package | `@xyflow/react`, `@xyflow/system` |
-| Version / commit | pinned semver **and** full upstream SHA when vendoring from git |
-| License | MIT — retain verbatim `LICENSE` |
-| Upstream | https://github.com/xyflow/xyflow |
-| Tarball / checksum | SHA-256 of imported artifact |
-| Vendored date | ISO date |
-| Local modifications | mechanical only, or explicit patch list |
-| How tint uses it | Only through `src/components/graph/adapter/` |
-
-### 11.3 Vendoring rules
-
-1. Vendor from an immutable commit SHA or published tarball checksum.
-2. Preserve all required license notices.
-3. Prefer published build artifacts when upstream TypeScript does not typecheck under tint's
-   `verbatimModuleSyntax` settings (same lesson as `@tanstack/table-core`).
-4. Store behavioral local modifications as patches; do not silently edit vendored source.
-5. Do not expose vendored types from tint public contracts.
-6. Retain or re-run upstream tests for imported packages where practical.
-7. Add adapter-level contract tests as the regression net for engine upgrades.
-8. Review upstream security advisories on a recurring schedule.
-9. Upgrade policy: quarterly, or immediately for security-triggered updates.
-
-### 11.4 Upgrade process
-
-1. Select a reviewed upstream version / commit.
-2. Verify license and provenance.
-3. Import into a temporary branch.
-4. Reapply the internal patch series.
-5. Run upstream tests (if retained) and tint `graph` contract tests.
-6. Run interaction and accessibility regression tests.
-7. Compare bundle size and interaction performance.
-8. Update `PROVENANCE.md` and checksums.
-9. Record behavioral changes in the PR.
-10. Merge through normal code review.
-
-### 11.5 What NOT to vendor
-
-| Source | Reason |
-| --- | --- |
-| Flipboard/react-canvas | Archived (~2015); incomplete events/a11y; not a graph editor |
-| Excalidraw editor core | Whiteboard document model; wrong interaction semantics for ports/nodes |
-| Full Baklava Vue renderer | Vue-specific; core concepts only |
-| Full LogicFlow runtime | Preact-coupled monolith; Apache-2.0 model useful as reference only |
-| Rete React renderer + engine | Useful ideas; adopting it as second graph authority violates §2.1 |
-| Isolated xyflow utility files copied into random folders | Destroys provenance and upgrade path |
-
----
-
-## 12. Performance Contracts
-
-Initial targets (measure before treating as guarantees):
-
-| Metric | Target |
-| --- | --- |
-| Visible DOM nodes under normal interaction | ~1,000 |
-| Total loaded nodes with viewport culling | ~5,000 |
-| SVG edges under degradation testing | up to ~10,000 |
-| Pointer response for normal drag | within one animation frame |
-| Repository writes during drag | none per pointer move; commit on gesture end |
-| Expensive auto-layout | Web Worker |
-| Graph-query expansion | progressive / incremental insertion |
-| Low zoom | detail reduction (compact node chrome) |
-
-For larger read-only result graphs, the product MAY introduce a separate canvas or WebGL
-renderer behind `GraphCanvasAdapter` without changing `GraphDocument`.
-
----
-
-## 13. Accessibility Contracts
-
-The graph view MUST:
-
-- Provide a keyboard-reachable node list
-- Expose selected state
-- Expose node labels and validation state
-- Provide keyboard alternatives for connecting ports
-- Provide a non-spatial entity inspector
-- Preserve visible focus
-- Avoid trapping keyboard focus inside nodes
-- Respect `prefers-reduced-motion`
-- Support read-only traversal without drag gestures
-- Provide an accessible fallback for operations that cannot be represented meaningfully
-  through the spatial canvas
-
-DOM + SVG is the default rendering pattern specifically so rich node content, embedded
-controls, browser semantics, and accessibility integration remain first-class.
-
----
-
-## 14. Testing Requirements
-
-### 14.1 Adapter contract tests
-
-Every `GraphCanvasAdapter` implementation MUST pass the same tests for:
-
-- Mount and disposal
-- Coordinate conversion
-- Selection synchronization
-- Node movement
-- Connection gestures
-- Viewport transitions
-- Read-only enforcement
-- Cancellation
-- Superseded operations
-- Unknown node kinds
-- Missing ports
-- Document replacement
-- Revision refresh
-
-### 14.2 Repository / host fake tests
-
-- Atomic commits
-- Revision conflicts
-- Idempotent replay
-- Authorization rejection
-- Query limits
-- Cancellation
-- Empty and partial results
-- Continuation tokens
-
-### 14.3 PostgreSQL compatibility tests (host / data-platform)
-
-- Pin exact PostgreSQL 19 beta / RC build in CI
-- Property graph creation over relational tables
-- Vertex- and edge-table mapping
-- Directed pattern matching
-- Label filtering and property projection
-- Composition of `GRAPH_TABLE` with relational joins
-- Query cancellation and timeout enforcement
-- Upgrade rehearsal against each adopted beta / RC / GA
-
-### 14.4 Tint component tests
-
-- Public API does not leak xyflow types (`package-portability`-style guard)
-- Script nodes never import execution runtimes
-- Adapter is the only `src/vendor/xyflow` importer
-- Docs demo runs offline with fixture graphs (no outbound network)
-
----
-
-## 15. Developer Plan
-
-### Phase 0 — Architecture and provenance
-
-**Deliverables**
-
-- This specification approved as working draft
-- Vendoring policy aligned with existing `PROVENANCE.md` practice
-- Canonical `GraphDocument` TypeScript types in `contracts/`
-- Host PostgreSQL relational schema draft + property graph PoC (data-platform)
-- Dependency and license review for xyflow MIT packages
-
-**Exit criteria**
-
-- No public contract imports xyflow types
-- SQL/PGQ isolated behind host repository
-- Canonical identifiers map consistently across client DTOs and database keys
-
-### Phase 1 — Read-only graph view
-
-**Deliverables**
-
-- Vendored `@xyflow/system` + `@xyflow/react` under `src/vendor/xyflow`
-- `adapter/` xyflow session implementation
-- `InteractiveGraphView` read-only surface
-- Generic node / edge rendering
-- Pan, zoom, fit, focus, selection
-- In-memory `GraphRepository` fake + fixture document
-- Docs page under `src/docs/graph/`
-
-**Exit criteria**
-
-- A fixture graph loads and navigates at `http://tint.localhost`
-- Selection synchronizes with a side inspector stub
-- Adapter contract tests pass
-
-### Phase 2 — Editing and command bus
-
-**Deliverables**
-
-- Node move / create / delete
-- Port connections with `isValidConnection` policy hook
-- Command envelopes + optimistic local apply
-- Undo / redo transaction model (application-owned)
-- Revision conflict handling against fake repository
-
-**Exit criteria**
-
-- Every durable edit passes through the command bus
-- Dragging does not write on every pointer event
-- Rejected commands return typed errors
-
-### Phase 3 — Ontology grounding
-
-**Deliverables**
-
-- `NodeDefinition` registry
-- Typed ports / `TypeReference`
-- Connection policy service
-- Async validation + validation chrome on nodes/edges
-- Server-compatible rule identifiers (documented for hosts)
-
-**Exit criteria**
-
-- Invalid edges cannot be committed
-- Unknown ontology terms degrade safely
-- Client and host validation share rule id vocabulary
-
-### Phase 4 — SQL/PGQ graph exploration (host-integrated)
-
-**Deliverables**
-
-- Structured query DTOs in `contracts/queries.ts`
-- Expansion / neighborhood / path-finding UI intents
-- Result limits, continuation tokens, cancellation
-- Incremental canvas insertion of query results
-- Host reference implementation translating intents → parameterized `GRAPH_TABLE`
-
-**Exit criteria**
-
-- No client request accepts raw SQL or PGQ
-- Queries enforce tenant and authorization filters on the host
-- Partial results are distinguishable from complete results
-- PG19 beta compatibility suite green on the pinned build
-
-### Phase 5 — Script-node experience
-
-**Deliverables**
-
-- Lua / Python / TypeScript `NodeDefinition`s
-- `sourceRef`-based configuration
-- Dedicated script inspector (reuse tint `code` / editor surfaces where appropriate)
-- Runtime-profile and permission-profile UI
-- Execution-summary event presentation (read-only)
-
-**Exit criteria**
-
-- Canvas components never execute scripts
-- Script source is not duplicated through high-frequency canvas state
-- Runtime events cannot mutate the graph without commands
-
-### Phase 6 — Scale, accessibility, and hardening
-
-**Deliverables**
-
-- Viewport culling
-- Worker-based layout (ELK or dagre behind a layout port)
-- Keyboard graph navigation + accessible entity list
-- Interaction performance suite
-- Visual regression suite
-- Vendored dependency upgrade rehearsal
-- PostgreSQL 19 GA upgrade rehearsal
-
-**Exit criteria**
-
-- Performance budgets documented from measured results
-- Accessibility test gates pass
-- PostgreSQL beta-specific behavior covered by compatibility tests
-- xyflow upgrade procedure rehearsed once end-to-end
-
----
-
-## 16. Definition of Done
-
-The interactive graph view is complete when:
-
-1. Tint owns a versioned canonical graph schema and public `tint/graph` export.
-2. xyflow is isolated behind `src/components/graph/adapter/`.
-3. Vendored source has provenance, licensing, checksums, and reproducible patches.
-4. Graph rendering remains independent of workflow execution.
-5. Script nodes do not execute code in the canvas component hierarchy.
-6. Client mutations use commands and revision tokens.
-7. Hosts store durable graph entities relationally; SQL/PGQ remains server-side.
-8. Graph-query requests are structured and bounded.
-9. Adapter, repository-fake, accessibility, and (host) database compatibility tests pass.
-10. The team can replace the renderer without changing persistence or API contracts.
-11. The team can upgrade PostgreSQL without changing React component contracts.
-
----
-
-## 17. Main Design Constraints (Summary)
-
-- **One graph authority:** Do not combine Rete, Baklava, and xyflow runtime models.
-- **Stable abstraction boundary:** Vendor xyflow as a package boundary; hide it behind an
-  internal adapter, matching tint's Yjs and TanStack seams.
-- **Explicit promise behavior:** Cancellation, revision conflicts, partial results,
-  superseded viewport operations, and typed failures are defined.
-- **PostgreSQL 19 isolation:** SQL/PGQ is a host implementation detail; the client submits
-  structured graph intents only.
-- **Beta protection:** Pin PG19 builds in CI; do not leak beta SQL into tint contracts.
-- **Script-node safety:** Lua, Python, and TypeScript nodes describe execution but never run
-  code inside the canvas tree.
-- **Host injection:** `GraphRepository`, `GraphQueryService`, and `GraphCommandBus` are
-  optional props / ports — tint does not ship a database.

@@ -27,17 +27,119 @@ import {
   type ValidationIssue,
 } from '../../components/graph'
 import { CodeBlock } from '../components/CodeBlock'
-import { DocsNav } from '../components/DocsNav'
+import { DocsPage, DocsSection } from '../components/DocsPage'
+import { PropsTable } from '../components/PropsTable'
 
-const usageCode = `import {
+const usageCode = `import { useState } from 'react'
+import {
   InteractiveGraphView,
+  applyCommand,
+  createDefaultNodeRegistry,
+  comfyNodeDefinition,
+  parseComfyWorkflow,
 } from 'tint/graph'
+import 'tint/graph/styles.css'
 
-const { document, validationByNodeId } = loadComfyLtx23WithMockDiagnostics()
-const run = createMockI2VRun(document, {
-  onUpdate: (snapshot) => setRuntimeByNodeId(snapshot.runtimeByNodeId),
-})
-run.start() // mock image→video pass; canvas stays presentation-only`
+// ComfyUI is opt-in: the default registry is domain-neutral.
+const registry = createDefaultNodeRegistry()
+registry.register(comfyNodeDefinition)
+
+export function Workflow({ workflow }) {
+  const [document, setDocument] = useState(() => parseComfyWorkflow(workflow))
+
+  return (
+    <InteractiveGraphView
+      document={document}
+      registry={registry}
+      onDocumentChange={setDocument}
+    />
+  )
+}
+
+// Or own the reduction yourself — applyCommand is the same function
+// the component would have used:
+//   onCommand={(command) => store.dispatch(applyCommand(document, command, registry))}
+`
+
+const props = [
+  {
+    name: 'document',
+    type: 'GraphDocument',
+    required: true,
+    description: 'The graph to render. The component holds no copy of it.',
+  },
+  {
+    name: 'registry',
+    type: 'NodeRegistry',
+    defaultValue: 'createDefaultNodeRegistry()',
+    description:
+      'Node kinds and how to draw them. The default is domain-neutral — register comfyNodeDefinition to add ComfyUI nodes.',
+  },
+  {
+    name: 'readonly',
+    type: 'boolean',
+    defaultValue: 'false',
+    description:
+      'Disables moving, connecting and deleting. Selection keeps working, so the graph stays inspectable.',
+  },
+  {
+    name: 'selection',
+    type: 'GraphSelection',
+    description:
+      'Controlled selection. Controlled-ness is latched on the first render; clear with emptySelection(), not undefined.',
+  },
+  {
+    name: 'validationByNodeId',
+    type: 'NodeValidationMap',
+    description: 'Per-node issues. Drives the error and warning chrome on nodes and in the inspector.',
+  },
+  {
+    name: 'runtimeByNodeId',
+    type: 'ReadonlyMap<string, NodeRuntimeSummary>',
+    description: 'Read-only execution state, if something is running the graph.',
+  },
+  {
+    name: 'viewport',
+    type: 'GraphViewport',
+    description:
+      "Moves the camera; each distinct value is applied once, so the user can pan away afterwards. Distinct from document.viewport, the graph's authored camera.",
+  },
+  {
+    name: 'showInspector',
+    type: 'boolean',
+    defaultValue: 'true',
+    description: 'Renders the side panel listing the current selection.',
+  },
+  {
+    name: 'showFullscreenControl',
+    type: 'boolean',
+    defaultValue: 'true',
+    description:
+      'Shows the canvas fullscreen button. Falls back to an in-page theater mode where the platform refuses fullscreen.',
+  },
+  { name: 'className', type: 'string', description: 'Extra classes for the graph root.' },
+  {
+    name: 'onCommand',
+    type: '(command: GraphCommand) => void',
+    description: 'Every user intent, before it is applied. Reduce it yourself with applyCommand if you own a store.',
+  },
+  {
+    name: 'onDocumentChange',
+    type: '(document: GraphDocument) => void',
+    description:
+      'The document a command produced. Return it through `document` for edits to stick — nothing is applied otherwise.',
+  },
+  {
+    name: 'onSelectionChange',
+    type: '(selection: GraphSelection) => void',
+    description: 'Selection changed, whether controlled or not.',
+  },
+  {
+    name: 'onViewportChange',
+    type: '(viewport: GraphViewport) => void',
+    description: 'The user panned or zoomed.',
+  },
+]
 
 type DemoMode = 'comfy' | 'demo'
 
@@ -145,27 +247,22 @@ export function GraphDoc() {
   }
 
   return (
-    <main className="min-h-screen px-4 py-8 sm:px-6 lg:px-10 lg:py-12">
-      <div className="mx-auto max-w-[1440px]">
-        <DocsNav current="components/graph" />
-
-        <section className="mb-8 max-w-3xl">
-          <p className="m-0 text-xs font-semibold tracking-[0.14em] text-tint-accent uppercase">
-            Components
-          </p>
-          <h1 className="mt-2 mb-3 text-3xl font-semibold tracking-tight text-tint-ink sm:text-4xl">
-            Graph
-          </h1>
-          <p className="m-0 text-base leading-7 text-tint-muted">
-            Interactive node canvas for domain-neutral graph documents — including
-            parsed ComfyUI workflows. Edit prompts and latent size on the node, mock
-            an image→video pass, or fullscreen the graph view from the canvas toolbar.
-          </p>
-        </section>
-
-        <section id="preview" className="mb-10">
+    <DocsPage
+      route="components/graph"
+      title="Graph"
+      intro="An interactive node canvas for graph documents the host owns. It renders nodes and edges, reports what the user did, and hands back the document that results — it never holds document state of its own."
+      note={
+        <>
+          Import <code>tint/graph/styles.css</code> alongside{' '}
+          <code>tint/styles.css</code>; the component does not pull its own
+          stylesheet in. ComfyUI support is composed in via{' '}
+          <code>comfyNodeDefinition</code> rather than shipped in the default
+          registry.
+        </>
+      }
+    >
+        <DocsSection id="preview" title="Live preview">
           <div className="mb-3 flex flex-wrap items-center gap-3">
-            <h2 className="m-0 text-lg font-semibold text-tint-ink">Live preview</h2>
             <div className="inline-flex rounded-md border border-tint-border p-0.5 text-sm">
               <ModeButton active={mode === 'comfy'} onClick={() => switchMode('comfy')}>
                 Comfy LTX-2.3
@@ -304,42 +401,20 @@ export function GraphDoc() {
               {viewport.zoom.toFixed(2)}×
             </p>
           ) : null}
-        </section>
+        </DocsSection>
 
-        <section id="usage" className="mb-10 max-w-3xl">
-          <h2 className="mt-0 mb-3 text-lg font-semibold text-tint-ink">Usage</h2>
-          <p className="mb-4 text-sm leading-6 text-tint-muted">
-            Parse a ComfyUI workflow into{' '}
-            <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">GraphDocument</code>.
-            Pass <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">runtimeByNodeId</code>{' '}
-            for read-only execution chrome — the canvas never talks to Comfy.
-          </p>
+        <DocsSection
+          id="usage"
+          title="Usage"
+          description="The host owns the document: pass it in, take the next one out. Nothing is applied behind your back."
+        >
           <CodeBlock code={usageCode} language="tsx" />
-        </section>
+        </DocsSection>
 
-        <section id="api" className="max-w-3xl">
-          <h2 className="mt-0 mb-3 text-lg font-semibold text-tint-ink">API notes</h2>
-          <ul className="m-0 list-disc space-y-2 pl-5 text-sm leading-6 text-tint-muted">
-            <li>
-              In-node editors use xyflow <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">nodrag</code> /{' '}
-              <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">nowheel</code> so typing and dropping
-              do not pan the canvas.
-            </li>
-            <li>
-              Prompt → <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">PrimitiveStringMultiline</code>;
-              resolution → Width/Height primitives +{' '}
-              <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">EmptyLTXVLatentVideo</code>;
-              reference image → <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">EmptyImage</code> drop zone.
-            </li>
-            <li>
-              <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">createMockI2VRun</code> walks an
-              image→video-ish queue and emits <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">NodeRuntimeSummary</code>{' '}
-              maps. Missing custom nodes (e.g. TextGenerateLTX2Prompt) mark as failed then continue.
-            </li>
-          </ul>
-        </section>
-      </div>
-    </main>
+        <DocsSection id="api" title="API">
+          <PropsTable rows={props} />
+        </DocsSection>
+    </DocsPage>
   )
 }
 

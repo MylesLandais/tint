@@ -59,7 +59,7 @@ is linked from there, including `#/components/editor` (the rich-text buffer),
 `#/components/chat`, `#/components/media-player`, `#/components/video-player`,
 `#/components/media` (the primitives the players are built from),
 `#/components/code`, `#/components/panel`, `#/components/settings-popout`,
-`#/components/dice`, and `#/components/audio-input`.
+`#/components/dice`, `#/components/graph`, and `#/components/audio-input`.
 
 Doc pages are declared once in `src/docs/routes.ts`; the router, the page title, the
 breadcrumb, and the index cards all read from that list, so a new entry appears
@@ -214,6 +214,28 @@ Websocket needs an injected `createProvider` — tint does not depend on `y-webs
 Do not point hosts at the public Yjs demo server. TipTap / `y-prosemirror` binding is
 a later editor adapter, not this package.
 
+`InteractiveGraphView` is a node canvas over a vendored xyflow. It holds no
+document state: it reports what the user did and hands back the document that
+results, so edits only stick if you pass the new document back.
+
+```tsx
+import { InteractiveGraphView, applyCommand } from 'tint/graph'
+import 'tint/graph/styles.css'
+
+const [document, setDocument] = useState(initialGraph)
+
+<InteractiveGraphView document={document} onDocumentChange={setDocument} />
+```
+
+`applyCommand(document, command, registry)` is the reducer behind
+`onDocumentChange`. Hosts running their own store can ignore that callback and
+reduce `onCommand` themselves with the same function.
+
+The graph carries its own stylesheet — `tint/graph/styles.css`, alongside
+`tint/styles.css` — because it brings xyflow's CSS with it and non-graph
+consumers should not pay for that. ComfyUI workflow support is composed in via
+`comfyNodeDefinition`; the default registry is domain-neutral.
+
 Open `#/components/collab` for two textareas sharing one room.
 
 ## Theming
@@ -361,6 +383,8 @@ src/
   vendor/tanstack-table-core/  # vendored TanStack table engine
   components/collab/           # Yjs CollabConfig + createCollabSession
   vendor/yjs/                  # vendored Yjs v13 CRDT engine
+  components/graph/            # controlled node canvas — contracts, adapter, node views
+  vendor/xyflow/               # vendored xyflow graph engine
   components/theme/            # scheme/theme hooks and controlled toggles
   components/icon/             # Icon / StatusIcon, the size scale, the status registry
   components/dice/             # DiceRoller — a worked example of extending Icon

@@ -147,6 +147,11 @@ const CASES: readonly Case[] = [
     types: 'src/components/dice/types.ts',
     names: ['DiceRollerProps'],
   },
+  {
+    doc: 'src/docs/graph/GraphDoc.tsx',
+    types: 'src/components/graph/InteractiveGraphView.tsx',
+    names: ['InteractiveGraphViewProps'],
+  },
 ]
 
 describe('docs prop tables', () => {
