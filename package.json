@@ -5,7 +5,11 @@
   "type": "module",
   "description": "Tint — controlled React components for media and rich chat interfaces.",
   "files": [
-    "src"
+    "src",
+    "!src/docs",
+    "!src/test",
+    "!src/**/*.test.ts",
+    "!src/**/*.test.tsx"
   ],
   "scripts": {
     "dev": "vite",
@@ -25,6 +29,8 @@
     "./chat": "./src/components/chat/index.ts",
     "./table": "./src/components/table/index.ts",
     "./collab": "./src/components/collab/index.ts",
+    "./graph": "./src/components/graph/index.ts",
+    "./graph/styles.css": "./src/components/graph/graph.css",
     "./theme": "./src/components/theme/index.ts",
     "./icon": "./src/components/icon/index.ts",
     "./dice": "./src/components/dice/index.ts",

@@ -148,3 +148,27 @@ export {
   visibleColumns,
 } from './components/table'
 export type * from './components/table'
+
+export {
+  ComfyNodeView,
+  GenericNodeView,
+  InteractiveGraphView,
+  ScriptNodeView,
+  applyCommand,
+  comfyNodeDefinition,
+  configureComfyNode,
+  createDefaultNodeRegistry,
+  createNodeRegistry,
+  defaultNodeDefinitions,
+  deriveEditableFields,
+  emptySelection,
+  findComfyPromptNode,
+  flattenValidationIssues,
+  isComfyWorkflow,
+  nextRevision,
+  parseComfyWorkflow,
+  patchComfyConfiguration,
+  readIntWidget,
+  updateComfyPrompt,
+} from './components/graph'
+export type * from './components/graph'

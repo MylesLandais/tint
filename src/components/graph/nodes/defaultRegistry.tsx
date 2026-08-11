@@ -1,0 +1,113 @@
+import type { GraphPort } from '../contracts'
+import { createNodeRegistry, type NodeDefinition } from '../contracts'
+import { GenericNodeView } from './GenericNodeView'
+import { ScriptNodeView, type ScriptNodeConfiguration } from './ScriptNodeView'
+
+function ports(
+  specs: Array<Pick<GraphPort, 'key' | 'direction'> & Partial<GraphPort>>,
+): GraphPort[] {
+  return specs.map((spec) => ({
+    id: `${spec.key}:${spec.direction}`,
+    key: spec.key,
+    direction: spec.direction,
+    cardinality: spec.cardinality ?? 'multiple',
+    dataType: spec.dataType,
+    required: spec.required,
+  }))
+}
+
+const triggerDefinition: NodeDefinition = {
+  kind: 'trigger',
+  version: '1',
+  displayName: 'Trigger',
+  category: 'automation',
+  createDefault: () => ({ event: 'manual' }),
+  derivePorts: () => ports([{ key: 'out', direction: 'output' }]),
+  validate: async () => [],
+  render: GenericNodeView,
+}
+
+const actionDefinition: NodeDefinition = {
+  kind: 'action',
+  version: '1',
+  displayName: 'Action',
+  category: 'automation',
+  createDefault: () => ({ action: 'noop' }),
+  derivePorts: () =>
+    ports([
+      { key: 'in', direction: 'input' },
+      { key: 'out', direction: 'output' },
+    ]),
+  validate: async () => [],
+  render: GenericNodeView,
+}
+
+const scriptDefinition: NodeDefinition<ScriptNodeConfiguration> = {
+  kind: 'script',
+  version: '1',
+  displayName: 'Script',
+  category: 'scripting',
+  createDefault: () => ({
+    language: 'typescript',
+    sourceRef: 'scripts/untitled.ts',
+    entrypoint: 'main',
+    permissions: [],
+  }),
+  derivePorts: () =>
+    ports([
+      { key: 'in', direction: 'input' },
+      { key: 'out', direction: 'output' },
+    ]),
+  validate: async (node) => {
+    if (!node.configuration.sourceRef) {
+      return [
+        {
+          code: 'SCRIPT_SOURCE_REQUIRED',
+          message: 'Script nodes require a sourceRef',
+          severity: 'error',
+        },
+      ]
+    }
+    return []
+  },
+  render: ScriptNodeView,
+}
+
+const ontologyDefinition: NodeDefinition = {
+  kind: 'ontology.class',
+  version: '1',
+  displayName: 'Ontology class',
+  category: 'ontology',
+  createDefault: () => ({ iri: 'https://example.org/Class' }),
+  derivePorts: () =>
+    ports([
+      { key: 'broader', direction: 'input' },
+      { key: 'narrower', direction: 'output' },
+    ]),
+  validate: async () => [],
+  render: GenericNodeView,
+}
+
+/**
+ * The domain-neutral definitions every graph gets.
+ *
+ * `comfy.node` used to be one of them, which pointed the dependency the wrong
+ * way: the neutral component imported the Comfy types and pulled ComfyNodeView
+ * — 685 lines of ComfyUI-specific editors — into every consumer's bundle, for
+ * graphs that contain no Comfy nodes at all. Hosts that want it compose it in:
+ *
+ * ```ts
+ * const registry = createDefaultNodeRegistry()
+ * registry.register(comfyNodeDefinition)
+ * ```
+ */
+export const defaultNodeDefinitions: readonly NodeDefinition[] = [
+  triggerDefinition,
+  actionDefinition,
+  scriptDefinition as NodeDefinition,
+  ontologyDefinition,
+]
+
+export function createDefaultNodeRegistry() {
+  return createNodeRegistry(defaultNodeDefinitions)
+}
