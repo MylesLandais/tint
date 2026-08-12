@@ -10,7 +10,6 @@ import type {
   NodeRegistry,
   NodeRuntimeSummary,
   NodeValidationMap,
-  Point,
 } from './contracts'
 import { applyCommand, emptySelection } from './contracts'
 import { createDefaultNodeRegistry } from './nodes/defaultRegistry'
@@ -155,20 +154,6 @@ export function InteractiveGraphView({
     [document, onCommand, onDocumentChange, resolvedRegistry],
   )
 
-  const handlePositionsCommit = useCallback(
-    (positions: Record<string, Point>) => {
-      if (!onDocumentChange) return
-      onDocumentChange(
-        applyCommand(
-          document,
-          { type: 'node.move', nodeIds: Object.keys(positions), positions },
-          resolvedRegistry,
-        ),
-      )
-    },
-    [document, onDocumentChange, resolvedRegistry],
-  )
-
   const selectedNodes = document.nodes.filter((node) =>
     selection.nodeIds.has(node.id),
   )
@@ -229,7 +214,6 @@ export function InteractiveGraphView({
           viewport={viewport}
           onSelectionChange={handleSelectionChange}
           onViewportChange={onViewportChange}
-          onNodePositionsCommit={handlePositionsCommit}
           onCommand={handleCommand}
         />
       </div>

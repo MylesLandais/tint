@@ -15,6 +15,7 @@ import {
   applyEdgeChanges,
   applyNodeChanges,
   useReactFlow,
+  useStoreApi,
   type Connection,
   type Edge,
   type EdgeChange,
@@ -41,10 +42,12 @@ import { GraphAdapterProvider } from './GraphAdapterContext'
 import { TintFlowNode } from './TintFlowNode'
 import {
   indexNodesById,
+  mergeFlowNodesFromDocument,
   portIdFromHandle,
   selectionFromFlow,
   toFlowEdges,
   toFlowNodes,
+  type GraphFlowNode,
 } from './mappers'
 
 export type XyflowCanvasProps = {
@@ -58,7 +61,6 @@ export type XyflowCanvasProps = {
   viewport?: GraphViewport
   onSelectionChange?: (selection: GraphSelection) => void
   onViewportChange?: (viewport: GraphViewport) => void
-  onNodePositionsCommit?: (positions: Record<string, Point>) => void
   onCommand?: (command: GraphCommand) => void
   className?: string
 }
@@ -81,12 +83,12 @@ function XyflowCanvasInner({
   viewport,
   onSelectionChange,
   onViewportChange,
-  onNodePositionsCommit,
   onCommand,
   className,
 }: XyflowCanvasProps) {
   const { fitView, setViewport, getViewport } = useReactFlow()
-  const [nodes, setNodes] = useState<Node[]>(() => toFlowNodes(document))
+  const store = useStoreApi()
+  const [nodes, setNodes] = useState<GraphFlowNode[]>(() => toFlowNodes(document))
   const [edges, setEdges] = useState<Edge[]>(() => toFlowEdges(document))
   const dragBaseline = useRef<Map<string, Point>>(new Map())
   const lastSelectionKey = useRef('')
@@ -161,22 +163,13 @@ function XyflowCanvasInner({
 
   // Sync graph document → flow nodes/edges. Preserve measured dimensions so
   // xyflow does not re-measure in a loop after every configure/move revision.
+  // While a drag is open, keep live positions so a mid-gesture document update
+  // cannot fight the pointer.
   useEffect(() => {
-    setNodes((current) => {
-      const previous = new Map(current.map((node) => [node.id, node]))
-      const next = toFlowNodes(document).map((node) => {
-        const prior = previous.get(node.id)
-        return {
-          ...prior,
-          ...node,
-          selected: prior?.selected ?? false,
-          width: prior?.width,
-          height: prior?.height,
-          measured: prior?.measured,
-        }
-      })
-      return next
-    })
+    const draggingIds = new Set(dragBaseline.current.keys())
+    setNodes((current) =>
+      mergeFlowNodesFromDocument(document, current, draggingIds),
+    )
     setEdges((current) => {
       const previous = new Map(current.map((edge) => [edge.id, edge]))
       const next = toFlowEdges(document).map((edge) => {
@@ -218,15 +211,26 @@ function XyflowCanvasInner({
   }, [selection])
 
   // Fit / apply authored viewport only when the graph identity changes.
+  // Re-applying on every document.viewport reference change used to feed
+  // setViewport → onMoveEnd → viewport.set → revision spam.
   useEffect(() => {
-    if (lastViewportGraphId.current === document.id && !document.viewport) return
+    if (lastViewportGraphId.current === document.id) return
     lastViewportGraphId.current = document.id
-    if (!document.viewport) {
+    const authored = document.viewport
+    if (!authored) {
       void fitView({ padding: 0.2 })
       return
     }
-    void setViewport(document.viewport, { duration: 0 })
-  }, [document.id, document.viewport, fitView, setViewport])
+    // syncViewport skips the d3 end event that would otherwise re-emit
+    // viewport.set and bounce through the document again.
+    const panZoom = store.getState().panZoom
+    if (panZoom?.syncViewport) {
+      panZoom.syncViewport(authored)
+      store.setState({ transform: [authored.x, authored.y, authored.zoom] })
+      return
+    }
+    void setViewport(authored, { duration: 0 })
+  }, [document.id, document.viewport, fitView, setViewport, store])
 
   /**
    * Host-driven camera (e.g. following a run). Keyed so an identical frame is a
@@ -275,15 +279,31 @@ function XyflowCanvasInner({
         }
       }
       dragBaseline.current.clear()
-      if (Object.keys(positions).length === 0) return
-      onNodePositionsCommit?.(positions)
-      onCommand?.({
-        type: 'node.move',
-        nodeIds: Object.keys(positions),
-        positions,
-      })
+
+      // One path only: onCommand → applyCommand. A separate positions-commit
+      // callback used to apply the same move a second time.
+      if (Object.keys(positions).length > 0) {
+        onCommand?.({
+          type: 'node.move',
+          nodeIds: Object.keys(positions),
+          positions,
+        })
+      }
+
+      // Auto-pan during the drag suppressed viewport.set; commit the camera once.
+      const live = getViewport()
+      const authored = documentRef.current.viewport
+      if (
+        !authored ||
+        authored.x !== live.x ||
+        authored.y !== live.y ||
+        authored.zoom !== live.zoom
+      ) {
+        onViewportChange?.(live)
+        onCommand?.({ type: 'viewport.set', viewport: live })
+      }
     },
-    [onCommand, onNodePositionsCommit],
+    [getViewport, onCommand, onViewportChange],
   )
 
   const onEdgesChange = useCallback((changes: EdgeChange[]) => {
@@ -306,9 +326,13 @@ function XyflowCanvasInner({
   )
 
   const handleMoveEnd = useCallback(
-    (_event: MouseEvent | TouchEvent | null, viewport: Viewport) => {
-      onViewportChange?.(viewport)
-      onCommand?.({ type: 'viewport.set', viewport })
+    (_event: MouseEvent | TouchEvent | null, nextViewport: Viewport) => {
+      onViewportChange?.(nextViewport)
+      // Auto-pan during a node drag fires onMoveEnd every frame. Committing
+      // those as document revisions remaps nodes mid-gesture and fights the
+      // pointer. Defer until drag stop.
+      if (dragBaseline.current.size > 0) return
+      onCommand?.({ type: 'viewport.set', viewport: nextViewport })
     },
     [onCommand, onViewportChange],
   )

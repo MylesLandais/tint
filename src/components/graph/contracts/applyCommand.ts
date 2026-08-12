@@ -89,8 +89,21 @@ export function applyCommand(
       })
     }
 
-    case 'viewport.set':
+    case 'viewport.set': {
+      // Identical cameras are a no-op. Without this, a programmatic setViewport
+      // that re-fired onMoveEnd (or auto-pan end spam) bumped the revision every
+      // frame even when nothing moved.
+      const prev = document.viewport
+      if (
+        prev &&
+        prev.x === command.viewport.x &&
+        prev.y === command.viewport.y &&
+        prev.zoom === command.viewport.zoom
+      ) {
+        return document
+      }
       return commit(document, { viewport: { ...command.viewport } })
+    }
 
     case 'node.create': {
       // The registry is the single source for a new node's shape. Before this,
