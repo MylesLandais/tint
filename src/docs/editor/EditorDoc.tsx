@@ -1,15 +1,13 @@
 import { Extension, type Editor as TiptapEditor } from '@tiptap/core'
-import { Check, Clock3, Copy } from 'lucide-react'
+import { Clock3 } from 'lucide-react'
 import { useMemo, useRef, useState } from 'react'
 import {
   Editor,
   type EditorDocument,
   type EditorSlashCommand,
 } from '../../components/editor'
-import { CodeTabs, type CodeTab } from '../../components/code'
-import { Icon } from '../../components/icon'
 import { CodeBlock } from '../components/CodeBlock'
-import { DocsNav } from '../components/DocsNav'
+import { DocsPage, DocsPreview, DocsSection } from '../components/DocsPage'
 import { PropsTable } from '../components/PropsTable'
 import { EditorOutput } from './EditorOutput'
 
@@ -69,112 +67,6 @@ const docsShortcut = Extension.create({
 })
 const DOC_EXTENSIONS = [docsShortcut]
 
-const polyglotTabs = [
-  { id: 'python', language: 'python', code: 'def greet(name):\n    return f"Hello, {name}!"' },
-  { id: 'typescript', language: 'typescript', code: 'export const greet = (name: string) => `Hello, ${name}!`' },
-  { id: 'go', language: 'go', code: 'func greet(name string) string {\n    return "Hello, " + name + "!"\n}' },
-  { id: 'java', language: 'java', code: 'String greet(String name) {\n  return "Hello, " + name + "!";\n}' },
-  { id: 'rust', language: 'rust', code: 'fn greet(name: &str) -> String {\n    format!("Hello, {name}!")\n}' },
-  { id: 'erlang', language: 'erlang', code: 'greet(Name) -> io_lib:format("Hello, ~s!", [Name]).' },
-] as const
-
-type CodeTemplate = { id: string; title: string; tabs: readonly CodeTab[] }
-
-const initialTemplates: CodeTemplate[] = [
-  { id: 'agent-setup', title: 'Agent setup', tabs: polyglotTabs },
-  {
-    id: 'tooling',
-    title: 'Tooling bootstrap',
-    tabs: polyglotTabs.map((tab) => ({ ...tab, code: `${tab.code}\n\n// tooling bootstrap` })),
-  },
-  {
-    id: 'deployment',
-    title: 'Deployment entrypoint',
-    tabs: polyglotTabs.map((tab) => ({ ...tab, code: `${tab.code}\n\n// deployment entrypoint` })),
-  },
-]
-
-const installCommands: Record<string, string> = {
-  python: 'pip install google-adk',
-  typescript: 'npm install @google/adk',
-  go: 'go get google.golang.org/adk/v2',
-  java: 'com.google.adk:google-adk',
-}
-
-function InstallInfo({ tabId }: { tabId: string }) {
-  const command = installCommands[tabId]
-  const [copied, setCopied] = useState(false)
-
-  if (!command) return null
-
-  const copy = async () => {
-    await navigator.clipboard.writeText(command)
-    setCopied(true)
-    window.setTimeout(() => setCopied(false), 1600)
-  }
-
-  return (
-    <div className="flex items-center justify-between gap-3 px-3 py-2.5 text-xs">
-      <div className="min-w-0 overflow-x-auto rounded-md border border-tint-border bg-tint-panel px-2.5 py-1.5 font-mono text-tint-ink">
-        <code>{command}</code>
-      </div>
-      <button
-        type="button"
-        onClick={() => void copy()}
-        aria-label={copied ? 'Install command copied' : 'Copy install command'}
-        className="inline-flex shrink-0 items-center gap-1.5 rounded-md px-2 py-1.5 text-tint-muted hover:bg-tint-surface hover:text-tint-ink focus-visible:outline-2 focus-visible:outline-tint-accent"
-      >
-        <Icon icon={copied ? Check : Copy} size="sm" />
-        {copied ? 'Copied' : 'Copy'}
-      </button>
-    </div>
-  )
-}
-
-function CodeTemplateBuilder() {
-  const [templates, setTemplates] = useState<CodeTemplate[]>(initialTemplates)
-  const addTemplate = () => {
-    const index = templates.length + 1
-    setTemplates((current) => [
-      ...current,
-      { id: `template-${index}`, title: `New container ${index}`, tabs: polyglotTabs },
-    ])
-  }
-  const removeTemplate = (id: string) =>
-    setTemplates((current) => (current.length <= 1 ? current : current.filter((template) => template.id !== id)))
-  const moveTemplate = (index: number, direction: -1 | 1) => {
-    const next = index + direction
-    if (next < 0 || next >= templates.length) return
-    setTemplates((current) => {
-      const copy = [...current]
-      const item = copy[index]
-      if (!item) return current
-      copy[index] = copy[next]!
-      copy[next] = item
-      return copy
-    })
-  }
-
-  return (
-    <div className="space-y-5">
-      {templates.map((template, index) => (
-        <article key={template.id} className="rounded-2xl border border-tint-border bg-tint-panel p-3 sm:p-4">
-          <div className="mb-3 flex flex-wrap items-center gap-2">
-            <h3 className="m-0 text-sm font-semibold text-tint-ink">{template.title}</h3>
-            <div className="ml-auto flex items-center gap-1">
-              <button type="button" onClick={() => moveTemplate(index, -1)} disabled={index === 0} className="rounded px-2 py-1 text-xs text-tint-muted hover:bg-tint-surface disabled:opacity-40">Move up</button>
-              <button type="button" onClick={() => moveTemplate(index, 1)} disabled={index === templates.length - 1} className="rounded px-2 py-1 text-xs text-tint-muted hover:bg-tint-surface disabled:opacity-40">Move down</button>
-              <button type="button" onClick={() => removeTemplate(template.id)} disabled={templates.length <= 1} className="rounded px-2 py-1 text-xs text-tint-danger-ink hover:bg-tint-danger/10 disabled:opacity-40">Remove</button>
-            </div>
-          </div>
-          <CodeTabs tabs={template.tabs} renderAccessory={(tab) => <InstallInfo tabId={tab.id} />} />
-        </article>
-      ))}
-      <button type="button" onClick={addTemplate} className="rounded-lg border border-dashed border-tint-border px-3 py-2 text-sm font-medium text-tint-muted hover:border-tint-accent hover:text-tint-ink focus-visible:outline-2 focus-visible:outline-tint-accent">Add tabbed code container</button>
-    </div>
-  )
-}
-
 const usageCode = `import { Editor, type EditorDocument } from 'tint/editor'
 import { useState } from 'react'
 
@@ -202,11 +94,21 @@ const editorProps = [
   { name: 'onValueChange', type: '(value: EditorDocument) => void', required: true, description: 'Receives JSON after a document transaction.' },
   { name: 'expanded', type: 'boolean', required: true, description: 'Controlled Panel disclosure state.' },
   { name: 'onExpandedChange', type: '(expanded: boolean) => void', required: true, description: 'Reports disclosure intent.' },
-  { name: 'extensions', type: 'Extensions', description: 'Raw Tiptap extensions appended after Tint defaults.' },
+  { name: 'title', type: 'ReactNode', defaultValue: "'Editor'", description: 'Panel disclosure label.' },
+  { name: 'status', type: 'ReactNode', description: 'Save or sync state rendered beside the title.' },
+  { name: 'headerActions', type: 'ReactNode', description: 'Controls in the panel header, outside the disclosure button.' },
+  { name: 'toolbarEnd', type: 'ReactNode | ((editor: TiptapEditor) => ReactNode)', description: 'Trailing toolbar content. A function receives the live editor instance.' },
+  { name: 'placeholder', type: 'string', defaultValue: "'Start writing, or type / for commands…'", description: 'Shown in the empty document.' },
+  { name: 'label', type: 'string', defaultValue: "'Document editor'", description: 'Accessible name for the editable region.' },
+  { name: 'editable', type: 'boolean', defaultValue: 'true', description: 'Switches the document into read-only mode; toolbar and bubble menu disappear.' },
+  { name: 'autofocus', type: 'FocusPosition', defaultValue: 'false', description: 'Where to place the caret on mount.' },
+  { name: 'extensions', type: 'Extensions', description: 'Raw Tiptap extensions appended after Tint defaults. Must be referentially stable.' },
   { name: 'includeDefaultExtensions', type: 'boolean', defaultValue: 'true', description: 'Disable to provide a complete custom schema.' },
-  { name: 'slashCommands', type: 'readonly EditorSlashCommand[]', description: 'Adds or replaces slash commands by id.' },
-  { name: 'editable', type: 'boolean', defaultValue: 'true', description: 'Switches the document into read-only mode.' },
+  { name: 'slashCommands', type: 'readonly EditorSlashCommand[]', description: 'Adds or replaces slash commands by id. Must be referentially stable.' },
   { name: 'editorRef', type: 'Ref<TiptapEditor | null>', description: 'Access to the underlying Tiptap instance.' },
+  { name: 'onContentError', type: '(error: Error) => void', description: 'Called when a document fails schema validation, instead of throwing.' },
+  { name: 'className', type: 'string', description: 'Extra classes for the Panel root.' },
+  { name: 'bodyClassName', type: 'string', description: 'Extra classes for the Panel body. Avoid display utilities — collapsing relies on the hidden attribute.' },
 ]
 
 function countWords(document: EditorDocument) {
@@ -247,20 +149,20 @@ export function EditorDoc() {
   )
 
   return (
-    <main className="min-h-screen px-4 py-8 sm:px-6 lg:px-10 lg:py-12">
-      <div className="mx-auto max-w-[1200px]">
-        <DocsNav current="components/editor" />
-
-        <section className="mb-8 max-w-3xl">
-          <p className="m-0 text-xs font-semibold tracking-[0.14em] text-tint-accent uppercase">Magical text buffer</p>
-          <h1 className="mt-2 mb-3 text-3xl font-semibold tracking-tight text-tint-ink sm:text-4xl">Editor</h1>
-          <p className="m-0 text-base leading-7 text-tint-muted">
-            A controlled WYSIWYG drafting surface with block commands, selection formatting,
-            keyboard shortcuts, and an escape hatch into the full Tiptap extension system.
-          </p>
-        </section>
-
-        <section className="mb-14">
+    <DocsPage
+      route="components/editor"
+      title="Editor"
+      intro="A controlled WYSIWYG buffer with slash commands, selection formatting, and Tiptap extensions."
+      note={
+        <>
+          The app owns the document JSON; Tint owns the drafting surface. Keep{' '}
+          <code>extensions</code> and <code>slashCommands</code> referentially stable so
+          the editor is not torn down on every render.
+        </>
+      }
+    >
+      <DocsSection id="preview" title="Preview">
+        <DocsPreview>
           <Editor
             value={document}
             onValueChange={(next) => {
@@ -278,43 +180,42 @@ export function EditorDoc() {
               <button
                 type="button"
                 onClick={() => setShowOutput((current) => !current)}
-                className="rounded-md px-2 py-1 text-xs text-tint-muted hover:bg-tint-accent-soft hover:text-tint-ink"
+                className="rounded-md px-2 py-1 text-xs text-tint-muted hover:bg-tint-accent-soft hover:text-tint-ink focus-visible:outline-2 focus-visible:outline-tint-accent"
               >
                 {showOutput ? 'Hide output' : 'Show output'}
               </button>
             }
           />
-          {contentError ? <p role="alert" className="text-sm text-tint-danger">{contentError}</p> : null}
+          {contentError ? (
+            <p role="alert" className="mt-3 mb-0 text-sm text-tint-danger">
+              {contentError}
+            </p>
+          ) : null}
           {showOutput ? <EditorOutput document={document} /> : null}
-        </section>
+        </DocsPreview>
+      </DocsSection>
 
-        <section id="usage" className="mb-14 max-w-3xl scroll-mt-24">
-          <h2 className="mb-3 text-2xl font-semibold tracking-tight text-tint-ink">Usage</h2>
-          <CodeBlock code={usageCode} language="tsx" />
-          <div className="mt-4 rounded-xl border border-tint-warning/40 bg-tint-warning-soft p-4 text-sm leading-6 text-tint-warning-ink">
-            <strong className="font-semibold">
-              Keep <code>extensions</code> and <code>slashCommands</code> stable.
-            </strong>{' '}
-            Both feed the dependency array that builds the Tiptap instance, so a fresh
-            array literal on every render tears the editor down and rebuilds it — losing
-            the caret, the selection, and the undo history as you type. Hoist them to
-            module scope, or wrap them in <code>useMemo</code>. Omitting them entirely is
-            safe.
-          </div>
-        </section>
+      <DocsSection
+        id="usage"
+        title="Usage"
+        description="Controlled like the rest of the library: pass JSON in, receive JSON out, and own the Panel disclosure state yourself."
+      >
+        <CodeBlock code={usageCode} language="tsx" />
+        <div className="mt-4 rounded-xl border border-tint-warning/40 bg-tint-warning-soft p-4 text-sm leading-6 text-tint-warning-ink">
+          <strong className="font-semibold">
+            Keep <code>extensions</code> and <code>slashCommands</code> stable.
+          </strong>{' '}
+          Both feed the dependency array that builds the Tiptap instance, so a fresh
+          array literal on every render tears the editor down and rebuilds it — losing
+          the caret, the selection, and the undo history as you type. Hoist them to
+          module scope, or wrap them in <code>useMemo</code>. Omitting them entirely is
+          safe.
+        </div>
+      </DocsSection>
 
-        <section className="mb-14 max-w-3xl">
-          <h2 className="mb-3 text-2xl font-semibold tracking-tight text-tint-ink">Polyglot code</h2>
-          <p className="mb-5 text-tint-muted">Each container owns its active language, so templates can be reordered or expanded without coupling every example on the page.</p>
-          <CodeTemplateBuilder />
-        </section>
-
-        <section id="api" className="scroll-mt-24">
-          <h2 className="mb-2 text-2xl font-semibold tracking-tight text-tint-ink">API</h2>
-          <p className="mb-6 max-w-2xl text-tint-muted">Required props are marked with an asterisk.</p>
-          <PropsTable rows={editorProps} />
-        </section>
-      </div>
-    </main>
+      <DocsSection id="api" title="API">
+        <PropsTable rows={editorProps} />
+      </DocsSection>
+    </DocsPage>
   )
 }

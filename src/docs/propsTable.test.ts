@@ -138,6 +138,11 @@ const CASES: readonly Case[] = [
     names: ['TerminalConsoleProps'],
   },
   {
+    doc: 'src/docs/editor/EditorDoc.tsx',
+    types: 'src/components/editor/types.ts',
+    names: ['EditorProps'],
+  },
+  {
     doc: 'src/docs/CodeDoc.tsx',
     types: 'src/components/code/CodeTabs.tsx',
     names: ['CodeTabsProps'],

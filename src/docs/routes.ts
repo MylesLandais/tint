@@ -79,7 +79,10 @@ const ROUTE_DATA = [
     path: 'components/editor',
     label: 'Editor',
     blurb: 'Controlled WYSIWYG buffer with slash commands, selection formatting, and Tiptap extensions.',
-    sections: USAGE_AND_API,
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      ...USAGE_AND_API,
+    ],
   },
   {
     path: 'components/terminal',
