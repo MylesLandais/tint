@@ -44,9 +44,12 @@ import type {
   ChatCustomPart,
   ChatErrorPart,
   ChatFilePart,
+  ChatId,
+  ChatImageItem,
   ChatImagePart,
-  ChatMessageData,
+  ChatImagesPart,
   ChatMessageActionPayload,
+  ChatMessageData,
   ChatPartRenderer,
   ChatReasoningPart,
   ChatRichPartProps,
@@ -56,6 +59,7 @@ import type {
   ChatToolPart,
   ChatToolStatus,
 } from './types'
+import { ChatMediaLightbox } from './ChatMediaLightbox'
 
 /**
  * Tool results and artifact payloads are arbitrary application data. A large one
@@ -198,31 +202,200 @@ export function ChatCodeBlock({
   )
 }
 
+export type ChatImageProps = ChatRichPartProps<ChatImagePart> & {
+  messageId?: ChatId
+  onAction?: (payload: ChatMessageActionPayload) => void
+}
+
 export function ChatImage({
   part,
+  messageId,
+  onAction,
   className,
   ...props
-}: ChatRichPartProps<ChatImagePart>) {
+}: ChatImageProps) {
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const item: ChatImageItem = {
+    id: part.id,
+    src: part.src,
+    alt: part.alt,
+    width: part.width,
+    height: part.height,
+    href: part.href,
+  }
+
+  const openLightbox = () => {
+    setLightboxOpen(true)
+    if (messageId) {
+      onAction?.({
+        messageId,
+        action: 'image-open',
+        partId: part.id,
+        imageId: part.id,
+        imageIndex: 0,
+      })
+    }
+  }
+
   return (
-    <figure
-      data-chat-part="image"
-      data-status={part.status}
-      className={cn(
-        'overflow-hidden rounded-xl border border-tint-border bg-tint-surface',
-        className,
-      )}
-      {...props}
-    >
-      <img
-        src={part.src}
-        alt={part.alt}
-        width={part.width}
-        height={part.height}
-        loading="lazy"
-        decoding="async"
-        className="max-h-96 w-full object-contain"
+    <>
+      <figure
+        data-chat-part="image"
+        data-status={part.status}
+        className={cn(
+          'overflow-hidden rounded-xl border border-tint-border bg-tint-surface',
+          className,
+        )}
+        {...props}
+      >
+        <button
+          type="button"
+          onClick={openLightbox}
+          className="block w-full cursor-zoom-in p-0 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tint-accent"
+          aria-label={part.alt ? `Open image: ${stripBidi(part.alt)}` : 'Open image'}
+        >
+          <img
+            src={part.src}
+            alt={part.alt}
+            width={part.width}
+            height={part.height}
+            loading="lazy"
+            decoding="async"
+            className="max-h-96 w-full object-contain"
+          />
+        </button>
+      </figure>
+      <ChatMediaLightbox
+        open={lightboxOpen}
+        images={[item]}
+        index={0}
+        onClose={() => setLightboxOpen(false)}
+        onIndexChange={() => undefined}
       />
-    </figure>
+    </>
+  )
+}
+
+function imagesGridClass(count: number) {
+  if (count <= 1) return 'grid-cols-1'
+  if (count === 2) return 'grid-cols-2'
+  if (count === 3) return 'grid-cols-2'
+  if (count === 4) return 'grid-cols-2'
+  return 'grid-cols-2 sm:grid-cols-3'
+}
+
+export type ChatImagesProps = ChatRichPartProps<ChatImagesPart> & {
+  messageId?: ChatId
+  onAction?: (payload: ChatMessageActionPayload) => void
+}
+
+export function ChatImages({
+  part,
+  messageId,
+  onAction,
+  className,
+  ...props
+}: ChatImagesProps) {
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
+  const images = part.images
+  const count = images.length
+
+  const openAt = (index: number) => {
+    setLightboxIndex(index)
+    const image = images[index]
+    if (messageId && image) {
+      onAction?.({
+        messageId,
+        action: 'image-open',
+        partId: part.id,
+        imageId: image.id,
+        imageIndex: index,
+      })
+    }
+  }
+
+  return (
+    <>
+      <section
+        data-chat-part="images"
+        data-status={part.status}
+        data-count={count}
+        className={cn('min-w-0 space-y-2', className)}
+        {...props}
+      >
+        {part.caption ? (
+          <p className="m-0 text-sm font-medium text-tint-ink">{stripBidi(part.caption)}</p>
+        ) : null}
+        <div
+          className={cn(
+            'grid gap-0.5 overflow-hidden rounded-xl border border-tint-border bg-tint-border',
+            imagesGridClass(count),
+          )}
+        >
+          {images.map((image, index) => {
+            const spanFull =
+              count === 3 && index === 2 ? 'col-span-2 aspect-[2/1]' : 'aspect-square'
+            return (
+              <button
+                key={image.id}
+                type="button"
+                onClick={() => openAt(index)}
+                className={cn(
+                  'relative block overflow-hidden bg-tint-surface p-0 focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-tint-accent',
+                  spanFull,
+                )}
+                aria-label={
+                  image.alt
+                    ? `Open image ${index + 1}: ${stripBidi(image.alt)}`
+                    : `Open image ${index + 1}`
+                }
+              >
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  width={image.width}
+                  height={image.height}
+                  loading="lazy"
+                  decoding="async"
+                  className="size-full object-cover"
+                />
+              </button>
+            )
+          })}
+        </div>
+        {part.actions?.length ? (
+          <div className="flex flex-wrap gap-2" data-chat-images-actions="">
+            {part.actions.map((action) => (
+              <button
+                key={action.id}
+                type="button"
+                onClick={() => {
+                  if (!messageId) return
+                  onAction?.({
+                    messageId,
+                    action: 'image-action',
+                    actionId: action.id,
+                    partId: part.id,
+                    imageId: action.imageId,
+                  })
+                }}
+                className="inline-flex items-center rounded-lg border border-tint-border bg-tint-panel px-2.5 py-1.5 text-xs font-medium text-tint-ink hover:bg-tint-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tint-accent"
+              >
+                {stripBidi(action.label)}
+              </button>
+            ))}
+          </div>
+        ) : null}
+      </section>
+      <ChatMediaLightbox
+        open={lightboxIndex !== null && count > 0}
+        images={images}
+        index={lightboxIndex ?? 0}
+        caption={part.caption}
+        onClose={() => setLightboxIndex(null)}
+        onIndexChange={setLightboxIndex}
+      />
+    </>
   )
 }
 
@@ -239,7 +412,9 @@ export function ChatFile({
   ...props
 }: ChatRichPartProps<ChatFilePart>) {
   const { attachment } = part
-  const icon = attachment.mediaType.startsWith('image/') ? (
+  const isImage = attachment.mediaType.startsWith('image/')
+  const preview = isImage ? attachment.previewUrl ?? attachment.url : undefined
+  const icon = isImage ? (
     <Icon icon={ImageIcon} />
   ) : (
     <Icon icon={FileText} />
@@ -255,9 +430,17 @@ export function ChatFile({
       )}
       {...props}
     >
-      <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-tint-surface text-tint-muted">
-        {icon}
-      </span>
+      {preview ? (
+        <img
+          src={preview}
+          alt=""
+          className="size-9 shrink-0 rounded-lg object-cover"
+        />
+      ) : (
+        <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-tint-surface text-tint-muted">
+          {icon}
+        </span>
+      )}
       <div className="min-w-0 flex-1">
         <div className="truncate text-sm font-medium">{stripBidi(attachment.name)}</div>
         <div className="mt-0.5 text-xs text-tint-muted">
@@ -712,12 +895,16 @@ export function ChatError({
 /** Shared dispatcher for built-in part types (message body and preference columns). */
 export function ChatBuiltInPart({
   part,
+  messageId,
   onApproval,
   onRetry,
+  onAction,
 }: {
   part: ChatBuiltInMessagePart
+  messageId?: ChatId
   onApproval?: (approved: boolean, reason?: string) => void
   onRetry?: () => void
+  onAction?: (payload: ChatMessageActionPayload) => void
 }) {
   switch (part.type) {
     case 'text':
@@ -725,7 +912,9 @@ export function ChatBuiltInPart({
     case 'code':
       return <ChatCodeBlock part={part} />
     case 'image':
-      return <ChatImage part={part} />
+      return <ChatImage part={part} messageId={messageId} onAction={onAction} />
+    case 'images':
+      return <ChatImages part={part} messageId={messageId} onAction={onAction} />
     case 'file':
       return <ChatFile part={part} />
     case 'audio':
@@ -865,6 +1054,8 @@ export function ChatMessagePartView<TCustomPart extends ChatCustomPart = never>(
     content = (
       <ChatBuiltInPart
         part={part}
+        messageId={message.id}
+        onAction={onAction}
         onRetry={onRetry}
         // Only approval parts can produce a decision, so the handler exists only
         // for them rather than being defended against inside the callback.

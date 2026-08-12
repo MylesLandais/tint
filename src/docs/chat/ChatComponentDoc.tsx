@@ -228,7 +228,76 @@ const imagePartProps = [
     name: 'part',
     type: 'ChatImagePart',
     required: true,
-    description: 'Rendered inside a bordered figure, lazy-loaded and capped at a max height.',
+    description:
+      'Single figure; click opens ChatMediaLightbox. Optional `href` becomes “View original”.',
+  },
+  {
+    name: 'messageId',
+    type: 'ChatId',
+    description: 'When set with `onAction`, emits `image-open` on lightbox open.',
+  },
+  {
+    name: 'onAction',
+    type: '(payload: ChatMessageActionPayload) => void',
+    description: 'Reports lightbox open intent for hosts that track analytics or state.',
+  },
+]
+
+const imagesPartProps = [
+  {
+    name: 'part',
+    type: 'ChatImagesPart',
+    required: true,
+    description:
+      'Gallery block: caption, adaptive grid (1–4+), optional action row, and in-part lightbox navigation.',
+  },
+  {
+    name: 'messageId',
+    type: 'ChatId',
+    description: 'Required for `image-open` / `image-action` payloads.',
+  },
+  {
+    name: 'onAction',
+    type: '(payload: ChatMessageActionPayload) => void',
+    description: 'Reports lightbox opens and app-defined grid action button clicks.',
+  },
+]
+
+const lightboxProps = [
+  {
+    name: 'open',
+    type: 'boolean',
+    required: true,
+    description: 'Whether the overlay is mounted.',
+  },
+  {
+    name: 'images',
+    type: 'readonly ChatImageItem[]',
+    required: true,
+    description: 'Gallery cells; navigation stays within this list.',
+  },
+  {
+    name: 'index',
+    type: 'number',
+    required: true,
+    description: 'Zero-based index into `images` (clamped when out of range).',
+  },
+  {
+    name: 'onClose',
+    type: '() => void',
+    required: true,
+    description: 'Escape, backdrop click, and Close all call this.',
+  },
+  {
+    name: 'onIndexChange',
+    type: '(index: number) => void',
+    required: true,
+    description: 'Arrow keys and chevrons report the next index; host updates `index`.',
+  },
+  {
+    name: 'caption',
+    type: 'string',
+    description: 'Optional title under the image (falls back to the current alt text).',
   },
 ]
 
@@ -238,7 +307,7 @@ const filePartProps = [
     type: 'ChatFilePart',
     required: true,
     description:
-      'Attachment name, size, and status, with an upload progress bar while `status` is "uploading".',
+      'Attachment name, size, and status, with an upload progress bar while `status` is "uploading". Image attachments with `previewUrl`/`url` show a thumbnail.',
   },
 ]
 
@@ -608,9 +677,11 @@ export function ChatComponentDoc() {
               Rich part renderers
             </p>
             <p className="mb-6 max-w-2xl text-sm text-tint-muted">
-              All twelve take a single <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">part</code> prop
-              typed to their specific rich-part shape, plus <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">className</code> and
-              native attributes; two also take a callback.
+              Part renderers take a typed{' '}
+              <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">part</code> prop
+              plus <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">className</code> and
+              native attributes. Image gallery parts also take message action callbacks; approval and
+              error parts take decision / retry callbacks.
             </p>
           </div>
           <div>
@@ -624,6 +695,19 @@ export function ChatComponentDoc() {
           <div>
             <h3 className="mb-3 text-lg font-semibold">ChatImage</h3>
             <PropsTable rows={imagePartProps} />
+          </div>
+          <div>
+            <h3 className="mb-3 text-lg font-semibold">ChatImages</h3>
+            <PropsTable rows={imagesPartProps} />
+          </div>
+          <div>
+            <h3 className="mb-3 text-lg font-semibold">ChatMediaLightbox</h3>
+            <p className="mb-3 max-w-2xl text-sm text-tint-muted">
+              Controlled full-viewport viewer used by <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">ChatImage</code> and{' '}
+              <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">ChatImages</code>. Hosts can mount it
+              directly for custom galleries. Pattern ported from Bunny&apos;s feed lightbox.
+            </p>
+            <PropsTable rows={lightboxProps} />
           </div>
           <div>
             <h3 className="mb-3 text-lg font-semibold">ChatFile</h3>

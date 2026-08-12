@@ -256,7 +256,12 @@ export function ChatComposer({
       >
         {attachments.length ? (
           <ChatComposerAttachments className="mb-2">
-            {attachments.map((attachment) => (
+            {attachments.map((attachment) => {
+              const preview =
+                attachment.mediaType.startsWith('image/')
+                  ? attachment.previewUrl ?? attachment.url
+                  : undefined
+              return (
               <div
                 key={attachment.id}
                 data-attachment-id={attachment.id}
@@ -264,6 +269,12 @@ export function ChatComposer({
               >
                 {attachment.status === 'uploading' ? (
                   <Spinner size="sm" className="shrink-0 text-tint-accent" />
+                ) : preview ? (
+                  <img
+                    src={preview}
+                    alt=""
+                    className="size-6 shrink-0 rounded object-cover"
+                  />
                 ) : (
                   <Icon icon={Paperclip} size="sm" className="shrink-0 text-tint-muted" />
                 )}
@@ -285,7 +296,8 @@ export function ChatComposer({
                   <Icon icon={X} size="sm" />
                 </button>
               </div>
-            ))}
+              )
+            })}
           </ChatComposerAttachments>
         ) : null}
 

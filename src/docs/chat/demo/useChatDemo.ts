@@ -409,6 +409,78 @@ export function useChatDemo() {
     [schedule, streamAnswer, updateMessage],
   )
 
+  const runImagesScenario = useCallback(
+    (messageId: string) => {
+      schedule(() => {
+        updateMessage(messageId, (message) => ({
+          ...message,
+          parts: [
+            {
+              ...message.parts[0]!,
+              status: 'complete',
+              durationMs: 520,
+            },
+            {
+              id: `${messageId}-answer`,
+              type: 'text',
+              format: 'markdown',
+              status: 'streaming',
+              text: '',
+            },
+          ],
+        }))
+        streamAnswer(
+          messageId,
+          `${messageId}-answer`,
+          [
+            'Four local variations — click any cell to open the lightbox, then use ',
+            '← / → or the chevrons to move between them.',
+          ],
+          [
+            {
+              id: `${messageId}-gallery`,
+              type: 'images',
+              caption: 'vibrant California poppies at golden hour',
+              images: [
+                {
+                  id: `${messageId}-img-1`,
+                  src: '/images/gallery-1.svg',
+                  alt: 'Poppies variation 1 — warm terracotta field',
+                },
+                {
+                  id: `${messageId}-img-2`,
+                  src: '/images/gallery-2.svg',
+                  alt: 'Poppies variation 2 — teal dusk sky',
+                },
+                {
+                  id: `${messageId}-img-3`,
+                  src: '/images/gallery-3.svg',
+                  alt: 'Poppies variation 3 — violet hillside',
+                },
+                {
+                  id: `${messageId}-img-4`,
+                  src: '/images/gallery-4.svg',
+                  alt: 'Poppies variation 4 — deep green meadow',
+                },
+              ],
+              actions: [
+                { id: 'upscale-1', label: 'U1', imageId: `${messageId}-img-1` },
+                { id: 'upscale-2', label: 'U2', imageId: `${messageId}-img-2` },
+                { id: 'upscale-3', label: 'U3', imageId: `${messageId}-img-3` },
+                { id: 'upscale-4', label: 'U4', imageId: `${messageId}-img-4` },
+                { id: 'vary-1', label: 'V1', imageId: `${messageId}-img-1` },
+                { id: 'vary-2', label: 'V2', imageId: `${messageId}-img-2` },
+                { id: 'vary-3', label: 'V3', imageId: `${messageId}-img-3` },
+                { id: 'vary-4', label: 'V4', imageId: `${messageId}-img-4` },
+              ],
+            },
+          ],
+        )
+      }, 420)
+    },
+    [schedule, streamAnswer, updateMessage],
+  )
+
   const runPreferenceScenario = useCallback(
     (messageId: string) => {
       schedule(() => {
@@ -520,7 +592,9 @@ export function useChatDemo() {
           ? 'Inspecting attachment metadata'
           : activeScenario === 'preference'
             ? 'Preparing candidate responses'
-            : 'Planning response',
+            : activeScenario === 'images'
+              ? 'Composing image variations'
+              : 'Planning response',
         runTime + 1_000,
       )
       const next = [
@@ -542,6 +616,7 @@ export function useChatDemo() {
       if (activeScenario === 'attachment') {
         runAttachmentScenario(assistantId, payload.attachments)
       }
+      if (activeScenario === 'images') runImagesScenario(assistantId)
       if (activeScenario === 'preference') runPreferenceScenario(assistantId)
     },
     [
@@ -549,6 +624,7 @@ export function useChatDemo() {
       messages,
       runAttachmentScenario,
       runErrorScenario,
+      runImagesScenario,
       runPreferenceScenario,
       runResearchScenario,
       runStreamingScenario,
@@ -603,6 +679,8 @@ export function useChatDemo() {
         runResearchScenario(messageId)
       } else if (scenarioId === 'attachment') {
         runAttachmentScenario(messageId, lastPayloadRef.current?.attachments ?? [])
+      } else if (scenarioId === 'images') {
+        runImagesScenario(messageId)
       } else if (scenarioId === 'preference') {
         runPreferenceScenario(messageId)
       } else {
@@ -613,6 +691,7 @@ export function useChatDemo() {
       clearTimers,
       runAttachmentScenario,
       runErrorScenario,
+      runImagesScenario,
       runPreferenceScenario,
       runResearchScenario,
       runStreamingScenario,
@@ -778,14 +857,18 @@ export function useChatDemo() {
 
   const addAttachments = useCallback(
     (files: readonly File[]) => {
-      const additions = files.map<ChatAttachmentData>((file, index) => ({
-        id: `demo-attachment-${attachmentSequenceRef.current++}-${index}`,
-        name: file.name,
-        mediaType: file.type || 'application/octet-stream',
-        size: file.size,
-        uploadProgress: 0,
-        status: 'uploading',
-      }))
+      const additions = files.map<ChatAttachmentData>((file, index) => {
+        const isImage = file.type.startsWith('image/')
+        return {
+          id: `demo-attachment-${attachmentSequenceRef.current++}-${index}`,
+          name: file.name,
+          mediaType: file.type || 'application/octet-stream',
+          size: file.size,
+          uploadProgress: 0,
+          status: 'uploading',
+          previewUrl: isImage ? URL.createObjectURL(file) : undefined,
+        }
+      })
       setAttachments((current) => [...current, ...additions])
 
       for (const addition of additions) {
@@ -799,6 +882,10 @@ export function useChatDemo() {
                       ...attachment,
                       uploadProgress: progress,
                       status: progress === 100 ? 'ready' : 'uploading',
+                      url:
+                        progress === 100
+                          ? attachment.previewUrl ?? attachment.url
+                          : attachment.url,
                     }
                   : attachment,
               ),
@@ -811,9 +898,13 @@ export function useChatDemo() {
   )
 
   const removeAttachment = useCallback((attachmentId: string) => {
-    setAttachments((current) =>
-      current.filter((attachment) => attachment.id !== attachmentId),
-    )
+    setAttachments((current) => {
+      const removed = current.find((attachment) => attachment.id === attachmentId)
+      if (removed?.previewUrl?.startsWith('blob:')) {
+        URL.revokeObjectURL(removed.previewUrl)
+      }
+      return current.filter((attachment) => attachment.id !== attachmentId)
+    })
   }, [])
 
   const reset = useCallback(() => {

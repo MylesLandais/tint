@@ -28,11 +28,13 @@ import {
  * Theater mode hides body scroll. Two players open at once would each save the
  * *current* value and restore it on close, so the first to close would restore
  * the second's `hidden`. Counted, so the last one out restores the original.
+ *
+ * Exported so other full-viewport overlays (chat lightbox) share the same lock.
  */
 let scrollLockCount = 0
 let scrollLockPrevious = ''
 
-function lockBodyScroll(): () => void {
+export function lockBodyScroll(): () => void {
   if (typeof document === 'undefined') return () => {}
   if (scrollLockCount === 0) {
     scrollLockPrevious = document.body.style.overflow
@@ -45,8 +47,10 @@ function lockBodyScroll(): () => void {
   }
 }
 
-const FOCUSABLE =
+export const OVERLAY_FOCUSABLE =
   'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
+
+const FOCUSABLE = OVERLAY_FOCUSABLE
 
 export type UseFullscreenOptions = {
   /**
