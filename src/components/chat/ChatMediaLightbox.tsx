@@ -92,11 +92,14 @@ export function ChatMediaLightbox({
   return createPortal(
     <div
       data-chat-lightbox=""
+      role="presentation"
       className={cn(
         'fixed inset-0 z-50 flex items-center justify-center bg-tint-ink/70 p-4 backdrop-blur-sm',
         className,
       )}
-      onClick={onClose}
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) onClose()
+      }}
     >
       <div
         ref={panelRef}
@@ -105,7 +108,6 @@ export function ChatMediaLightbox({
         aria-labelledby={titleId}
         tabIndex={-1}
         className="relative flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-tint-border bg-tint-panel shadow-lg outline-none"
-        onClick={(event) => event.stopPropagation()}
       >
         <button
           type="button"
