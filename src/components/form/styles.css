@@ -10,7 +10,7 @@
 .tint-form[data-columns='2'] > .tint-form-section > .tint-form-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .tint-form-control { display: grid; gap: 0.375rem; min-width: 0; }
 .tint-form-label { color: var(--tint-muted, currentColor); font-size: 0.875rem; }
-.tint-form-required { margin-left: 0.25rem; color: var(--tint-danger, currentColor); }
+.tint-form-label[data-required='true']::after { content: '*'; margin-left: 0.25rem; color: var(--tint-danger, currentColor); }
 .tint-form-description { margin: 0; color: var(--tint-muted, currentColor); font-size: 0.8125rem; line-height: 1.45; }
 .tint-form-error { margin: 0; color: var(--tint-danger-ink, currentColor); font-size: 0.8125rem; }
 .tint-form-input, .tint-form-textarea, .tint-form select.tint-form-input {

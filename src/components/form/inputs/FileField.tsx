@@ -1,4 +1,4 @@
-import React, { useId } from 'react'
+import React from 'react'
 import type { FormFileValue } from '../contracts'
 import { describedByFor } from '../FormControl'
 
@@ -23,8 +23,7 @@ export function FileField({
   description,
   error,
 }: FileFieldProps) {
-  const previewId = useId()
-  const isImage = value?.mimeType.startsWith('image/') && value.objectUrl
+  const preview = value?.mimeType.startsWith('image/') ? value.objectUrl : undefined
 
   function onFile(file: File | undefined) {
     if (!file) {
@@ -42,9 +41,7 @@ export function FileField({
 
   return (
     <div className="tint-form-file">
-      {isImage ? (
-        <img id={previewId} className="tint-form-file__preview" src={value.objectUrl} alt="" />
-      ) : null}
+      {preview ? <img className="tint-form-file__preview" src={preview} alt="" /> : null}
       <input
         id={id}
         className="tint-form-file__input"

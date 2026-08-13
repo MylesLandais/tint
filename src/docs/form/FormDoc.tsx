@@ -6,11 +6,11 @@ import {
   defaultValuesForSchema,
   type FormSchema,
   type FormValues,
-} from '../components/form'
-import '../components/form/styles.css'
-import { CodeBlock } from './components/CodeBlock'
-import { DocsPage, DocsPreview, DocsSection } from './components/DocsPage'
-import { PropsTable } from './components/PropsTable'
+} from '../../components/form'
+import '../../components/form/styles.css'
+import { CodeBlock } from '../components/CodeBlock'
+import { DocsPage, DocsPreview, DocsSection } from '../components/DocsPage'
+import { PropsTable } from '../components/PropsTable'
 
 const usage = `import { useState } from 'react'
 import {

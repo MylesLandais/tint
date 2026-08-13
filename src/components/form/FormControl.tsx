@@ -37,13 +37,8 @@ export function FormControl({
       data-invalid={error ? 'true' : undefined}
       data-disabled={disabled ? 'true' : undefined}
     >
-      <label className="tint-form-label" htmlFor={id}>
+      <label className="tint-form-label" htmlFor={id} data-required={required ? 'true' : undefined}>
         {label}
-        {required ? (
-          <span className="tint-form-required" aria-hidden="true">
-            *
-          </span>
-        ) : null}
       </label>
       {description ? (
         <p className="tint-form-description" id={descriptionId}>

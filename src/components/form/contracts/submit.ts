@@ -1,4 +1,4 @@
-import { FormAbortError, throwIfAborted } from './errors'
+import { FormAbortError, FormAuthorizationError, FormError, FormTransportError, throwIfAborted } from './errors'
 import type { FormSchema } from './schema'
 import type { FormIssue, FormValidationResult } from './validate'
 import type { FormValues } from './values'
@@ -116,7 +116,6 @@ export function createMemoryFormTransport<TValues = FormValues, TResult = TValue
       if (cached) return cached
 
       if (options.authorize && !(await options.authorize(envelope))) {
-        const { FormAuthorizationError } = await import('./errors')
         throw new FormAuthorizationError(undefined, requestId)
       }
 
@@ -141,9 +140,7 @@ export function createMemoryFormTransport<TValues = FormValues, TResult = TValue
         replay.set(envelope.idempotencyKey, result)
         return result
       } catch (cause) {
-        if (cause instanceof FormAbortError) throw cause
-        const { FormTransportError, FormError } = await import('./errors')
-        if (cause instanceof FormError) throw cause
+        if (cause instanceof FormAbortError || cause instanceof FormError) throw cause
         throw new FormTransportError(undefined, requestId, cause)
       }
     },

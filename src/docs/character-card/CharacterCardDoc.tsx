@@ -9,12 +9,12 @@ import {
   parseTavernCardJson,
   serializeTavernCard,
   type TavernCardV2,
-} from '../components/character-card'
-import type { FormFileValue } from '../components/form'
-import '../components/form/styles.css'
-import { CodeBlock } from './components/CodeBlock'
-import { DocsPage, DocsPreview, DocsSection } from './components/DocsPage'
-import { PropsTable } from './components/PropsTable'
+} from '../../components/character-card'
+import type { FormFileValue } from '../../components/form'
+import '../../components/form/styles.css'
+import { CodeBlock } from '../components/CodeBlock'
+import { DocsPage, DocsPreview, DocsSection } from '../components/DocsPage'
+import { PropsTable } from '../components/PropsTable'
 
 const usage = `import { useState } from 'react'
 import {
@@ -47,8 +47,11 @@ const props = [
   { name: 'onSubmit', type: '(envelope: FormSubmitEnvelope) => void | Promise<void>', description: 'Called after validation with the form envelope.' },
 ]
 
-function download(filename: string, bytes: BlobPart, type: string) {
-  const blob = new Blob([bytes], { type })
+function download(filename: string, bytes: string | Uint8Array, type: string) {
+  const blob =
+    typeof bytes === 'string'
+      ? new Blob([bytes], { type })
+      : new Blob([Uint8Array.from(bytes).buffer as ArrayBuffer], { type })
   const url = URL.createObjectURL(blob)
   const anchor = document.createElement('a')
   anchor.href = url
@@ -64,7 +67,7 @@ export function CharacterCardDoc() {
     next.data.description = 'A late-night barista with a pen tucked behind one ear.'
     next.data.personality = 'Sarcastic, quietly protective of regulars.'
     next.data.scenario = '{{user}} arrives just before closing.'
-    next.data.first_mes = '"We're closed in ten. Sit down before you fall down."'
+    next.data.first_mes = '"We\'re closed in ten. Sit down before you fall down."'
     next.data.tags = ['original', 'slice-of-life']
     next.data.creator = 'tint'
     next.data.character_version = '1.0'

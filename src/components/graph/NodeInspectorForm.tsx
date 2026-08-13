@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
-import { FormLayout } from '../../form'
-import type { FormSchema, FormValues } from '../../form/contracts'
+import { FormLayout } from '../form'
+import type { FormSchema, FormValues } from '../form/contracts'
 import type { GraphCommand, GraphNode } from './contracts'
 import { createGraphNodeFormTransport } from './contracts'
 
