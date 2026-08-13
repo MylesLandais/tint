@@ -1,7 +1,75 @@
+import type { FormSchema } from '../../form/contracts'
 import type { GraphPort } from '../contracts'
 import { createNodeRegistry, type NodeDefinition } from '../contracts'
 import { GenericNodeView } from './GenericNodeView'
 import { ScriptNodeView, type ScriptNodeConfiguration } from './ScriptNodeView'
+
+const triggerFormSchema: FormSchema = {
+  id: 'graph.trigger',
+  version: '1',
+  title: '',
+  sections: [
+    {
+      id: 'config',
+      title: 'Configuration',
+      fields: [{ name: 'event', kind: 'text', label: 'Event', required: true }],
+    },
+  ],
+}
+
+const actionFormSchema: FormSchema = {
+  id: 'graph.action',
+  version: '1',
+  title: '',
+  sections: [
+    {
+      id: 'config',
+      title: 'Configuration',
+      fields: [{ name: 'action', kind: 'text', label: 'Action', required: true }],
+    },
+  ],
+}
+
+const scriptFormSchema: FormSchema = {
+  id: 'graph.script',
+  version: '1',
+  title: '',
+  sections: [
+    {
+      id: 'config',
+      title: 'Configuration',
+      fields: [
+        {
+          name: 'language',
+          kind: 'select',
+          label: 'Language',
+          options: [
+            { value: 'typescript', label: 'TypeScript' },
+            { value: 'python', label: 'Python' },
+            { value: 'lua', label: 'Lua' },
+          ],
+        },
+        { name: 'sourceRef', kind: 'text', label: 'Source', required: true },
+        { name: 'entrypoint', kind: 'text', label: 'Entrypoint' },
+        { name: 'runtimeProfileId', kind: 'text', label: 'Runtime' },
+        { name: 'permissions', kind: 'tags', label: 'Permissions' },
+      ],
+    },
+  ],
+}
+
+const ontologyFormSchema: FormSchema = {
+  id: 'graph.ontology',
+  version: '1',
+  title: '',
+  sections: [
+    {
+      id: 'config',
+      title: 'Configuration',
+      fields: [{ name: 'iri', kind: 'text', label: 'IRI', required: true }],
+    },
+  ],
+}
 
 function ports(
   specs: Array<Pick<GraphPort, 'key' | 'direction'> & Partial<GraphPort>>,
@@ -25,6 +93,7 @@ const triggerDefinition: NodeDefinition = {
   derivePorts: () => ports([{ key: 'out', direction: 'output' }]),
   validate: async () => [],
   render: GenericNodeView,
+  formSchema: triggerFormSchema,
 }
 
 const actionDefinition: NodeDefinition = {
@@ -40,6 +109,7 @@ const actionDefinition: NodeDefinition = {
     ]),
   validate: async () => [],
   render: GenericNodeView,
+  formSchema: actionFormSchema,
 }
 
 const scriptDefinition: NodeDefinition<ScriptNodeConfiguration> = {
@@ -71,6 +141,7 @@ const scriptDefinition: NodeDefinition<ScriptNodeConfiguration> = {
     return []
   },
   render: ScriptNodeView,
+  formSchema: scriptFormSchema,
 }
 
 const ontologyDefinition: NodeDefinition = {
@@ -86,6 +157,7 @@ const ontologyDefinition: NodeDefinition = {
     ]),
   validate: async () => [],
   render: GenericNodeView,
+  formSchema: ontologyFormSchema,
 }
 
 /**

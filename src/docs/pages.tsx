@@ -19,10 +19,9 @@ import { VideoPlayerDoc } from './VideoPlayerDoc'
  * Path -> page component, kept apart from `routes.ts` so that the route data
  * stays importable from `DocsNav` without closing an import cycle.
  *
- * The four heavy pages load lazily: Editor pulls in Tiptap, Terminal pulls in
- * xterm, Auth pulls in its own stylesheet, and Graph pulls in the vendored
- * xyflow bundle, its stylesheet, and a ComfyUI workflow fixture. Everything else
- * is small enough to ship in the entry chunk.
+ * The heavy pages load lazily: Editor pulls in Tiptap, Terminal pulls in
+ * xterm, Auth pulls in its own stylesheet, Graph pulls in the vendored
+ * xyflow bundle, and Form / Character Card pull in the form stylesheet.
  */
 const EditorDoc = lazy(() =>
   import('./editor/EditorDoc').then((module) => ({ default: module.EditorDoc })),
@@ -33,6 +32,10 @@ const TerminalDoc = lazy(() =>
 const AuthDoc = lazy(() => import('./auth/AuthDoc').then((module) => ({ default: module.AuthDoc })))
 const GraphDoc = lazy(() =>
   import('./graph/GraphDoc').then((module) => ({ default: module.GraphDoc })),
+)
+const FormDoc = lazy(() => import('./form/FormDoc').then((module) => ({ default: module.FormDoc })))
+const CharacterCardDoc = lazy(() =>
+  import('./character-card/CharacterCardDoc').then((module) => ({ default: module.CharacterCardDoc })),
 )
 
 /**
@@ -47,6 +50,8 @@ export const DOC_PAGES = {
   'components/editor': EditorDoc,
   'components/terminal': TerminalDoc,
   'components/graph': GraphDoc,
+  'components/form': FormDoc,
+  'components/character-card': CharacterCardDoc,
   'components/socket': SocketDoc,
   'components/collab': CollabDoc,
   'components/auth': AuthDoc,

@@ -1,6 +1,8 @@
-import React, { useId, useState, type FormEvent, type ReactNode } from 'react'
+import React, { useMemo, type ReactNode } from 'react'
+import { FormLayout } from '../form'
+import { createAuthFormSchema } from '../form/schemas'
 
-void React // Keep source-package JSX compatible with consumers using the classic runtime.
+void React
 
 export type SignInFormLabels = {
   email: string
@@ -25,6 +27,11 @@ export type SignInFormProps = {
   className?: string
 }
 
+/**
+ * Controlled email/password form. The public props did not change; the fields
+ * now render through `FormLayout` so auth shares `form_inputs` with every other
+ * composed form.
+ */
 export function SignInForm({
   email,
   password,
@@ -38,60 +45,35 @@ export function SignInForm({
   onSubmit,
   className,
 }: SignInFormProps) {
-  const prefix = useId()
-  const emailId = `${prefix}-email`
-  const passwordId = `${prefix}-password`
-  const [passwordVisible, setPasswordVisible] = useState(false)
-
-  function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    if (!busy) void onSubmit()
-  }
+  const schema = useMemo(
+    () =>
+      createAuthFormSchema({
+        email: labels.email,
+        password: labels.password,
+        showPassword: labels.showPassword,
+        hidePassword: labels.hidePassword,
+        emailPlaceholder,
+        passwordPlaceholder,
+      }),
+    [labels, emailPlaceholder, passwordPlaceholder],
+  )
 
   return (
-    <form className={['tint-auth-form', className].filter(Boolean).join(' ')} onSubmit={submit}>
-      {error ? <div className="tint-auth-message" role="alert" aria-live="polite">{error}</div> : null}
-      <div className="tint-auth-field">
-        <label htmlFor={emailId}>{labels.email}</label>
-        <input
-          id={emailId}
-          type="email"
-          autoComplete="email"
-          value={email}
-          placeholder={emailPlaceholder}
-          disabled={busy}
-          onChange={(event) => onEmailChange(event.target.value)}
-          required
-        />
-      </div>
-      <div className="tint-auth-field">
-        <label htmlFor={passwordId}>{labels.password}</label>
-        <div className="tint-auth-password">
-          <input
-            id={passwordId}
-            type={passwordVisible ? 'text' : 'password'}
-            autoComplete="current-password"
-            value={password}
-            placeholder={passwordPlaceholder}
-            disabled={busy}
-            onChange={(event) => onPasswordChange(event.target.value)}
-            required
-          />
-          <button
-            type="button"
-            className="tint-auth-password-toggle"
-            aria-label={passwordVisible ? labels.hidePassword : labels.showPassword}
-            aria-pressed={passwordVisible}
-            disabled={busy}
-            onClick={() => setPasswordVisible((visible) => !visible)}
-          >
-            {passwordVisible ? labels.hidePassword : labels.showPassword}
-          </button>
-        </div>
-      </div>
-      <button className="tint-auth-submit" type="submit" disabled={busy}>
-        {busy ? labels.submitting : labels.submit}
-      </button>
-    </form>
+    <FormLayout
+      schema={schema}
+      values={{ email, password }}
+      onValuesChange={(values) => {
+        const nextEmail = typeof values.email === 'string' ? values.email : email
+        const nextPassword = typeof values.password === 'string' ? values.password : password
+        if (nextEmail !== email) onEmailChange(nextEmail)
+        if (nextPassword !== password) onPasswordChange(nextPassword)
+      }}
+      busy={busy}
+      error={error}
+      submitLabel={labels.submit}
+      submittingLabel={labels.submitting}
+      className={['tint-auth-form', className].filter(Boolean).join(' ')}
+      onSubmit={() => onSubmit()}
+    />
   )
 }
