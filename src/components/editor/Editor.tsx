@@ -140,7 +140,7 @@ export function Editor({
       className={className}
       bodyClassName={cn('bg-tint-panel', bodyClassName)}
     >
-      {editor ? (
+      {editor?.extensionManager ? (
         <>
           {editable ? <EditorToolbar editor={editor} end={toolbarSlot} /> : null}
           <EditorContent editor={editor} className="tint-editor-content" />
