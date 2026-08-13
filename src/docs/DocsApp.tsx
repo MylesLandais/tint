@@ -41,7 +41,6 @@ function FailedDoc({ onRetry }: { onRetry: () => void }) {
 
 type DocErrorBoundaryProps = {
   children: ReactNode
-  resetKey: string
 }
 
 type DocErrorBoundaryState = {
@@ -57,12 +56,6 @@ class DocErrorBoundary extends Component<DocErrorBoundaryProps, DocErrorBoundary
 
   componentDidCatch(error: Error, info: ErrorInfo) {
     console.error('[tint] A docs page failed to render.', error, info)
-  }
-
-  componentDidUpdate(prevProps: DocErrorBoundaryProps) {
-    if (prevProps.resetKey !== this.props.resetKey && this.state.failed) {
-      this.setState({ failed: false })
-    }
   }
 
   render() {
@@ -106,7 +99,7 @@ export function DocsApp() {
   if (!Page) return <HomeDoc />
 
   return (
-    <DocErrorBoundary resetKey={route.path}>
+    <DocErrorBoundary key={route.path}>
       <Suspense fallback={<LoadingDoc />}>
         <Page />
       </Suspense>
