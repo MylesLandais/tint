@@ -5,6 +5,7 @@ import { CollabDoc } from './collab/CollabDoc'
 import { IconsDoc } from './IconsDoc'
 import { MediaPlayerDoc } from './MediaPlayerDoc'
 import { TableDoc } from './table/TableDoc'
+import { ChromeDoc } from './ChromeDoc'
 import { ThemeDoc } from './ThemeDoc'
 import { AudioInputDoc } from './AudioInputDoc'
 import { CodeDoc } from './CodeDoc'
@@ -19,10 +20,11 @@ import { VideoPlayerDoc } from './VideoPlayerDoc'
  * Path -> page component, kept apart from `routes.ts` so that the route data
  * stays importable from `DocsNav` without closing an import cycle.
  *
- * The heavy pages load lazily: Editor pulls in Tiptap, Terminal pulls in
- * xterm, Auth pulls in its own stylesheet, Graph pulls in the vendored
- * xyflow bundle, Form / Character Card pull in the form stylesheet, and
- * Telemetry pulls in the graph canvas for its service map.
+ * Heavy pages load lazily: Editor pulls in Tiptap, Terminal pulls in xterm,
+ * Auth pulls in its own stylesheet, Graph / Dependency Graph pull in the
+ * vendored xyflow bundle, Form / Character Card pull in the form stylesheet,
+ * and Telemetry pulls in the graph canvas for its service map. Everything else
+ * is small enough to ship in the entry chunk.
  */
 const EditorDoc = lazy(() =>
   import('./editor/EditorDoc').then((module) => ({ default: module.EditorDoc })),
@@ -39,7 +41,12 @@ const TelemetryDoc = lazy(() =>
 )
 const FormDoc = lazy(() => import('./form/FormDoc').then((module) => ({ default: module.FormDoc })))
 const CharacterCardDoc = lazy(() =>
-  import('./character-card/CharacterCardDoc').then((module) => ({ default: module.CharacterCardDoc })),
+  import('./character-card/CharacterCardDoc').then((module) => ({
+    default: module.CharacterCardDoc,
+  })),
+)
+const ComponentGraphDoc = lazy(() =>
+  import('./ComponentGraphDoc').then((module) => ({ default: module.ComponentGraphDoc })),
 )
 
 /**
@@ -51,6 +58,7 @@ export const DOC_PAGES = {
   'components/chat': ChatComponentDoc,
   'components/audio-input': AudioInputDoc,
   'components/table': TableDoc,
+  'components/chrome': ChromeDoc,
   'components/editor': EditorDoc,
   'components/terminal': TerminalDoc,
   'components/graph': GraphDoc,
@@ -68,4 +76,5 @@ export const DOC_PAGES = {
   'components/dice': DiceDoc,
   'components/icon': IconsDoc,
   'components/theme': ThemeDoc,
+  'graph': ComponentGraphDoc,
 } satisfies Record<DocRoutePath, ComponentType>

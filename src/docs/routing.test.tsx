@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { DocsNav } from './components/DocsNav'
 import { HomeDoc } from './HomeDoc'
 import { DOC_PAGES } from './pages'
 import { DOC_ROUTES, findRoute, pathFromHash } from './routes'
+import { DocsShell } from './shell/DocsShell'
 
 /**
  * These cover the defect this module was built to fix: the Editor and Terminal
@@ -67,29 +67,39 @@ describe('HomeDoc', () => {
   })
 })
 
-describe('DocsNav', () => {
+describe('DocsShell', () => {
   beforeEach(() => {
     window.location.hash = '#/components/editor'
   })
 
-  it('shows the current page in the breadcrumb', () => {
-    render(<DocsNav current="components/editor" />)
-    expect(screen.getByText('Editor')).toBeInTheDocument()
+  it('links every documented component from the sidebar', () => {
+    render(<DocsShell current="components/editor">content</DocsShell>)
+    const nav = screen.getByRole('navigation', { name: 'Documentation' })
+    const hrefs = Array.from(nav.querySelectorAll('a')).map((link) => link.getAttribute('href'))
+
+    for (const route of DOC_ROUTES) {
+      expect(hrefs, `sidebar missing ${route.path}`).toContain(`#/${route.path}`)
+    }
   })
 
   it('always offers a route back to the index', () => {
-    render(<DocsNav current="components/terminal" />)
+    render(<DocsShell current="components/terminal">content</DocsShell>)
     expect(screen.getByRole('link', { name: /tint/i })).toHaveAttribute('href', '#/')
   })
 
-  it('scrolls to a section without disturbing the route hash', () => {
+  it('marks the current page in the sidebar', () => {
+    render(<DocsShell current="components/editor">content</DocsShell>)
+    expect(screen.getByRole('link', { name: 'Editor' })).toHaveAttribute('aria-current', 'page')
+  })
+
+  it('scrolls to a TOC section without disturbing the route hash', () => {
     const scrollIntoView = vi.fn()
     const section = document.createElement('section')
     section.id = 'usage'
     section.scrollIntoView = scrollIntoView
     document.body.append(section)
 
-    render(<DocsNav current="components/editor" />)
+    render(<DocsShell current="components/editor">content</DocsShell>)
     screen.getByRole('button', { name: 'Usage' }).click()
 
     expect(scrollIntoView).toHaveBeenCalled()

@@ -1,6 +1,12 @@
 import { VideoPlayer } from '../components/video-player'
 import { CodeBlock } from './components/CodeBlock'
-import { DocsPage, DocsPreview, DocsSection } from './components/DocsPage'
+import {
+  DocsCallout,
+  DocsDemo,
+  DocsFooter,
+  DocsPage,
+  DocsSection,
+} from './components/DocsPage'
 import { PropsTable } from './components/PropsTable'
 
 const usage = `import { VideoPlayer } from 'tint/video-player'
@@ -17,6 +23,31 @@ const viaMediaPlayer = `import { MediaPlayer } from 'tint/media-player'
 
 // Identical surface, reached through the unified entry point.
 <MediaPlayer kind="video" src="/videos/clip.mp4" label="Clip" />`
+
+const signature = `export type VideoPlayerProps = {
+  src: string
+  poster?: string
+  className?: string
+  autoHideControls?: boolean
+  label?: string
+  title?: string
+  duration?: number
+  playbackSpeeds?: readonly number[]
+  size?: 'sm' | 'md' | 'lg'
+  shadow?: boolean
+  onPlay?: () => void
+  onPause?: () => void
+} & Omit<
+  VideoHTMLAttributes<HTMLVideoElement>,
+  'src' | 'poster' | 'className' | 'controls' | 'onPlay' | 'onPause'
+>`
+
+const previewDemoCode = `<VideoPlayer
+  src="/videos/big-buck-bunny.mp4"
+  label="Big Buck Bunny"
+  title="Big Buck Bunny"
+  autoHideControls={false}
+/>`
 
 const props = [
   { name: 'src', type: 'string', required: true, description: 'Video source URL. An object URL from a recording works too.' },
@@ -55,14 +86,14 @@ export function VideoPlayerDoc() {
       }
     >
       <DocsSection id="preview" title="Preview">
-        <DocsPreview>
+        <DocsDemo code={previewDemoCode}>
           <VideoPlayer
             src="/videos/big-buck-bunny.mp4"
             label="Big Buck Bunny"
             title="Big Buck Bunny"
             autoHideControls={false}
           />
-        </DocsPreview>
+        </DocsDemo>
       </DocsSection>
 
       <DocsSection
@@ -75,24 +106,29 @@ export function VideoPlayerDoc() {
           Through MediaPlayer
         </h3>
         <CodeBlock code={viaMediaPlayer} />
-        <div className="mt-4 rounded-xl border border-tint-border bg-tint-surface/60 p-4 text-sm leading-6 text-tint-muted">
-          <strong className="font-semibold text-tint-ink">
-            The two surfaces are not interchangeable.
-          </strong>{' '}
-          <code>MediaPlayer kind="audio"</code> picks its tier from its container width
-          via container queries; <code>size</code> here is a plain max-width. And the
-          audio-only props — <code>waveform</code>, <code>artist</code>,{' '}
-          <code>artwork</code>, <code>onPrevious</code>, <code>onNext</code> — have no
-          effect on video.
-        </div>
-        <div className="mt-4 rounded-xl border border-tint-warning/40 bg-tint-warning-soft p-4 text-sm leading-6 text-tint-warning-ink">
-          <strong className="font-semibold">No captions yet.</strong> There is no prop for
-          a <code>&lt;track&gt;</code>, so subtitles and captions cannot be attached
-          through tint today. A video that needs them has to be composed by the host.
+        <div className="mt-4 space-y-4">
+          <DocsCallout variant="note" title="The two surfaces are not interchangeable">
+            <code>MediaPlayer kind="audio"</code> picks its tier from its container width
+            via container queries; <code>size</code> here is a plain max-width. And the
+            audio-only props — <code>waveform</code>, <code>artist</code>,{' '}
+            <code>artwork</code>, <code>onPrevious</code>, <code>onNext</code> — have no
+            effect on video.
+          </DocsCallout>
+          <DocsCallout variant="warning" title="No captions yet">
+            There is no prop for a <code>&lt;track&gt;</code>, so subtitles and captions
+            cannot be attached through tint today. A video that needs them has to be
+            composed by the host.
+          </DocsCallout>
         </div>
       </DocsSection>
 
       <DocsSection id="api" title="API">
+        <p className="mt-0 mb-4 max-w-3xl text-sm leading-6 text-tint-muted">
+          The full prop signature, from the source:
+        </p>
+        <div className="mb-6">
+          <CodeBlock code={signature} language="tsx" />
+        </div>
         <PropsTable rows={props} />
         <p className="mt-4 text-sm leading-6 text-tint-muted">
           Remaining <code>&lt;video&gt;</code> attributes — <code>loop</code>,{' '}
@@ -101,6 +137,10 @@ export function VideoPlayerDoc() {
           custom chrome.
         </p>
       </DocsSection>
+
+      <DocsFooter>
+        <span>Demo media: Big Buck Bunny (Blender Foundation)</span>
+      </DocsFooter>
     </DocsPage>
   )
 }

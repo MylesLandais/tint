@@ -5,6 +5,10 @@ import '../index.css'
 // site offers all of them, so it loads all of them.
 import '../styles/themes/solarized.css'
 import '../styles/themes/gruvbox.css'
+import '../styles/themes/latte.css'
+import '../styles/themes/frappe.css'
+import '../styles/themes/macchiato.css'
+import '../styles/themes/mocha.css'
 import { DocsApp } from './DocsApp'
 
 createRoot(document.getElementById('root')!).render(

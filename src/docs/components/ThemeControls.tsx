@@ -11,6 +11,12 @@ const THEMES = [
   { value: 'tint', label: 'Tint' },
   { value: 'solarized', label: 'Solarized' },
   { value: 'gruvbox', label: 'Gruvbox' },
+  // The Catppuccin flavors each pin a scheme, so the toggle beside this picker
+  // moves only the native chrome while one of them is selected.
+  { value: 'latte', label: 'Catppuccin Latte' },
+  { value: 'frappe', label: 'Catppuccin Frappé' },
+  { value: 'macchiato', label: 'Catppuccin Macchiato' },
+  { value: 'mocha', label: 'Catppuccin Mocha' },
 ] as const
 
 export function ThemeControls() {

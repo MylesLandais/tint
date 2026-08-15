@@ -9,7 +9,13 @@ import {
 import { CodeTabs, type CodeTab } from '../../components/code'
 import { Icon } from '../../components/icon'
 import { CodeBlock } from '../components/CodeBlock'
-import { DocsNav } from '../components/DocsNav'
+import {
+  DocsCallout,
+  DocsDemo,
+  DocsFooter,
+  DocsPage,
+  DocsSection,
+} from '../components/DocsPage'
 import { PropsTable } from '../components/PropsTable'
 import { EditorOutput } from './EditorOutput'
 
@@ -197,6 +203,55 @@ export function Draft() {
   )
 }`
 
+const previewDemoCode = `<Editor
+  value={document}
+  onValueChange={setDocument}
+  expanded={expanded}
+  onExpandedChange={setExpanded}
+  status={\`\${countWords(document)} words\`}
+  extensions={DOC_EXTENSIONS}
+  slashCommands={slashCommands}
+  editorRef={editorRef}
+  onContentError={(error) => setContentError(error.message)}
+  toolbarEnd={<button onClick={toggleOutput}>Show output</button>}
+/>`
+
+const signatureCode = `type EditorProps = {
+  /** The controlled Tiptap JSON document. */
+  value: EditorDocument
+  /** Called on every keystroke with the new document. */
+  onValueChange: (value: EditorDocument) => void
+  /** Controlled \`Panel\` disclosure state. */
+  expanded: boolean
+  onExpandedChange: (expanded: boolean) => void
+  /** Panel disclosure label. */
+  title?: ReactNode
+  /** Save or sync state rendered beside the title. */
+  status?: ReactNode
+  /** Controls rendered in the panel header, outside the disclosure button. */
+  headerActions?: ReactNode
+  /** Trailing toolbar content. A function receives the live editor instance. */
+  toolbarEnd?: ReactNode | ((editor: TiptapEditor) => ReactNode)
+  /** Shown in the empty document. */
+  placeholder?: string
+  /** Accessible name for the editable region. */
+  label?: string
+  /** Set false for a read-only view; the toolbar and bubble menu disappear. */
+  editable?: boolean
+  /** Where to place the caret on mount. */
+  autofocus?: FocusPosition
+  /** Extra Tiptap extensions. Must be referentially stable. */
+  extensions?: Extensions
+  /** Set false to drop tint's defaults and supply the whole set yourself. */
+  includeDefaultExtensions?: boolean
+  /** Commands offered by the \`/\` menu. Referentially stable, like extensions. */
+  slashCommands?: readonly EditorSlashCommand[]
+  /** Receives the live Tiptap instance, for imperative commands. */
+  editorRef?: Ref<TiptapEditor | null>
+  /** Called when a document fails schema validation, instead of throwing. */
+  onContentError?: (error: Error) => void
+}`
+
 const editorProps = [
   { name: 'value', type: 'EditorDocument', required: true, description: 'Controlled Tiptap JSON document.' },
   { name: 'onValueChange', type: '(value: EditorDocument) => void', required: true, description: 'Receives JSON after a document transaction.' },
@@ -247,20 +302,17 @@ export function EditorDoc() {
   )
 
   return (
-    <main className="min-h-screen px-4 py-8 sm:px-6 lg:px-10 lg:py-12">
-      <div className="mx-auto max-w-[1200px]">
-        <DocsNav current="components/editor" />
-
-        <section className="mb-8 max-w-3xl">
-          <p className="m-0 text-xs font-semibold tracking-[0.14em] text-tint-accent uppercase">Magical text buffer</p>
-          <h1 className="mt-2 mb-3 text-3xl font-semibold tracking-tight text-tint-ink sm:text-4xl">Editor</h1>
-          <p className="m-0 text-base leading-7 text-tint-muted">
-            A controlled WYSIWYG drafting surface with block commands, selection formatting,
-            keyboard shortcuts, and an escape hatch into the full Tiptap extension system.
-          </p>
-        </section>
-
-        <section className="mb-14">
+    <DocsPage
+      route="components/editor"
+      title="Editor"
+      intro="A controlled WYSIWYG drafting surface with block commands, selection formatting, keyboard shortcuts, and an escape hatch into the full Tiptap extension system."
+    >
+      <DocsSection
+        id="preview"
+        title="Preview"
+        description="A controlled rich-text buffer with a custom slash command, a word-count status, and a toolbar slot toggling the JSON output below."
+      >
+        <DocsDemo code={previewDemoCode}>
           <Editor
             value={document}
             onValueChange={(next) => {
@@ -284,37 +336,43 @@ export function EditorDoc() {
               </button>
             }
           />
-          {contentError ? <p role="alert" className="text-sm text-tint-danger">{contentError}</p> : null}
+          {contentError ? <p role="alert" className="mt-3 text-sm text-tint-danger">{contentError}</p> : null}
           {showOutput ? <EditorOutput document={document} /> : null}
-        </section>
+        </DocsDemo>
+      </DocsSection>
 
-        <section id="usage" className="mb-14 max-w-3xl scroll-mt-24">
-          <h2 className="mb-3 text-2xl font-semibold tracking-tight text-tint-ink">Usage</h2>
+      <DocsSection id="usage" title="Usage">
+        <div className="max-w-3xl space-y-4">
           <CodeBlock code={usageCode} language="tsx" />
-          <div className="mt-4 rounded-xl border border-tint-warning/40 bg-tint-warning-soft p-4 text-sm leading-6 text-tint-warning-ink">
-            <strong className="font-semibold">
-              Keep <code>extensions</code> and <code>slashCommands</code> stable.
-            </strong>{' '}
+          <DocsCallout variant="warning" title="Keep extensions and slashCommands stable">
             Both feed the dependency array that builds the Tiptap instance, so a fresh
             array literal on every render tears the editor down and rebuilds it — losing
             the caret, the selection, and the undo history as you type. Hoist them to
             module scope, or wrap them in <code>useMemo</code>. Omitting them entirely is
             safe.
-          </div>
-        </section>
+          </DocsCallout>
+        </div>
+      </DocsSection>
 
-        <section className="mb-14 max-w-3xl">
-          <h2 className="mb-3 text-2xl font-semibold tracking-tight text-tint-ink">Polyglot code</h2>
-          <p className="mb-5 text-tint-muted">Each container owns its active language, so templates can be reordered or expanded without coupling every example on the page.</p>
+      <DocsSection
+        id="polyglot-code"
+        title="Polyglot code"
+        description="Each container owns its active language, so templates can be reordered or expanded without coupling every example on the page."
+      >
+        <div className="max-w-3xl">
           <CodeTemplateBuilder />
-        </section>
+        </div>
+      </DocsSection>
 
-        <section id="api" className="scroll-mt-24">
-          <h2 className="mb-2 text-2xl font-semibold tracking-tight text-tint-ink">API</h2>
-          <p className="mb-6 max-w-2xl text-tint-muted">Required props are marked with an asterisk.</p>
-          <PropsTable rows={editorProps} />
-        </section>
-      </div>
-    </main>
+      <DocsSection id="api" title="API" description="Required props are marked with an asterisk.">
+        <div className="mb-8 max-w-3xl space-y-4">
+          <p className="m-0 text-sm leading-6 text-tint-muted">The full prop signature, from the source:</p>
+          <CodeBlock code={signatureCode} language="tsx" />
+        </div>
+        <PropsTable rows={editorProps} />
+      </DocsSection>
+
+      <DocsFooter />
+    </DocsPage>
   )
 }

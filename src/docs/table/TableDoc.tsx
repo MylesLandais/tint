@@ -1,8 +1,35 @@
-import { DocsNav } from '../components/DocsNav'
 import { CodeBlock } from '../components/CodeBlock'
 import { PropsTable } from '../components/PropsTable'
+import {
+  DocsCallout,
+  DocsDemo,
+  DocsFooter,
+  DocsPage,
+  DocsPreview,
+  DocsSection,
+} from '../components/DocsPage'
 import { MusicCollection } from './MusicCollection'
 import { MasonryCollection } from './MasonryCollection'
+
+const previewDemoCode = `const [sort, setSort] = useState<TableSort | null>(null)
+const [selection, setSelection] = useState<readonly string[]>([])
+
+// The pipeline is a pure function, so the same call runs on a server.
+const rows = useMemo(
+  () => deriveRows(tracks, { columns, sort }),
+  [tracks, sort],
+)
+
+<DataTable
+  rows={rows}
+  columns={columns}
+  rowId="id"
+  label="Tracks"
+  sort={sort}
+  onSortChange={setSort}
+  selection={selection}
+  onSelectionChange={(change) => setSelection(change.selection)}
+/>`
 
 const usageCode = `import {
   DataTable,
@@ -40,6 +67,77 @@ export function Tracks({ tracks }: { tracks: Track[] }) {
       onSelectionChange={(change) => setSelection(change.selection)}
     />
   )
+}`
+
+const dataTableSignature = `// DataTable (src/components/table/types.ts)
+
+export type DataTableProps<TRow> = {
+  rows?: readonly TRow[]
+  table?: TableInstance<TRow>
+  columns: readonly TableColumn<TRow>[]
+  rowId: (keyof TRow & string) | ((row: TRow) => TableRowId)
+  label?: string
+  caption?: ReactNode
+  density?: TableDensity
+  emptyState?: ReactNode
+  rowHeaderColumn?: string
+  sort?: TableSort | null
+  onSortChange?: (sort: TableSort | null) => void
+  selection?: readonly TableRowId[]
+  onSelectionChange?: (change: TableSelectionChange) => void
+  selectionLabel?: (row: TRow) => string
+  expanded?: readonly TableRowId[]
+  onExpandedChange?: (expanded: readonly TableRowId[], rowId: TableRowId) => void
+  renderExpanded?: (row: TRow) => ReactNode
+  hiddenColumns?: readonly string[]
+  onHiddenColumnsChange?: (hidden: readonly string[]) => void
+  resizing?: TableResizeConfig
+  columnWidths?: Readonly<Record<string, number>>
+  rowHeights?: Readonly<Record<TableRowId, number>>
+  onResize?: (event: TableResizeEvent) => void
+  editing?: TableEditConfig<TRow>
+}`
+
+const tableToolbarSignature = `// TableToolbar (src/components/table/types.ts)
+
+export type TableToolbarProps = {
+  children?: ReactNode
+}`
+
+const tableColumnsMenuSignature = `// TableColumnsMenu (src/components/table/types.ts)
+
+export type TableColumnsMenuProps<TRow> = {
+  columns: readonly TableColumn<TRow>[]
+  hiddenColumns: readonly string[]
+  onChange: (hidden: readonly string[]) => void
+  label?: string
+}`
+
+const tablePagerSignature = `// TablePager (src/components/table/types.ts)
+
+export type TablePagerProps = {
+  page: number
+  pageSize: number
+  total: number
+  onChange: (page: number) => void
+  label?: string
+}`
+
+const tableColumnSignature = `// TableColumn (src/components/table/types.ts)
+
+export type TableColumn<TRow> = {
+  id: string
+  header?: ReactNode
+  accessor?: (row: TRow) => unknown
+  type?: TableFieldType
+  renderCell?: (row: TRow) => ReactNode
+  sortable?: boolean
+  hideable?: boolean
+  pinned?: boolean
+  width?: number
+  align?: TableAlign
+  label?: string
+  editable?: boolean | ((row: TRow) => boolean)
 }`
 
 const dataTableProps = [
@@ -391,130 +489,156 @@ const notes = [
 
 export function TableDoc() {
   return (
-    <main className="min-h-screen px-4 py-8 sm:px-6 lg:px-10 lg:py-12">
-      <div className="mx-auto max-w-[1440px]">
-        <DocsNav current="components/table" />
+    <DocsPage
+      route="components/table"
+      title="DataTable"
+      intro="A controlled data grid with a pure behavior core. The demo below points it at a festival lineup: artists are the parent grain with catalog rollups and personal collection state, and expanding a row reveals its tracks. Sort, select, hide a column, page — every one of those is state this page owns."
+      wide
+    >
+      <DocsSection id="preview" title="Preview">
+        <DocsDemo code={previewDemoCode}>
+          <MusicCollection />
+        </DocsDemo>
+      </DocsSection>
 
-        <section className="mb-8 max-w-3xl">
-          <p className="m-0 text-xs font-semibold tracking-[0.14em] text-tint-accent uppercase">
-            Components
-          </p>
-          <h1 className="mt-2 mb-3 text-3xl font-semibold tracking-tight text-tint-ink sm:text-4xl">
-            DataTable
-          </h1>
-          <p className="m-0 text-base leading-7 text-tint-muted">
-            A controlled data grid with a pure behavior core. The demo below points it at a
-            festival lineup: artists are the parent grain with catalog rollups and personal
-            collection state, and expanding a row reveals its tracks. Sort, select, hide a
-            column, page — every one of those is state this page owns.
-          </p>
-        </section>
+      <DocsSection
+        id="usage"
+        title="Usage"
+        description="Sort, selection, expansion, and column visibility are props — the table renders what it is handed and reports what the reader did. The row pipeline is a pure function, so the same call runs on a server."
+      >
+        <CodeBlock code={usageCode} language="tsx" />
+      </DocsSection>
 
-        <MusicCollection />
-
-        <section className="mt-14">
-          <h2 className="mb-2 text-2xl font-semibold tracking-tight text-tint-ink">
-            One row model, two layouts
-          </h2>
-          <p className="mt-0 mb-5 max-w-3xl text-base leading-7 text-tint-muted">
+      <DocsSection
+        id="features"
+        title="One row model, two layouts"
+        description={
+          <>
             A masonry is a table whose cells have inconsistent dimensions, and infinite scroll is
             pagination wearing a different hat. Both views below read the same{' '}
-            <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">useDataTable</code>{' '}
-            instance — flipping the layout changes where cells are placed, not what the filter
-            matched or how it sorted. Scrolling to the end grows the page size; that is all
-            &ldquo;infinite&rdquo; ever means, and the active filter bounds it.
-          </p>
+            <code>useDataTable</code> instance — flipping the layout changes where cells are
+            placed, not what the filter matched or how it sorted. Scrolling to the end grows the
+            page size; that is all &ldquo;infinite&rdquo; ever means, and the active filter bounds
+            it.
+          </>
+        }
+      >
+        <DocsPreview className="mb-6">
           <MasonryCollection />
-        </section>
-
-        <section className="mt-14 grid gap-4 md:grid-cols-3">
+        </DocsPreview>
+        <div className="grid gap-4 md:grid-cols-3">
           {notes.map(([title, body]) => (
             <article
               key={title}
               className="rounded-2xl border border-tint-border bg-tint-panel p-5"
             >
-              <h2 className="m-0 text-base font-semibold text-tint-ink">{title}</h2>
+              <h3 className="m-0 text-base font-semibold text-tint-ink">{title}</h3>
               <p className="mt-2 mb-0 text-sm leading-6 text-tint-muted">{body}</p>
             </article>
           ))}
-        </section>
+        </div>
+      </DocsSection>
 
-        <section id="usage" className="mt-10 max-w-3xl scroll-mt-24">
-          <h2 className="mb-3 text-2xl font-semibold tracking-tight text-tint-ink">
-            Usage
-          </h2>
-          <CodeBlock code={usageCode} language="tsx" />
-        </section>
-
-        <section id="api" className="mt-14 scroll-mt-24 space-y-10">
+      <DocsSection
+        id="api"
+        title="API"
+        description={
+          <>
+            Required props are marked with an asterisk. <code>DataTable</code> is generic over the
+            row shape, same as the <code>columns: TableColumn&lt;Track&gt;[]</code> example above.
+          </>
+        }
+      >
+        <div className="space-y-10">
           <div>
-            <h2 className="mb-2 text-2xl font-semibold tracking-tight text-tint-ink">API</h2>
-            <p className="mb-6 max-w-2xl text-tint-muted">
-              Required props are marked with an asterisk. <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">DataTable</code> is
-              generic over the row shape, same as the{' '}
-              <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">columns: TableColumn&lt;Track&gt;[]</code> example
-              above.
+            <p className="mb-3 max-w-2xl text-sm text-tint-muted">
+              The full prop signature, from the source:
             </p>
-            <h3 className="mb-3 text-lg font-semibold text-tint-ink">DataTable</h3>
+            <CodeBlock code={dataTableSignature} language="tsx" className="mb-3" />
             <PropsTable rows={dataTableProps} />
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold text-tint-ink">TableToolbar</h3>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+              TableToolbar
+            </h3>
+            <p className="mb-3 max-w-2xl text-sm text-tint-muted">
+              The full prop signature, from the source:
+            </p>
+            <CodeBlock code={tableToolbarSignature} language="tsx" className="mb-3" />
             <PropsTable rows={tableToolbarProps} />
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold text-tint-ink">TableColumnsMenu</h3>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+              TableColumnsMenu
+            </h3>
+            <p className="mb-3 max-w-2xl text-sm text-tint-muted">
+              The full prop signature, from the source:
+            </p>
+            <CodeBlock code={tableColumnsMenuSignature} language="tsx" className="mb-3" />
             <PropsTable rows={tableColumnsMenuProps} />
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold text-tint-ink">TablePager</h3>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">TablePager</h3>
+            <p className="mb-3 max-w-2xl text-sm text-tint-muted">
+              The full prop signature, from the source:
+            </p>
+            <CodeBlock code={tablePagerSignature} language="tsx" className="mb-3" />
             <PropsTable rows={tablePagerProps} />
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold text-tint-ink">
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">
               TableColumn&lt;TRow&gt;
             </h3>
             <p className="mb-3 max-w-2xl text-sm text-tint-muted">
               Every subcomponent above reads its <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">columns</code> in
-              this shape.
+              this shape. The full prop signature, from the source:
             </p>
+            <CodeBlock code={tableColumnSignature} language="tsx" className="mb-3" />
             <PropsTable rows={tableColumnProps} />
           </div>
-        </section>
+          <DocsCallout variant="note" title="Column visibility is caller-owned">
+            <code>onHiddenColumnsChange</code> is declared on the type, but{' '}
+            <code>DataTable</code> itself only reads <code>hiddenColumns</code> — pair it with a
+            caller-owned control like <code>TableColumnsMenu</code>, which is what actually
+            invokes it.
+          </DocsCallout>
+        </div>
+      </DocsSection>
 
-        <section className="mt-14 max-w-3xl">
-          <h2 className="mb-2 text-2xl font-semibold tracking-tight text-tint-ink">
-            Table utilities
-          </h2>
-          <p className="mt-0 mb-5 text-base leading-7 text-tint-muted">
-            <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">DataTable</code> is the
-            component; these are the pure functions underneath it —{' '}
-            <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">deriveRows</code> is
-            what the table calls internally, exported so a server or a URL-synced view can run
-            the identical pipeline.
-          </p>
-          <div className="space-y-6">
-            <div>
-              <h3 className="mb-3 text-base font-semibold">Row pipeline</h3>
-              <CodeBlock code={rowPipelineCode} language="ts" />
-            </div>
-            <div>
-              <h3 className="mb-3 text-base font-semibold">Field types</h3>
-              <CodeBlock code={fieldTypesCode} language="ts" />
-            </div>
-            <div>
-              <h3 className="mb-3 text-base font-semibold">View persistence</h3>
-              <CodeBlock code={useTableViewCode} language="ts" />
-            </div>
+      <DocsSection
+        id="utilities"
+        title="Table utilities"
+        description={
+          <>
+            <code>DataTable</code> is the component; these are the pure functions underneath it —{' '}
+            <code>deriveRows</code> is what the table calls internally, exported so a server or a
+            URL-synced view can run the identical pipeline.
+          </>
+        }
+      >
+        <div className="space-y-6">
+          <div>
+            <h3 className="mb-3 text-base font-semibold text-tint-ink">Row pipeline</h3>
+            <CodeBlock code={rowPipelineCode} language="ts" />
           </div>
-        </section>
+          <div>
+            <h3 className="mb-3 text-base font-semibold text-tint-ink">Field types</h3>
+            <CodeBlock code={fieldTypesCode} language="ts" />
+          </div>
+          <div>
+            <h3 className="mb-3 text-base font-semibold text-tint-ink">View persistence</h3>
+            <CodeBlock code={useTableViewCode} language="ts" />
+          </div>
+        </div>
+      </DocsSection>
 
-        <p className="mt-8 text-xs text-tint-muted">
+      <DocsFooter>
+        <span>
           Artist records are real festival lineup data. Track rows are synthetic — generated
-          deterministically so the demo has something to sort and expand, and naming nothing
-          that exists.
-        </p>
-      </div>
-    </main>
+          deterministically so the demo has something to sort and expand, and naming nothing that
+          exists.
+        </span>
+      </DocsFooter>
+    </DocsPage>
   )
 }

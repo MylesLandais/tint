@@ -3,9 +3,31 @@ import { AudioInput } from '../components/audio-input'
 import { ChatComposer } from '../components/chat'
 import { MediaPlayer } from '../components/media-player'
 import { CodeBlock } from './components/CodeBlock'
-import { DocsNav } from './components/DocsNav'
 import { PropsTable } from './components/PropsTable'
+import {
+  DocsCallout,
+  DocsDemo,
+  DocsFooter,
+  DocsPage,
+  DocsSection,
+} from './components/DocsPage'
 import { createWebSpeechTranscriber } from './audio-input/webSpeechTranscriber'
+
+const previewDemoCode = `<ChatComposer
+  value={draft}
+  onValueChange={setDraft}
+  state={recording ? 'disabled' : 'idle'}
+  onSubmit={() => setDraft('')}
+  actions={
+    <AudioInput
+      transcriber={transcriber}
+      value={draft}
+      onValueChange={setDraft}
+      onActiveChange={setRecording}
+      onCapture={(blob, meta) => saveVoiceNote(blob, meta.duration)}
+    />
+  }
+/>`
 
 const usage = `import { AudioInput } from 'tint/audio-input'
 
@@ -14,6 +36,36 @@ const usage = `import { AudioInput } from 'tint/audio-input'
   value={draft}
   onValueChange={setDraft}
 />`
+
+const signature = `export type AudioInputProps = Omit<HTMLAttributes<HTMLDivElement>, 'onError'> & {
+  /** Host-owned recognition adapter. Changing identity tears down any session. */
+  transcriber: AudioTranscriber
+  /**
+   * The controlled draft this appends into. Captured at record time, so
+   * cancelling restores exactly what was there before.
+   */
+  value: string
+  /** Receives interim previews and committed transcript text. */
+  onValueChange: (value: string) => void
+  /**
+   * Receives a voice-note Blob after Stop. Supplying this turns on
+   * \`MediaRecorder\`; omit it and only recognition runs.
+   */
+  onCapture?: (blob: Blob, meta: AudioCaptureMeta) => void
+  /**
+   * Reports whether a session is live, so a host can lock adjacent text
+   * editing while the transcript is being written into it.
+   */
+  onActiveChange?: (active: boolean) => void
+  /** Blocks starting a recording. Has no effect on one already running. */
+  disabled?: boolean
+  /**
+   * Names the controls: "Start {label}", "Stop {label}", "Cancel {label}".
+   * Not visible text.
+   */
+  label?: string
+}`
+
 const props = [
   { name: 'transcriber', type: 'AudioTranscriber', required: true, description: 'Host-owned transcription adapter.' },
   { name: 'value', type: 'string', required: true, description: 'Controlled draft text.' },
@@ -35,41 +87,63 @@ export function AudioInputDoc() {
   }, [recording])
 
   return (
-    <main className="min-h-screen px-4 py-8 sm:px-6 lg:px-10 lg:py-12">
-      <div className="mx-auto max-w-[1200px]">
-        <DocsNav current="components/audio-input" />
-        <section className="mb-8 max-w-3xl">
-          <p className="m-0 text-xs font-semibold tracking-[0.14em] text-tint-accent uppercase">Components</p>
-          <h1 className="mt-2 mb-3 text-3xl font-semibold tracking-tight text-tint-ink sm:text-4xl">Audio Input</h1>
-          <p className="m-0 text-base leading-7 text-tint-muted">A microphone control that captures locally and delegates speech recognition to a host-supplied adapter.</p>
-          <p className="mt-3 text-sm leading-6 text-tint-muted">This demo adapter uses the Web Speech API. Browser support is limited, and Chrome’s default recognition may send audio to a server-based service; it is not an offline privacy boundary.</p>
-        </section>
-        <section id="preview" className="mb-14 scroll-mt-24">
-          <div className="rounded-xl border border-tint-border bg-tint-panel p-4 shadow-sm sm:p-6">
-            <ChatComposer
-              value={draft}
-              onValueChange={setDraft}
-              state={active ? 'disabled' : 'idle'}
-              onSubmit={() => setDraft('')}
-              actions={<AudioInput transcriber={transcriber} value={draft} onValueChange={setDraft} onActiveChange={setActive} onCapture={(blob, meta) => {
-                setRecording((previous) => {
-                  if (previous) URL.revokeObjectURL(previous.url)
-                  return { url: URL.createObjectURL(blob), duration: meta.duration }
-                })
-              }} />}
-            />
-            {recording ? <MediaPlayer kind="audio" src={recording.url} label="Recorded voice note" duration={recording.duration} className="mt-4" /> : null}
-          </div>
-        </section>
-        <section id="usage" className="mb-14 max-w-3xl scroll-mt-24">
-          <h2 className="mb-3 text-2xl font-semibold tracking-tight">Usage</h2>
-          <CodeBlock code={usage} language="tsx" />
-        </section>
-        <section id="api" className="scroll-mt-24">
-          <h2 className="mb-2 text-2xl font-semibold tracking-tight">API</h2>
-          <PropsTable rows={props} />
-        </section>
-      </div>
-    </main>
+    <DocsPage
+      route="components/audio-input"
+      title="Audio Input"
+      intro="A microphone control that captures locally and delegates speech recognition to a host-supplied adapter."
+    >
+      <DocsSection
+        id="preview"
+        title="Preview"
+        description="Voice input docked in a chat composer. Stopping a recording commits the transcript to the draft and, when onCapture is set, hands back a playable voice note."
+      >
+        <DocsDemo code={previewDemoCode}>
+          <ChatComposer
+            value={draft}
+            onValueChange={setDraft}
+            state={active ? 'disabled' : 'idle'}
+            onSubmit={() => setDraft('')}
+            actions={<AudioInput transcriber={transcriber} value={draft} onValueChange={setDraft} onActiveChange={setActive} onCapture={(blob, meta) => {
+              setRecording((previous) => {
+                if (previous) URL.revokeObjectURL(previous.url)
+                return { url: URL.createObjectURL(blob), duration: meta.duration }
+              })
+            }} />}
+          />
+          {recording ? <MediaPlayer kind="audio" src={recording.url} label="Recorded voice note" duration={recording.duration} className="mt-4" /> : null}
+        </DocsDemo>
+        <div className="mt-6">
+          <DocsCallout variant="warning" title="Demo transcriber uses the Web Speech API">
+            Browser support is limited, and Chrome’s default recognition may send audio to a
+            server-based service; it is not an offline privacy boundary.
+          </DocsCallout>
+        </div>
+      </DocsSection>
+
+      <DocsSection
+        id="usage"
+        title="Usage"
+        description={
+          <>
+            <code>AudioInput</code> is fully controlled: the host owns the draft text through{' '}
+            <code>value</code>/<code>onValueChange</code> and supplies the transcription adapter.
+          </>
+        }
+      >
+        <CodeBlock code={usage} language="tsx" />
+      </DocsSection>
+
+      <DocsSection id="api" title="API">
+        <p className="mb-3 text-sm leading-6 text-tint-muted">
+          The full prop signature, from the source:
+        </p>
+        <div className="mb-6">
+          <CodeBlock code={signature} language="tsx" />
+        </div>
+        <PropsTable rows={props} />
+      </DocsSection>
+
+      <DocsFooter />
+    </DocsPage>
   )
 }

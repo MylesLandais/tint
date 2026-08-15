@@ -7,8 +7,49 @@ import {
   formatTime,
 } from '../components/media'
 import { CodeBlock } from './components/CodeBlock'
-import { DocsPage, DocsPreview, DocsSection } from './components/DocsPage'
+import {
+  DocsCallout,
+  DocsDemo,
+  DocsFooter,
+  DocsPage,
+  DocsPreview,
+  DocsSection,
+} from './components/DocsPage'
 import { PropsTable } from './components/PropsTable'
+
+const previewDemoCode = `const [progress, setProgress] = useState(35)
+const [volume, setVolume] = useState(70)
+const [muted, setMuted] = useState(false)
+const [hover, setHover] = useState<number | null>(null)
+
+<Slider
+  value={progress}
+  onChange={setProgress}
+  aria-label="Seek the example track"
+  showThumb
+  fillClassName="bg-tint-accent"
+/>
+
+<VolumeControl
+  volume={muted ? 0 : volume}
+  isMuted={muted}
+  onVolumeChange={(next) => {
+    setVolume(next)
+    setMuted(next === 0)
+  }}
+  onToggleMute={() => setMuted(m => !m)}
+  tone="surface"
+/>
+
+<Waveform
+  peaks={peaks}
+  progress={progress / 100}
+  hoverProgress={hover}
+  color="#0f6e56"
+  onSeek={(next) => setProgress(next * 100)}
+/>
+
+<MediaPlaceholder />`
 
 const usage = `import { Slider, VolumeControl, formatTime } from 'tint/media'
 
@@ -35,6 +76,35 @@ const waveformUsage = `import { Waveform } from 'tint/media'
   color={resolvedAccent}
   onSeek={p => seek(p * 100)}
 />`
+
+const sliderSignature = `export type SliderProps = {
+  value: number
+  onChange: (value: number) => void
+  className?: string
+  fillClassName?: string
+  thumbClassName?: string
+  showThumb?: boolean
+  orientation?: 'horizontal' | 'vertical'
+  'aria-label': string
+}`
+
+const volumeSignature = `export type VolumeControlProps = {
+  volume: number
+  isMuted: boolean
+  onVolumeChange: (value: number) => void
+  onToggleMute: () => void
+  onOpenChange?: (open: boolean) => void
+  tone?: 'chrome' | 'surface'
+  className?: string
+}`
+
+const waveformSignature = `export type WaveformProps = {
+  peaks: readonly number[]
+  progress: number
+  hoverProgress: number | null
+  color: string
+  onSeek: (progress: number) => void
+}`
 
 const sliderProps = [
   { name: 'value', type: 'number', required: true, description: 'Position, 0–100. Non-finite values clamp to 0.' },
@@ -87,7 +157,8 @@ export function MediaPrimitivesDoc() {
       note="These are exported because a host building its own player should not have to reimplement them. MediaPlayer composes exactly these."
     >
       <DocsSection id="preview" title="Preview">
-        <div className="grid gap-4 sm:grid-cols-2">
+        <DocsDemo code={previewDemoCode}>
+          <div className="grid gap-4 sm:grid-cols-2">
           <DocsPreview>
             <p className="mt-0 mb-4 text-sm font-medium text-tint-ink">Slider</p>
             <div className="flex items-center gap-3 text-tint-ink">
@@ -163,32 +234,79 @@ export function MediaPrimitivesDoc() {
               What renders when artwork is absent or fails to load.
             </p>
           </DocsPreview>
-        </div>
+          </div>
+        </DocsDemo>
       </DocsSection>
 
       <DocsSection id="usage" title="Usage">
-        <CodeBlock code={usage} />
-        <h3 className="mt-8 mb-3 text-base font-semibold text-tint-ink">Waveform</h3>
-        <CodeBlock code={waveformUsage} />
+        <div className="space-y-6">
+          <div>
+            <h3 className="mb-3 text-base font-semibold text-tint-ink">Slider, VolumeControl, formatTime</h3>
+            <CodeBlock code={usage} />
+          </div>
+          <div>
+            <h3 className="mb-3 text-base font-semibold text-tint-ink">Waveform</h3>
+            <CodeBlock code={waveformUsage} />
+          </div>
+          <DocsCallout variant="warning" title="Waveform needs a literal colour">
+            <code>peaks</code> must already be normalized to 0–1, and <code>color</code> must
+            be a canvas-parseable literal — <code>fillStyle</code> cannot resolve{' '}
+            <code>var(--tint-*)</code>, so resolve the token before passing it.
+          </DocsCallout>
+        </div>
       </DocsSection>
 
       <DocsSection id="api" title="API">
-        <h3 className="mt-0 mb-3 text-base font-semibold text-tint-ink">Slider</h3>
-        <PropsTable rows={sliderProps} />
-        <h3 className="mt-8 mb-3 text-base font-semibold text-tint-ink">VolumeControl</h3>
-        <PropsTable rows={volumeProps} />
-        <h3 className="mt-8 mb-3 text-base font-semibold text-tint-ink">Waveform</h3>
-        <PropsTable rows={waveformProps} />
-        <h3 className="mt-8 mb-3 text-base font-semibold text-tint-ink">formatTime</h3>
-        <p className="mt-0 text-sm leading-6 text-tint-muted">
-          <code>formatTime(seconds: number): string</code> — renders <code>m:ss</code>.
-          Minutes are not wrapped into hours, so a 70-minute recording reads{' '}
-          <code>70:00</code> rather than <code>1:10:00</code>. Non-finite and negative
-          input returns <code>0:00</code>, which is what keeps a live stream’s{' '}
-          <code>Infinity</code> duration and the <code>NaN</code> before metadata loads
-          off the screen.
-        </p>
+        <div className="space-y-10">
+          <div>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">Slider</h3>
+            <p className="mt-0 mb-3 text-sm leading-6 text-tint-muted">
+              The full prop signature, from the source:
+            </p>
+            <div className="mb-4">
+              <CodeBlock code={sliderSignature} language="tsx" />
+            </div>
+            <PropsTable rows={sliderProps} />
+          </div>
+          <div>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+              VolumeControl
+            </h3>
+            <p className="mt-0 mb-3 text-sm leading-6 text-tint-muted">
+              The full prop signature, from the source:
+            </p>
+            <div className="mb-4">
+              <CodeBlock code={volumeSignature} language="tsx" />
+            </div>
+            <PropsTable rows={volumeProps} />
+          </div>
+          <div>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">Waveform</h3>
+            <p className="mt-0 mb-3 text-sm leading-6 text-tint-muted">
+              The full prop signature, from the source:
+            </p>
+            <div className="mb-4">
+              <CodeBlock code={waveformSignature} language="tsx" />
+            </div>
+            <PropsTable rows={waveformProps} />
+          </div>
+          <div>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+              formatTime
+            </h3>
+            <p className="mt-0 text-sm leading-6 text-tint-muted">
+              <code>formatTime(seconds: number): string</code> — renders <code>m:ss</code>.
+              Minutes are not wrapped into hours, so a 70-minute recording reads{' '}
+              <code>70:00</code> rather than <code>1:10:00</code>. Non-finite and negative
+              input returns <code>0:00</code>, which is what keeps a live stream’s{' '}
+              <code>Infinity</code> duration and the <code>NaN</code> before metadata loads
+              off the screen.
+            </p>
+          </div>
+        </div>
       </DocsSection>
+
+      <DocsFooter />
     </DocsPage>
   )
 }
