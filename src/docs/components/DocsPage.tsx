@@ -28,6 +28,7 @@ const IMPORT_SNIPPETS = {
   'components/auth': "import { AuthProvider, SignInForm } from 'tint/auth'",
   'components/theme': "import { ThemePicker, ThemeToggle } from 'tint/theme'",
   'components/panel': "import { Panel } from 'tint/panel'",
+  'components/button': "import { Button } from 'tint/button'",
   'components/icon': "import { Icon, StatusIcon } from 'tint/icon'",
   'components/dice': "import { DiceRoller } from 'tint/dice'",
   'components/form': "import { FormLayout, TextField, SelectField } from 'tint/form'",

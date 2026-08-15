@@ -208,6 +208,17 @@ const ROUTE_DATA = [
     ],
   },
   {
+    path: 'components/button',
+    label: 'Button',
+    blurb: 'The shared button surface, as a component and as a bare class anchors can wear.',
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      { id: 'usage', label: 'Usage' },
+      { id: 'anchors', label: 'On anchors and other elements' },
+      { id: 'api', label: 'API' },
+    ],
+  },
+  {
     path: 'components/settings-popout',
     label: 'Settings Popout',
     blurb: 'A searchable, keyboard-driven picker for player settings and other grouped choices.',
@@ -302,6 +313,7 @@ export const ROUTE_GROUPS = {
   'components/auth': 'Data & infra',
   'components/theme': 'Theming & layout',
   'components/panel': 'Theming & layout',
+  'components/button': 'Theming & layout',
   'components/icon': 'Theming & layout',
   'components/dice': 'Theming & layout',
   'components/form': 'Theming & layout',

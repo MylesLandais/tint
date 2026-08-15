@@ -91,6 +91,9 @@ export type * from './components/panel'
 export { Badge } from './components/badge'
 export type { BadgeProps, BadgeTone } from './components/badge'
 
+export { Button } from './components/button'
+export type { ButtonProps, ButtonSize, ButtonVariant } from './components/button'
+
 export { ProgressBar } from './components/progress'
 export type { ProgressBarProps } from './components/progress'
 

@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.5",
   "type": "module",
-  "description": "Tint — controlled React components for media and rich chat interfaces.",
+  "description": "Tint \u2014 controlled React components for media and rich chat interfaces.",
   "files": [
     "src",
     "!src/docs",
@@ -39,6 +39,7 @@
     "./dice": "./src/components/dice/index.ts",
     "./panel": "./src/components/panel/index.ts",
     "./badge": "./src/components/badge/index.ts",
+    "./button": "./src/components/button/index.ts",
     "./progress": "./src/components/progress/index.ts",
     "./dialog": "./src/components/dialog/index.ts",
     "./context-menu": "./src/components/context-menu/index.ts",
