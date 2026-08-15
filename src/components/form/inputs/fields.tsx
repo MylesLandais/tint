@@ -58,6 +58,16 @@ export type PasswordFieldProps = Shared & {
   onVisibleChange?: (visible: boolean) => void
   showPasswordLabel?: string
   hidePasswordLabel?: string
+  /**
+   * A value is already held by the backend but cannot be read back.
+   *
+   * Write-only secret stores never return what they hold, so an empty field is
+   * ambiguous: it means "no secret" and "a secret you cannot see" equally. This
+   * disambiguates, and while it is set the field stops being `required` — an
+   * empty submit is the way to keep the stored value.
+   */
+  hasStoredValue?: boolean
+  storedValueLabel?: string
 }
 
 export function PasswordField({
@@ -74,24 +84,32 @@ export function PasswordField({
   onVisibleChange,
   showPasswordLabel = 'Show password',
   hidePasswordLabel = 'Hide password',
+  hasStoredValue = false,
+  storedValueLabel = 'A value is stored. Leave blank to keep it.',
 }: PasswordFieldProps) {
   const [uncontrolledVisible, setUncontrolledVisible] = useState(false)
   const isVisible = visible ?? uncontrolledVisible
   const setVisible = onVisibleChange ?? setUncontrolledVisible
+  const storedId = hasStoredValue ? `${id}-stored` : undefined
+  const describedBy =
+    [describedByFor(id, description, error), storedId].filter(Boolean).join(' ') || undefined
 
   return (
-    <div className="tint-form-password">
+    <div className="tint-form-password" data-has-stored-value={hasStoredValue ? 'true' : undefined}>
       <input
         id={id}
         className="tint-form-input"
         type={isVisible ? 'text' : 'password'}
         value={value}
         placeholder={placeholder}
-        required={required}
+        // A stored value satisfies the requirement; demanding input here would
+        // force the operator to re-enter a secret they cannot read just to
+        // change some unrelated field on the same form.
+        required={required && !hasStoredValue}
         disabled={disabled}
         autoComplete={autoComplete}
         aria-invalid={error ? true : undefined}
-        aria-describedby={describedByFor(id, description, error)}
+        aria-describedby={describedBy}
         onChange={(event) => onChange(event.target.value)}
       />
       <button
@@ -104,6 +122,11 @@ export function PasswordField({
       >
         {isVisible ? hidePasswordLabel : showPasswordLabel}
       </button>
+      {hasStoredValue ? (
+        <p className="tint-form-stored" id={storedId}>
+          {storedValueLabel}
+        </p>
+      ) : null}
     </div>
   )
 }

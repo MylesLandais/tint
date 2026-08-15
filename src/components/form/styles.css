@@ -41,9 +41,12 @@
 .tint-form-control[data-invalid='true'] .tint-form-textarea {
   border-color: var(--tint-danger, currentColor);
 }
-.tint-form-password { position: relative; display: flex; align-items: center; }
+.tint-form-password { position: relative; display: flex; flex-wrap: wrap; align-items: center; }
 .tint-form-password .tint-form-input { padding-right: 5rem; }
-.tint-form-password-toggle { position: absolute; right: 0.5rem; border: 0; background: transparent; color: var(--tint-muted, currentColor); font: inherit; cursor: pointer; }
+/* Pinned to the input row rather than vertically centred, so the stored-value
+   hint below does not drag the toggle down with it. */
+.tint-form-password-toggle { position: absolute; top: 0; right: 0.5rem; height: 2.75rem; border: 0; background: transparent; color: var(--tint-muted, currentColor); font: inherit; cursor: pointer; }
+.tint-form-stored { flex-basis: 100%; margin: 0.375rem 0 0; color: var(--tint-muted, currentColor); font-size: 0.8125rem; line-height: 1.45; }
 .tint-form-checkbox { width: 1.125rem; height: 1.125rem; accent-color: var(--tint-accent, currentColor); }
 .tint-form-slider { display: grid; grid-template-columns: 1fr auto; gap: 0.75rem; align-items: center; }
 .tint-form-range { width: 100%; accent-color: var(--tint-accent, currentColor); }
