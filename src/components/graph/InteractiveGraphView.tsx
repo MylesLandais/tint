@@ -140,10 +140,19 @@ export function InteractiveGraphView({
   )
 
   /**
-   * Every mutating command takes the same route: report it, then offer the
-   * document it produces. `node.configure` and `node.move` used to be applied
-   * inline here while the other six were only reported, so a host wiring
-   * `onCommand` into its own store double-applied those two and dropped the rest.
+   * Every command takes the same route: report it, then offer the document it
+   * produces. `node.configure` and `node.move` used to be applied inline here
+   * while the other six were only reported, so a host wiring `onCommand` into
+   * its own store double-applied those two and dropped the rest.
+   *
+   * It is also the *only* route. A second handler used to reduce node drags
+   * from a separate `onNodePositionsCommit` callback the adapter fired
+   * alongside the command — both against the same, not-yet-updated `document`,
+   * so one drag built two documents and discarded the first.
+   *
+   * `applyCommand` returns the same reference when nothing changed, and a new
+   * document with an unchanged revision for a camera move; the identity check
+   * below is what keeps a pan from waking every subscriber.
    */
   const handleCommand = useCallback(
     (command: GraphCommand) => {
