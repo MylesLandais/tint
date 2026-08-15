@@ -108,6 +108,28 @@ const ROUTE_DATA = [
     blurb: 'CRDT text sync over a vendored Yjs, with presence awareness and a pluggable transport.',
   },
   {
+    path: 'components/form',
+    label: 'Form',
+    blurb: 'Schema-driven layouts, labelled inputs, and a Promise-based submit contract.',
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      { id: 'schema', label: 'Schema' },
+      { id: 'usage', label: 'Usage' },
+      { id: 'api', label: 'API' },
+    ],
+  },
+  {
+    path: 'components/character-card',
+    label: 'Character Card',
+    blurb: 'SillyTavern-shaped Character Card V2 editor composed on FormLayout, with JSON and PNG round-trips.',
+    sections: [
+      { id: 'editor', label: 'Editor' },
+      { id: 'schema', label: 'Schema' },
+      { id: 'usage', label: 'Usage' },
+      { id: 'api', label: 'API' },
+    ],
+  },
+  {
     path: 'components/auth',
     label: 'Auth',
     blurb: 'Sign-in form, OAuth buttons, and a session client with an injectable transport.',

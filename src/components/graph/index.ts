@@ -16,10 +16,13 @@ export type { InteractiveGraphViewProps } from './InteractiveGraphView'
 
 export {
   applyCommand,
+  createGraphNodeFormTransport,
   createNodeRegistry,
   emptySelection,
   flattenValidationIssues,
+  graphConfigureCommand,
   nextRevision,
+  submitNodeConfiguration,
 } from './contracts'
 export type {
   EndpointReference,

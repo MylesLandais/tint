@@ -56,6 +56,7 @@ browser entrypoint.
 Open `http://tint.localhost/` for the component index — every documented component
 is linked from there, including `#/components/editor` (the rich-text buffer),
 `#/components/terminal` (the mock PTY-backed terminal), `#/components/auth`,
+`#/components/form` (schema-driven layouts), `#/components/character-card`,
 `#/components/chat`, `#/components/media-player`, `#/components/video-player`,
 `#/components/media` (the primitives the players are built from),
 `#/components/code`, `#/components/panel`, `#/components/settings-popout`,
@@ -236,6 +237,27 @@ The graph carries its own stylesheet — `tint/graph/styles.css`, alongside
 consumers should not pay for that. ComfyUI workflow support is composed in via
 `comfyNodeDefinition`; the default registry is domain-neutral.
 
+A node kind may declare `formSchema`. The inspector then renders `FormLayout`
+and Apply submits `node.configure` through the same reducer. Inspector forms
+need `tint/form/styles.css` as well.
+
+`FormLayout` is schema-driven: the host owns `values`, Tint maps `FormSchema`
+onto labelled inputs and a `FormSubmitEnvelope`. Hosts persist through
+`FormTransport` (the same injectable-Promise shape as `AuthTransport`).
+`SignInForm` and `CharacterCardEditorForm` are composed on this kit.
+
+```tsx
+import { FormLayout, DEMO_FORM_SCHEMA, defaultValuesForSchema } from 'tint/form'
+import 'tint/form/styles.css'
+
+const [values, setValues] = useState(() => defaultValuesForSchema(DEMO_FORM_SCHEMA))
+
+<FormLayout schema={DEMO_FORM_SCHEMA} values={values} onValuesChange={setValues} />
+```
+
+Open `#/components/form` to edit a schema and watch the layout update, and
+`#/components/character-card` for the SillyTavern-shaped V2 editor.
+
 Open `#/components/collab` for two textareas sharing one room.
 
 ## Theming
@@ -385,6 +407,8 @@ src/
   vendor/yjs/                  # vendored Yjs v13 CRDT engine
   components/graph/            # controlled node canvas — contracts, adapter, node views
   vendor/xyflow/               # vendored xyflow graph engine
+  components/form/             # FormLayout, form_inputs, and the submit Promise contract
+  components/character-card/   # Tavern Card V2 editor composed on FormLayout
   components/theme/            # scheme/theme hooks and controlled toggles
   components/icon/             # Icon / StatusIcon, the size scale, the status registry
   components/dice/             # DiceRoller — a worked example of extending Icon

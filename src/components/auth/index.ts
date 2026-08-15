@@ -1,5 +1,6 @@
 export { AuthProvider, useAuth, useSession } from './AuthProvider'
 export { SignInForm } from './SignInForm'
 export type { SignInFormLabels, SignInFormProps } from './SignInForm'
+export { AuthForm } from './AuthForm'
 export { OAuthButtons } from './OAuthButtons'
 export type { OAuthButtonsProps, OAuthOption } from './OAuthButtons'

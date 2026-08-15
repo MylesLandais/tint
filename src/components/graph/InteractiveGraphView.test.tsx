@@ -107,4 +107,21 @@ describe('InteractiveGraphView', () => {
     )
     expect(screen.getByRole('button', { name: 'Exit fullscreen' })).toBeInTheDocument()
   })
+
+  it('renders a FormLayout in the inspector when the kind declares formSchema', () => {
+    render(
+      <InteractiveGraphView
+        document={demoGraphDocument}
+        selection={{
+          nodeIds: new Set(['n-trigger']),
+          edgeIds: new Set(),
+          groupIds: new Set(),
+          primary: { kind: 'node', id: 'n-trigger' },
+        }}
+      />,
+    )
+
+    expect(screen.getByLabelText('Event')).toHaveValue('webhook.intake')
+    expect(screen.getByRole('button', { name: 'Apply' })).toBeInTheDocument()
+  })
 })

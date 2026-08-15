@@ -37,3 +37,8 @@ export type {
 } from './registry'
 export { createNodeRegistry, flattenValidationIssues } from './registry'
 export { applyCommand, nextRevision } from './applyCommand'
+export {
+  createGraphNodeFormTransport,
+  graphConfigureCommand,
+  submitNodeConfiguration,
+} from './formSubmit'

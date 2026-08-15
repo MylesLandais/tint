@@ -9,6 +9,7 @@ import {
 // The graph ships its stylesheet as `tint/graph/styles.css`, like auth. Hosts
 // import it themselves; the component does not pull it in.
 import '../../components/graph/graph.css'
+import '../../components/form/styles.css'
 import { demoGraphDocument } from './fixtures/demoDocument'
 import { loadComfyLtx23WithMockDiagnostics } from './fixtures/comfy/loadComfyFixture'
 import {
