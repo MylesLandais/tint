@@ -1,0 +1,83 @@
+/*
+ * Catppuccin Frappé — the lightest of the three dark flavors.
+ *
+ *   base    #303446  mantle   #292c3c  crust    #232634
+ *   surface #414559  surface1 #51576d  surface2 #626880
+ *   overlay #737994  overlay1 #838ba7  overlay2 #949cbb
+ *   text    #c6d0f5  subtext1 #b5bfe2  subtext0 #a5adce
+ *   mauve   #ca9ee6  red      #e78284  peach    #ef9f76  yellow #e5c890
+ *   green   #a6d189  blue     #8caaee  sapphire #85c1dc  lavender #babbf1
+ *
+ * Unlike tint, solarized, and gruvbox, the four Catppuccin themes do NOT use
+ * light-dark(). See latte.css for the reasoning; the short version is that a
+ * flavor is a whole palette, so each file commits to one and the scheme toggle
+ * moves only the native chrome.
+ *
+ * Frappé's base sits well above the other dark flavors, which squeezes contrast
+ * against the raised surface0 panel. The accent is left at canonical mauve
+ * anyway: it reaches 5.60:1 on the page, where links actually live, and 4.30:1
+ * on a panel — under the text bar but comfortably over the 3:1 bar that governs
+ * its dominant use as a fill, border, and focus ring. Every -soft wash is mixed
+ * from crust rather than base so its -ink pair clears 4.5:1.
+ * Muted text is lifted from canonical subtext0 to #acb4d5 so it also clears
+ * 4.5:1 on the raised surface0 panel.
+ *
+ * Usage: <html data-theme="frappe">
+ */
+
+[data-theme='frappe'] {
+  color-scheme: dark;
+
+  /* Surface and text */
+  --tint-bg: #303446;
+  --tint-surface: #292c3c;
+  --tint-panel: #414559;
+  --tint-ink: #c6d0f5;
+  --tint-muted: #acb4d5;
+  --tint-border: #51576d;
+  --tint-border-strong: #626880;
+
+  /* Accent: mauve. It is a light pastel here, so on-accent inverts to crust —
+     the same inversion gruvbox documents for its bright aqua. */
+  --tint-accent: #ca9ee6;
+  --tint-accent-hover: #c9aaea;
+  --tint-accent-soft: #3a374d;
+  --tint-on-accent: #232634;
+
+  /* Status: red, yellow, green, blue. The pastel hue doubles as -ink; on a
+     crust-derived wash it reads at 4.5:1 or better. */
+  --tint-danger: #e78284;
+  --tint-danger-soft: #3e333f;
+  --tint-danger-ink: #e78284;
+  --tint-warning: #e5c890;
+  --tint-warning-soft: #3e3d41;
+  --tint-warning-ink: #e5c890;
+  --tint-success: #a6d189;
+  --tint-success-soft: #353e40;
+  --tint-success-ink: #a6d189;
+  --tint-info: #8caaee;
+  --tint-info-soft: #32384e;
+  --tint-info-ink: #8caaee;
+
+  /* Code — crust, the recessed surface Catppuccin editors use. */
+  --tint-code: #232634;
+  --tint-code-ink: #c6d0f5;
+  --tint-code-muted: #858daa;
+  --tint-code-border: #414559;
+
+  /* Syntax, following Catppuccin's editor convention: mauve keywords, green
+     strings, peach numbers, blue functions, overlay comments. */
+  --tint-code-keyword: #ca9ee6;
+  --tint-code-string: #a6d189;
+  --tint-code-number: #ef9f76;
+  --tint-code-comment: #737994;
+  --tint-code-function: #8caaee;
+  --tint-code-punctuation: #949cbb;
+
+  /* Media chrome — overlays video, fixed across the family. */
+  --tint-chrome: #11111bee;
+  --tint-chrome-ink: #cdd6f4;
+  --tint-chrome-border: #cdd6f429;
+
+  --tint-shadow-color: rgb(17 17 27 / 0.5);
+}

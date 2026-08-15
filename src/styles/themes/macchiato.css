@@ -1,0 +1,78 @@
+/*
+ * Catppuccin Macchiato — the middle dark flavor.
+ *
+ *   base    #24273a  mantle   #1e2030  crust    #181926
+ *   surface #363a4f  surface1 #494d64  surface2 #5b6078
+ *   overlay #6e738d  overlay1 #8087a2  overlay2 #939ab7
+ *   text    #cad3f5  subtext1 #b8c0e0  subtext0 #a5adcb
+ *   mauve   #c6a0f6  red      #ed8796  peach    #f5a97f  yellow #eed49f
+ *   green   #a6da95  blue     #8aadf4  sapphire #7dc4e4  lavender #b7bdf8
+ *
+ * Unlike tint, solarized, and gruvbox, the four Catppuccin themes do NOT use
+ * light-dark(). See latte.css for the reasoning; the short version is that a
+ * flavor is a whole palette, so each file commits to one and the scheme toggle
+ * moves only the native chrome.
+ *
+ * Every value here is canonical — Macchiato has enough range that no token
+ * needed adjusting. The -soft washes are mixed from crust so their -ink pairs
+ * clear 4.5:1, matching how the other three flavors are built.
+ *
+ * Usage: <html data-theme="macchiato">
+ */
+
+[data-theme='macchiato'] {
+  color-scheme: dark;
+
+  /* Surface and text */
+  --tint-bg: #24273a;
+  --tint-surface: #1e2030;
+  --tint-panel: #363a4f;
+  --tint-ink: #cad3f5;
+  --tint-muted: #a5adcb;
+  --tint-border: #494d64;
+  --tint-border-strong: #5b6078;
+
+  /* Accent: mauve. It is a light pastel here, so on-accent inverts to crust —
+     the same inversion gruvbox documents for its bright aqua. */
+  --tint-accent: #c6a0f6;
+  --tint-accent-hover: #c7adf6;
+  --tint-accent-soft: #302c43;
+  --tint-on-accent: #181926;
+
+  /* Status: red, yellow, green, blue. The pastel hue doubles as -ink; on a
+     crust-derived wash it reads at 4.5:1 or better. */
+  --tint-danger: #ed8796;
+  --tint-danger-soft: #362836;
+  --tint-danger-ink: #ed8796;
+  --tint-warning: #eed49f;
+  --tint-warning-soft: #363337;
+  --tint-warning-ink: #eed49f;
+  --tint-success: #a6da95;
+  --tint-success-soft: #2c3436;
+  --tint-success-ink: #a6da95;
+  --tint-info: #8aadf4;
+  --tint-info-soft: #282e43;
+  --tint-info-ink: #8aadf4;
+
+  /* Code — crust, the recessed surface Catppuccin editors use. */
+  --tint-code: #181926;
+  --tint-code-ink: #cad3f5;
+  --tint-code-muted: #8087a2;
+  --tint-code-border: #363a4f;
+
+  /* Syntax, following Catppuccin's editor convention: mauve keywords, green
+     strings, peach numbers, blue functions, overlay comments. */
+  --tint-code-keyword: #c6a0f6;
+  --tint-code-string: #a6da95;
+  --tint-code-number: #f5a97f;
+  --tint-code-comment: #6e738d;
+  --tint-code-function: #8aadf4;
+  --tint-code-punctuation: #939ab7;
+
+  /* Media chrome — overlays video, fixed across the family. */
+  --tint-chrome: #11111bee;
+  --tint-chrome-ink: #cdd6f4;
+  --tint-chrome-border: #cdd6f429;
+
+  --tint-shadow-color: rgb(17 17 27 / 0.5);
+}

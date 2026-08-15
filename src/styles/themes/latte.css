@@ -1,0 +1,98 @@
+/*
+ * Catppuccin Latte — the light flavor of the Catppuccin family.
+ *
+ *   base    #eff1f5  mantle   #e6e9ef  crust    #dce0e8
+ *   surface #ccd0da  surface1 #bcc0cc  surface2 #acb0be
+ *   overlay #9ca0b0  overlay1 #8c8fa1  overlay2 #7c7f93
+ *   text    #4c4f69  subtext1 #5c5f77  subtext0 #6c6f85
+ *   mauve   #8839ef  red      #d20f39  peach    #fe640b  yellow #df8e1d
+ *   green   #40a02b  blue     #1e66f5  sapphire #209fb5  lavender #7287fd
+ *
+ * Unlike tint, solarized, and gruvbox, the four Catppuccin themes do NOT use
+ * light-dark(). A flavor is a complete palette in its own right, so each file
+ * commits to one and stays there: <html data-theme="latte"> is Latte whether the
+ * reader's scheme is light, dark, or unset. `color-scheme` is declared here so
+ * native controls, scrollbars, and focus rings match the palette. The selector
+ * is bare (specificity 0,1,0), so an explicit :root[data-scheme] from
+ * contract.css (0,1,1) still wins — the reader can force the native chrome, but
+ * the palette does not flip under them.
+ *
+ * Latte has no variant brighter than base, so the surfaces step down rather than
+ * up: mantle is the page, base is the raised panel, crust is the recess. That is
+ * gruvbox's bg0/bg0_h trick in reverse.
+ *
+ * Contrast deviations from the canonical palette, all against the surface the
+ * token actually lands on:
+ *   - accent  #8839ef → #8136e3.  Canonical mauve is 4.45:1 on the page, just
+ *             under the bar, and 4.11:1 on its own soft wash. The darkened value
+ *             clears 4.5:1 on page, panel, and wash alike.
+ *   - warning #df8e1d → #c07a19 and success #40a02b → #3f9e2b, so the icon and
+ *             border uses clear the 3:1 non-text bar on a panel.
+ *   - the -ink tokens are each darkened until they clear 4.5:1 on their own -soft
+ *             wash; canonical yellow and green are far too light to read there.
+ *   - the syntax hues are darkened against the crust code surface for the same
+ *             reason. Comment is deliberately held at 3.05:1 — it is meant to
+ *             recede.
+ *   - muted #6c6f85 → #5e6176 so secondary text clears 4.5:1 across every
+ *             surface token, including the darker mantle recess.
+ *   - code-muted steps up from subtext0 to subtext1. The code surface is crust,
+ *             darker than the panel, and subtext0 only reaches 3.73:1 there.
+ *
+ * Usage: <html data-theme="latte">
+ */
+
+[data-theme='latte'] {
+  color-scheme: light;
+
+  /* Surface and text */
+  --tint-bg: #e6e9ef;
+  --tint-surface: #dce0e8;
+  --tint-panel: #eff1f5;
+  --tint-ink: #4c4f69;
+  --tint-muted: #5e6176;
+  --tint-border: #ccd0da;
+  --tint-border-strong: #bcc0cc;
+
+  /* Accent: mauve, Catppuccin's own brand hue, darkened for contrast. */
+  --tint-accent: #8136e3;
+  --tint-accent-hover: #6f2ec3;
+  --tint-accent-soft: #e5dff4;
+  --tint-on-accent: #eff1f5;
+
+  /* Status: red, yellow, green, blue. */
+  --tint-danger: #d20f39;
+  --tint-danger-soft: #ebd1db;
+  --tint-danger-ink: #bb0d33;
+  --tint-warning: #c07a19;
+  --tint-warning-soft: #ede3d7;
+  --tint-warning-ink: #8f5b13;
+  --tint-success: #3f9e2b;
+  --tint-success-soft: #d6e6d9;
+  --tint-success-ink: #2e731f;
+  --tint-info: #1e66f5;
+  --tint-info-soft: #d2def5;
+  --tint-info-ink: #1a59d5;
+
+  /* Code — crust, the recessed surface Catppuccin editors use. */
+  --tint-code: #dce0e8;
+  --tint-code-ink: #4c4f69;
+  --tint-code-muted: #5c5f77;
+  --tint-code-border: #ccd0da;
+
+  /* Syntax, following Catppuccin's editor convention: mauve keywords, green
+     strings, peach numbers, blue functions, overlay comments. */
+  --tint-code-keyword: #7e35de;
+  --tint-code-string: #2d701e;
+  --tint-code-number: #aa4307;
+  --tint-code-comment: #7b7e8b;
+  --tint-code-function: #1a5ad8;
+  --tint-code-punctuation: #5f6271;
+
+  /* Media chrome — overlays video, so it stays dark even on the light flavor.
+     Mocha's crust at overlay opacity, matching the other three files. */
+  --tint-chrome: #11111bee;
+  --tint-chrome-ink: #cdd6f4;
+  --tint-chrome-border: #cdd6f429;
+
+  --tint-shadow-color: rgb(76 79 105 / 0.16);
+}
