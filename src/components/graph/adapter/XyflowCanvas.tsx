@@ -58,7 +58,6 @@ export type XyflowCanvasProps = {
   viewport?: GraphViewport
   onSelectionChange?: (selection: GraphSelection) => void
   onViewportChange?: (viewport: GraphViewport) => void
-  onNodePositionsCommit?: (positions: Record<string, Point>) => void
   onCommand?: (command: GraphCommand) => void
   className?: string
 }
@@ -81,7 +80,6 @@ function XyflowCanvasInner({
   viewport,
   onSelectionChange,
   onViewportChange,
-  onNodePositionsCommit,
   onCommand,
   className,
 }: XyflowCanvasProps) {
@@ -217,16 +215,30 @@ function XyflowCanvasInner({
     lastSelectionKey.current = key
   }, [selection])
 
-  // Fit / apply authored viewport only when the graph identity changes.
+  /**
+   * Fit or apply the *authored* camera, once per graph.
+   *
+   * The guard is on identity alone, which is what this has always claimed to do.
+   * It used to read `id === current && !document.viewport`, so a document that
+   * had a viewport never took the early return — and since a pan wrote a fresh
+   * `document.viewport` back through `applyCommand`, this effect re-applied it
+   * with `setViewport`, xyflow fired `onMoveEnd` for that programmatic move
+   * (d3's transform carries `sourceEvent: null`, and the end handler only
+   * ignores `sourceEvent.internal`), and the pan handler emitted another
+   * `viewport.set`. One drag on the canvas started a loop that never stopped.
+   *
+   * `document.viewport` is deliberately not a dependency: it is read here, not
+   * reacted to. The host drives the camera through the `viewport` prop below.
+   */
   useEffect(() => {
-    if (lastViewportGraphId.current === document.id && !document.viewport) return
+    if (lastViewportGraphId.current === document.id) return
     lastViewportGraphId.current = document.id
-    if (!document.viewport) {
+    if (!documentRef.current.viewport) {
       void fitView({ padding: 0.2 })
       return
     }
-    void setViewport(document.viewport, { duration: 0 })
-  }, [document.id, document.viewport, fitView, setViewport])
+    void setViewport(documentRef.current.viewport, { duration: 0 })
+  }, [document.id, fitView, setViewport])
 
   /**
    * Host-driven camera (e.g. following a run). Keyed so an identical frame is a
@@ -276,14 +288,20 @@ function XyflowCanvasInner({
       }
       dragBaseline.current.clear()
       if (Object.keys(positions).length === 0) return
-      onNodePositionsCommit?.(positions)
+      /**
+       * One command, one application. This used to also call an
+       * `onNodePositionsCommit` prop, which `InteractiveGraphView` reduced with
+       * `applyCommand` in a second handler — against the same, not-yet-updated
+       * `document` — so a single drag built two documents, fired
+       * `onDocumentChange` twice, and threw the first result away.
+       */
       onCommand?.({
         type: 'node.move',
         nodeIds: Object.keys(positions),
         positions,
       })
     },
-    [onCommand, onNodePositionsCommit],
+    [onCommand],
   )
 
   const onEdgesChange = useCallback((changes: EdgeChange[]) => {

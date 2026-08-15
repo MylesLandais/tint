@@ -10,7 +10,6 @@ import type {
   NodeRegistry,
   NodeRuntimeSummary,
   NodeValidationMap,
-  Point,
 } from './contracts'
 import { applyCommand, emptySelection } from './contracts'
 import { createDefaultNodeRegistry } from './nodes/defaultRegistry'
@@ -140,10 +139,19 @@ export function InteractiveGraphView({
   )
 
   /**
-   * Every mutating command takes the same route: report it, then offer the
-   * document it produces. `node.configure` and `node.move` used to be applied
-   * inline here while the other six were only reported, so a host wiring
-   * `onCommand` into its own store double-applied those two and dropped the rest.
+   * Every command takes the same route: report it, then offer the document it
+   * produces. `node.configure` and `node.move` used to be applied inline here
+   * while the other six were only reported, so a host wiring `onCommand` into
+   * its own store double-applied those two and dropped the rest.
+   *
+   * It is also the *only* route. A second handler used to reduce node drags
+   * from a separate `onNodePositionsCommit` callback the adapter fired
+   * alongside the command — both against the same, not-yet-updated `document`,
+   * so one drag built two documents and discarded the first.
+   *
+   * `applyCommand` returns the same reference when nothing changed, and a new
+   * document with an unchanged revision for a camera move; the identity check
+   * below is what keeps a pan from waking every subscriber.
    */
   const handleCommand = useCallback(
     (command: GraphCommand) => {
@@ -153,20 +161,6 @@ export function InteractiveGraphView({
       if (next !== document) onDocumentChange(next)
     },
     [document, onCommand, onDocumentChange, resolvedRegistry],
-  )
-
-  const handlePositionsCommit = useCallback(
-    (positions: Record<string, Point>) => {
-      if (!onDocumentChange) return
-      onDocumentChange(
-        applyCommand(
-          document,
-          { type: 'node.move', nodeIds: Object.keys(positions), positions },
-          resolvedRegistry,
-        ),
-      )
-    },
-    [document, onDocumentChange, resolvedRegistry],
   )
 
   const selectedNodes = document.nodes.filter((node) =>
@@ -229,7 +223,6 @@ export function InteractiveGraphView({
           viewport={viewport}
           onSelectionChange={handleSelectionChange}
           onViewportChange={onViewportChange}
-          onNodePositionsCommit={handlePositionsCommit}
           onCommand={handleCommand}
         />
       </div>

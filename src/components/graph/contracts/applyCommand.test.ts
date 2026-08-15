@@ -156,6 +156,40 @@ describe('applyCommand', () => {
     expect(next).toBe(before)
     expect(next.revision).toBe('r1')
   })
+
+  /**
+   * The camera moved and the graph did not, so the revision must not move
+   * either.
+   *
+   * Bumping it here is what closed a feedback loop: the fresh
+   * `document.viewport` object flowed back into the canvas, which re-applied it
+   * with `setViewport`, which made xyflow fire `onMoveEnd` again — d3's
+   * programmatic transform carries `sourceEvent: null` and the end handler only
+   * ignores `sourceEvent.internal`. The revision counted up on its own for as
+   * long as the page stayed open.
+   */
+  it('moves the camera without bumping the revision', () => {
+    const before = document()
+    const next = applyCommand(
+      before,
+      { type: 'viewport.set', viewport: { x: 10, y: 20, zoom: 1.5 } },
+      registry,
+    )
+
+    expect(next.viewport).toEqual({ x: 10, y: 20, zoom: 1.5 })
+    expect(next.revision).toBe('r1')
+    expect(next).not.toBe(before)
+  })
+
+  it('still bumps the revision when the graph itself changes', () => {
+    expect(
+      applyCommand(
+        document(),
+        { type: 'node.move', nodeIds: ['a'], positions: { a: { x: 5, y: 5 } } },
+        registry,
+      ).revision,
+    ).toBe('r2')
+  })
 })
 
 describe('nextRevision', () => {
