@@ -1,8 +1,15 @@
 import { useState } from 'react'
 import { MediaPlayer } from '../components/media-player'
 import { CodeBlock } from './components/CodeBlock'
-import { DocsNav } from './components/DocsNav'
 import { PropsTable } from './components/PropsTable'
+import {
+  DocsCallout,
+  DocsDemo,
+  DocsFooter,
+  DocsPage,
+  DocsSection,
+  DocsTabs,
+} from './components/DocsPage'
 
 const VIDEO_DEMO_SRC = '/videos/big-buck-bunny.mp4'
 const AUDIO_DEMO_SRC = 'https://upload.wikimedia.org/wikipedia/en/e/ef/Opening_of_%22Never_Gonna_Give_You_Up%22.mp3'
@@ -18,6 +25,25 @@ const TRACKS = [
   { title: 'Signal Bloom', artist: 'Tint Sessions' },
   { title: 'Quiet Current', artist: 'Tint Sessions' },
 ] as const
+
+const previewDemoCode = `<MediaPlayer
+  kind="audio"
+  src={trackUrl}
+  label={\`\${track.title} by \${track.artist}\`}
+  title={track.title}
+  artist={track.artist}
+  artwork={artworkUrl}
+  waveform={peaks}
+  onPrevious={() => setTrackIndex(previous)}
+  onNext={() => setTrackIndex(next)}
+/>
+
+<MediaPlayer
+  kind="video"
+  src="/videos/big-buck-bunny.mp4"
+  label="Big Buck Bunny"
+  title="Big Buck Bunny"
+/>`
 
 const audioUsageCode = `import { MediaPlayer } from 'tint'
 
@@ -56,6 +82,57 @@ const sizeUsageCode = `<MediaPlayer kind="audio" src={src} label={label} size="s
 
 // size is undefined by default: the tier is auto-detected from the
 // player's own container width instead of a fixed prop.`
+
+const mediaPlayerSignatureCode = `type MediaPlayerProps = MediaPlayerAudioProps | MediaPlayerVideoProps
+
+type MediaPlayerBaseProps = {
+  src: string
+  label: string
+  title?: string
+  duration?: number
+  waveform?: readonly number[]
+  shadow?: boolean
+  size?: 'sm' | 'md' | 'lg'
+  className?: string
+  onPlay?: () => void
+  onPause?: () => void
+  onPrevious?: () => void
+  onNext?: () => void
+}
+
+type MediaPlayerAudioProps = MediaPlayerBaseProps & {
+  kind: 'audio'
+  artist?: string
+  artwork?: string
+  artworkAlt?: string
+}
+
+type MediaPlayerVideoProps = MediaPlayerBaseProps & {
+  kind: 'video'
+  poster?: string
+  playbackSpeeds?: readonly number[]
+  autoHideControls?: boolean
+} & Omit<
+  VideoHTMLAttributes<HTMLVideoElement>,
+  'src' | 'poster' | 'className' | 'controls' | 'onPlay' | 'onPause'
+>`
+
+const settingsPopoutSignatureCode = `type SettingsPopoutProps = {
+  isOpen: boolean
+  onOpenChange: (isOpen: boolean) => void
+  items: readonly SettingsPopoutItem[]
+  value?: string
+  onSelect?: (id: string) => void
+  label?: string
+  placeholder?: string
+  footer?: ReactNode
+  emptySearchText?: ReactNode
+}`
+
+const SCENARIO_TABS = [
+  { id: 'audio', label: 'Audio' },
+  { id: 'video', label: 'Video' },
+] as const
 
 const baseProps = [
   {
@@ -123,17 +200,20 @@ const audioOnlyProps = [
   {
     name: 'artist',
     type: 'string',
+    badge: 'audio only',
     description: 'Optional artist, speaker, or source.',
   },
   {
     name: 'artwork',
     type: 'string',
+    badge: 'audio only',
     description: 'Square artwork URL. Renders the white-label placeholder when omitted, or if it fails to load.',
   },
   {
     name: 'artworkAlt',
     type: 'string',
     defaultValue: "''",
+    badge: 'audio only',
     description: 'Artwork alt text; leave empty when the image repeats the track metadata.',
   },
 ]
@@ -142,18 +222,21 @@ const videoOnlyProps = [
   {
     name: 'poster',
     type: 'string',
+    badge: 'video only',
     description: 'Optional poster image shown before playback begins. Renders the white-label placeholder when omitted, or the source fails to load.',
   },
   {
     name: 'playbackSpeeds',
     type: 'readonly number[]',
     defaultValue: '[0.5, 1, 1.5, 2]',
-    description: 'Selectable rates in the settings popout (lg tier only).',
+    badge: 'video only · lg tier',
+    description: 'Selectable rates in the settings popout.',
   },
   {
     name: 'autoHideControls',
     type: 'boolean',
     defaultValue: 'true',
+    badge: 'video only',
     description: 'Hide the control overlay until hover or focus. Set false to pin it open.',
   },
 ]
@@ -171,87 +254,70 @@ export function MediaPlayerDoc() {
   const [shadow, setShadow] = useState(false)
   const [size, setSize] = useState<'sm' | 'md' | 'lg' | undefined>(undefined)
   const [broken, setBroken] = useState(false)
+  const [scenario, setScenario] = useState('audio')
   const track = TRACKS[trackIndex]
 
   const previous = () => setTrackIndex((index) => (index + TRACKS.length - 1) % TRACKS.length)
   const next = () => setTrackIndex((index) => (index + 1) % TRACKS.length)
 
   return (
-    <div className="min-h-screen">
-      <div className="mx-auto max-w-6xl px-4 pt-8 sm:px-6">
-        <DocsNav current="components/media-player" />
-      </div>
-
-      <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
-        <div className="mb-10 max-w-3xl">
-          <p className="mb-3 text-sm font-medium tracking-[0.08em] text-tint-accent uppercase">
-            Components
-          </p>
-          <h1 className="mb-3 text-4xl font-semibold tracking-tight text-tint-ink sm:text-5xl">
-            Media Player
-          </h1>
-          <p className="text-lg leading-relaxed text-tint-muted">
-            One entry point for two deliberate media presentations: immersive dark overlay chrome
-            for video, and a compact responsive artwork rail for audio. Both share the same
-            playback callbacks and accessible media primitives.
-          </p>
+    <DocsPage
+      route="components/media-player"
+      title="Media Player"
+      intro="One entry point for two deliberate media presentations: immersive dark overlay chrome for video, and a compact responsive artwork rail for audio. Both share the same playback callbacks and accessible media primitives."
+    >
+      <DocsSection
+        id="preview"
+        title="Preview"
+        description="The same component, resized. Set an explicit tier to override auto-detection, or clear it to let the container decide."
+      >
+        <div className="mb-4 flex flex-wrap items-center gap-4">
+          <label className="flex cursor-pointer items-center gap-2 text-sm text-tint-ink">
+            <input
+              type="checkbox"
+              checked={shadow}
+              onChange={(event) => setShadow(event.currentTarget.checked)}
+              className="size-4 accent-tint-accent"
+            />
+            Offset shadow
+          </label>
+          <label className="flex cursor-pointer items-center gap-2 text-sm text-tint-ink">
+            <input
+              type="checkbox"
+              checked={broken}
+              onChange={(event) => setBroken(event.currentTarget.checked)}
+              className="size-4 accent-tint-accent"
+            />
+            Broken source
+          </label>
+          <div className="flex items-center gap-1 rounded-md border border-tint-border p-1">
+            {(['auto', 'sm', 'md', 'lg'] as const).map((option) => (
+              <button
+                key={option}
+                type="button"
+                onClick={() => setSize(option === 'auto' ? undefined : option)}
+                className={`cursor-pointer rounded px-2 py-1 text-xs font-medium capitalize transition-colors ${
+                  (size ?? 'auto') === option
+                    ? 'bg-tint-accent text-tint-on-accent'
+                    : 'text-tint-muted hover:text-tint-ink'
+                }`}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <section id="preview" className="mb-14 scroll-mt-24">
-          <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <h2 className="text-2xl font-semibold tracking-tight">Responsive preview</h2>
-              <p className="mt-1 max-w-2xl text-tint-muted">
-                The same component, resized. Set an explicit tier to override auto-detection, or
-                clear it to let the container decide.
-              </p>
-            </div>
-            <div className="flex flex-wrap items-center gap-4">
-              <label className="flex cursor-pointer items-center gap-2 text-sm text-tint-ink">
-                <input
-                  type="checkbox"
-                  checked={shadow}
-                  onChange={(event) => setShadow(event.currentTarget.checked)}
-                  className="size-4 accent-tint-accent"
-                />
-                Offset shadow
-              </label>
-              <label className="flex cursor-pointer items-center gap-2 text-sm text-tint-ink">
-                <input
-                  type="checkbox"
-                  checked={broken}
-                  onChange={(event) => setBroken(event.currentTarget.checked)}
-                  className="size-4 accent-tint-accent"
-                />
-                Broken source
-              </label>
-              <div className="flex items-center gap-1 rounded-md border border-tint-border p-1">
-                {(['auto', 'sm', 'md', 'lg'] as const).map((option) => (
-                  <button
-                    key={option}
-                    type="button"
-                    onClick={() => setSize(option === 'auto' ? undefined : option)}
-                    className={`rounded px-2 py-1 text-xs font-medium capitalize transition-colors ${
-                      (size ?? 'auto') === option
-                        ? 'bg-tint-accent text-tint-on-accent'
-                        : 'text-tint-muted hover:text-tint-ink'
-                    }`}
-                  >
-                    {option}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
+        <DocsDemo code={previewDemoCode}>
+          <div className="space-y-8">
+            <DocsTabs
+              tabs={SCENARIO_TABS}
+              active={scenario}
+              onChange={setScenario}
+              label="Media kind"
+            />
 
-          <div className="space-y-8 rounded-xl border border-tint-border bg-tint-surface p-4 sm:p-8">
-            <div>
-              <p className="mb-3 text-xs font-medium tracking-widest text-tint-muted uppercase">
-                Audio
-              </p>
-              <p className="mb-3 max-w-2xl text-xs leading-5 text-tint-muted">
-                Demo stream: <a className="text-tint-accent underline-offset-2 hover:underline" href="https://en.wikipedia.org/wiki/File:Opening_of_%22Never_Gonna_Give_You_Up%22.mp3" target="_blank" rel="noreferrer">Opening of &quot;Never Gonna Give You Up&quot;</a> by Rick Astley, loaded remotely for this demo only. <a className="text-tint-accent underline-offset-2 hover:underline" href="https://en.wikipedia.org/wiki/File:RickAstleyNeverGonnaGiveYouUp7InchSingleCover.jpg" target="_blank" rel="noreferrer">Artwork source</a>.
-              </p>
+            {scenario === 'audio' ? (
               <MediaPlayer
                 key={`audio-${trackIndex}-${broken}`}
                 kind="audio"
@@ -268,12 +334,7 @@ export function MediaPlayerDoc() {
                 onPrevious={previous}
                 onNext={next}
               />
-            </div>
-
-            <div>
-              <p className="mb-3 text-xs font-medium tracking-widest text-tint-muted uppercase">
-                Video
-              </p>
+            ) : (
               <MediaPlayer
                 key={`video-${broken}`}
                 kind="video"
@@ -283,7 +344,7 @@ export function MediaPlayerDoc() {
                 shadow={shadow}
                 size={size}
               />
-            </div>
+            )}
 
             <div>
               <p className="mb-3 text-xs font-medium tracking-widest text-tint-muted uppercase">
@@ -306,92 +367,111 @@ export function MediaPlayerDoc() {
               </div>
             </div>
           </div>
-        </section>
+        </DocsDemo>
+      </DocsSection>
 
-        <section id="usage" className="mb-14 scroll-mt-24">
-          <h2 className="mb-2 text-2xl font-semibold tracking-tight">Usage</h2>
-          <p className="mb-6 max-w-2xl text-tint-muted">
-            <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">kind</code> is a
-            required discriminant: TypeScript narrows the rest of the props by its value, so
-            <code className="mx-1 rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">poster</code>
-            is a type error under <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">kind=&quot;audio&quot;</code>
-            and vice versa for <code className="mx-1 rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">artwork</code>.
-          </p>
-          <div className="space-y-6">
-            <div>
-              <h3 className="mb-3 text-base font-semibold">Audio</h3>
-              <CodeBlock code={audioUsageCode} />
-            </div>
-            <div>
-              <h3 className="mb-3 text-base font-semibold">Video</h3>
-              <CodeBlock code={videoUsageCode} />
-            </div>
-            <div>
-              <h3 className="mb-3 text-base font-semibold">Size tiers</h3>
-              <CodeBlock code={sizeUsageCode} />
-            </div>
-          </div>
-        </section>
-
-        <section id="features" className="mb-14 scroll-mt-24">
-          <h2 className="mb-2 text-2xl font-semibold tracking-tight">Features</h2>
-          <ul className="grid gap-3 sm:grid-cols-2">
-            {[
-              'One entry point provides an immersive video player and a compact audio rail',
-              'Canvas waveform with hover preview and click-to-seek, layered behind the accessible Slider',
-              'White-label record placeholder for missing or broken audio artwork',
-              'Three size tiers (sm/md/lg), auto-detected from container width or set explicitly',
-              'Click the video surface to play or pause',
-              'Title shown above the timeline, with a fullscreen toggle alongside settings and volume',
-              'Settings popout for playback speed (video, lg tier)',
-            ].map((feature) => (
-              <li
-                key={feature}
-                className="rounded-xl border border-tint-border bg-tint-panel px-4 py-3 text-sm text-tint-ink"
-              >
-                {feature}
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section id="api" className="scroll-mt-24 space-y-10">
+      <DocsSection
+        id="usage"
+        title="Usage"
+        description={
+          <>
+            <code>kind</code> is a required discriminant: TypeScript narrows the rest of the props
+            by its value, so <code>poster</code> is a type error under <code>kind="audio"</code> and
+            vice versa for <code>artwork</code>.
+          </>
+        }
+      >
+        <div className="space-y-6">
           <div>
-            <h2 className="mb-2 text-2xl font-semibold tracking-tight">API</h2>
-            <p className="mb-6 max-w-2xl text-tint-muted">Shared props, present regardless of kind.</p>
-            <PropsTable rows={baseProps} />
+            <h3 className="mb-3 text-base font-semibold text-tint-ink">Audio</h3>
+            <CodeBlock code={audioUsageCode} />
           </div>
           <div>
-            <h3 className="mb-2 text-xl font-semibold tracking-tight">Audio-only</h3>
+            <h3 className="mb-3 text-base font-semibold text-tint-ink">Video</h3>
+            <CodeBlock code={videoUsageCode} />
+          </div>
+          <div>
+            <h3 className="mb-3 text-base font-semibold text-tint-ink">Size tiers</h3>
+            <CodeBlock code={sizeUsageCode} />
+          </div>
+          <DocsCallout variant="warning" title="Demo audio streams from the network">
+            The audio demo above loads{' '}
+            <a
+              className="text-tint-accent underline-offset-2 hover:underline"
+              href="https://en.wikipedia.org/wiki/File:Opening_of_%22Never_Gonna_Give_You_Up%22.mp3"
+              target="_blank"
+              rel="noreferrer"
+            >
+              a remote stream
+            </a>{' '}
+            for this page only — your own players should point at URLs your app controls. Browsers
+            also block autoplay with sound until the user interacts with the page; always start
+            muted or paused.
+          </DocsCallout>
+        </div>
+      </DocsSection>
+
+      <DocsSection id="features" title="Features">
+        <ul className="grid gap-3 sm:grid-cols-2">
+          {[
+            'One entry point provides an immersive video player and a compact audio rail',
+            'Canvas waveform with hover preview and click-to-seek, layered behind the accessible Slider',
+            'White-label record placeholder for missing or broken audio artwork',
+            'Three size tiers (sm/md/lg), auto-detected from container width or set explicitly',
+            'Click the video surface to play or pause',
+            'Title shown above the timeline, with a fullscreen toggle alongside settings and volume',
+            'Settings popout for playback speed (video, lg tier)',
+          ].map((feature) => (
+            <li
+              key={feature}
+              className="rounded-xl border border-tint-border bg-tint-panel px-4 py-3 text-sm text-tint-ink"
+            >
+              {feature}
+            </li>
+          ))}
+        </ul>
+      </DocsSection>
+
+      <DocsSection id="api" title="API" description="Shared props, present regardless of kind.">
+        <div className="space-y-10">
+          <div>
+            <p className="mb-4 max-w-2xl text-sm text-tint-muted">
+              The full prop signature, from the source:
+            </p>
+            <CodeBlock code={mediaPlayerSignatureCode} />
+          </div>
+          <PropsTable rows={baseProps} />
+          <div>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">Audio-only</h3>
             <PropsTable rows={audioOnlyProps} />
           </div>
           <div>
-            <h3 className="mb-2 text-xl font-semibold tracking-tight">Video-only</h3>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">Video-only</h3>
             <PropsTable rows={videoOnlyProps} />
             <p className="mt-3 text-sm text-tint-muted">
-              Also accepts standard HTML video attributes (minus{' '}
-              <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">src</code>,{' '}
-              <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">poster</code>,{' '}
-              <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">className</code>,{' '}
-              <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">controls</code>).
+              Also accepts standard HTML video attributes (minus <code>src</code>,{' '}
+              <code>poster</code>, <code>className</code>, <code>controls</code>).
             </p>
           </div>
           <div>
-            <h3 className="mb-2 text-xl font-semibold tracking-tight">SettingsPopout</h3>
-            <p className="mb-6 max-w-2xl text-tint-muted">
-              Reusable searchable settings picker used by the playback-speed gear menu.
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+              SettingsPopout
+            </h3>
+            <p className="mb-4 max-w-2xl text-sm text-tint-muted">
+              Reusable searchable settings picker used by the playback-speed gear menu. The full
+              prop signature, from the source:
             </p>
+            <div className="mb-4">
+              <CodeBlock code={settingsPopoutSignatureCode} />
+            </div>
             <PropsTable rows={settingsProps} />
           </div>
-        </section>
-      </main>
-
-      <footer className="border-t border-tint-border py-8">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 text-sm text-tint-muted sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <span>tint · React component library</span>
-          <span>Demo media: Big Buck Bunny (Blender Foundation)</span>
         </div>
-      </footer>
-    </div>
+      </DocsSection>
+
+      <DocsFooter>
+        <span>Demo media: Big Buck Bunny (Blender Foundation)</span>
+      </DocsFooter>
+    </DocsPage>
   )
 }

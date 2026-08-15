@@ -1,7 +1,7 @@
 {
   "name": "tint",
   "private": true,
-  "version": "0.1.1",
+  "version": "0.1.5",
   "type": "module",
   "description": "Tint — controlled React components for media and rich chat interfaces.",
   "files": [
@@ -35,6 +35,12 @@
     "./icon": "./src/components/icon/index.ts",
     "./dice": "./src/components/dice/index.ts",
     "./panel": "./src/components/panel/index.ts",
+    "./badge": "./src/components/badge/index.ts",
+    "./progress": "./src/components/progress/index.ts",
+    "./dialog": "./src/components/dialog/index.ts",
+    "./context-menu": "./src/components/context-menu/index.ts",
+    "./tree": "./src/components/tree/index.ts",
+    "./toast": "./src/components/toast/index.ts",
     "./socket": "./src/components/socket/index.ts",
     "./editor": "./src/components/editor/index.ts",
     "./terminal": "./src/components/terminal/index.ts",
@@ -43,7 +49,11 @@
     "./auth/styles.css": "./src/components/auth/styles.css",
     "./styles.css": "./src/index.css",
     "./themes/solarized.css": "./src/styles/themes/solarized.css",
-    "./themes/gruvbox.css": "./src/styles/themes/gruvbox.css"
+    "./themes/gruvbox.css": "./src/styles/themes/gruvbox.css",
+    "./themes/latte.css": "./src/styles/themes/latte.css",
+    "./themes/frappe.css": "./src/styles/themes/frappe.css",
+    "./themes/macchiato.css": "./src/styles/themes/macchiato.css",
+    "./themes/mocha.css": "./src/styles/themes/mocha.css"
   },
   "dependencies": {
     "@tiptap/core": "^3.29.2",

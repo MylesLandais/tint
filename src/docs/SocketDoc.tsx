@@ -1,5 +1,5 @@
 import { CodeBlock } from './components/CodeBlock'
-import { DocsPage, DocsSection } from './components/DocsPage'
+import { DocsCallout, DocsPage, DocsSection } from './components/DocsPage'
 
 const usage = `import type { Socket, SocketSpec, SocketType } from 'tint/socket'
 
@@ -17,25 +17,61 @@ const refImages: Socket = {
   extensions: {},
 }`
 
+const signature = `export interface SocketType {
+  name: string
+  wildcard?: boolean
+  /** Alternate type names this socket also accepts or produces. */
+  union?: readonly string[]
+}
+
+export interface SocketSpec {
+  type: SocketType
+  rawLink?: boolean
+  lazy?: boolean
+}
+
+export interface Socket {
+  dataType: SocketType
+  isList: boolean
+  tooltip?: string
+  matchType?: string
+  extensions: Readonly<Record<string, unknown>>
+}`
+
 export function SocketDoc() {
   return (
     <DocsPage
       route="components/socket"
       title="Socket"
       intro="Types-only contracts for graph and workbench socket wiring: named type identity, declaration flags, and the runtime/UI descriptor a node exposes."
-      note={
-        <>
-          There is no socket UI in this package yet. Import from{' '}
-          <code className="rounded bg-tint-surface px-1 py-0.5 text-[0.85em]">tint/socket</code> (or
-          the root barrel) and implement matching at the host.
-        </>
-      }
     >
-      <DocsSection id="usage" title="Usage">
-        <CodeBlock code={usage} />
+      <DocsSection
+        id="usage"
+        title="Usage"
+        description={
+          <>
+            The three types below cover the full contract: <code>SocketType</code> names the type,
+            <code>SocketSpec</code> declares it on a node definition, and <code>Socket</code> is the
+            runtime/UI descriptor a node exposes.
+          </>
+        }
+      >
+        <div className="space-y-6">
+          <CodeBlock code={usage} />
+          <DocsCallout variant="note" title="Types only, no UI">
+            There is no socket UI in this package yet. Import from <code>tint/socket</code> (or the
+            root barrel) and implement matching at the host.
+          </DocsCallout>
+        </div>
       </DocsSection>
 
       <DocsSection id="api" title="API">
+        <p className="mt-0 mb-4 max-w-3xl text-sm leading-6 text-tint-muted">
+          The full type signatures, from the source:
+        </p>
+        <div className="mb-6">
+          <CodeBlock code={signature} />
+        </div>
         <div className="overflow-x-auto rounded-xl border border-tint-border">
           <table className="w-full min-w-[36rem] border-collapse text-left text-sm">
             <thead className="bg-tint-surface text-xs tracking-[0.06em] text-tint-muted uppercase">

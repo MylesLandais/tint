@@ -54,9 +54,10 @@ const ROUTE_DATA = [
     blurb: 'Message list, composer, and streaming-friendly primitives for conversational UI.',
     sections: [
       { id: 'preview', label: 'Preview' },
-      { id: 'features', label: 'Features' },
       { id: 'usage', label: 'Usage' },
+      { id: 'features', label: 'Features' },
       { id: 'api', label: 'API' },
+      { id: 'utilities', label: 'Utilities' },
     ],
   },
   {
@@ -73,27 +74,53 @@ const ROUTE_DATA = [
     label: 'Table',
     blurb: 'Sortable, filterable data grid with infinite rows and a masonry view.',
     aliases: ['components/music-library'],
-    sections: USAGE_AND_API,
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      { id: 'usage', label: 'Usage' },
+      { id: 'features', label: 'Features' },
+      { id: 'api', label: 'API' },
+      { id: 'utilities', label: 'Utilities' },
+    ],
+  },
+  {
+    path: 'components/chrome',
+    label: 'Chrome',
+    blurb: 'Dialog, progress, context menu, tree, badge, and toast — overlays and feedback for dense data UIs.',
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      { id: 'usage', label: 'Usage' },
+      { id: 'api', label: 'API' },
+    ],
   },
   {
     path: 'components/editor',
     label: 'Editor',
     blurb: 'Controlled WYSIWYG buffer with slash commands, selection formatting, and Tiptap extensions.',
-    sections: USAGE_AND_API,
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      { id: 'usage', label: 'Usage' },
+      { id: 'polyglot-code', label: 'Polyglot code' },
+      { id: 'api', label: 'API' },
+    ],
   },
   {
     path: 'components/terminal',
     label: 'Terminal',
     blurb: 'Browser terminal emulator that renders VT output and forwards raw input to your runtime.',
-    sections: USAGE_AND_API,
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      ...USAGE_AND_API,
+    ],
   },
   {
     path: 'components/graph',
     label: 'Graph',
-    blurb: 'Interactive node canvas over a vendored xyflow engine, driven by a host-owned graph document.',
+    blurb: 'Interactive node canvas over a vendored xyflow engine, plus network and timeline projections of the same document.',
     sections: [
       { id: 'preview', label: 'Preview' },
-      ...USAGE_AND_API,
+      { id: 'usage', label: 'Usage' },
+      { id: 'projections', label: 'Projections' },
+      { id: 'api', label: 'API' },
     ],
   },
   {
@@ -106,6 +133,11 @@ const ROUTE_DATA = [
     path: 'components/collab',
     label: 'Collab',
     blurb: 'CRDT text sync over a vendored Yjs, with presence awareness and a pluggable transport.',
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      { id: 'usage', label: 'Usage' },
+      { id: 'api', label: 'API' },
+    ],
   },
   {
     path: 'components/auth',
@@ -175,18 +207,69 @@ const ROUTE_DATA = [
     path: 'components/icon',
     label: 'Icons',
     blurb: 'One seam over lucide-react, with a fixed size scale and a status glyph registry.',
-    sections: USAGE_AND_API,
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      { id: 'usage', label: 'Usage' },
+      { id: 'sizes', label: 'Sizes' },
+      { id: 'status', label: 'Status' },
+      { id: 'vocabulary', label: 'Vocabulary' },
+      { id: 'extending', label: 'Extending' },
+      { id: 'api', label: 'API' },
+    ],
+  },
+  {
+    path: 'graph',
+    label: 'Dependency Graph',
+    blurb: 'Every tint component and what it builds on — derived from the real import graph.',
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      { id: 'usage', label: 'Usage' },
+    ],
   },
   {
     path: 'components/theme',
     label: 'Theme',
     blurb: 'Two independent axes — light/dark scheme and palette family — driven by data attributes.',
-    sections: USAGE_AND_API,
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      ...USAGE_AND_API,
+    ],
   },
 ] as const satisfies readonly DocRouteShape[]
 
 /** Literal union of valid paths, so a typo in `<DocsNav current>` is a type error. */
 export type DocRoutePath = (typeof ROUTE_DATA)[number]['path']
+
+/**
+ * Sidebar groups, in display order. Kept as a separate satisfies-record rather
+ * than a field on each entry so adding a route without a group (or vice versa)
+ * is a compile error, the same trick `pages.tsx` uses for page components.
+ */
+export const DOC_GROUPS = ['Media', 'Chat & content', 'Data & infra', 'Theming & layout', 'Meta'] as const
+export type DocGroup = (typeof DOC_GROUPS)[number]
+
+export const ROUTE_GROUPS = {
+  'components/media-player': 'Media',
+  'components/video-player': 'Media',
+  'components/media': 'Media',
+  'components/audio-input': 'Media',
+  'components/settings-popout': 'Media',
+  'components/chat': 'Chat & content',
+  'components/editor': 'Chat & content',
+  'components/code': 'Chat & content',
+  'components/terminal': 'Chat & content',
+  'components/table': 'Data & infra',
+  'components/chrome': 'Data & infra',
+  'components/graph': 'Data & infra',
+  'components/socket': 'Data & infra',
+  'components/collab': 'Data & infra',
+  'components/auth': 'Data & infra',
+  'components/theme': 'Theming & layout',
+  'components/panel': 'Theming & layout',
+  'components/icon': 'Theming & layout',
+  'components/dice': 'Theming & layout',
+  'graph': 'Meta',
+} satisfies Record<DocRoutePath, DocGroup>
 
 export type DocRoute = DocRouteShape & { path: DocRoutePath }
 

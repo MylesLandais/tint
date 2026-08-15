@@ -2,10 +2,11 @@ import { Suspense, useEffect, useState } from 'react'
 import { HomeDoc } from './HomeDoc'
 import { DOC_PAGES } from './pages'
 import { findRoute } from './routes'
+import { DocsShell } from './shell/DocsShell'
 
 function LoadingDoc() {
   return (
-    <main className="grid min-h-screen place-items-center text-sm text-tint-muted">
+    <main className="grid min-h-[60vh] place-items-center text-sm text-tint-muted">
       Loading component…
     </main>
   )
@@ -38,14 +39,26 @@ export function DocsApp() {
   }, [route])
 
   // Unknown paths land on the component index rather than an arbitrary page.
-  if (!route) return <HomeDoc />
+  if (!route)
+    return (
+      <DocsShell>
+        <HomeDoc />
+      </DocsShell>
+    )
 
   const Page = DOC_PAGES[route.path]
-  if (!Page) return <HomeDoc />
+  if (!Page)
+    return (
+      <DocsShell>
+        <HomeDoc />
+      </DocsShell>
+    )
 
   return (
-    <Suspense fallback={<LoadingDoc />}>
-      <Page />
-    </Suspense>
+    <DocsShell current={route.path}>
+      <Suspense fallback={<LoadingDoc />}>
+        <Page />
+      </Suspense>
+    </DocsShell>
   )
 }

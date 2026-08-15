@@ -5,6 +5,7 @@ import { CollabDoc } from './collab/CollabDoc'
 import { IconsDoc } from './IconsDoc'
 import { MediaPlayerDoc } from './MediaPlayerDoc'
 import { TableDoc } from './table/TableDoc'
+import { ChromeDoc } from './ChromeDoc'
 import { ThemeDoc } from './ThemeDoc'
 import { AudioInputDoc } from './AudioInputDoc'
 import { CodeDoc } from './CodeDoc'
@@ -21,7 +22,8 @@ import { VideoPlayerDoc } from './VideoPlayerDoc'
  *
  * The four heavy pages load lazily: Editor pulls in Tiptap, Terminal pulls in
  * xterm, Auth pulls in its own stylesheet, and Graph pulls in the vendored
- * xyflow bundle, its stylesheet, and a ComfyUI workflow fixture. Everything else
+ * xyflow bundle, its stylesheet, and a ComfyUI workflow fixture. The
+ * Dependency Graph page shares the xyflow chunk. Everything else
  * is small enough to ship in the entry chunk.
  */
 const EditorDoc = lazy(() =>
@@ -34,6 +36,9 @@ const AuthDoc = lazy(() => import('./auth/AuthDoc').then((module) => ({ default:
 const GraphDoc = lazy(() =>
   import('./graph/GraphDoc').then((module) => ({ default: module.GraphDoc })),
 )
+const ComponentGraphDoc = lazy(() =>
+  import('./ComponentGraphDoc').then((module) => ({ default: module.ComponentGraphDoc })),
+)
 
 /**
  * `satisfies` is load-bearing: adding a route to the registry without a page
@@ -44,6 +49,7 @@ export const DOC_PAGES = {
   'components/chat': ChatComponentDoc,
   'components/audio-input': AudioInputDoc,
   'components/table': TableDoc,
+  'components/chrome': ChromeDoc,
   'components/editor': EditorDoc,
   'components/terminal': TerminalDoc,
   'components/graph': GraphDoc,
@@ -58,4 +64,5 @@ export const DOC_PAGES = {
   'components/dice': DiceDoc,
   'components/icon': IconsDoc,
   'components/theme': ThemeDoc,
+  'graph': ComponentGraphDoc,
 } satisfies Record<DocRoutePath, ComponentType>

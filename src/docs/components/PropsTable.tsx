@@ -4,6 +4,8 @@ type PropRow = {
   defaultValue?: string
   description: string
   required?: boolean
+  /** Availability chip, docs.rs-style: `audio only`, `lg tier`, `experimental`. */
+  badge?: string
 }
 
 type PropsTableProps = {
@@ -28,6 +30,11 @@ export function PropsTable({ rows }: PropsTableProps) {
               <td className="px-4 py-3 font-mono text-[13px] text-tint-accent">
                 {row.name}
                 {row.required ? <span className="text-tint-danger"> *</span> : null}
+                {row.badge ? (
+                  <span className="ml-2 rounded-full bg-tint-info-soft px-2 py-0.5 font-sans text-[11px] font-medium whitespace-nowrap text-tint-info-ink">
+                    {row.badge}
+                  </span>
+                ) : null}
               </td>
               <td className="px-4 py-3 font-mono text-[13px] text-tint-ink">
                 {row.type}

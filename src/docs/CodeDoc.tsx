@@ -1,6 +1,11 @@
 import { CodeTabs, CODE_LANGUAGES, HighlightedCode } from '../components/code'
 import { CodeBlock } from './components/CodeBlock'
-import { DocsPage, DocsPreview, DocsSection } from './components/DocsPage'
+import {
+  DocsDemo,
+  DocsFooter,
+  DocsPage,
+  DocsSection,
+} from './components/DocsPage'
 import { PropsTable } from './components/PropsTable'
 
 const tabsUsage = `import { CodeTabs } from 'tint/code'
@@ -31,6 +36,25 @@ import kotlin from 'highlight.js/lib/languages/kotlin'
 // Tint registers a fixed subset; register more onto the shared instance.
 lowlight.register({ kotlin })`
 
+const previewDemoCode = `<CodeTabs
+  label="Install tint"
+  tabs={[
+    { id: 'npm', label: 'npm', language: 'bash', code: 'npm i tint' },
+    { id: 'pnpm', label: 'pnpm', language: 'bash', code: 'pnpm add tint' },
+    { id: 'bun', label: 'bun', language: 'bash', code: 'bun add tint' },
+  ]}
+/>
+
+<pre>
+  <HighlightedCode
+    code={source}
+    language="typescript"
+    lineNumbers
+    highlightLines={[5]}
+    highlightWords={['greet']}
+  />
+</pre>`
+
 const highlightedProps = [
   { name: 'code', type: 'string', required: true, description: 'The source to render. Never set as raw HTML — the hast tree is walked into elements.' },
   { name: 'language', type: 'string', description: 'A language name or alias. Unregistered values fall back to plain text rather than throwing.' },
@@ -50,6 +74,31 @@ const tabsProps = [
   { name: 'renderAccessory', type: '(tab: CodeTab) => ReactNode', description: 'Content synchronized with the active tab, rendered below its panel.' },
 ]
 
+const highlightedSignature = `export type HighlightedCodeProps = {
+  code: string
+  /** A language name or alias. Unknown values render as plain text. */
+  language?: string
+  className?: string
+  /** Render one addressable line per row. */
+  lineNumbers?: boolean
+  /** First displayed line number when lineNumbers is enabled. */
+  startLine?: number
+  /** One-based source lines to tint as highlighted. */
+  highlightLines?: readonly number[]
+  /** Literal terms to emphasize in the rendered code. */
+  highlightWords?: readonly string[]
+}`
+
+const tabsSignature = `export type CodeTabsProps = Omit<HTMLAttributes<HTMLElement>, 'children'> & {
+  tabs: readonly CodeTab[]
+  value?: string
+  defaultValue?: string
+  onValueChange?: (id: string) => void
+  label?: string
+  /** Optional content synchronized with the active tab, rendered below its panel. */
+  renderAccessory?: (tab: CodeTab) => ReactNode
+}`
+
 const SPANNING = `/**
  * A block comment that spans several lines.
  * Each line keeps its comment colour.
@@ -66,23 +115,23 @@ export function CodeDoc() {
       intro="Syntax-highlighted code and tabbed examples. Both render through one lowlight instance shared with the editor’s code block and chat’s fenced blocks, so a language registered once is available everywhere."
       note="Nothing here is ever set as raw markup — lowlight’s hast output is walked into React elements, which matters because chat renders code that arrived over the wire."
     >
-      <DocsSection id="preview" title="Preview">
-        <div className="flex flex-col gap-6">
-          {/* `label` matters when tabs share a language: without it each one
-              falls back to the language name and all three read "Bash". */}
-          <CodeTabs
-            label="Install tint"
-            tabs={[
-              { id: 'npm', label: 'npm', language: 'bash', code: 'npm i tint' },
-              { id: 'pnpm', label: 'pnpm', language: 'bash', code: 'pnpm add tint' },
-              { id: 'bun', label: 'bun', language: 'bash', code: 'bun add tint' },
-            ]}
-          />
-          <DocsPreview>
-            <p className="mt-0 mb-3 text-sm text-tint-muted">
-              Line numbers, a highlighted line, and a marked word — with a comment
-              spanning four lines, which stays a comment on every one of them.
-            </p>
+      <DocsSection
+        id="preview"
+        title="Preview"
+        description="Tabs with a shared label, then line numbers, a highlighted line, and a marked word — with a comment spanning four lines, which stays a comment on every one of them."
+      >
+        <DocsDemo code={previewDemoCode}>
+          <div className="flex flex-col gap-6">
+            {/* `label` matters when tabs share a language: without it each one
+                falls back to the language name and all three read "Bash". */}
+            <CodeTabs
+              label="Install tint"
+              tabs={[
+                { id: 'npm', label: 'npm', language: 'bash', code: 'npm i tint' },
+                { id: 'pnpm', label: 'pnpm', language: 'bash', code: 'pnpm add tint' },
+                { id: 'bun', label: 'bun', language: 'bash', code: 'bun add tint' },
+              ]}
+            />
             <pre className="m-0 overflow-x-auto rounded-lg bg-tint-code p-4 text-[13px] leading-6 text-tint-code-ink">
               <HighlightedCode
                 code={SPANNING}
@@ -92,8 +141,8 @@ export function CodeDoc() {
                 highlightWords={['greet']}
               />
             </pre>
-          </DocsPreview>
-        </div>
+          </div>
+        </DocsDemo>
       </DocsSection>
 
       <DocsSection id="usage" title="Usage">
@@ -119,11 +168,35 @@ export function CodeDoc() {
       </DocsSection>
 
       <DocsSection id="api" title="API">
-        <h3 className="mt-0 mb-3 text-base font-semibold text-tint-ink">HighlightedCode</h3>
-        <PropsTable rows={highlightedProps} />
-        <h3 className="mt-8 mb-3 text-base font-semibold text-tint-ink">CodeTabs</h3>
-        <PropsTable rows={tabsProps} />
+        <div className="space-y-10">
+          <div>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+              HighlightedCode
+            </h3>
+            <p className="mt-0 mb-4 max-w-3xl text-sm leading-6 text-tint-muted">
+              The full prop signature, from the source:
+            </p>
+            <div className="mb-6">
+              <CodeBlock code={highlightedSignature} language="tsx" />
+            </div>
+            <PropsTable rows={highlightedProps} />
+          </div>
+          <div>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">CodeTabs</h3>
+            <p className="mt-0 mb-4 max-w-3xl text-sm leading-6 text-tint-muted">
+              The full prop signature, from the source:
+            </p>
+            <div className="mb-6">
+              <CodeBlock code={tabsSignature} language="tsx" />
+            </div>
+            <PropsTable rows={tabsProps} />
+          </div>
+        </div>
       </DocsSection>
+
+      <DocsFooter>
+        <span>Syntax highlighting: highlight.js grammars via lowlight</span>
+      </DocsFooter>
     </DocsPage>
   )
 }

@@ -247,20 +247,30 @@ so **the stylesheet is required** — without it there is nothing to render agai
 import 'tint/styles.css'                   // contract + the default palette
 import 'tint/themes/solarized.css'         // optional
 import 'tint/themes/gruvbox.css'           // optional
+import 'tint/themes/mocha.css'             // optional — Catppuccin, one file per flavor
 ```
+
+The Catppuccin flavors ship as `latte.css`, `frappe.css`, `macchiato.css`, and `mocha.css`.
 
 ### Two independent axes
 
 | Attribute on `<html>` | Absent means | Set it to |
 | --- | --- | --- |
 | `data-scheme` | follow the operating system | `"light"` or `"dark"` to force |
-| `data-theme` | the built-in `tint` palette | `"solarized"`, `"gruvbox"`, or your own |
+| `data-theme` | the built-in `tint` palette | `"solarized"`, `"gruvbox"`, `"latte"`, `"frappe"`, `"macchiato"`, `"mocha"`, or your own |
 
 Light and dark resolve through CSS `light-dark()` against `:root { color-scheme: light dark }`.
 There is no media query in any theme file and no duplicated dark block — forcing a scheme sets
 `color-scheme` to a single value, which flips every token at once. Because the attributes are
 plain CSS selectors, they also work on a subtree: a `<div data-theme="gruvbox">` themes only
 what it contains.
+
+**The four Catppuccin flavors are the exception.** A flavor is already a complete palette, so each
+file commits to one instead of pairing two through `light-dark()`: `data-theme="mocha"` is Mocha
+whatever the reader's scheme is. Each declares its own `color-scheme` so native controls match, but
+from a bare `[data-theme]` selector — an explicit `data-scheme` still wins, moving the native chrome
+without flipping the palette. Offer `latte` where you would offer a light theme and one of the other
+three where you would offer a dark one.
 
 ### Toggles
 
@@ -395,7 +405,7 @@ src/
   auth/client/                 # transport-agnostic session client
   lib/                         # internal cross-component helpers — not a public subpath
   styles/contract.css          # the annotated token contract
-  styles/themes/               # tint, solarized, gruvbox
+  styles/themes/               # tint, solarized, gruvbox, catppuccin ×4
   docs/                        # component docs and demos
   docs/routes.ts               # the docs route registry — add a page here first
   index.ts                     # library exports

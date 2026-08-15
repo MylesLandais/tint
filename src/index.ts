@@ -59,8 +59,13 @@ export {
   ChatText,
   ChatTool,
   ChatTypingIndicator,
+  buildThreadIndex,
+  buildThreadTree,
+  replySnippet,
   safeHref,
   stripBidi,
+  threadRoot,
+  threadSummary,
 } from './components/chat'
 export type * from './components/chat'
 
@@ -82,6 +87,24 @@ export type * from './components/dice'
 
 export { Panel } from './components/panel'
 export type * from './components/panel'
+
+export { Badge } from './components/badge'
+export type { BadgeProps, BadgeTone } from './components/badge'
+
+export { ProgressBar } from './components/progress'
+export type { ProgressBarProps } from './components/progress'
+
+export { Dialog } from './components/dialog'
+export type { DialogProps } from './components/dialog'
+
+export { ContextMenu } from './components/context-menu'
+export type { ContextMenuItem, ContextMenuProps } from './components/context-menu'
+
+export { TreeView } from './components/tree'
+export type { TreeNode, TreeViewProps } from './components/tree'
+
+export { ToastProvider, useToast } from './components/toast'
+export type { ToastInput, ToastProviderProps, ToastTone } from './components/toast'
 
 export type { Socket, SocketSpec, SocketType } from './components/socket'
 
@@ -153,24 +176,33 @@ export type * from './components/table'
 
 export {
   ComfyNodeView,
+  ForceGraphView,
   GenericNodeView,
   InteractiveGraphView,
   ScriptNodeView,
+  TimelineView,
   applyCommand,
   comfyNodeDefinition,
   configureComfyNode,
   createDefaultNodeRegistry,
+  createForceLayout,
   createNodeRegistry,
   defaultNodeDefinitions,
   deriveEditableFields,
   emptySelection,
   findComfyPromptNode,
   flattenValidationIssues,
+  forceLayout,
   isComfyWorkflow,
   nextRevision,
+  nodeStatusLabel,
   parseComfyWorkflow,
   patchComfyConfiguration,
+  projectTimeline,
   readIntWidget,
+  resolveNodeStatus,
+  stepForceLayout,
+  topologicalLanes,
   updateComfyPrompt,
 } from './components/graph'
 export type * from './components/graph'
