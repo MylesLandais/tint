@@ -108,6 +108,10 @@ export function ChatMessageList<TCustomPart extends ChatCustomPart = never>({
     [messages, currentActorId],
   )
   const positions = useMemo(() => groupPositions(messages), [messages])
+  const messagesById = useMemo(
+    () => new Map(messages.map((message) => [message.id, message])),
+    [messages],
+  )
   const isEmpty = messages.length === 0
 
   const setFollowing = useCallback(
@@ -320,6 +324,11 @@ export function ChatMessageList<TCustomPart extends ChatCustomPart = never>({
                 <ChatMessage
                   key={message.id}
                   message={message}
+                  replyToMessage={
+                    message.parentMessageId != null
+                      ? messagesById.get(message.parentMessageId)
+                      : undefined
+                  }
                   alignment={
                     message.actor.id === currentActorId
                       ? 'end'

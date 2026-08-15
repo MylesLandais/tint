@@ -75,4 +75,19 @@ describe('ChatMessageList', () => {
 
     expect(onFollowOutputChange).toHaveBeenCalledWith(false)
   })
+
+  it('resolves parentMessageId into a quoted-reply header', () => {
+    const { container } = render(
+      <ChatMessageList
+        messages={[
+          message('one'),
+          { ...message('two'), parentMessageId: 'one' },
+        ]}
+      />,
+    )
+
+    const contexts = container.querySelectorAll('[data-chat-reply-context]')
+    expect(contexts).toHaveLength(1)
+    expect(contexts[0]).toHaveTextContent('one')
+  })
 })

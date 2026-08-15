@@ -92,4 +92,34 @@ describe('ChatMessage', () => {
       action: 'retry',
     })
   })
+
+  it('renders a quoted-reply header and emits a reply action', () => {
+    const onAction = vi.fn()
+    const parent: ChatMessageData = {
+      id: 'parent',
+      actor: { id: 'human', name: 'Ada', kind: 'human' },
+      createdAt: '2026-08-02T14:59:00Z',
+      status: 'complete',
+      parts: [{ id: 'parent-text', type: 'text', text: 'What is the thread model?' }],
+    }
+    const message: ChatMessageData = {
+      id: 'reply',
+      actor,
+      createdAt: '2026-08-02T15:00:00Z',
+      status: 'complete',
+      parentMessageId: 'parent',
+      parts: [{ id: 'reply-text', type: 'text', text: 'Flat list, derived tree.' }],
+    }
+
+    render(
+      <ChatMessage message={message} replyToMessage={parent} onAction={onAction} />,
+    )
+
+    const context = document.querySelector('[data-chat-reply-context]')!
+    expect(context).toHaveTextContent('Ada')
+    expect(context).toHaveTextContent('What is the thread model?')
+
+    fireEvent.click(screen.getByRole('button', { name: 'Reply' }))
+    expect(onAction).toHaveBeenCalledWith({ messageId: 'reply', action: 'reply' })
+  })
 })

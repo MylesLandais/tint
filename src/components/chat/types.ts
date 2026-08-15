@@ -407,6 +407,12 @@ export type ChatMessageProps<TCustomPart extends ChatCustomPart = never> = Omit<
   'children'
 > & {
   message: ChatMessageData<TCustomPart>
+  /**
+   * The message `message.parentMessageId` points at, when known. Rendered as a
+   * quoted-reply header above the bubble. `ChatMessageList` resolves this from
+   * its own `messages`; standalone uses pass it themselves.
+   */
+  replyToMessage?: ChatMessageData<TCustomPart>
   /** Defaults to `start`. `ChatMessageList` derives this from `currentActorId`. */
   alignment?: ChatMessageAlignment
   groupPosition?: ChatMessageGroupPosition

@@ -1,9 +1,27 @@
-import { Accessibility, Boxes, Code2, FlaskConical } from 'lucide-react'
+import { Accessibility, Boxes, FlaskConical } from 'lucide-react'
 import { Icon } from '../../components/icon'
 import { CodeBlock } from '../components/CodeBlock'
 import { PropsTable } from '../components/PropsTable'
-import { DocsNav } from '../components/DocsNav'
+import {
+  DocsCallout,
+  DocsDemo,
+  DocsFooter,
+  DocsPage,
+  DocsSection,
+} from '../components/DocsPage'
 import { ChatDemo } from './demo/ChatDemo'
+
+const previewDemoCode = `<ChatConversation className="h-[42rem]">
+  <ChatMessageList
+    messages={messages}
+    currentActorId="current-user"
+  />
+  <ChatComposer
+    value={draft}
+    onValueChange={setDraft}
+    onSubmit={submit}
+  />
+</ChatConversation>`
 
 const usageCode = `import {
   ChatComposer,
@@ -61,6 +79,27 @@ const richMessageCode = `const message = {
     },
   ],
 } satisfies ChatMessageData`
+
+const chatComposerSignature = `type ChatComposerProps = Omit<
+  FormHTMLAttributes<HTMLFormElement>,
+  'onSubmit'
+> & {
+  /** The draft. Fully controlled. */
+  value: string
+  attachments?: readonly ChatAttachmentData[]
+  state?: ChatComposerState
+  onValueChange: (value: string) => void
+  onSubmit: (payload: ChatSubmitPayload) => void
+  /** Supplying this swaps the send button for Stop while streaming. */
+  onStop?: () => void
+}`
+
+const chatConversationSignature = `type ChatConversationProps = HTMLAttributes<HTMLElement> & {
+  /** Accessible name for the conversation region. */
+  label?: string
+  /** Spacing between the transcript and the composer. */
+  density?: 'compact' | 'comfortable' | 'spacious'
+}`
 
 const messageListProps = [
   {
@@ -505,101 +544,112 @@ const preferencePartProps = [
 
 export function ChatComponentDoc() {
   return (
-    <div className="min-h-screen">
-      <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
-        <DocsNav current="components/chat" />
-        <div className="mb-10 max-w-3xl">
-          <p className="mb-3 text-sm font-medium tracking-[0.08em] text-tint-accent uppercase">
-            Components
-          </p>
-          <h1 className="mb-3 text-4xl font-semibold tracking-tight text-tint-ink sm:text-5xl">
-            Chat
-          </h1>
-          <p className="text-lg leading-relaxed text-tint-muted">
-            Controlled React primitives for assistant and messaging interfaces. This demo
-            exercises the complete client interaction surface with deterministic mock data—no
-            backend or transport required.
-          </p>
+    <DocsPage
+      route="components/chat"
+      title="Chat"
+      intro="Controlled React primitives for assistant and messaging interfaces. This demo exercises the complete client interaction surface with deterministic mock data—no backend or transport required."
+    >
+      <DocsSection
+        id="preview"
+        title="Preview"
+        description="Choose a scenario, send the suggested prompt, then stop, retry, approve, deny, pick a preferred response, attach a file, or load earlier history."
+      >
+        <div className="mb-4 flex justify-end">
+          <span className="rounded-md bg-tint-accent-soft px-2.5 py-1 text-xs font-medium text-tint-accent">
+            Client-only demo
+          </span>
         </div>
-
-        <section id="preview" className="mb-16 scroll-mt-24">
-          <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <h2 className="text-2xl font-semibold tracking-tight">Interactive preview</h2>
-              <p className="mt-1 max-w-2xl text-tint-muted">
-                Choose a scenario, send the suggested prompt, then stop, retry, approve, deny,
-                pick a preferred response, attach a file, or load earlier history.
-              </p>
-            </div>
-            <span className="rounded-md bg-tint-accent-soft px-2.5 py-1 text-xs font-medium text-tint-accent">
-              Client-only demo
-            </span>
-          </div>
+        <DocsDemo code={previewDemoCode}>
           <ChatDemo />
-        </section>
+        </DocsDemo>
+      </DocsSection>
 
-        <section id="features" className="mb-16 scroll-mt-24">
-          <h2 className="mb-6 text-2xl font-semibold tracking-tight">Design boundaries</h2>
-          <div className="grid gap-4 md:grid-cols-3">
-            {features.map(({ icon: FeatureIcon, title, text }) => (
-              <article
-                key={title}
-                className="rounded-xl border border-tint-border bg-tint-panel p-5"
-              >
-                <span className="mb-4 grid size-9 place-items-center rounded-xl bg-tint-accent-soft text-tint-accent">
-                  <Icon icon={FeatureIcon} />
-                </span>
-                <h3 className="font-semibold">{title}</h3>
-                <p className="mt-2 text-sm leading-6 text-tint-muted">{text}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section id="usage" className="mb-16 scroll-mt-24">
-          <h2 className="mb-2 text-2xl font-semibold tracking-tight">Usage</h2>
-          <p className="mb-6 max-w-2xl text-tint-muted">
-            Import from the focused subpath or the package root. Applications own the data and
-            reduce the callbacks into local state, a store, or a transport adapter.
-          </p>
-          <div className="space-y-8">
-            <div>
-              <h3 className="mb-3 text-base font-semibold">Controlled composition</h3>
-              <CodeBlock code={usageCode} />
-            </div>
-            <div>
-              <h3 className="mb-3 text-base font-semibold">Rich message data</h3>
-              <CodeBlock code={richMessageCode} />
-            </div>
-          </div>
-        </section>
-
-        <section id="api" className="scroll-mt-24 space-y-10">
+      <DocsSection
+        id="usage"
+        title="Usage"
+        description="Import from the focused subpath or the package root. Applications own the data and reduce the callbacks into local state, a store, or a transport adapter."
+      >
+        <div className="space-y-6">
           <div>
-            <div className="mb-2 flex items-center gap-2">
-              <Icon icon={Code2} size="lg" className="text-tint-accent" />
-              <h2 className="text-2xl font-semibold tracking-tight">API</h2>
-            </div>
-            <p className="mb-6 max-w-2xl text-tint-muted">
-              Core props are shown here. The complete union and event payloads are defined in{' '}
-              <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">
-                src/components/chat/types.ts
-              </code>
-              .
-            </p>
-            <h3 className="mb-3 text-lg font-semibold">ChatMessageList</h3>
+            <h3 className="mb-3 text-base font-semibold text-tint-ink">
+              Controlled composition
+            </h3>
+            <CodeBlock code={usageCode} />
+          </div>
+          <div>
+            <h3 className="mb-3 text-base font-semibold text-tint-ink">Rich message data</h3>
+            <CodeBlock code={richMessageCode} />
+          </div>
+          <DocsCallout variant="note" title="Intent-only events">
+            Submit, stop, retry, approval, and other interaction callbacks report intent only —
+            they never mutate your state or execute a tool. Tint does not choose a store,
+            transport, or AI SDK; reduce each callback into your own application state.
+          </DocsCallout>
+        </div>
+      </DocsSection>
+
+      <DocsSection id="features" title="Design boundaries">
+        <div className="grid gap-4 md:grid-cols-3">
+          {features.map(({ icon: FeatureIcon, title, text }) => (
+            <article
+              key={title}
+              className="rounded-xl border border-tint-border bg-tint-panel p-5"
+            >
+              <span className="mb-4 grid size-9 place-items-center rounded-xl bg-tint-accent-soft text-tint-accent">
+                <Icon icon={FeatureIcon} />
+              </span>
+              <h3 className="font-semibold text-tint-ink">{title}</h3>
+              <p className="mt-2 text-sm leading-6 text-tint-muted">{text}</p>
+            </article>
+          ))}
+        </div>
+      </DocsSection>
+
+      <DocsSection
+        id="api"
+        title="API"
+        description={
+          <>
+            Core props are shown here. The complete union and event payloads are defined in{' '}
+            <code>src/components/chat/types.ts</code>.
+          </>
+        }
+      >
+        <div className="space-y-10">
+          <div>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+              ChatMessageList
+            </h3>
             <PropsTable rows={messageListProps} />
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold">ChatComposer</h3>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+              ChatComposer
+            </h3>
+            <p className="mb-3 max-w-2xl text-sm text-tint-muted">
+              The full prop signature, from the source:
+            </p>
+            <div className="mb-4">
+              <CodeBlock code={chatComposerSignature} language="tsx" />
+            </div>
             <PropsTable rows={composerProps} />
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold">ChatConversation</h3>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+              ChatConversation
+            </h3>
+            <p className="mb-3 max-w-2xl text-sm text-tint-muted">
+              The full prop signature, from the source:
+            </p>
+            <div className="mb-4">
+              <CodeBlock code={chatConversationSignature} language="tsx" />
+            </div>
             <PropsTable rows={conversationProps} />
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold">ChatMessage</h3>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+              ChatMessage
+            </h3>
             <PropsTable rows={messageProps} />
           </div>
 
@@ -607,74 +657,86 @@ export function ChatComponentDoc() {
             <p className="mb-2 text-[0.6875rem] font-semibold tracking-wide text-tint-muted uppercase">
               Rich part renderers
             </p>
-            <p className="mb-6 max-w-2xl text-sm text-tint-muted">
-              All twelve take a single <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">part</code> prop
-              typed to their specific rich-part shape, plus <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">className</code> and
-              native attributes; two also take a callback.
+            <p className="mb-6 max-w-2xl text-sm text-tint-muted [&_code]:rounded [&_code]:bg-tint-surface [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-[13px] [&_code]:text-tint-ink">
+              All twelve take a single <code>part</code> prop typed to their specific rich-part
+              shape, plus <code>className</code> and native attributes; two also take a callback.
             </p>
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold">ChatText</h3>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">ChatText</h3>
             <PropsTable rows={textPartProps} />
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold">ChatCodeBlock</h3>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+              ChatCodeBlock
+            </h3>
             <PropsTable rows={codeBlockPartProps} />
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold">ChatImage</h3>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">ChatImage</h3>
             <PropsTable rows={imagePartProps} />
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold">ChatFile</h3>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">ChatFile</h3>
             <PropsTable rows={filePartProps} />
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold">ChatAudio</h3>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">ChatAudio</h3>
             <PropsTable rows={audioPartProps} />
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold">ChatSources</h3>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+              ChatSources
+            </h3>
             <PropsTable rows={sourcesPartProps} />
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold">ChatReasoning</h3>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+              ChatReasoning
+            </h3>
             <PropsTable rows={reasoningPartProps} />
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold">ChatTool</h3>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">ChatTool</h3>
             <PropsTable rows={toolPartProps} />
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold">ChatArtifact</h3>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+              ChatArtifact
+            </h3>
             <PropsTable rows={artifactPartProps} />
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold">ChatApproval</h3>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+              ChatApproval
+            </h3>
             <PropsTable rows={approvalPartProps} />
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold">ChatPreference</h3>
-            <p className="mb-3 max-w-2xl text-sm text-tint-muted">
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+              ChatPreference
+            </h3>
+            <p className="mb-3 max-w-2xl text-sm text-tint-muted [&_code]:rounded [&_code]:bg-tint-surface [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-[13px] [&_code]:text-tint-ink">
               A layout shell for side-by-side response comparison. It is not a built-in message
-              part — mount it from <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">renderPart</code> on
-              a <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">type: &quot;custom&quot;</code> part
-              (see the Response preference demo scenario). Nested bodies reuse existing part
-              renderers rather than inventing new content types.
+              part — mount it from <code>renderPart</code> on a{' '}
+              <code>type: &quot;custom&quot;</code> part (see the Response preference demo
+              scenario). Nested bodies reuse existing part renderers rather than inventing new
+              content types.
             </p>
             <PropsTable rows={preferencePartProps} />
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold">ChatError</h3>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">ChatError</h3>
             <PropsTable rows={errorPartProps} />
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold">ChatMessagePartView</h3>
-            <p className="mb-3 max-w-2xl text-sm text-tint-muted">
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+              ChatMessagePartView
+            </h3>
+            <p className="mb-3 max-w-2xl text-sm text-tint-muted [&_code]:rounded [&_code]:bg-tint-surface [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-[13px] [&_code]:text-tint-ink">
               The dispatcher every rich part above renders through. Its prop type is defined
-              inline in <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">ChatParts.tsx</code> rather
-              than exported from <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">types.ts</code> like
-              its siblings — a minor, pre-existing inconsistency.
+              inline in <code>ChatParts.tsx</code> rather than exported from{' '}
+              <code>types.ts</code> like its siblings — a minor, pre-existing inconsistency.
             </p>
             <PropsTable rows={messagePartViewProps} />
           </div>
@@ -685,11 +747,15 @@ export function ChatComponentDoc() {
             </p>
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold">ChatActionButton</h3>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+              ChatActionButton
+            </h3>
             <PropsTable rows={actionButtonProps} />
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold">ChatComposerInput</h3>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+              ChatComposerInput
+            </h3>
             <PropsTable rows={composerInputProps} />
           </div>
 
@@ -699,53 +765,61 @@ export function ChatComponentDoc() {
             </p>
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold">ChatEmptyState</h3>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+              ChatEmptyState
+            </h3>
             <PropsTable rows={emptyStateProps} />
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold">ChatDateDivider</h3>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+              ChatDateDivider
+            </h3>
             <PropsTable rows={dateDividerProps} />
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold">ChatTypingIndicator</h3>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+              ChatTypingIndicator
+            </h3>
             <PropsTable rows={typingIndicatorProps} />
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold">ChatScrollToBottom</h3>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+              ChatScrollToBottom
+            </h3>
             <PropsTable rows={scrollToBottomProps} />
           </div>
           <div>
-            <h3 className="mb-3 text-lg font-semibold">Layout slots</h3>
-            <p className="max-w-2xl text-sm text-tint-muted">
-              Five plain wrapper elements with no props beyond <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">className</code> and
-              native attributes — layout only, no owned behavior:{' '}
-              <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">ChatPartContainer</code> (rich-part
-              wrapper), <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">ChatMessageContent</code> (parts
-              container), <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">ChatMessageActions</code> (action-button
-              row), <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">ChatComposerAttachments</code> (attachment
-              chip row), and <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">ChatComposerFooter</code> (footer
-              row).
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+              Layout slots
+            </h3>
+            <p className="max-w-2xl text-sm text-tint-muted [&_code]:rounded [&_code]:bg-tint-surface [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-[13px] [&_code]:text-tint-ink">
+              Five plain wrapper elements with no props beyond <code>className</code> and native
+              attributes — layout only, no owned behavior: <code>ChatPartContainer</code>{' '}
+              (rich-part wrapper), <code>ChatMessageContent</code> (parts container),{' '}
+              <code>ChatMessageActions</code> (action-button row),{' '}
+              <code>ChatComposerAttachments</code> (attachment chip row), and{' '}
+              <code>ChatComposerFooter</code> (footer row).
             </p>
           </div>
-        </section>
-
-        <section className="mt-16 max-w-3xl">
-          <h2 className="mb-2 text-2xl font-semibold tracking-tight">Utilities</h2>
-          <p className="mt-0 mb-5 text-base leading-7 text-tint-muted">
-            Two plain functions the built-in renderers use internally, exported so a custom{' '}
-            <code className="rounded bg-tint-surface px-1.5 py-0.5 text-[13px]">renderPart</code> can
-            reuse the same safety checks.
-          </p>
-          <CodeBlock code={chatUtilitiesCode} language="ts" />
-        </section>
-      </main>
-
-      <footer className="mt-16 border-t border-tint-border py-8">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 text-sm text-tint-muted sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <span>tint · controlled React components</span>
-          <span>Chat demo uses local mock data only</span>
         </div>
-      </footer>
-    </div>
+      </DocsSection>
+
+      <DocsSection
+        id="utilities"
+        title="Utilities"
+        description={
+          <>
+            Two plain functions the built-in renderers use internally, exported so a custom{' '}
+            <code>renderPart</code> can reuse the same safety checks.
+          </>
+        }
+      >
+        <CodeBlock code={chatUtilitiesCode} language="ts" />
+      </DocsSection>
+
+      <DocsFooter>
+        <span>Chat demo uses local mock data only</span>
+      </DocsFooter>
+    </DocsPage>
   )
 }

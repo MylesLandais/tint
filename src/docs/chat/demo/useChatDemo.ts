@@ -13,11 +13,11 @@ import {
   demoAssistant,
   demoHuman,
   earlierDemoMessages,
-  initialDemoMessages,
   type ChatDemoMessage,
   type ChatDemoScenarioId,
   type PreferencePart,
 } from './scenarios'
+import { demoChannel } from './channel'
 
 const STREAM_DELAY = 84
 const DEMO_BASE_TIME = Date.parse('2026-08-02T15:01:00Z')
@@ -63,6 +63,7 @@ function userMessage(
   id: string,
   payload: ChatSubmitPayload,
   createdAt: number,
+  parentMessageId?: ChatId,
 ): ChatDemoMessage {
   const parts: DemoPart[] = []
   if (payload.text) {
@@ -90,6 +91,7 @@ function userMessage(
     createdAt,
     status: 'complete',
     parts,
+    parentMessageId,
   }
 }
 
@@ -119,7 +121,8 @@ export function useChatDemo() {
   const [scenarioId, setScenarioIdState] =
     useState<ChatDemoScenarioId>('research')
   const [messages, setMessages] =
-    useState<readonly ChatDemoMessage[]>(initialDemoMessages)
+    useState<readonly ChatDemoMessage[]>(demoChannel.messages)
+  const [replyTo, setReplyTo] = useState<ChatDemoMessage | null>(null)
   const [draft, setDraft] = useState(
     chatDemoScenarios.find((scenario) => scenario.id === 'research')?.prompt ?? '',
   )
@@ -525,12 +528,13 @@ export function useChatDemo() {
       )
       const next = [
         ...(options?.baseMessages ?? messages),
-        userMessage(humanId, payload, runTime),
+        userMessage(humanId, payload, runTime, replyTo?.id),
         assistant,
       ]
 
       lastPayloadRef.current = payload
       setMessages(next)
+      setReplyTo(null)
       setDraft('')
       setAttachments([])
       setComposerState('streaming')
@@ -553,6 +557,7 @@ export function useChatDemo() {
       runResearchScenario,
       runStreamingScenario,
       scenarioId,
+      replyTo,
     ],
   )
 
@@ -620,11 +625,22 @@ export function useChatDemo() {
     ],
   )
 
+  const startReply = useCallback(
+    (messageId: ChatId) => {
+      const target = messages.find((message) => message.id === messageId)
+      if (target) setReplyTo(target)
+    },
+    [messages],
+  )
+
+  const cancelReply = useCallback(() => setReplyTo(null), [])
+
   const messageAction = useCallback(
     (payload: ChatMessageActionPayload) => {
       if (payload.action === 'retry') retryMessage(payload.messageId)
+      if (payload.action === 'reply') startReply(payload.messageId)
     },
-    [retryMessage],
+    [retryMessage, startReply],
   )
 
   const selectPreference = useCallback(
@@ -822,7 +838,8 @@ export function useChatDemo() {
     attachmentSequenceRef.current = 0
     failedOnceRef.current = false
     lastPayloadRef.current = null
-    setMessages(initialDemoMessages)
+    setMessages(demoChannel.messages)
+    setReplyTo(null)
     setAttachments([])
     setComposerState('idle')
     setHasEarlier(true)
@@ -843,7 +860,7 @@ export function useChatDemo() {
       chatDemoScenarios.find((scenario) => scenario.id === scenarioId)?.prompt ?? ''
     beginRun(
       { text: prompt, attachments: [] },
-      { baseMessages: initialDemoMessages, scenario: scenarioId },
+      { baseMessages: demoChannel.messages, scenario: scenarioId },
     )
   }, [beginRun, clearTimers, scenarioId])
 
@@ -854,7 +871,8 @@ export function useChatDemo() {
       attachmentSequenceRef.current = 0
       failedOnceRef.current = false
       setScenarioIdState(next)
-      setMessages(initialDemoMessages)
+      setMessages(demoChannel.messages)
+      setReplyTo(null)
       setAttachments([])
       setComposerState('idle')
       setHasEarlier(true)
@@ -886,6 +904,8 @@ export function useChatDemo() {
     composerState,
     hasEarlier,
     loadingEarlier,
+    replyTo,
+    cancelReply,
     submit,
     stop,
     messageAction,
