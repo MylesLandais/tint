@@ -12,6 +12,7 @@ import { CodeDoc } from './CodeDoc'
 import { DiceDoc } from './DiceDoc'
 import { MediaPrimitivesDoc } from './MediaPrimitivesDoc'
 import { PanelDoc } from './PanelDoc'
+import { ButtonDoc } from './ButtonDoc'
 import { SettingsPopoutDoc } from './SettingsPopoutDoc'
 import { SocketDoc } from './SocketDoc'
 import { VideoPlayerDoc } from './VideoPlayerDoc'
@@ -72,6 +73,7 @@ export const DOC_PAGES = {
   'components/media': MediaPrimitivesDoc,
   'components/code': CodeDoc,
   'components/panel': PanelDoc,
+  'components/button': ButtonDoc,
   'components/settings-popout': SettingsPopoutDoc,
   'components/dice': DiceDoc,
   'components/icon': IconsDoc,

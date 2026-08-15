@@ -3,6 +3,7 @@
 @import './styles/contract.css';
 @import './styles/themes/tint.css';
 @import './styles/code-highlight.css';
+@import './styles/button.css';
 
 /*
  * tint ships raw source, and every component is styled with Tailwind utilities.
