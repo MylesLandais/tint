@@ -2,14 +2,17 @@ import { useState } from 'react'
 import {
   CheckCircle2,
   FlaskConical,
+  Reply,
   RotateCcw,
   Sparkles,
+  X,
 } from 'lucide-react'
 import {
   ChatComposer,
   ChatConversation,
   ChatMessageList,
   ChatPreference,
+  replySnippet,
 } from '../../../components/chat'
 import { Icon } from '../../../components/icon'
 import { Panel } from '../../../components/panel'
@@ -134,6 +137,26 @@ export function ChatDemo() {
             )
           }}
         />
+        {demo.replyTo ? (
+          <div className="flex items-center gap-2 border-t border-tint-border bg-tint-panel px-4 py-2 text-xs text-tint-muted">
+            <Icon icon={Reply} size="sm" className="shrink-0 text-tint-accent" />
+            <span className="min-w-0 truncate">
+              Replying to{' '}
+              <span className="font-medium text-tint-ink">
+                {demo.replyTo.actor.name}
+              </span>
+              : {replySnippet(demo.replyTo, 60)}
+            </span>
+            <button
+              type="button"
+              onClick={demo.cancelReply}
+              className="ml-auto inline-flex shrink-0 items-center gap-1 rounded-md px-1.5 py-1 hover:bg-tint-surface hover:text-tint-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tint-accent"
+              aria-label="Cancel reply"
+            >
+              <Icon icon={X} size="sm" />
+            </button>
+          </div>
+        ) : null}
         <ChatComposer
           value={demo.draft}
           onValueChange={demo.setDraft}

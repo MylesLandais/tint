@@ -1,4 +1,4 @@
-import { Bot, Check, Copy, RotateCcw, Square, User, Volume2 } from 'lucide-react'
+import { Bot, Check, Copy, Reply, RotateCcw, Square, User, Volume2 } from 'lucide-react'
 import { memo, useCallback, useMemo, useRef, useState } from 'react'
 import { cn } from '../../lib/utils'
 import { Icon, Spinner } from '../icon'
@@ -6,6 +6,7 @@ import { ChatMessageActions, ChatMessageContent } from './ChatPrimitives'
 import { ChatMessagePartView } from './ChatParts'
 import { useChatPlayback } from './ChatPlaybackContext'
 import { stripBidi } from './sanitize'
+import { replySnippet } from './thread'
 import { useCopied } from '../../lib/useCopied'
 import type {
   ChatCustomPart,
@@ -50,6 +51,7 @@ function hasAudioPart<TCustomPart extends ChatCustomPart>(
 
 function ChatMessageImpl<TCustomPart extends ChatCustomPart = never>({
   message,
+  replyToMessage,
   alignment = 'start',
   groupPosition = 'solo',
   showActor = true,
@@ -92,6 +94,10 @@ function ChatMessageImpl<TCustomPart extends ChatCustomPart = never>({
 
   const retry = useCallback(() => {
     onAction?.({ messageId: message.id, action: 'retry' })
+  }, [onAction, message.id])
+
+  const reply = useCallback(() => {
+    onAction?.({ messageId: message.id, action: 'reply' })
   }, [onAction, message.id])
 
   const copyMessage = () => {
@@ -185,6 +191,22 @@ function ChatMessageImpl<TCustomPart extends ChatCustomPart = never>({
           </header>
         ) : null}
 
+        {replyToMessage ? (
+          <div
+            data-chat-reply-context=""
+            className={cn(
+              'mb-1 flex min-w-0 items-center gap-1.5 border-l-2 border-tint-border pl-2 text-xs text-tint-muted',
+              alignment === 'end' && 'flex-row-reverse border-r-2 border-l-0 pr-2 pl-0',
+            )}
+          >
+            <Icon icon={Reply} size="xs" className="shrink-0" />
+            <span className="shrink-0 font-medium">
+              {stripBidi(replyToMessage.actor.name)}
+            </span>
+            <span className="truncate">{replySnippet(replyToMessage)}</span>
+          </div>
+        ) : null}
+
         <div
           className={cn(
             alignment === 'end'
@@ -267,6 +289,14 @@ function ChatMessageImpl<TCustomPart extends ChatCustomPart = never>({
               aria-label={copied ? 'Message copied' : 'Copy message'}
             >
               {copied ? <Icon icon={Check} size="sm" /> : <Icon icon={Copy} size="sm" />}
+            </button>
+            <button
+              type="button"
+              onClick={reply}
+              className="inline-flex items-center gap-1 rounded-md px-2 py-1.5 text-xs font-medium text-tint-muted hover:bg-tint-surface hover:text-tint-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tint-accent"
+            >
+              <Icon icon={Reply} size="sm" />
+              Reply
             </button>
             {canRetry && !hasInlineRetry ? (
               <button

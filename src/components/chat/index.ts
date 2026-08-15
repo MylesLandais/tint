@@ -43,4 +43,12 @@ export {
   ChatTypingIndicator,
 } from './ChatPrimitives'
 export { safeHref, stripBidi } from './sanitize'
+export {
+  buildThreadIndex,
+  buildThreadTree,
+  replySnippet,
+  threadRoot,
+  threadSummary,
+} from './thread'
+export type { ChatChannelData, ChatThreadNode, ChatThreadSummary } from './thread'
 export type * from './types'
