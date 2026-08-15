@@ -13,6 +13,7 @@ import type {
 } from './contracts'
 import { applyCommand, emptySelection } from './contracts'
 import { createDefaultNodeRegistry } from './nodes/defaultRegistry'
+import { NodeInspectorForm, describeConfiguration } from './NodeInspectorForm'
 import { useFullscreen } from '../../lib/useFullscreen'
 import { cn } from '../../lib/utils'
 
@@ -248,6 +249,8 @@ export function InteractiveGraphView({
           {selectedNodes.map((node) => {
             const issues = validationByNodeId?.get(node.id) ?? []
             const runtime = runtimeByNodeId?.get(node.id)
+            const definition = resolvedRegistry.get(node.kind)
+            const Inspector = definition?.inspector
             return (
             <section key={node.id} className="tint-graph-view__inspector-card">
               <h3>{node.presentation?.label ?? node.kind}</h3>
@@ -303,7 +306,23 @@ export function InteractiveGraphView({
                 <div>
                   <dt>Configuration</dt>
                   <dd>
-                    <pre>{describeConfiguration(node.configuration)}</pre>
+                    {Inspector ? (
+                      <Inspector
+                        node={node}
+                        readonly={readonly}
+                        validation={issues}
+                        dispatch={handleCommand}
+                      />
+                    ) : definition?.formSchema ? (
+                      <NodeInspectorForm
+                        node={node}
+                        schema={definition.formSchema}
+                        readonly={readonly}
+                        dispatch={handleCommand}
+                      />
+                    ) : (
+                      <pre>{describeConfiguration(node.configuration)}</pre>
+                    )}
                   </dd>
                 </div>
               </dl>
@@ -343,27 +362,5 @@ export function InteractiveGraphView({
         </aside>
       ) : null}
     </div>
-  )
-}
-
-/**
- * The node's configuration, with anything unreasonable to print elided.
- *
- * A raw `JSON.stringify` put whatever a node held into the DOM as text. That was
- * fine until reference images arrived carrying base64 `data:` URLs, at which
- * point selecting a node with a 4 MB image rendered a multi-megabyte text node.
- * Images no longer embed their bytes, but the inspector shows host-supplied
- * configuration of any shape, so it clamps rather than trusting it.
- */
-const MAX_INSPECTED_VALUE = 120
-
-function describeConfiguration(configuration: unknown): string {
-  return JSON.stringify(
-    configuration,
-    (_key, value: unknown) =>
-      typeof value === 'string' && value.length > MAX_INSPECTED_VALUE
-        ? `${value.slice(0, MAX_INSPECTED_VALUE)}… (${value.length} chars)`
-        : value,
-    2,
   )
 }

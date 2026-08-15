@@ -33,6 +33,23 @@ function readRoutePaths(): string[] {
   return [...text.matchAll(/path: '([^']+)'/g)].map((m) => m[1])
 }
 
+/**
+ * `GROUPED_ROUTE_MEMBERS` from routes.ts: route path -> component directories.
+ *
+ * Read as text for the same reason the rest of this file is — the assertion is
+ * about what the source declares.
+ */
+function readGroupedMembers(): Map<string, string[]> {
+  const text = readFileSync(path.join(ROOT, 'src/docs/routes.ts'), 'utf8')
+  const block = text.match(/GROUPED_ROUTE_MEMBERS = \{([\s\S]*?)\n\}/)
+  const grouped = new Map<string, string[]>()
+  if (!block) return grouped
+  for (const [, route, members] of block[1].matchAll(/'([^']+)':\s*\[([^\]]*)\]/g)) {
+    grouped.set(route, [...members.matchAll(/'([^']+)'/g)].map((m) => m[1]))
+  }
+  return grouped
+}
+
 /** Re-runs the generator's scan, kept deliberately parallel to the Python. */
 function scanImportGraph(): Map<string, string[]> {
   const components = readdirSync(COMPONENTS_DIR)
@@ -72,10 +89,14 @@ describe('docs dependency graph data', () => {
 
   it('gives every docs route with a component directory a node', () => {
     const nodeIds = new Set(nodes.map((node) => node.id))
+    const grouped = readGroupedMembers()
     for (const routePath of readRoutePaths()) {
       if (!routePath.startsWith('components/')) continue
-      const dir = routePath.slice('components/'.length)
-      expect(nodeIds, `no graph node for ${routePath}`).toContain(dir)
+      // A grouped page has no directory of its own; its members do.
+      const dirs = grouped.get(routePath) ?? [routePath.slice('components/'.length)]
+      for (const dir of dirs) {
+        expect(nodeIds, `no graph node for ${routePath} (${dir})`).toContain(dir)
+      }
     }
   })
 

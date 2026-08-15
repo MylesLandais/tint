@@ -30,6 +30,8 @@ const IMPORT_SNIPPETS = {
   'components/panel': "import { Panel } from 'tint/panel'",
   'components/icon': "import { Icon, StatusIcon } from 'tint/icon'",
   'components/dice': "import { DiceRoller } from 'tint/dice'",
+  'components/form': "import { FormLayout, TextField, SelectField } from 'tint/form'",
+  'components/character-card': "import { CharacterCardEditorForm } from 'tint/character-card'",
   'graph': "import { InteractiveGraphView } from 'tint/graph'",
 } satisfies Record<DocRoutePath, string>
 

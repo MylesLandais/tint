@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react'
+import type { FormSchema } from '../../form/contracts'
 import type { GraphCommand } from './commands'
 import type { GraphNode, GraphPort } from './document'
 
@@ -81,6 +82,11 @@ export type NodeDefinition<TConfiguration = unknown> = {
   ) => Promise<readonly ValidationIssue[]>
   render: ComponentType<NodeViewProps<TConfiguration>>
   inspector?: ComponentType<NodeInspectorProps<TConfiguration>>
+  /**
+   * When set, the side inspector renders a `FormLayout` over this schema and
+   * submits through `node.configure`. A custom `inspector` still wins.
+   */
+  formSchema?: FormSchema
 }
 
 export type NodeDefinitionFilter = {

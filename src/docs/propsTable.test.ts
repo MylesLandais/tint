@@ -152,6 +152,16 @@ const CASES: readonly Case[] = [
     types: 'src/components/graph/InteractiveGraphView.tsx',
     names: ['InteractiveGraphViewProps'],
   },
+  {
+    doc: 'src/docs/form/FormDoc.tsx',
+    types: 'src/components/form/FormLayout.tsx',
+    names: ['FormLayoutProps'],
+  },
+  {
+    doc: 'src/docs/character-card/CharacterCardDoc.tsx',
+    types: 'src/components/character-card/CharacterCardEditorForm.tsx',
+    names: ['CharacterCardEditorFormProps'],
+  },
 ]
 
 describe('docs prop tables', () => {

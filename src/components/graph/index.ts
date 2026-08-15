@@ -55,10 +55,13 @@ export type { NodeStatus } from './nodes/nodeStatus'
 
 export {
   applyCommand,
+  createGraphNodeFormTransport,
   createNodeRegistry,
   emptySelection,
   flattenValidationIssues,
+  graphConfigureCommand,
   nextRevision,
+  submitNodeConfiguration,
 } from './contracts'
 export type {
   EndpointReference,

@@ -140,6 +140,28 @@ const ROUTE_DATA = [
     ],
   },
   {
+    path: 'components/form',
+    label: 'Form',
+    blurb: 'Schema-driven layouts, labelled inputs, and a Promise-based submit contract.',
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      { id: 'schema', label: 'Schema' },
+      { id: 'usage', label: 'Usage' },
+      { id: 'api', label: 'API' },
+    ],
+  },
+  {
+    path: 'components/character-card',
+    label: 'Character Card',
+    blurb: 'SillyTavern-shaped Character Card V2 editor composed on FormLayout, with JSON and PNG round-trips.',
+    sections: [
+      { id: 'editor', label: 'Editor' },
+      { id: 'schema', label: 'Schema' },
+      { id: 'usage', label: 'Usage' },
+      { id: 'api', label: 'API' },
+    ],
+  },
+  {
     path: 'components/auth',
     label: 'Auth',
     blurb: 'Sign-in form, OAuth buttons, and a session client with an injectable transport.',
@@ -241,6 +263,20 @@ const ROUTE_DATA = [
 export type DocRoutePath = (typeof ROUTE_DATA)[number]['path']
 
 /**
+ * Docs pages that cover several component directories at once.
+ *
+ * Most routes are `components/<directory>` one-for-one, and two guards lean on
+ * that: `exports.test.ts` wants a route per package subpath, and
+ * `componentGraph.test.ts` wants a graph node per route. A grouped page — six
+ * small overlay primitives documented together rather than as six near-empty
+ * pages — satisfies neither by name, so the membership is declared here instead
+ * of each guard growing its own private exception list.
+ */
+export const GROUPED_ROUTE_MEMBERS = {
+  'components/chrome': ['badge', 'context-menu', 'dialog', 'progress', 'toast', 'tree'],
+} satisfies Partial<Record<DocRoutePath, string[]>>
+
+/**
  * Sidebar groups, in display order. Kept as a separate satisfies-record rather
  * than a field on each entry so adding a route without a group (or vice versa)
  * is a compile error, the same trick `pages.tsx` uses for page components.
@@ -268,6 +304,8 @@ export const ROUTE_GROUPS = {
   'components/panel': 'Theming & layout',
   'components/icon': 'Theming & layout',
   'components/dice': 'Theming & layout',
+  'components/form': 'Theming & layout',
+  'components/character-card': 'Data & infra',
   'graph': 'Meta',
 } satisfies Record<DocRoutePath, DocGroup>
 
