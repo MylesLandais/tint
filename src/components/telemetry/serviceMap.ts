@@ -114,7 +114,7 @@ export function graphDocumentFromTrace(trace: TelemetryTrace): GraphDocument {
       nodes.push({
         id: service,
         kind: isRoot ? 'trigger' : 'action',
-        position: { x: layer * 280, y: index * 160 },
+        position: { x: 24 + layer * 260, y: 48 + index * 150 },
         presentation: {
           label: service,
           description: `${summary.spanCount} span${summary.spanCount === 1 ? '' : 's'}`,
@@ -142,7 +142,7 @@ export function graphDocumentFromTrace(trace: TelemetryTrace): GraphDocument {
     schemaVersion: '0.1.0',
     id: `graph:trace:${trace.traceId}`,
     revision: 'r1',
-    viewport: { x: 48, y: 32, zoom: 0.85 },
+    viewport: { x: 16, y: 24, zoom: 0.72 },
     metadata: {
       title: trace.name,
       source: 'telemetry',

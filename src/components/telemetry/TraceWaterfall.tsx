@@ -5,11 +5,11 @@ import type { LaidOutSpan } from './layout'
 import type { TraceWaterfallProps } from './types'
 
 function selectSpan(
-  current: string | null | undefined,
+  _current: string | null | undefined,
   next: string,
   onChange?: (spanId: string | null) => void,
 ) {
-  onChange?.(current === next ? null : next)
+  onChange?.(next)
 }
 
 function SpanBar({
@@ -106,7 +106,7 @@ export function TraceWaterfall({
                     {formatDuration(span.durationMs)}
                   </span>
                 </span>
-                <span className="relative min-h-9 min-w-0">
+                <span className="relative min-h-10 min-w-0">
                   <SpanBar span={span} selected={selected} />
                 </span>
               </button>
