@@ -92,4 +92,66 @@ describe('ChatMessage', () => {
       action: 'retry',
     })
   })
+
+  it('hides Play until enableSpeak is on, then reports speak rather than retry', () => {
+    const onAction = vi.fn()
+    const message: ChatMessageData = {
+      id: 'message-1',
+      actor,
+      createdAt: '2026-08-02T15:00:00Z',
+      status: 'complete',
+      parts: [{ id: 'text-1', type: 'text', text: 'Hello from Tint.' }],
+    }
+
+    const { rerender } = render(<ChatMessage message={message} onAction={onAction} />)
+    expect(screen.queryByRole('button', { name: 'Play Tint Assistant' })).not.toBeInTheDocument()
+
+    rerender(<ChatMessage message={message} onAction={onAction} enableSpeak />)
+    fireEvent.click(screen.getByRole('button', { name: 'Play Tint Assistant' }))
+    expect(onAction).toHaveBeenCalledWith({
+      messageId: 'message-1',
+      action: 'speak',
+    })
+    expect(screen.getByRole('button', { name: 'Replay Tint Assistant' })).toBeInTheDocument()
+  })
+
+  it('labels Replay when a ChatAudio part is already attached', () => {
+    const message: ChatMessageData = {
+      id: 'maya-1',
+      actor: { id: 'maya', name: 'Maya', kind: 'assistant' },
+      createdAt: '2026-08-02T15:00:00Z',
+      status: 'complete',
+      parts: [
+        { id: 'text-1', type: 'text', text: 'I am Maya.' },
+        {
+          id: 'audio-1',
+          type: 'audio',
+          src: '/audio/maya.wav',
+          artist: 'Maya',
+          title: 'Maya',
+        },
+      ],
+    }
+
+    render(
+      <ChatMessage message={message} enableSpeak speakingMessageId="maya-1" />,
+    )
+
+    const replay = screen.getByRole('button', { name: 'Replay Maya' })
+    expect(replay).toHaveAttribute('aria-pressed', 'true')
+    expect(replay).toHaveTextContent('Replay')
+  })
+
+  it('does not offer Play while the message is still streaming', () => {
+    const message: ChatMessageData = {
+      id: 'streaming-1',
+      actor,
+      createdAt: '2026-08-02T15:00:00Z',
+      status: 'streaming',
+      parts: [{ id: 'text-1', type: 'text', text: 'Hel', status: 'streaming' }],
+    }
+
+    render(<ChatMessage message={message} enableSpeak />)
+    expect(screen.queryByRole('button', { name: /Play|Replay/ })).not.toBeInTheDocument()
+  })
 })

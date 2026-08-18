@@ -87,7 +87,26 @@ const messageListProps = [
   {
     name: 'onMessageAction',
     type: '(payload) => void',
-    description: 'Reports copy, retry, and other message action intent.',
+    description:
+      'Reports copy, retry, speak, and other message action intent. `speak` is not Retry — Retry regenerates the model turn.',
+  },
+  {
+    name: 'enableSpeak',
+    type: 'boolean',
+    defaultValue: 'false',
+    description:
+      'Offer Play/Replay next to Copy. Tint never calls `speechSynthesis` or a vendor API; the host supplies a `ChatAudio` part and handles `action: "speak"`.',
+  },
+  {
+    name: 'speakingMessageId',
+    type: 'ChatId | null',
+    description:
+      'Controlled conversation playback slot. Omit to let the list latch internally when `enableSpeak` is true. Starting one message stops whoever is speaking; Repeat restarts that clip from 0.',
+  },
+  {
+    name: 'onSpeakingMessageIdChange',
+    type: '(messageId: ChatId | null) => void',
+    description: 'Fires when the playback slot is claimed, switched, or cleared.',
   },
   {
     name: 'onToolApproval',
@@ -189,7 +208,21 @@ const messageProps = [
   {
     name: 'onAction',
     type: '(payload: ChatMessageActionPayload) => void',
-    description: 'Reports copy, retry, and other message-level action intent.',
+    description:
+      'Reports copy, retry, speak, and other message-level action intent.',
+  },
+  {
+    name: 'enableSpeak',
+    type: 'boolean',
+    defaultValue: 'false',
+    description:
+      'Offer Play/Replay next to Copy. Off by default so existing hosts do not grow a dead control.',
+  },
+  {
+    name: 'speakingMessageId',
+    type: 'ChatId | null',
+    description:
+      'The message occupying the conversation playback slot. `ChatMessageList` supplies this when `enableSpeak` is on.',
   },
   {
     name: 'onToolApproval',
@@ -248,7 +281,7 @@ const audioPartProps = [
     type: 'ChatAudioPart',
     required: true,
     description:
-      'A responsive MediaPlayer with optional track metadata, artwork, waveform, and transcript disclosure.',
+      'A responsive MediaPlayer with optional track metadata, artwork, waveform, and transcript disclosure. When the parent list has `enableSpeak`, this player occupies the single conversation playback slot — Repeat seeks to 0, and another speaker pauses this clip.',
   },
 ]
 
@@ -463,7 +496,7 @@ const features = [
   {
     icon: FlaskConical,
     title: 'Controlled interaction',
-    text: 'Submit, stop, retry, approval, attachment, preference, and pagination events report intent only.',
+    text: 'Submit, stop, retry, speak, approval, attachment, preference, and pagination events report intent only.',
   },
   {
     icon: Accessibility,
@@ -528,7 +561,8 @@ export function ChatComponentDoc() {
               <h2 className="text-2xl font-semibold tracking-tight">Interactive preview</h2>
               <p className="mt-1 max-w-2xl text-tint-muted">
                 Choose a scenario, send the suggested prompt, then stop, retry, approve, deny,
-                pick a preferred response, attach a file, or load earlier history.
+                pick a preferred response, attach a file, replay Maya’s cached clip, or load
+                earlier history.
               </p>
             </div>
             <span className="rounded-md bg-tint-accent-soft px-2.5 py-1 text-xs font-medium text-tint-accent">

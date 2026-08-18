@@ -35,6 +35,17 @@ export type UseMediaPlaybackOptions = {
   durationHint?: number
   onPlay?: () => void
   onPause?: () => void
+  onEnded?: () => void
+  /**
+   * When true, seek to the start and play; when false, pause. Omit to leave
+   * transport fully under the player's own controls.
+   */
+  playing?: boolean
+  /**
+   * When this value changes, seek to 0 and play. Repeat uses it so the same
+   * `src` restarts instead of becoming a no-op.
+   */
+  playbackNonce?: number
 }
 
 /**
@@ -46,7 +57,15 @@ export type UseMediaPlaybackOptions = {
  */
 export function useMediaPlayback(
   mediaRef: RefObject<HTMLMediaElement | null>,
-  { src, durationHint, onPlay, onPause }: UseMediaPlaybackOptions,
+  {
+    src,
+    durationHint,
+    onPlay,
+    onPause,
+    onEnded,
+    playing: playingOverride,
+    playbackNonce,
+  }: UseMediaPlaybackOptions,
 ): { state: MediaPlaybackState; actions: MediaPlaybackActions; mediaEventHandlers: MediaEventHandlers } {
   const [playing, setPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
@@ -64,6 +83,34 @@ export function useMediaPlayback(
     setBuffering(false)
     setFailed(false)
   }, [src, durationHint])
+
+  useEffect(() => {
+    if (playingOverride === undefined) return
+    const media = mediaRef.current
+    if (!media || failed) return
+    if (playingOverride) {
+      media.currentTime = 0
+      setCurrentTime(0)
+      void Promise.resolve(media.play()).catch(() => {
+        setBuffering(false)
+        setFailed(true)
+      })
+      return
+    }
+    if (!media.paused) media.pause()
+  }, [failed, mediaRef, playingOverride, src])
+
+  useEffect(() => {
+    if (playbackNonce === undefined || playbackNonce === 0) return
+    const media = mediaRef.current
+    if (!media || failed) return
+    media.currentTime = 0
+    setCurrentTime(0)
+    void Promise.resolve(media.play()).catch(() => {
+      setBuffering(false)
+      setFailed(true)
+    })
+  }, [failed, mediaRef, playbackNonce])
 
   const seek = (percentage: number) => {
     const media = mediaRef.current
@@ -131,6 +178,7 @@ export function useMediaPlayback(
       onEnded: () => {
         setPlaying(false)
         setCurrentTime(0)
+        onEnded?.()
       },
       onWaiting: () => setBuffering(true),
       onPlaying: () => setBuffering(false),

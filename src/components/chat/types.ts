@@ -297,6 +297,7 @@ export type ChatMessageAlignment = 'start' | 'end' | 'center'
 export type ChatMessageAction =
   | 'copy'
   | 'retry'
+  | 'speak'
   | 'edit'
   | 'delete'
   | 'reply'
@@ -396,6 +397,19 @@ export type ChatMessageListProps<TCustomPart extends ChatCustomPart = never> = O
   onMessageAction?: (payload: ChatMessageActionPayload) => void
   onToolApproval?: (payload: ChatToolApprovalPayload) => void
   /**
+   * Offer Play/Replay next to Copy. Off by default so existing hosts do not
+   * grow a dead control. Tint never synthesizes speech; it reports `speak`
+   * and plays a host-supplied `ChatAudio` part when one exists.
+   */
+  enableSpeak?: boolean
+  /**
+   * Which message occupies the conversation playback slot. Omit to let the
+   * list latch internally when `enableSpeak` is true. Starting one message
+   * stops whoever is speaking; Repeat on the same message restarts from 0.
+   */
+  speakingMessageId?: ChatId | null
+  onSpeakingMessageIdChange?: (messageId: ChatId | null) => void
+  /**
    * A part threw while rendering. The part is replaced with a notice either way;
    * without this handler the error is logged to the console.
    */
@@ -417,6 +431,16 @@ export type ChatMessageProps<TCustomPart extends ChatCustomPart = never> = Omit<
   renderPart?: ChatPartRenderer<TCustomPart>
   onAction?: (payload: ChatMessageActionPayload) => void
   onToolApproval?: (payload: ChatToolApprovalPayload) => void
+  /**
+   * Offer Play/Replay next to Copy. Off by default. Tint reports `speak`;
+   * it does not call `speechSynthesis` or a vendor API.
+   */
+  enableSpeak?: boolean
+  /**
+   * The message currently occupying the conversation playback slot.
+   * `ChatMessageList` supplies this when `enableSpeak` is on.
+   */
+  speakingMessageId?: ChatId | null
   /** See `ChatMessageListProps.onRenderError`. */
   onRenderError?: (error: Error, info: ErrorInfo) => void
 }

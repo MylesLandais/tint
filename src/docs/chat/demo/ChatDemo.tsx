@@ -103,6 +103,7 @@ export function ChatDemo() {
           onLoadEarlier={demo.loadEarlier}
           onMessageAction={demo.messageAction}
           onToolApproval={demo.toolApproval}
+          enableSpeak={demo.scenarioId === 'group'}
           renderPart={(part, context) => {
             if (part.type !== 'custom' || part.kind !== 'preference') return undefined
             return (
