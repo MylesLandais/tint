@@ -107,8 +107,8 @@ describe('ChatDemo scenario runner', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Replay' }))
     act(() => vi.advanceTimersByTime(5000))
 
-    expect(screen.getByText(/cached clip/i)).toBeInTheDocument()
     const replayMaya = screen.getByRole('button', { name: 'Replay Maya' })
+    expect(document.querySelector('[data-chat-part="audio"]')).toBeInTheDocument()
     fireEvent.click(replayMaya)
 
     expect(replayMaya).toHaveAttribute('aria-pressed', 'true')
