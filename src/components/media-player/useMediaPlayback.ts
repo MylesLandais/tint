@@ -1,4 +1,4 @@
-import { useEffect, useState, type RefObject, type SyntheticEvent } from 'react'
+import { useEffect, useLayoutEffect, useState, type RefObject, type SyntheticEvent } from 'react'
 
 export type MediaPlaybackState = {
   playing: boolean
@@ -84,32 +84,36 @@ export function useMediaPlayback(
     setFailed(false)
   }, [src, durationHint])
 
-  useEffect(() => {
+  const playOrFail = (media: HTMLMediaElement) => {
+    void Promise.resolve(media.play()).catch((error: unknown) => {
+      // A newer play() or pause() aborts the previous play(); that is not a
+      // bad source and must not lock the player in the failed state.
+      if (error instanceof DOMException && error.name === 'AbortError') return
+      setBuffering(false)
+      setFailed(true)
+    })
+  }
+
+  useLayoutEffect(() => {
     if (playingOverride === undefined) return
     const media = mediaRef.current
     if (!media || failed) return
     if (playingOverride) {
       media.currentTime = 0
       setCurrentTime(0)
-      void Promise.resolve(media.play()).catch(() => {
-        setBuffering(false)
-        setFailed(true)
-      })
+      playOrFail(media)
       return
     }
     if (!media.paused) media.pause()
   }, [failed, mediaRef, playingOverride, src])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (playbackNonce === undefined || playbackNonce === 0) return
     const media = mediaRef.current
     if (!media || failed) return
     media.currentTime = 0
     setCurrentTime(0)
-    void Promise.resolve(media.play()).catch(() => {
-      setBuffering(false)
-      setFailed(true)
-    })
+    playOrFail(media)
   }, [failed, mediaRef, playbackNonce])
 
   const seek = (percentage: number) => {

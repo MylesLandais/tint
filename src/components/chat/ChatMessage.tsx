@@ -1,5 +1,5 @@
 import { Bot, Check, Copy, RotateCcw, Square, User, Volume2 } from 'lucide-react'
-import { memo, useCallback, useMemo, useState } from 'react'
+import { memo, useCallback, useMemo, useRef, useState } from 'react'
 import { cn } from '../../lib/utils'
 import { Icon, Spinner } from '../icon'
 import { ChatMessageActions, ChatMessageContent } from './ChatPrimitives'
@@ -75,6 +75,7 @@ function ChatMessageImpl<TCustomPart extends ChatCustomPart = never>({
   const isSpeaking = speakingId === message.id
   const hasAudio = hasAudioPart(message)
   const [hasSpoken, setHasSpoken] = useState(false)
+  const rootRef = useRef<HTMLElement>(null)
   const canSpeak =
     enableSpeak &&
     !busy &&
@@ -101,6 +102,13 @@ function ChatMessageImpl<TCustomPart extends ChatCustomPart = never>({
   const speak = useCallback(() => {
     setHasSpoken(true)
     playback?.requestSpeak(message.id)
+    const media = rootRef.current?.querySelector('audio')
+    if (media) {
+      media.currentTime = 0
+      void media.play().catch(() => {
+        /* The player records failure from its own `play()` rejection. */
+      })
+    }
     onAction?.({ messageId: message.id, action: 'speak' })
   }, [onAction, playback, message.id])
 
@@ -121,6 +129,7 @@ function ChatMessageImpl<TCustomPart extends ChatCustomPart = never>({
         className,
       )}
       {...props}
+      ref={rootRef}
     >
       {showAvatar && alignment !== 'center' ? (
         <span
