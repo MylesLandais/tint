@@ -233,6 +233,7 @@ function ChatMessageImpl<TCustomPart extends ChatCustomPart = never>({
           <ChatMessageActions
             className={cn(
               'transition-opacity sm:opacity-0 sm:group-hover/message:opacity-100 sm:group-focus-within/message:opacity-100',
+              (enableSpeak || message.status === 'streaming') && 'sm:opacity-100',
               message.status === 'streaming' && 'ml-auto',
             )}
           >
