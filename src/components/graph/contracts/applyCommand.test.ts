@@ -156,6 +156,33 @@ describe('applyCommand', () => {
     expect(next).toBe(before)
     expect(next.revision).toBe('r1')
   })
+
+  it('sets the viewport and bumps the revision once', () => {
+    const next = applyCommand(
+      document(),
+      { type: 'viewport.set', viewport: { x: 10, y: 20, zoom: 1.5 } },
+      registry,
+    )
+
+    expect(next.viewport).toEqual({ x: 10, y: 20, zoom: 1.5 })
+    expect(next.revision).toBe('r2')
+  })
+
+  it('ignores an identical viewport.set without bumping the revision', () => {
+    const withViewport = applyCommand(
+      document(),
+      { type: 'viewport.set', viewport: { x: 10, y: 20, zoom: 1.5 } },
+      registry,
+    )
+    const again = applyCommand(
+      withViewport,
+      { type: 'viewport.set', viewport: { x: 10, y: 20, zoom: 1.5 } },
+      registry,
+    )
+
+    expect(again).toBe(withViewport)
+    expect(again.revision).toBe('r2')
+  })
 })
 
 describe('nextRevision', () => {
