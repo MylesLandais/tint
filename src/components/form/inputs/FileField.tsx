@@ -23,7 +23,7 @@ export function FileField({
   description,
   error,
 }: FileFieldProps) {
-  const preview = value?.mimeType.startsWith('image/') ? value.objectUrl : undefined
+  const preview = value?.mimeType?.startsWith('image/') ? value.objectUrl : undefined
 
   function onFile(file: File | undefined) {
     if (!file) {

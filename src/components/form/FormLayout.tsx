@@ -1,10 +1,12 @@
-import React, { useId, useMemo, useState, type FormEvent, type ReactNode } from 'react'
+import React, { useEffect, useId, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import type { FormField, FormSchema, FormSection } from './contracts'
 import {
+  FormAbortError,
   appendAtPath,
   createFormSubmitEnvelope,
   defaultItemForField,
   getAtPath,
+  isFormError,
   isFormFileValue,
   removeAtIndex,
   setAtPath,
@@ -48,6 +50,7 @@ export type FormLayoutProps = {
   transport?: FormTransport<FormValues, unknown>
   onSubmit?: (envelope: FormSubmitEnvelope<FormValues>) => void | Promise<void>
   onValidation?: (issues: readonly FormIssue[]) => void
+  onSubmitError?: (error: unknown) => void
 }
 
 /**
@@ -75,11 +78,25 @@ export function FormLayout({
   transport,
   onSubmit,
   onValidation,
+  onSubmitError,
 }: FormLayoutProps) {
   const prefix = useId()
   const [localIssues, setLocalIssues] = useState<readonly FormIssue[]>([])
+  const [submitError, setSubmitError] = useState<string | null>(null)
+  const [submitting, setSubmitting] = useState(false)
+  const submittingRef = useRef(false)
+  const abortRef = useRef<AbortController | null>(null)
+  const mountedRef = useRef(true)
   const issues = issueProp ?? localIssues
-  const locked = busy || disabled || readonly
+  const locked = busy || disabled || readonly || submitting
+
+  useEffect(() => {
+    mountedRef.current = true
+    return () => {
+      mountedRef.current = false
+      abortRef.current?.abort()
+    }
+  }, [])
 
   const issuesByPath = useMemo(() => {
     const map = new Map<string, string>()
@@ -95,46 +112,70 @@ export function FormLayout({
     onValuesChange(setAtPath(values, path, value))
   }
 
+  function failSubmit(cause: unknown) {
+    if (cause instanceof FormAbortError) return
+    onSubmitError?.(cause)
+    if (!mountedRef.current) return
+    setSubmitError(
+      isFormError(cause) || cause instanceof Error
+        ? cause.message
+        : 'The form could not be submitted.',
+    )
+  }
+
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (locked) return
+    if (locked || submittingRef.current) return
     const result = validateForm(schema, values)
     setLocalIssues(result.issues)
+    setSubmitError(null)
     onValidation?.(result.issues)
     if (!result.ok) return
 
     const envelope = createFormSubmitEnvelope(schema, values)
-    if (transport) {
-      void submitWithTransport(envelope)
-      return
-    }
-    void onSubmit?.(envelope)
+    submittingRef.current = true
+    setSubmitting(true)
+    void settleSubmit(envelope)
   }
 
-  async function submitWithTransport(envelope: FormSubmitEnvelope<FormValues>) {
-    const remote = await transport!.validate(envelope)
-    if (!remote.ok) {
-      setLocalIssues(remote.issues)
-      onValidation?.(remote.issues)
-      return
+  async function settleSubmit(envelope: FormSubmitEnvelope<FormValues>) {
+    const controller = new AbortController()
+    abortRef.current = controller
+    try {
+      if (transport) {
+        const remote = await transport.validate(envelope, { signal: controller.signal })
+        if (!remote.ok) {
+          setLocalIssues(remote.issues)
+          onValidation?.(remote.issues)
+          return
+        }
+        await transport.submit(envelope, { signal: controller.signal })
+      }
+      await onSubmit?.(envelope)
+    } catch (cause) {
+      failSubmit(cause)
+    } finally {
+      submittingRef.current = false
+      if (mountedRef.current) setSubmitting(false)
     }
-    await transport!.submit(envelope)
-    await onSubmit?.(envelope)
   }
+
+  const banner = error ?? submitError
 
   return (
     <form
       className={['tint-form', className].filter(Boolean).join(' ')}
       data-density={density}
       data-columns={columns}
+      aria-busy={busy || submitting || undefined}
       onSubmit={(event) => submit(event)}
       noValidate
     >
       {schema.title ? <h2 className="tint-form-title">{schema.title}</h2> : null}
       {schema.description ? <p className="tint-form-lede">{schema.description}</p> : null}
-      {error ? (
+      {banner ? (
         <div className="tint-form-banner" role="alert" aria-live="polite">
-          {error}
+          {banner}
         </div>
       ) : null}
       {schema.sections.map((section) => (
@@ -151,7 +192,7 @@ export function FormLayout({
       ))}
       {hideSubmit ? null : (
         <button className="tint-form-submit" type="submit" disabled={locked}>
-          {busy ? submittingLabel : submitLabel}
+          {busy || submitting ? submittingLabel : submitLabel}
         </button>
       )}
     </form>
@@ -419,6 +460,7 @@ function KindInput({
           {...shared}
           value={Array.isArray(raw) ? raw.map(String) : []}
           placeholder={field.placeholder}
+          label={field.label}
           onChange={(value) => onSetPath(path, value)}
         />
       )

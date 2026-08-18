@@ -16,7 +16,6 @@ export type FormValidationResult = {
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export function defaultValueForField(field: FormField): unknown {
-  if (field.defaultItem !== undefined && field.kind === 'repeatable') return []
   switch (field.kind) {
     case 'toggle':
       return false
@@ -101,8 +100,12 @@ export function validateForm(schema: FormSchema, values: unknown): FormValidatio
 
 function validateSection(section: FormSection, values: unknown, issues: FormIssue[], prefix = '') {
   for (const field of section.fields) {
-    const path = prefix ? `${prefix}.${field.name}` : field.name
-    const value = field.name === '' ? values : getAtPath(values, path)
+    // Field names are relative to `values`. Repeatable item schemas pass the
+    // row object, so looking up the *issue* path (`entries.0.keys`) here would
+    // miss every nested field — the bug that let required lore keys through.
+    const lookup = field.name
+    const path = prefix ? (lookup ? `${prefix}.${lookup}` : prefix) : lookup
+    const value = lookup === '' ? values : getAtPath(values, lookup)
     validateField(field, value, path, issues)
   }
 }

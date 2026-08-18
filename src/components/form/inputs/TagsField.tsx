@@ -11,6 +11,8 @@ export type TagsFieldProps = {
   disabled?: boolean
   description?: string
   error?: string
+  /** Accessible name for the tag list. Defaults to "Tags". */
+  label?: string
 }
 
 export function TagsField({
@@ -21,6 +23,7 @@ export function TagsField({
   disabled,
   description,
   error,
+  label = 'Tags',
 }: TagsFieldProps) {
   const [draft, setDraft] = useState('')
   const inputId = useId()
@@ -46,7 +49,7 @@ export function TagsField({
 
   return (
     <div className="tint-form-tags">
-      <ul className="tint-form-tags__list" aria-label="Tags">
+      <ul className="tint-form-tags__list" aria-label={label}>
         {value.map((tag) => (
           <li key={tag} className="tint-form-tags__item">
             <span>{tag}</span>

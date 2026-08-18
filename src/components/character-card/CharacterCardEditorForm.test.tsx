@@ -1,10 +1,10 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { CharacterCardEditorForm } from './CharacterCardEditorForm'
 import { emptyTavernCard } from './parse'
 
 describe('CharacterCardEditorForm', () => {
-  it('is controlled and submits the V2 card through the host callback', () => {
+  it('is controlled and submits the V2 card through the host callback', async () => {
     const onValueChange = vi.fn()
     const onSubmit = vi.fn()
     const card = emptyTavernCard()
@@ -23,6 +23,6 @@ describe('CharacterCardEditorForm', () => {
     )
 
     fireEvent.submit(screen.getByRole('button', { name: 'Save character' }).closest('form')!)
-    expect(onSubmit).toHaveBeenCalledOnce()
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledOnce())
   })
 })
