@@ -153,6 +153,17 @@ const CASES: readonly Case[] = [
     names: ['InteractiveGraphViewProps'],
   },
   {
+    doc: 'src/docs/telemetry/TelemetryDoc.tsx',
+    types: 'src/components/telemetry/types.ts',
+    names: [
+      'TraceWaterfallProps',
+      'TraceMetricsProps',
+      'TraceSpanDetailProps',
+      'TraceViewerProps',
+      'TraceServiceMapProps',
+    ],
+  },
+  {
     doc: 'src/docs/form/FormDoc.tsx',
     types: 'src/components/form/FormLayout.tsx',
     names: ['FormLayoutProps'],

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   CheckCircle2,
   ChevronDown,
@@ -12,15 +13,19 @@ import {
   ChatPreference,
 } from '../../../components/chat'
 import { Icon } from '../../../components/icon'
+import { Panel } from '../../../components/panel'
+import { TraceViewer } from '../../../components/telemetry/TraceViewer'
 import { cn } from '../../../lib/utils'
 import { useChatDemo } from './useChatDemo'
 import type { ChatDemoScenarioId, PreferencePart } from './scenarios'
 
 export function ChatDemo() {
   const demo = useChatDemo()
+  const [traceOpen, setTraceOpen] = useState(true)
   const scenario = demo.scenarios.find((item) => item.id === demo.scenarioId)!
   const active =
     demo.composerState === 'streaming' || demo.composerState === 'submitting'
+  const groupTrace = demo.scenarioId === 'group' ? demo.traces[0] : undefined
 
   return (
     <div className="overflow-hidden rounded-2xl border border-tint-border bg-tint-surface shadow-[0_20px_60px_rgba(30,42,58,0.10)]">
@@ -104,6 +109,9 @@ export function ChatDemo() {
           onMessageAction={demo.messageAction}
           onToolApproval={demo.toolApproval}
           enableSpeak={demo.scenarioId === 'group'}
+          onSpeakingMessageIdChange={(messageId) => {
+            if (messageId) demo.recordSpeak(messageId)
+          }}
           renderPart={(part, context) => {
             if (part.type !== 'custom' || part.kind !== 'preference') return undefined
             return (
@@ -139,12 +147,31 @@ export function ChatDemo() {
         />
       </ChatConversation>
 
+      {groupTrace ? (
+        <div className="border-t border-tint-border bg-tint-surface p-3">
+          <Panel
+            title="Agent traces"
+            status={
+              <span className="font-mono text-[0.6875rem] text-tint-muted">
+                {groupTrace.spans.length} spans · {groupTrace.traceId}
+              </span>
+            }
+            expanded={traceOpen}
+            onExpandedChange={setTraceOpen}
+          >
+            <div className="p-3">
+              <TraceViewer trace={groupTrace} />
+            </div>
+          </Panel>
+        </div>
+      ) : null}
+
       <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-tint-border bg-tint-panel px-4 py-2.5 text-[0.6875rem] text-tint-muted">
         <span className="inline-flex items-center gap-1.5">
           <Icon icon={CheckCircle2} size="sm" className="text-tint-success" />
           No fetch, socket, persistence, or AI SDK
         </span>
-        <span>Deterministic fixtures · local timers · controlled state</span>
+        <span>Deterministic fixtures · local timers · mocked traces</span>
       </footer>
     </div>
   )

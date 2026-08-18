@@ -97,6 +97,16 @@ const ROUTE_DATA = [
     ],
   },
   {
+    path: 'components/telemetry',
+    label: 'Telemetry',
+    blurb: 'Waterfall Gantt, RED metrics, and a service map for host-owned agent traces.',
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      { id: 'service-map', label: 'Service map' },
+      ...USAGE_AND_API,
+    ],
+  },
+  {
     path: 'components/socket',
     label: 'Socket',
     blurb: 'Types-only contracts for graph and workbench socket wiring.',

@@ -109,11 +109,18 @@ describe('ChatDemo scenario runner', () => {
 
     const replayMaya = screen.getByRole('button', { name: 'Replay Maya' })
     expect(document.querySelector('[data-chat-part="audio"]')).toBeInTheDocument()
+    expect(screen.getByText(/I'm Jordan/)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Replay Jordan' })).toBeInTheDocument()
+    expect(screen.getByText('Agent traces')).toBeInTheDocument()
+    expect(screen.getByRole('listbox', { name: 'Trace waterfall' })).toBeInTheDocument()
+    expect(screen.getAllByRole('option', { name: /llm\.generate/ }).length).toBeGreaterThan(1)
+
     fireEvent.click(replayMaya)
 
     expect(replayMaya).toHaveAttribute('aria-pressed', 'true')
     expect(play).toHaveBeenCalled()
     expect(fetchSpy).not.toHaveBeenCalled()
+    expect(screen.getByRole('option', { name: /tts\.replay/ })).toBeInTheDocument()
 
     play.mockRestore()
   })
