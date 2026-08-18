@@ -93,4 +93,17 @@ describe('ChatPreference', () => {
     fireEvent.click(screen.getAllByRole('button', { name: /copy/i })[0]!)
     expect(onSelect).not.toHaveBeenCalled()
   })
+
+  it('moves radio focus with arrow keys without treating it as a pick', () => {
+    const onSelect = vi.fn()
+    render(<ChatPreference options={options} onSelect={onSelect} />)
+
+    const first = screen.getByRole('radio', { name: /Response 1/i })
+    const second = screen.getByRole('radio', { name: /Response 2/i })
+    first.focus()
+    fireEvent.keyDown(first, { key: 'ArrowRight' })
+
+    expect(second).toHaveFocus()
+    expect(onSelect).not.toHaveBeenCalled()
+  })
 })

@@ -1,5 +1,5 @@
 import { CheckCircle2 } from 'lucide-react'
-import type { HTMLAttributes, KeyboardEvent, MouseEvent } from 'react'
+import { useState, type HTMLAttributes, type KeyboardEvent, type MouseEvent } from 'react'
 import { cn } from '../../lib/utils'
 import { Icon } from '../icon'
 import { ChatBuiltInPart } from './ChatParts'
@@ -35,30 +35,53 @@ export function ChatPreference({
   ...props
 }: ChatPreferenceProps) {
   const locked = status === 'selected'
+  const selectedIndex = options.findIndex((option) => option.id === selectedOptionId)
+  const [focusIndex, setFocusIndex] = useState(() => (selectedIndex >= 0 ? selectedIndex : 0))
 
   const choose = (optionId: ChatId) => {
     if (!locked) onSelect?.(optionId)
   }
 
+  const moveFocus = (from: number, delta: number, currentTarget: HTMLDivElement) => {
+    if (options.length === 0) return
+    const next = (from + delta + options.length) % options.length
+    setFocusIndex(next)
+    const radios = currentTarget.parentElement?.querySelectorAll<HTMLElement>('[role="radio"]')
+    radios?.[next]?.focus()
+  }
+
   const onOptionClick = (
     event: MouseEvent<HTMLDivElement>,
     optionId: ChatId,
+    index: number,
   ) => {
     // Nested part controls (code Copy, links) must not count as a preference pick.
     if ((event.target as HTMLElement).closest(NESTED_CONTROL)) return
+    setFocusIndex(index)
     choose(optionId)
   }
 
   const onOptionKeyDown = (
     event: KeyboardEvent<HTMLDivElement>,
     optionId: ChatId,
+    index: number,
   ) => {
     if (locked) return
     if (event.target !== event.currentTarget) return
     if (event.key === ' ' || event.key === 'Enter') {
       event.preventDefault()
       choose(optionId)
+      return
     }
+    const delta =
+      event.key === 'ArrowRight' || event.key === 'ArrowDown'
+        ? 1
+        : event.key === 'ArrowLeft' || event.key === 'ArrowUp'
+          ? -1
+          : 0
+    if (!delta) return
+    event.preventDefault()
+    moveFocus(index, delta, event.currentTarget)
   }
 
   return (
@@ -83,15 +106,17 @@ export function ChatPreference({
       >
         {options.map((option, index) => {
           const selected = selectedOptionId === option.id
+          const tabStop = selectedIndex >= 0 ? selected : index === focusIndex
           return (
             <div
               key={option.id}
               role="radio"
               aria-checked={selected}
               aria-disabled={locked || undefined}
-              tabIndex={locked ? -1 : selected || (!selectedOptionId && index === 0) ? 0 : -1}
-              onClick={(event) => onOptionClick(event, option.id)}
-              onKeyDown={(event) => onOptionKeyDown(event, option.id)}
+              tabIndex={locked ? -1 : tabStop ? 0 : -1}
+              onClick={(event) => onOptionClick(event, option.id, index)}
+              onKeyDown={(event) => onOptionKeyDown(event, option.id, index)}
+              onFocus={() => setFocusIndex(index)}
               className={cn(
                 'min-w-0 rounded-xl border bg-tint-panel p-3 text-left transition',
                 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tint-accent',
