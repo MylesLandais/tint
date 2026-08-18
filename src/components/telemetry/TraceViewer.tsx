@@ -18,7 +18,9 @@ export function TraceViewer({
   className,
 }: TraceViewerProps) {
   const isControlled = useRef(selectedSpanId !== undefined).current
-  const [uncontrolled, setUncontrolled] = useState<string | null>(null)
+  const [uncontrolled, setUncontrolled] = useState<string | null>(
+    () => trace.spans[0]?.spanId ?? null,
+  )
   const selected = isControlled ? (selectedSpanId ?? null) : uncontrolled
 
   const setSelected = (next: string | null) => {
