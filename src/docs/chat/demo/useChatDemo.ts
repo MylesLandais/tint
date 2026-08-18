@@ -11,6 +11,7 @@ import type {
 import type { TelemetryTrace } from '../../../components/telemetry'
 import {
   chatDemoScenarios,
+  chatDemoScenarioFromHash,
   demoAssistant,
   demoHuman,
   demoJordan,
@@ -128,12 +129,17 @@ function pendingAssistantMessage(
 }
 
 export function useChatDemo() {
-  const [scenarioId, setScenarioIdState] =
-    useState<ChatDemoScenarioId>('research')
+  const [scenarioId, setScenarioIdState] = useState<ChatDemoScenarioId>(
+    () => chatDemoScenarioFromHash(window.location.hash) ?? 'research',
+  )
   const [messages, setMessages] =
     useState<readonly ChatDemoMessage[]>(initialDemoMessages)
   const [draft, setDraft] = useState(
-    chatDemoScenarios.find((scenario) => scenario.id === 'research')?.prompt ?? '',
+    () =>
+      chatDemoScenarios.find(
+        (scenario) =>
+          scenario.id === (chatDemoScenarioFromHash(window.location.hash) ?? 'research'),
+      )?.prompt ?? '',
   )
   const [attachments, setAttachments] =
     useState<readonly ChatAttachmentData[]>([])

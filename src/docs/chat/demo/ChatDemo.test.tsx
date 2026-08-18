@@ -5,6 +5,7 @@ import { ChatDemo } from './ChatDemo'
 describe('ChatDemo scenario runner', () => {
   beforeEach(() => {
     vi.useFakeTimers()
+    window.location.hash = '#/components/chat'
   })
 
   afterEach(() => {
@@ -88,6 +89,16 @@ describe('ChatDemo scenario runner', () => {
       'aria-checked',
       'false',
     )
+  })
+
+  it('opens the group scenario from the hash query', () => {
+    window.location.hash = '#/components/chat?scenario=group'
+    render(<ChatDemo />)
+    expect(screen.getByRole('radio', { name: 'Group chat TTS' })).toHaveAttribute(
+      'aria-checked',
+      'true',
+    )
+    expect(screen.getByText(/One mock trace spans both agents/)).toBeInTheDocument()
   })
 
   it('replays Maya from a local audio fixture without fetching TTS', () => {

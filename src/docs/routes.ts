@@ -246,3 +246,9 @@ export function findRoute(path: string): DocRoute | undefined {
 export function hrefFor(route: DocRoute): string {
   return `#/${route.path}`
 }
+
+/** Hash path without `#/` and without a query string or leftover fragment. */
+export function pathFromHash(hash: string): string {
+  const raw = hash.startsWith('#/') ? hash.slice(2) : hash.startsWith('#') ? hash.slice(1) : hash
+  return raw.split(/[?#]/)[0] ?? ''
+}

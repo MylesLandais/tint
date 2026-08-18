@@ -104,6 +104,13 @@ export const chatDemoScenarios: readonly ChatDemoScenario[] = [
   },
 ] as const
 
+export function chatDemoScenarioFromHash(hash: string): ChatDemoScenarioId | undefined {
+  const queryIndex = hash.indexOf('?')
+  if (queryIndex === -1) return undefined
+  const value = new URLSearchParams(hash.slice(queryIndex + 1)).get('scenario')
+  return chatDemoScenarios.find((scenario) => scenario.id === value)?.id
+}
+
 export const initialDemoMessages: readonly ChatDemoMessage[] = [
   {
     id: 'demo-welcome',
