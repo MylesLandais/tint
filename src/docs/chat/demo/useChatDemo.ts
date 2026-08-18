@@ -12,6 +12,7 @@ import type { TelemetryTrace } from '../../../components/telemetry'
 import {
   chatDemoScenarios,
   chatDemoScenarioFromHash,
+  chatDemoShouldAutoReplay,
   demoAssistant,
   demoHuman,
   demoJordan,
@@ -1064,6 +1065,14 @@ export function useChatDemo() {
     const agent: MockGroupAgent = messageId.includes('jordan') ? 'jordan' : 'maya'
     upsertTrace(session.recordReplay(agent))
   }, [upsertTrace])
+
+  const replayRef = useRef(replay)
+  replayRef.current = replay
+
+  useEffect(() => {
+    if (!chatDemoShouldAutoReplay(window.location.hash)) return
+    replayRef.current()
+  }, [])
 
   return {
     scenarioId,

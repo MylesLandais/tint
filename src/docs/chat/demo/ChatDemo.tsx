@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import {
   CheckCircle2,
   FlaskConical,
@@ -16,23 +16,15 @@ import { Panel } from '../../../components/panel'
 import { TraceViewer } from '../../../components/telemetry/TraceViewer'
 import { cn } from '../../../lib/utils'
 import { useChatDemo } from './useChatDemo'
-import { chatDemoShouldAutoReplay, type PreferencePart } from './scenarios'
+import type { PreferencePart } from './scenarios'
 
 export function ChatDemo() {
   const demo = useChatDemo()
   const [traceOpen, setTraceOpen] = useState(true)
-  const autoReplayRef = useRef(false)
   const scenario = demo.scenarios.find((item) => item.id === demo.scenarioId)!
   const active =
     demo.composerState === 'streaming' || demo.composerState === 'submitting'
   const groupTrace = demo.scenarioId === 'group' ? demo.traces[0] : undefined
-
-  useEffect(() => {
-    if (autoReplayRef.current) return
-    if (!chatDemoShouldAutoReplay(window.location.hash)) return
-    autoReplayRef.current = true
-    demo.replay()
-  }, [demo])
 
   return (
     <div className="overflow-hidden rounded-2xl border border-tint-border bg-tint-surface shadow-[0_20px_60px_rgba(30,42,58,0.10)]">
