@@ -101,6 +101,18 @@ describe('ChatDemo scenario runner', () => {
     expect(screen.getByText(/One mock trace spans both agents/)).toBeInTheDocument()
   })
 
+  it('auto-replays the group scenario when the hash asks', () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch')
+    window.location.hash = '#/components/chat?scenario=group&replay=1'
+    render(<ChatDemo />)
+    act(() => vi.advanceTimersByTime(5000))
+
+    expect(screen.getByText(/I'm Jordan/)).toBeInTheDocument()
+    expect(screen.getByText('Agent traces')).toBeInTheDocument()
+    expect(screen.getAllByRole('option', { name: /llm\.generate/ }).length).toBeGreaterThan(1)
+    expect(fetchSpy).not.toHaveBeenCalled()
+  })
+
   it('replays Maya from a local audio fixture without fetching TTS', () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch')
     const play = vi

@@ -111,6 +111,12 @@ export function chatDemoScenarioFromHash(hash: string): ChatDemoScenarioId | und
   return chatDemoScenarios.find((scenario) => scenario.id === value)?.id
 }
 
+export function chatDemoShouldAutoReplay(hash: string): boolean {
+  const queryIndex = hash.indexOf('?')
+  if (queryIndex === -1) return false
+  return new URLSearchParams(hash.slice(queryIndex + 1)).get('replay') === '1'
+}
+
 export const initialDemoMessages: readonly ChatDemoMessage[] = [
   {
     id: 'demo-welcome',
