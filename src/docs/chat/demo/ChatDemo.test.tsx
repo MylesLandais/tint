@@ -29,15 +29,15 @@ describe('ChatDemo scenario runner', () => {
 
   it('stops a stream and recovers the error scenario on retry', () => {
     render(<ChatDemo />)
-    const scenario = screen.getByRole('combobox', { name: 'Demo scenario' })
+    const scenario = screen.getByRole('radio', { name: 'Streaming answer' })
 
-    fireEvent.change(scenario, { target: { value: 'streaming' } })
+    fireEvent.click(scenario)
     fireEvent.click(screen.getByRole('button', { name: 'Replay' }))
     act(() => vi.advanceTimersByTime(700))
     fireEvent.click(screen.getByRole('button', { name: 'Stop response' }))
     expect(screen.getByText('Stopped')).toBeInTheDocument()
 
-    fireEvent.change(scenario, { target: { value: 'error' } })
+    fireEvent.click(screen.getByRole('radio', { name: 'Error recovery' }))
     fireEvent.click(screen.getByRole('button', { name: 'Replay' }))
     act(() => vi.advanceTimersByTime(1000))
     expect(screen.getByText('The mocked response was interrupted.')).toBeInTheDocument()
@@ -49,9 +49,7 @@ describe('ChatDemo scenario runner', () => {
 
   it('simulates local attachment progress and reset', () => {
     const { container } = render(<ChatDemo />)
-    fireEvent.change(screen.getByRole('combobox', { name: 'Demo scenario' }), {
-      target: { value: 'attachment' },
-    })
+    fireEvent.click(screen.getByRole('radio', { name: 'Attachment analysis' }))
     const file = new File(['fixture'], 'brief.md', { type: 'text/markdown' })
     const input = container.querySelector<HTMLInputElement>('input[type="file"]')!
     fireEvent.change(input, { target: { files: [file] } })
@@ -70,9 +68,7 @@ describe('ChatDemo scenario runner', () => {
 
   it('renders a preference split and locks the chosen response', () => {
     render(<ChatDemo />)
-    fireEvent.change(screen.getByRole('combobox', { name: 'Demo scenario' }), {
-      target: { value: 'preference' },
-    })
+    fireEvent.click(screen.getByRole('radio', { name: 'Response preference' }))
     fireEvent.click(screen.getByRole('button', { name: 'Replay' }))
     act(() => vi.advanceTimersByTime(2000))
 
@@ -101,9 +97,7 @@ describe('ChatDemo scenario runner', () => {
       .mockResolvedValue(undefined)
 
     render(<ChatDemo />)
-    fireEvent.change(screen.getByRole('combobox', { name: 'Demo scenario' }), {
-      target: { value: 'group' },
-    })
+    fireEvent.click(screen.getByRole('radio', { name: 'Group chat TTS' }))
     fireEvent.click(screen.getByRole('button', { name: 'Replay' }))
     act(() => vi.advanceTimersByTime(5000))
 
