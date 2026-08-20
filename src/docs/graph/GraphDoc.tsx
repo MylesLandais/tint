@@ -19,6 +19,7 @@ import {
 } from './mockI2VRun'
 import {
   InteractiveGraphView,
+  emptySelection,
   flattenValidationIssues,
   type GraphCommand,
   type GraphDocument,
@@ -155,7 +156,7 @@ export function GraphDoc() {
   const [validationByNodeId, setValidationByNodeId] = useState(
     initialComfy.validationByNodeId,
   )
-  const [selection, setSelection] = useState<GraphSelection | undefined>()
+  const [selection, setSelection] = useState<GraphSelection>(emptySelection)
   const [viewport, setViewport] = useState<GraphViewport | undefined>()
   const [followViewport, setFollowViewport] = useState<GraphViewport | undefined>()
   const [lastCommand, setLastCommand] = useState<GraphCommand | null>(null)
@@ -233,7 +234,7 @@ export function GraphDoc() {
   const switchMode = (next: DemoMode) => {
     stopMockRun()
     setMode(next)
-    setSelection(undefined)
+    setSelection(emptySelection())
     setLastCommand(null)
     if (next === 'comfy') {
       const loaded = loadComfyState()

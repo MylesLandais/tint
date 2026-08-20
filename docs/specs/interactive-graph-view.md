@@ -67,11 +67,10 @@ comment:
 | The root barrel re-exports everything `tint/graph` exposes | `src/exports.test.ts` |
 
 `contracts/` is React-free and xyflow-free: it is the part a host can depend on
-without pulling the canvas. Node kinds may declare an optional `formSchema`; the
-inspector renders `FormLayout` and Apply becomes `node.configure`. That is the
-as-built form submit path. Command buses, repositories, and SQL/PGQ stay in
-Appendix A.
-without inheriting a rendering engine.
+without pulling the canvas — and without inheriting a rendering engine. Node
+kinds may declare an optional `formSchema`; the inspector renders `FormLayout`
+and Apply becomes `node.configure`. That is the as-built form submit path.
+Command buses, repositories, and SQL/PGQ stay in Appendix A.
 
 ## 3. The graph document
 
