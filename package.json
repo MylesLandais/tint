@@ -31,6 +31,7 @@
     "./collab": "./src/components/collab/index.ts",
     "./graph": "./src/components/graph/index.ts",
     "./graph/styles.css": "./src/components/graph/graph.css",
+    "./telemetry": "./src/components/telemetry/index.ts",
     "./form": "./src/components/form/index.ts",
     "./form/styles.css": "./src/components/form/styles.css",
     "./character-card": "./src/components/character-card/index.ts",

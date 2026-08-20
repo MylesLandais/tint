@@ -181,6 +181,23 @@ export {
 export type * from './components/graph'
 
 export {
+  TraceMetrics,
+  TraceServiceMap,
+  TraceSpanDetail,
+  TraceViewer,
+  TraceWaterfall,
+  deriveTraceMetrics,
+  durationOf,
+  formatDuration,
+  graphDocumentFromTrace,
+  layoutTrace,
+  runtimeByService,
+  serviceColor,
+  spanById,
+} from './components/telemetry'
+export type * from './components/telemetry'
+
+export {
   DEMO_FORM_SCHEMA,
   FileField,
   FormAbortError,

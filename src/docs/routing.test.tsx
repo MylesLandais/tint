@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { DocsNav } from './components/DocsNav'
 import { HomeDoc } from './HomeDoc'
 import { DOC_PAGES } from './pages'
-import { DOC_ROUTES, findRoute } from './routes'
+import { DOC_ROUTES, findRoute, pathFromHash } from './routes'
 
 /**
  * These cover the defect this module was built to fix: the Editor and Terminal
@@ -29,6 +29,13 @@ describe('docs routing', () => {
 
   it('does not resolve an unknown path', () => {
     expect(findRoute('nope')).toBeUndefined()
+  })
+
+  it('strips hash query strings so deep links still resolve', () => {
+    expect(pathFromHash('#/components/chat?scenario=group')).toBe('components/chat')
+    expect(findRoute(pathFromHash('#/components/chat?scenario=group'))?.path).toBe(
+      'components/chat',
+    )
   })
 
   it('never lets an alias shadow a real path', () => {

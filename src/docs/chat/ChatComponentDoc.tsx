@@ -630,7 +630,8 @@ export function ChatComponentDoc() {
               <h2 className="text-2xl font-semibold tracking-tight">Interactive preview</h2>
               <p className="mt-1 max-w-2xl text-tint-muted">
                 Choose a scenario, send the suggested prompt, then stop, retry, approve, deny,
-                pick a preferred response, attach a file, replay Maya’s cached clip, or load
+                pick a preferred response, attach a file, replay Maya’s cached clip, inspect the
+                group-chat trace, or load
                 earlier history.
               </p>
             </div>

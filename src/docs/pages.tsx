@@ -21,7 +21,8 @@ import { VideoPlayerDoc } from './VideoPlayerDoc'
  *
  * The heavy pages load lazily: Editor pulls in Tiptap, Terminal pulls in
  * xterm, Auth pulls in its own stylesheet, Graph pulls in the vendored
- * xyflow bundle, and Form / Character Card pull in the form stylesheet.
+ * xyflow bundle, Form / Character Card pull in the form stylesheet, and
+ * Telemetry pulls in the graph canvas for its service map.
  */
 const EditorDoc = lazy(() =>
   import('./editor/EditorDoc').then((module) => ({ default: module.EditorDoc })),
@@ -32,6 +33,9 @@ const TerminalDoc = lazy(() =>
 const AuthDoc = lazy(() => import('./auth/AuthDoc').then((module) => ({ default: module.AuthDoc })))
 const GraphDoc = lazy(() =>
   import('./graph/GraphDoc').then((module) => ({ default: module.GraphDoc })),
+)
+const TelemetryDoc = lazy(() =>
+  import('./telemetry/TelemetryDoc').then((module) => ({ default: module.TelemetryDoc })),
 )
 const FormDoc = lazy(() => import('./form/FormDoc').then((module) => ({ default: module.FormDoc })))
 const CharacterCardDoc = lazy(() =>
@@ -50,6 +54,7 @@ export const DOC_PAGES = {
   'components/editor': EditorDoc,
   'components/terminal': TerminalDoc,
   'components/graph': GraphDoc,
+  'components/telemetry': TelemetryDoc,
   'components/form': FormDoc,
   'components/character-card': CharacterCardDoc,
   'components/socket': SocketDoc,

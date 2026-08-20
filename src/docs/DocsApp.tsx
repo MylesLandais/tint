@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useState } from 'react'
 import { HomeDoc } from './HomeDoc'
 import { DOC_PAGES } from './pages'
-import { findRoute } from './routes'
+import { findRoute, pathFromHash } from './routes'
 
 function LoadingDoc() {
   return (
@@ -12,7 +12,7 @@ function LoadingDoc() {
 }
 
 function readRoute() {
-  return window.location.hash.startsWith('#/') ? window.location.hash.slice(2) : ''
+  return pathFromHash(window.location.hash)
 }
 
 export function DocsApp() {
