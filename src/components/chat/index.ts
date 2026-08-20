@@ -6,6 +6,7 @@ export {
 } from './ChatComposer'
 export { ChatMessage } from './ChatMessage'
 export { ChatMessageList } from './ChatMessageList'
+export { ChatMediaLightbox } from './ChatMediaLightbox'
 export {
   ChatApproval,
   ChatArtifact,
@@ -15,6 +16,7 @@ export {
   ChatError,
   ChatFile,
   ChatImage,
+  ChatImages,
   ChatMessagePartView,
   ChatPartContainer,
   ChatReasoning,
@@ -22,7 +24,12 @@ export {
   ChatText,
   ChatTool,
 } from './ChatParts'
-export type { ChatApprovalProps, ChatErrorProps } from './ChatParts'
+export type {
+  ChatApprovalProps,
+  ChatErrorProps,
+  ChatImageProps,
+  ChatImagesProps,
+} from './ChatParts'
 export { ChatPreference } from './ChatPreference'
 export type { ChatPreferenceProps } from './ChatPreference'
 export {

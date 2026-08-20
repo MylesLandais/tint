@@ -17,6 +17,7 @@ export type ChatDemoScenarioId =
   | 'streaming'
   | 'error'
   | 'attachment'
+  | 'images'
   | 'preference'
   | 'group'
 
@@ -76,6 +77,13 @@ export const chatDemoScenarios: readonly ChatDemoScenario[] = [
     prompt: 'Review this attachment and call out the important details.',
   },
   {
+    id: 'images',
+    label: 'Image gallery',
+    description:
+      'A Midjourney-style four-image response with lightbox navigation and per-image actions.',
+    prompt: 'Generate four variations of California poppies at golden hour.',
+  },
+  {
     id: 'preference',
     label: 'Response preference',
     description:
@@ -103,7 +111,7 @@ export const initialDemoMessages: readonly ChatDemoMessage[] = [
         type: 'text',
         format: 'markdown',
         text:
-          'This is a **client-only Tint demo**. Pick a scenario or send the suggested prompt to exercise streaming, tools, approvals, attachments, preference splits, errors, and transcript behavior.',
+          'This is a **client-only Tint demo**. Pick a scenario or send the suggested prompt to exercise streaming, tools, approvals, attachments, image galleries, preference splits, errors, and transcript behavior.',
       },
     ],
   },

@@ -46,6 +46,8 @@ export {
   ChatError,
   ChatFile,
   ChatImage,
+  ChatImages,
+  ChatMediaLightbox,
   ChatMessage,
   ChatMessageActions,
   ChatMessageContent,

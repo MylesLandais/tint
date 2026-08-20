@@ -156,6 +156,44 @@ export type ChatImagePart = ChatPartBase & {
   alt: string
   width?: number
   height?: number
+  /** Optional “view original” target in the lightbox. */
+  href?: string
+}
+
+/** One cell inside an `images` gallery part. */
+export type ChatImageItem = {
+  id: ChatId
+  src: string
+  /** Required. Pass `''` only for genuinely decorative images. */
+  alt: string
+  width?: number
+  height?: number
+  /** Optional “view original” target in the lightbox. */
+  href?: string
+}
+
+/**
+ * App-defined control under an `images` grid (e.g. Upscale / Vary).
+ * Tint renders the label; the host decides what the action does.
+ */
+export type ChatImageAction = {
+  id: ChatId
+  label: string
+  /** When set, the action applies to one cell; omit for shared actions. */
+  imageId?: ChatId
+}
+
+/**
+ * Several images as one cohesive response block (Midjourney-style grid).
+ * Prefer this over adjacent `image` parts when the set is a single unit.
+ */
+export type ChatImagesPart = ChatPartBase & {
+  type: 'images'
+  images: readonly ChatImageItem[]
+  /** Optional caption above the grid (e.g. the generation prompt). */
+  caption?: string
+  /** Optional action buttons under the grid. */
+  actions?: readonly ChatImageAction[]
 }
 
 export type ChatFilePart = ChatPartBase & {
@@ -240,6 +278,7 @@ export type ChatBuiltInMessagePart =
   | ChatTextPart
   | ChatCodePart
   | ChatImagePart
+  | ChatImagesPart
   | ChatFilePart
   | ChatAudioPart
   | ChatSourcesPart
@@ -303,13 +342,21 @@ export type ChatMessageAction =
   | 'reply'
   | 'feedback-up'
   | 'feedback-down'
+  | 'image-open'
+  | 'image-action'
   | 'custom'
 
 export type ChatMessageActionPayload = {
   messageId: ChatId
   action: ChatMessageAction
-  /** Disambiguates when `action` is `custom`. */
+  /** Disambiguates when `action` is `custom` or `image-action`. */
   actionId?: string
+  /** Part that owned the image / gallery, when relevant. */
+  partId?: ChatId
+  /** Cell id inside an `images` part (or the single `image` part id). */
+  imageId?: ChatId
+  /** Zero-based index within the opened gallery. */
+  imageIndex?: number
 }
 
 export type ChatToolApprovalPayload = {
@@ -509,3 +556,16 @@ export type ChatRichPartProps<TPart extends ChatBuiltInMessagePart> =
   Omit<HTMLAttributes<HTMLElement>, 'part'> & {
     part: TPart
   }
+
+/** Controlled lightbox for one or more chat images. Presentation only. */
+export type ChatMediaLightboxProps = {
+  open: boolean
+  images: readonly ChatImageItem[]
+  /** Zero-based index into `images`. Clamped when out of range. */
+  index: number
+  onClose: () => void
+  onIndexChange: (index: number) => void
+  /** Optional caption shown under the current image. */
+  caption?: string
+  className?: string
+}

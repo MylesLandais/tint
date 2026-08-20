@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { ChatMessage } from './ChatMessage'
 import type { ChatMessageData, ChatMessagePart } from './types'
@@ -111,5 +111,102 @@ describe('output caps and formatting', () => {
     const name = screen.getByText('invoicegnp.exe')
     expect(name).toBeInTheDocument()
     expect(name.textContent).not.toContain(RLO)
+  })
+})
+
+describe('image gallery parts', () => {
+  it('renders a four-image grid with caption and opens the lightbox', () => {
+    const onAction = vi.fn()
+    render(
+      <ChatMessage
+        message={messageWith([
+          {
+            id: 'gallery-1',
+            type: 'images',
+            caption: 'vibrant California poppies',
+            images: [
+              { id: 'a', src: '/images/gallery-1.svg', alt: 'Variation 1' },
+              { id: 'b', src: '/images/gallery-2.svg', alt: 'Variation 2' },
+              { id: 'c', src: '/images/gallery-3.svg', alt: 'Variation 3' },
+              { id: 'd', src: '/images/gallery-4.svg', alt: 'Variation 4' },
+            ],
+          },
+        ])}
+        onAction={onAction}
+      />,
+    )
+
+    const gallery = document.querySelector('[data-chat-part="images"]')
+    expect(gallery).toHaveAttribute('data-count', '4')
+    expect(screen.getByText('vibrant California poppies')).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: /open image 2: variation 2/i }))
+    expect(onAction).toHaveBeenCalledWith(
+      expect.objectContaining({
+        messageId: 'message-1',
+        action: 'image-open',
+        partId: 'gallery-1',
+        imageId: 'b',
+        imageIndex: 1,
+      }),
+    )
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    expect(screen.getAllByAltText('Variation 2').length).toBeGreaterThan(0)
+  })
+
+  it('emits image-action when a gallery action button is pressed', () => {
+    const onAction = vi.fn()
+    render(
+      <ChatMessage
+        message={messageWith([
+          {
+            id: 'gallery-1',
+            type: 'images',
+            images: [
+              { id: 'a', src: '/images/gallery-1.svg', alt: 'One' },
+              { id: 'b', src: '/images/gallery-2.svg', alt: 'Two' },
+            ],
+            actions: [
+              { id: 'upscale-1', label: 'U1', imageId: 'a' },
+              { id: 'vary-2', label: 'V2', imageId: 'b' },
+            ],
+          },
+        ])}
+        onAction={onAction}
+      />,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'U1' }))
+    expect(onAction).toHaveBeenCalledWith(
+      expect.objectContaining({
+        action: 'image-action',
+        actionId: 'upscale-1',
+        imageId: 'a',
+        partId: 'gallery-1',
+      }),
+    )
+  })
+
+  it('shows a thumbnail for image file attachments with previewUrl', () => {
+    render(
+      <ChatMessage
+        message={messageWith([
+          {
+            id: 'file-1',
+            type: 'file',
+            attachment: {
+              id: 'a1',
+              name: 'poppy.png',
+              mediaType: 'image/png',
+              status: 'ready',
+              previewUrl: '/images/gallery-1.svg',
+            },
+          },
+        ])}
+      />,
+    )
+
+    const thumb = document.querySelector('[data-chat-part="file"] img')
+    expect(thumb).toHaveAttribute('src', '/images/gallery-1.svg')
   })
 })
