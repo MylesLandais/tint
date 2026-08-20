@@ -14,10 +14,10 @@ const builderRule = DEMO_POLICY.rules[0]!
 
 describe('matchEntry (builder)', () => {
   it('AND-matches every clause', () => {
-    const entry = DEMO_FEED.entries.find((row) => row.id === 'entry-mk-1')!
+    const entry = DEMO_FEED.entries.find((row) => row.id === 'entry-mk-yt-1')!
     expect(matchEntry(entry, builderRule.criteria)).toBe(true)
 
-    const miss = DEMO_FEED.entries.find((row) => row.id === 'entry-mk-2')!
+    const miss = DEMO_FEED.entries.find((row) => row.id === 'entry-mk-yt-2')!
     expect(matchEntry(miss, builderRule.criteria)).toBe(false)
   })
 
@@ -49,6 +49,7 @@ describe('mockDryRun', () => {
   })
 
   it('counts builder matches over a fixture list', () => {
+    // release tag on MissKatie lookbook + k2s token drop
     expect(countMatches(DEMO_FEED.entries, builderRule)).toBe(2)
   })
 })

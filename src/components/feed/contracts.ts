@@ -3,6 +3,8 @@
  *
  * Tint presents this; Kino (or a docs demo store) owns mutation and crawl. The
  * collections are `readonly` and replaced wholesale so `revision` stays honest.
+ *
+ * Mock-only in tint: fixtures stand in while the server is developed separately.
  */
 
 export type FeedId = string
@@ -13,13 +15,41 @@ export type SourcePlatform =
   | 'rss'
   | 'web'
   | 'forum'
+  | 'tiktok'
+  | 'instagram'
+  | 'reddit'
   | 'other'
 
 export type SourceHealth = 'healthy' | 'unreachable' | 'inactive' | 'dormant'
 
+/**
+ * Routeable room / topic — one place in the product where inbound streams land
+ * and (later) agents/users interact. Docs demos use paths like `channel/${slug}`.
+ *
+ * Not a YouTube/TikTok API object. Activity's `ForumChannel` shares the same
+ * `{ id, name, slug }` convention for rooms that also host forum threads; the
+ * types stay separate (FeedDocument vs ActivityDocument) until a later unify.
+ */
+export type Channel = {
+  id: string
+  /** URL segment: misskatie | LTT | gaming | nsfw */
+  slug: string
+  /** Display title in nav / header. */
+  name: string
+  /** Optional short topic blurb. */
+  description?: string
+  avatarUrl?: string
+}
+
+/**
+ * One inbound stream into a channel: platform endpoint + workflow + health.
+ * UI copy may say "stream"; the code name stays Source (already shipped).
+ */
 export type Source = {
   id: string
-  /** Display handle or site label. */
+  /** Channel this stream feeds. */
+  channelId: string
+  /** Display handle or site label on that platform. */
   handle: string
   url: string
   platform: SourcePlatform
@@ -69,6 +99,7 @@ export type FeedDocument = {
   schemaVersion: string
   id: FeedId
   revision: RevisionToken
+  channels: readonly Channel[]
   sources: readonly Source[]
   entries: readonly FeedEntry[]
   matches: readonly PolicyMatch[]
@@ -78,4 +109,47 @@ export type FeedDocument = {
 export function nextFeedRevision(current: RevisionToken): RevisionToken {
   const n = Number.parseInt(current.replace(/\D/g, ''), 10)
   return `r${Number.isFinite(n) ? n + 1 : 1}`
+}
+
+/** Docs / host route for a channel room. */
+export function channelPath(channel: Pick<Channel, 'slug'>): string {
+  return `channel/${channel.slug}`
+}
+
+export function sourcesForChannel(
+  document: Pick<FeedDocument, 'sources'>,
+  channelId: string,
+): readonly Source[] {
+  return document.sources.filter((source) => source.channelId === channelId)
+}
+
+export function channelForSource(
+  document: Pick<FeedDocument, 'channels' | 'sources'>,
+  sourceId: string,
+): Channel | undefined {
+  const source = document.sources.find((item) => item.id === sourceId)
+  if (!source) return undefined
+  return document.channels.find((channel) => channel.id === source.channelId)
+}
+
+export function entriesForChannel(
+  document: Pick<FeedDocument, 'sources' | 'entries'>,
+  channelId: string,
+): readonly FeedEntry[] {
+  const sourceIds = new Set(
+    document.sources.filter((source) => source.channelId === channelId).map((source) => source.id),
+  )
+  return document.entries.filter((entry) => sourceIds.has(entry.sourceId))
+}
+
+/** Attribution line: `MissKatie · youtube`. */
+export function resolveAttribution(
+  document: Pick<FeedDocument, 'channels' | 'sources'>,
+  sourceId: string,
+): string {
+  const source = document.sources.find((item) => item.id === sourceId)
+  if (!source) return sourceId
+  const channel = document.channels.find((item) => item.id === source.channelId)
+  const room = channel?.name ?? source.handle
+  return `${room} · ${source.platform}`
 }

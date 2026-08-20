@@ -10,8 +10,8 @@ describe('sortActivityEvents', () => {
     const top = sortActivityEvents(DEMO_ACTIVITY.events, 'top', now)
 
     expect(hot[0]?.rank).toBe(1)
-    expect(neu[0]?.id).toBe('act-3')
-    expect(top[0]?.id).toBe('act-4')
+    expect(neu[0]?.id).toBe('act-6')
+    expect(top[0]?.id).toBe('act-5')
     expect(new Set(hot.map((event) => event.id)).size).toBe(DEMO_ACTIVITY.events.length)
   })
 })

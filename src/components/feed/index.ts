@@ -1,5 +1,6 @@
 export type {
   ArtifactStatus,
+  Channel,
   ContentKind,
   FeedDocument,
   FeedEntry,
@@ -12,7 +13,14 @@ export type {
   SourceHealth,
   SourcePlatform,
 } from './contracts'
-export { nextFeedRevision } from './contracts'
+export {
+  channelForSource,
+  channelPath,
+  entriesForChannel,
+  nextFeedRevision,
+  resolveAttribution,
+  sourcesForChannel,
+} from './contracts'
 
 export {
   DEMO_ACTIVITY,

@@ -24,19 +24,20 @@ describe('deriveNotifications', () => {
   it('projects matches the feed can explain', () => {
     const rows = deriveNotifications(DEMO_FEED, DEFAULT_NOTIFICATION_SETTINGS)
     const matchIds = rows.filter((row) => row.kind === 'match').map((row) => row.id)
-    expect(matchIds).toContain('match:pol-mk-cache:entry-mk-1')
+    expect(matchIds).toContain('match:pol-mk-cache:entry-mk-yt-1')
     expect(matchIds).toContain('match:pol-k2s-auto:entry-k2s-1')
   })
 
   it('honours per-source off and includes artifact + health rows', () => {
     const rows = deriveNotifications(DEMO_FEED, {
       ...DEFAULT_NOTIFICATION_SETTINGS,
-      bySource: { 'src-misskatie': 'off' },
+      bySource: { 'src-mk-yt': 'off' },
     })
-    expect(rows.some((row) => row.sourceId === 'src-misskatie' && row.kind === 'match')).toBe(
-      false,
+    expect(rows.some((row) => row.sourceId === 'src-mk-yt' && row.kind === 'match')).toBe(false)
+    // Artifact rows also honour bySource off for that source; other sources still surface.
+    expect(rows.some((row) => row.kind === 'artifact_ready' && row.sourceId !== 'src-mk-yt')).toBe(
+      true,
     )
-    expect(rows.some((row) => row.kind === 'artifact_ready')).toBe(true)
     expect(rows.some((row) => row.kind === 'source_health' && row.sourceId === 'src-k2s')).toBe(
       true,
     )

@@ -35,6 +35,13 @@ export type ActivityEvent = {
   threadId?: string
 }
 
+/**
+ * Forum room inside ActivityDocument.
+ *
+ * Shares `{ id, name, slug }` with feed `Channel` so a thread can live under the
+ * same routeable room (e.g. `channel/gaming`). Types are not merged yet — feed
+ * and activity documents stay independent until a later unify.
+ */
 export type ForumChannel = {
   id: string
   name: string

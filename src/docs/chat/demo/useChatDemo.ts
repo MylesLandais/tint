@@ -35,7 +35,7 @@ import {
   commitSubscription,
   storeCredential,
 } from '../../feed/demoStore'
-import type { Source } from '../../../components/feed'
+import type { Channel, Source } from '../../../components/feed'
 import type { PolicyRule } from '../../../components/policy'
 
 const STREAM_DELAY = 84
@@ -44,6 +44,7 @@ const DEMO_BASE_TIME = Date.parse('2026-08-02T15:01:00Z')
 type DemoPart = ChatMessagePart<PreferencePart>
 
 type SubscriptionProposal = {
+  channel: Channel
   source: Source
   rule: PolicyRule
   summary: string
@@ -54,8 +55,15 @@ function parseSubscriptionIntent(text: string): SubscriptionProposal {
   const k2s = /k2s|token|domain/.test(lower)
   if (k2s) {
     const credentialRef = storeCredential('demo-k2s-token')
+    const channel: Channel = {
+      id: 'ch-k2s',
+      slug: 'k2s',
+      name: 'k2s',
+      description: 'Maya auto_queue demo room',
+    }
     const source: Source = {
       id: 'src-k2s-maya',
+      channelId: channel.id,
       handle: 'k2s.cc/domain (maya)',
       url: 'https://k2s.cc/file/watched',
       platform: 'web',
@@ -81,19 +89,27 @@ function parseSubscriptionIntent(text: string): SubscriptionProposal {
       matchCount: 0,
     }
     return {
+      channel,
       source,
       rule,
       summary:
-        '**Domain** k2s.cc · **Workflow** `k2s-unlock` · **Disposition** `auto_queue` · **Notify** on · **credentialRef** `' +
+        '**Room** `channel/k2s` · **Stream** web · **Workflow** `k2s-unlock` · **Disposition** `auto_queue` · **Notify** on · **credentialRef** `' +
         credentialRef +
         '` (opaque — no raw token in chat).',
     }
   }
 
   const credentialRef = storeCredential('demo-yt-cookie')
+  const channel: Channel = {
+    id: 'ch-misskatie',
+    slug: 'misskatie',
+    name: 'MissKatie',
+    description: 'Creator room — multi-platform fan-out',
+  }
   const source: Source = {
     id: 'src-misskatie-maya',
-    handle: 'misskatie (maya)',
+    channelId: channel.id,
+    handle: '@misskatie (maya)',
     url: 'https://youtube.com/@misskatie',
     platform: 'youtube',
     workflowName: 'youtube-poll',
@@ -117,10 +133,11 @@ function parseSubscriptionIntent(text: string): SubscriptionProposal {
     matchCount: 0,
   }
   return {
+    channel,
     source,
     rule,
     summary:
-      '**Channel** misskatie · **Workflow** `youtube-poll` · **Disposition** `notify_and_cache` · **Notify** on · **credentialRef** `' +
+      '**Room** `channel/misskatie` · **Stream** youtube · **Workflow** `youtube-poll` · **Disposition** `notify_and_cache` · **Notify** on · **credentialRef** `' +
       credentialRef +
       '` (opaque — no raw token in chat).',
   }
@@ -706,7 +723,7 @@ export function useChatDemo() {
         const affirming = Boolean(pending && isAffirmative(userText))
 
         if (affirming && pending) {
-          commitSubscription(pending.source, pending.rule)
+          commitSubscription(pending.channel, pending.source, pending.rule)
           subscriptionPendingRef.current = null
           updateMessage(messageId, (message) => ({
             ...message,
@@ -717,7 +734,7 @@ export function useChatDemo() {
                 status: 'complete',
                 durationMs: 240,
                 title: 'Writing subscription',
-                text: 'Confirmed — writing Source + PolicyRule into the docs demo store.',
+                text: 'Confirmed — writing Channel + Source + PolicyRule into the docs demo store.',
               },
               {
                 id: `${messageId}-answer`,
@@ -732,14 +749,16 @@ export function useChatDemo() {
             messageId,
             `${messageId}-answer`,
             [
-              'Done. Source **',
+              'Done. Room **channel/',
+              pending.channel.slug,
+              '** stream **',
               pending.source.handle,
               '** and policy **',
               pending.rule.name,
               '** are in the demo store (`credentialRef` ',
               '`',
               pending.source.credentialRef ?? '',
-              '`). Open **Policy** to see the write.',
+              '`). Open **Feed** / **Policy** to see the write.',
             ],
           )
           return

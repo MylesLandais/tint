@@ -308,10 +308,16 @@ export {
   SourceHealthBadge,
   SplitPane,
   ViewModeToggle,
+  channelForSource,
+  channelPath,
+  entriesForChannel,
   nextFeedRevision,
+  resolveAttribution,
+  sourcesForChannel,
 } from './components/feed'
 export type {
   ArtifactStatus,
+  Channel,
   ContentKind,
   FeedDocument,
   FeedEntry,

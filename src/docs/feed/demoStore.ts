@@ -3,13 +3,14 @@
  * the Policy / Feed workbenches.
  *
  * Lives under `src/docs` on purpose — component packages stay presentational and
- * must not grow a global mutation store.
+ * must not grow a global mutation store. All writes are mock; no server.
  */
 
 import {
   DEMO_FEED,
   DEMO_POLICY,
   nextFeedRevision,
+  type Channel,
   type FeedDocument,
   type Source,
 } from '../../components/feed'
@@ -58,6 +59,20 @@ export function storeCredential(_secret: string): string {
   return `cred_demo_${crypto.randomUUID().slice(0, 8)}`
 }
 
+export function upsertChannel(channel: Channel) {
+  const existing = feed.channels.findIndex((item) => item.id === channel.id)
+  const channels =
+    existing >= 0
+      ? feed.channels.map((item, index) => (index === existing ? channel : item))
+      : [...feed.channels, channel]
+  feed = {
+    ...feed,
+    channels,
+    revision: nextFeedRevision(feed.revision),
+  }
+  emit()
+}
+
 export function upsertSource(source: Source) {
   const existing = feed.sources.findIndex((item) => item.id === source.id)
   const sources =
@@ -91,8 +106,9 @@ export function dispatchPolicyCommand(
   emit()
 }
 
-/** Maya confirmation write: source + rule in one turn. */
-export function commitSubscription(source: Source, rule: PolicyRule) {
+/** Maya confirmation write: channel room + inbound stream + rule. */
+export function commitSubscription(channel: Channel, source: Source, rule: PolicyRule) {
+  upsertChannel(channel)
   upsertSource(source)
   upsertPolicyRule(rule)
 }

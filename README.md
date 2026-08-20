@@ -95,11 +95,19 @@ import 'tint/graph/styles.css'
 ```
 
 Subscriptions, policy rules, notifications, and Digg-style activity are separate
-focused packages. The host owns the documents; Tint presents them. Lua is edited
-and highlighted in the policy editor — it is never executed in the browser:
+focused packages. The host owns the documents; Tint presents them. A **Channel**
+is a routeable room/topic (`channel/misskatie`); a **Source** is one inbound
+platform stream into that room. Fixtures are mock-only — no live crawl. Lua is
+edited and highlighted in the policy editor — it is never executed in the browser:
 
 ```tsx
-import { FeedLayout, SplitPane, ReaderPane } from 'tint/feed'
+import {
+  FeedLayout,
+  SplitPane,
+  ReaderPane,
+  channelPath,
+  resolveAttribution,
+} from 'tint/feed'
 import { NotificationBell, deriveNotifications, NotificationSettingsPanel } from 'tint/notify'
 import { PolicyTable, PolicyEditor, applyPolicyCommand } from 'tint/policy'
 import { ActivityFeed, sortActivityEvents } from 'tint/activity'
