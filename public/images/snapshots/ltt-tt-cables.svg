@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="640" viewBox="0 0 360 640">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#101820"/>
+      <stop offset="100%" stop-color="#1e3a2f"/>
+    </linearGradient>
+  </defs>
+  <rect width="360" height="640" fill="url(#g)"/>
+  <rect x="40" y="120" width="280" height="280" rx="16" fill="#0a1210" stroke="#4a7a62" stroke-width="2"/>
+  <path d="M80 200 h200 M80 240 h160 M80 280 h180 M80 320 h120" stroke="#4a7a62" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="180" cy="480" r="36" fill="#ffffff22"/>
+  <polygon points="170,460 170,500 200,480" fill="#d7f5e6"/>
+  <text x="24" y="560" font-family="IBM Plex Sans,system-ui,sans-serif" font-size="18" font-weight="600" fill="#d7f5e6">Cable speedrun</text>
+  <text x="24" y="588" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="11" fill="#7eab93">SNAPSHOT · tiktok · 9:16 · stale</text>
+  <text x="336" y="48" text-anchor="end" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="12" fill="#7eab93">0:32</text>
+</svg>

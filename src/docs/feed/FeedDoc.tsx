@@ -68,13 +68,15 @@ function Workbench() {
   const [filter, setFilter] = useState<FilterId>('all')
   const [scope, setScope] = useState<Scope>({
     kind: 'channel',
-    channelId: feed.channels[0]?.id ?? 'ch-misskatie',
+    channelId: 'ch-ltt',
   })
-  const [selectedEntryId, setSelectedEntryId] = useState<string | null>(feed.entries[0]?.id ?? null)
+  const [selectedEntryId, setSelectedEntryId] = useState<string | null>('entry-ltt-yt-1')
   const [startWidth, setStartWidth] = useState('16rem')
   const [middleWidth, setMiddleWidth] = useState('1fr')
   const [askOpen, setAskOpen] = useState(false)
-  const [expandedIds, setExpandedIds] = useState<string[]>(() => feed.channels.map((c) => c.id))
+  const [expandedIds, setExpandedIds] = useState<string[]>(() => [
+    ...new Set(['ch-ltt', ...feed.channels.map((channel) => channel.id)]),
+  ])
 
   const channelRegistry = useMemo(() => createChannelNodeRegistry(), [])
 
@@ -286,8 +288,8 @@ function Workbench() {
         }
       >
         <p className="m-0 text-sm text-tint-muted">
-          Example: “subscribe to misskatie, notify, cache on release” or “watch domain for token,
-          use k2s-unlock”. All data here is mock fixture — nothing is fetched.
+          Example: “subscribe to LinusTechTips lab uploads” or “watch domain for token, use
+          k2s-unlock”. Default room is <code>channel/LTT</code> with stale local media snapshots.
         </p>
       </Dialog>
     </>
@@ -300,8 +302,8 @@ export function FeedDoc() {
       <DocsPage
         route="components/feed"
         title="Feed"
-        intro="Subscriptions workbench: channel rooms with inbound platform streams, layout variants, and a reader pane. Host owns FeedDocument; Tint presents it."
-        note="Channels are routeable rooms (channel/misskatie, channel/gaming). Sources are mock streams — no live crawl. Demo toast fires once for a fixture policy match."
+        intro="Subscriptions workbench: channel rooms with inbound platform streams, layout variants, and a reader pane. Default demo room is channel/LTT with stale YouTube/TikTok snapshot thumbnails."
+        note="Media under /images/snapshots is hand-authored — nothing is fetched. Demo toast fires once for the LTT lab policy match."
       >
         <DocsSection id="preview" title="Workbench">
           <DocsPreview className="p-3 sm:p-4">

@@ -10,7 +10,7 @@ import {
 import { DEMO_FEED } from '../feed/fixtures'
 import { DEMO_POLICY } from '../feed/fixtures'
 
-const builderRule = DEMO_POLICY.rules[0]!
+const builderRule = DEMO_POLICY.rules.find((rule) => rule.id === 'pol-mk-cache')!
 
 describe('matchEntry (builder)', () => {
   it('AND-matches every clause', () => {
