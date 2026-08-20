@@ -173,6 +173,96 @@ const CASES: readonly Case[] = [
     types: 'src/components/character-card/CharacterCardEditorForm.tsx',
     names: ['CharacterCardEditorFormProps'],
   },
+  {
+    doc: 'src/docs/feed/FeedDoc.tsx',
+    types: 'src/components/feed/FeedLayout.tsx',
+    names: ['FeedLayoutProps'],
+  },
+  {
+    doc: 'src/docs/feed/FeedDoc.tsx',
+    types: 'src/components/feed/SplitPane.tsx',
+    names: ['SplitPaneProps'],
+  },
+  {
+    doc: 'src/docs/feed/FeedDoc.tsx',
+    types: 'src/components/feed/ReaderPane.tsx',
+    names: ['ReaderPaneProps'],
+  },
+  {
+    doc: 'src/docs/feed/FeedDoc.tsx',
+    types: 'src/components/feed/NarrationTransport.tsx',
+    names: ['NarrationTransportProps'],
+  },
+  {
+    doc: 'src/docs/feed/FeedDoc.tsx',
+    types: 'src/components/feed/SourceHealthBadge.tsx',
+    names: ['SourceHealthBadgeProps'],
+  },
+  {
+    doc: 'src/docs/feed/FeedDoc.tsx',
+    types: 'src/components/feed/ViewModeToggle.tsx',
+    names: ['ViewModeToggleProps'],
+  },
+  {
+    doc: 'src/docs/feed/FeedDoc.tsx',
+    types: 'src/components/feed/HighlightLayer.tsx',
+    names: ['HighlightLayerProps'],
+  },
+  {
+    doc: 'src/docs/feed/FeedDoc.tsx',
+    types: 'src/components/feed/SelectionToolbar.tsx',
+    names: ['SelectionToolbarProps'],
+  },
+  {
+    doc: 'src/docs/feed/FeedDoc.tsx',
+    types: 'src/components/feed/FeedEntryCard.tsx',
+    names: ['FeedEntryCardProps'],
+  },
+  {
+    doc: 'src/docs/feed/FeedDoc.tsx',
+    types: 'src/components/feed/FeedEntryRow.tsx',
+    names: ['FeedEntryRowProps'],
+  },
+  {
+    doc: 'src/docs/activity/ActivityDoc.tsx',
+    types: 'src/components/activity/ActivityFeed.tsx',
+    names: ['ActivityFeedProps'],
+  },
+  {
+    doc: 'src/docs/activity/ActivityDoc.tsx',
+    types: 'src/components/activity/ActivityFeedRow.tsx',
+    names: ['ActivityFeedRowProps'],
+  },
+  {
+    doc: 'src/docs/policy/PolicyDoc.tsx',
+    types: 'src/components/policy/PolicyTable.tsx',
+    names: ['PolicyTableProps'],
+  },
+  {
+    doc: 'src/docs/policy/PolicyDoc.tsx',
+    types: 'src/components/policy/PolicyEditor.tsx',
+    names: ['PolicyEditorProps'],
+  },
+  {
+    doc: 'src/docs/policy/PolicyDoc.tsx',
+    types: 'src/components/policy/PolicyDryRun.tsx',
+    names: ['PolicyDryRunProps'],
+  },
+  {
+    doc: 'src/docs/notify/NotifyDoc.tsx',
+    types: 'src/components/notify/NotificationBell.tsx',
+    names: ['NotificationBellProps'],
+  },
+  {
+    doc: 'src/docs/notify/NotifyDoc.tsx',
+    types: 'src/components/notify/NotificationList.tsx',
+    names: ['NotificationListProps'],
+  },
+  {
+    doc: 'src/docs/notify/NotifyDoc.tsx',
+    types: 'src/components/notify/NotificationSettings.tsx',
+    names: ['NotificationSettingsProps'],
+  },
 ]
 
 describe('docs prop tables', () => {

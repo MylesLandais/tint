@@ -31,11 +31,104 @@ import {
   type MockGroupAgent,
 } from './mockAgentProvider'
 import { demoChannel } from './channel'
+import {
+  commitSubscription,
+  storeCredential,
+} from '../../feed/demoStore'
+import type { Source } from '../../../components/feed'
+import type { PolicyRule } from '../../../components/policy'
 
 const STREAM_DELAY = 84
 const DEMO_BASE_TIME = Date.parse('2026-08-02T15:01:00Z')
 
 type DemoPart = ChatMessagePart<PreferencePart>
+
+type SubscriptionProposal = {
+  source: Source
+  rule: PolicyRule
+  summary: string
+}
+
+function parseSubscriptionIntent(text: string): SubscriptionProposal {
+  const lower = text.toLowerCase()
+  const k2s = /k2s|token|domain/.test(lower)
+  if (k2s) {
+    const credentialRef = storeCredential('demo-k2s-token')
+    const source: Source = {
+      id: 'src-k2s-maya',
+      handle: 'k2s.cc/domain (maya)',
+      url: 'https://k2s.cc/file/watched',
+      platform: 'web',
+      workflowName: 'k2s-unlock',
+      health: 'healthy',
+      unreadCount: 0,
+      credentialRef,
+    }
+    const rule: PolicyRule = {
+      id: 'pol-k2s-maya',
+      sourceId: source.id,
+      name: 'Auto-queue token drops (Maya)',
+      enabled: true,
+      criteria: {
+        mode: 'builder',
+        clauses: [
+          { id: 'c1', field: 'title', operator: 'contains', value: 'token' },
+          { id: 'c2', field: 'contentKind', operator: 'equals', value: 'release' },
+        ],
+      },
+      disposition: 'auto_queue',
+      workflowEdge: 'intent_create',
+      matchCount: 0,
+    }
+    return {
+      source,
+      rule,
+      summary:
+        '**Domain** k2s.cc · **Workflow** `k2s-unlock` · **Disposition** `auto_queue` · **Notify** on · **credentialRef** `' +
+        credentialRef +
+        '` (opaque — no raw token in chat).',
+    }
+  }
+
+  const credentialRef = storeCredential('demo-yt-cookie')
+  const source: Source = {
+    id: 'src-misskatie-maya',
+    handle: 'misskatie (maya)',
+    url: 'https://youtube.com/@misskatie',
+    platform: 'youtube',
+    workflowName: 'youtube-poll',
+    health: 'healthy',
+    unreadCount: 0,
+    credentialRef,
+  }
+  const rule: PolicyRule = {
+    id: 'pol-mk-maya',
+    sourceId: source.id,
+    name: 'Notify + cache on release (Maya)',
+    enabled: true,
+    criteria: {
+      mode: 'builder',
+      clauses: [
+        { id: 'c1', field: 'tags', operator: 'includes_tag', value: 'release' },
+      ],
+    },
+    disposition: 'notify_and_cache',
+    workflowEdge: 'notify',
+    matchCount: 0,
+  }
+  return {
+    source,
+    rule,
+    summary:
+      '**Channel** misskatie · **Workflow** `youtube-poll` · **Disposition** `notify_and_cache` · **Notify** on · **credentialRef** `' +
+      credentialRef +
+      '` (opaque — no raw token in chat).',
+  }
+}
+
+function isAffirmative(text: string): boolean {
+  return /^(y|yes|yep|confirm|do it|proceed|ok|okay)\b/i.test(text.trim())
+}
 
 function replaceMessage(
   messages: readonly ChatDemoMessage[],
@@ -158,6 +251,7 @@ export function useChatDemo() {
   const lastPayloadRef = useRef<ChatSubmitPayload | null>(null)
   const [traces, setTraces] = useState<readonly TelemetryTrace[]>([])
   const groupTraceRef = useRef<GroupTraceSession | null>(null)
+  const subscriptionPendingRef = useRef<SubscriptionProposal | null>(null)
 
   const upsertTrace = useCallback((trace: TelemetryTrace) => {
     setTraces((current) => {
@@ -605,6 +699,88 @@ export function useChatDemo() {
     [schedule, updateMessage],
   )
 
+  const runSubscriptionsScenario = useCallback(
+    (messageId: string, userText: string) => {
+      schedule(() => {
+        const pending = subscriptionPendingRef.current
+        const affirming = Boolean(pending && isAffirmative(userText))
+
+        if (affirming && pending) {
+          commitSubscription(pending.source, pending.rule)
+          subscriptionPendingRef.current = null
+          updateMessage(messageId, (message) => ({
+            ...message,
+            actor: demoMaya,
+            parts: [
+              {
+                ...message.parts[0]!,
+                status: 'complete',
+                durationMs: 240,
+                title: 'Writing subscription',
+                text: 'Confirmed — writing Source + PolicyRule into the docs demo store.',
+              },
+              {
+                id: `${messageId}-answer`,
+                type: 'text',
+                format: 'markdown',
+                status: 'streaming',
+                text: '',
+              },
+            ],
+          }))
+          streamAnswer(
+            messageId,
+            `${messageId}-answer`,
+            [
+              'Done. Source **',
+              pending.source.handle,
+              '** and policy **',
+              pending.rule.name,
+              '** are in the demo store (`credentialRef` ',
+              '`',
+              pending.source.credentialRef ?? '',
+              '`). Open **Policy** to see the write.',
+            ],
+          )
+          return
+        }
+
+        const proposal = parseSubscriptionIntent(userText)
+        subscriptionPendingRef.current = proposal
+        updateMessage(messageId, (message) => ({
+          ...message,
+          actor: demoMaya,
+          parts: [
+            {
+              ...message.parts[0]!,
+              status: 'complete',
+              durationMs: 280,
+              title: 'Confirming subscription',
+              text: 'Echoing the slot-fill before mutation.',
+            },
+            {
+              id: `${messageId}-answer`,
+              type: 'text',
+              format: 'markdown',
+              status: 'streaming',
+              text: '',
+            },
+          ],
+        }))
+        streamAnswer(
+          messageId,
+          `${messageId}-answer`,
+          [
+            "Here's what I'll write:\n\n",
+            proposal.summary,
+            '\n\nReply **yes** to commit (or send another request to revise).',
+          ],
+        )
+      }, 360)
+    },
+    [schedule, streamAnswer, updateMessage],
+  )
+
   const runGroupScenario = useCallback(
     (mayaId: string, jordanId: string, session: GroupTraceSession) => {
       schedule(() => {
@@ -735,7 +911,9 @@ export function useChatDemo() {
       const activeScenario = options?.scenario ?? scenarioId
       const humanId = `demo-user-${sequence}`
       const assistantId =
-        activeScenario === 'group' ? `demo-maya-${sequence}` : `demo-assistant-${sequence}`
+        activeScenario === 'group' || activeScenario === 'subscriptions'
+          ? `demo-maya-${sequence}`
+          : `demo-assistant-${sequence}`
       const jordanId = `demo-jordan-${sequence}`
       const runTime = DEMO_BASE_TIME + sequence * 60_000
       const assistant = pendingAssistantMessage(
@@ -746,11 +924,15 @@ export function useChatDemo() {
             ? 'Preparing candidate responses'
             : activeScenario === 'group'
               ? 'Choosing a cached voice clip'
+              : activeScenario === 'subscriptions'
+                ? 'Slot-filling a subscription'
               : activeScenario === 'images'
                 ? 'Composing image variations'
                 : 'Planning response',
         runTime + 1_000,
-        activeScenario === 'group' ? demoMaya : demoAssistant,
+        activeScenario === 'group' || activeScenario === 'subscriptions'
+          ? demoMaya
+          : demoAssistant,
       )
       const next = [
         ...(options?.baseMessages ?? messages),
@@ -785,6 +967,9 @@ export function useChatDemo() {
         upsertTrace(session.afterUser())
         runGroupScenario(assistantId, jordanId, session)
       }
+      if (activeScenario === 'subscriptions') {
+        runSubscriptionsScenario(assistantId, payload.text)
+      }
     },
     [
       clearTimers,
@@ -796,6 +981,7 @@ export function useChatDemo() {
       runPreferenceScenario,
       runResearchScenario,
       runStreamingScenario,
+      runSubscriptionsScenario,
       scenarioId,
       upsertTrace,
       replyTo,
@@ -865,6 +1051,8 @@ export function useChatDemo() {
         setTraces([])
         upsertTrace(session.afterUser())
         runGroupScenario(messageId, jordanId, session)
+      } else if (scenarioId === 'subscriptions') {
+        runSubscriptionsScenario(messageId, lastPayloadRef.current?.text ?? '')
       } else {
         runStreamingScenario(messageId)
       }
@@ -878,6 +1066,7 @@ export function useChatDemo() {
       runPreferenceScenario,
       runResearchScenario,
       runStreamingScenario,
+      runSubscriptionsScenario,
       scenarioId,
       upsertTrace,
     ],
@@ -1119,6 +1308,7 @@ export function useChatDemo() {
     )
     setTraces([])
     groupTraceRef.current = null
+    subscriptionPendingRef.current = null
   }, [clearTimers, scenarioId])
 
   const replay = useCallback(() => {
@@ -1153,6 +1343,7 @@ export function useChatDemo() {
       )
       setTraces([])
       groupTraceRef.current = null
+      subscriptionPendingRef.current = null
     },
     [clearTimers],
   )

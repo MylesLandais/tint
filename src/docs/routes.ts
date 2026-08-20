@@ -278,6 +278,42 @@ const ROUTE_DATA = [
       ...USAGE_AND_API,
     ],
   },
+  {
+    path: 'components/feed',
+    label: 'Feed',
+    blurb: 'Subscriptions workbench: layout variants, split panes, reader, and narration over a host-owned FeedDocument.',
+    sections: [
+      { id: 'preview', label: 'Workbench' },
+      ...USAGE_AND_API,
+    ],
+  },
+  {
+    path: 'components/activity',
+    label: 'Activity',
+    blurb: 'Digg-style ranked activity stream with optional forum-thread expansion.',
+    sections: [
+      { id: 'preview', label: 'Workbench' },
+      ...USAGE_AND_API,
+    ],
+  },
+  {
+    path: 'components/policy',
+    label: 'Policy',
+    blurb: 'Rule table, builder/Lua editor, mocked dry-run, and a read-only workflow graph.',
+    sections: [
+      { id: 'preview', label: 'Workbench' },
+      ...USAGE_AND_API,
+    ],
+  },
+  {
+    path: 'components/notify',
+    label: 'Notify',
+    blurb: 'Bell, grouped list, and per-source/policy channels derived from feed matches.',
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      ...USAGE_AND_API,
+    ],
+  },
 ] as const satisfies readonly DocRouteShape[]
 
 /** Literal union of valid paths, so a typo in `<DocsNav current>` is a type error. */
@@ -329,6 +365,10 @@ export const ROUTE_GROUPS = {
   'components/dice': 'Theming & layout',
   'components/form': 'Theming & layout',
   'components/character-card': 'Data & infra',
+  'components/feed': 'Chat & content',
+  'components/activity': 'Chat & content',
+  'components/policy': 'Data & infra',
+  'components/notify': 'Data & infra',
   'graph': 'Meta',
 } satisfies Record<DocRoutePath, DocGroup>
 

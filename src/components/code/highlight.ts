@@ -6,6 +6,7 @@ import go from 'highlight.js/lib/languages/go'
 import java from 'highlight.js/lib/languages/java'
 import javascript from 'highlight.js/lib/languages/javascript'
 import json from 'highlight.js/lib/languages/json'
+import lua from 'highlight.js/lib/languages/lua'
 import markdown from 'highlight.js/lib/languages/markdown'
 import python from 'highlight.js/lib/languages/python'
 import rust from 'highlight.js/lib/languages/rust'
@@ -32,6 +33,7 @@ lowlight.register({
   java,
   javascript,
   json,
+  lua,
   markdown,
   python,
   rust,
@@ -64,6 +66,7 @@ export const CODE_LANGUAGES = [
   { value: 'java', label: 'Java' },
   { value: 'javascript', label: 'JavaScript' },
   { value: 'json', label: 'JSON' },
+  { value: 'lua', label: 'Lua' },
   { value: 'markdown', label: 'Markdown' },
   { value: 'python', label: 'Python' },
   { value: 'rust', label: 'Rust' },

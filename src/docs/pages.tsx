@@ -16,6 +16,10 @@ import { ButtonDoc } from './ButtonDoc'
 import { SettingsPopoutDoc } from './SettingsPopoutDoc'
 import { SocketDoc } from './SocketDoc'
 import { VideoPlayerDoc } from './VideoPlayerDoc'
+import { FeedDoc } from './feed/FeedDoc'
+import { ActivityDoc } from './activity/ActivityDoc'
+import { PolicyDoc } from './policy/PolicyDoc'
+import { NotifyDoc } from './notify/NotifyDoc'
 
 /**
  * Path -> page component, kept apart from `routes.ts` so that the route data
@@ -77,5 +81,9 @@ export const DOC_PAGES = {
   'components/dice': DiceDoc,
   'components/icon': IconsDoc,
   'components/theme': ThemeDoc,
+  'components/feed': FeedDoc,
+  'components/activity': ActivityDoc,
+  'components/policy': PolicyDoc,
+  'components/notify': NotifyDoc,
   'graph': ComponentGraphDoc,
 } satisfies Record<DocRoutePath, ComponentType>

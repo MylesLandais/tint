@@ -292,3 +292,110 @@ export {
   toCharacterCardFormValues,
 } from './components/character-card'
 export type * from './components/character-card'
+
+export {
+  DEMO_ACTIVITY,
+  DEMO_FEED,
+  DEMO_NOTIFY_SETTINGS,
+  DEMO_POLICY,
+  FeedEntryCard,
+  FeedEntryRow,
+  FeedLayout,
+  HighlightLayer,
+  NarrationTransport,
+  ReaderPane,
+  SelectionToolbar,
+  SourceHealthBadge,
+  SplitPane,
+  ViewModeToggle,
+  nextFeedRevision,
+} from './components/feed'
+export type {
+  ArtifactStatus,
+  ContentKind,
+  FeedDocument,
+  FeedEntry,
+  FeedEntryCardProps,
+  FeedEntryRowProps,
+  FeedId,
+  FeedLayoutProps,
+  FeedLayoutVariant,
+  HighlightLayerProps,
+  NarrationTransportProps,
+  PolicyDisposition,
+  PolicyMatch,
+  ReadState,
+  ReaderPaneProps,
+  SelectionToolbarAction,
+  SelectionToolbarProps,
+  Source,
+  SourceHealth,
+  SourceHealthBadgeProps,
+  SourcePlatform,
+  SplitPaneProps,
+  TextHighlight,
+  ViewModeToggleProps,
+} from './components/feed'
+
+export {
+  DEFAULT_NOTIFICATION_SETTINGS,
+  NotificationBell,
+  NotificationList,
+  NotificationSettingsPanel,
+  deriveNotifications,
+  isInQuietHours,
+} from './components/notify'
+export type {
+  Notification,
+  NotificationBellProps,
+  NotificationKind,
+  NotificationListProps,
+  NotificationSettings,
+  NotificationSettingsProps,
+  NotifyChannel,
+} from './components/notify'
+
+export {
+  PolicyDryRun,
+  PolicyEditor,
+  PolicyTable,
+  applyPolicyCommand,
+  countMatches,
+  matchClause,
+  matchEntry,
+  mockDryRun,
+} from './components/policy'
+export type {
+  DryRunResult,
+  MatchClause,
+  MatchCriteria,
+  MatchField,
+  MatchOperator,
+  PolicyCommand,
+  PolicyDocument,
+  PolicyDryRunProps,
+  PolicyEditorProps,
+  PolicyId,
+  PolicyRule,
+  PolicyTableProps,
+  WorkflowEdge,
+} from './components/policy'
+
+export {
+  ActivityFeed,
+  ActivityFeedRow,
+  sortActivityEvents,
+} from './components/activity'
+export type {
+  ActivityDocument,
+  ActivityEvent,
+  ActivityFeedProps,
+  ActivityFeedRowProps,
+  ActivityId,
+  ActivitySignal,
+  ActivitySort,
+  CrossPost,
+  ForumChannel,
+  ForumPost,
+  ForumThread,
+} from './components/activity'

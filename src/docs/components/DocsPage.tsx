@@ -34,6 +34,10 @@ const IMPORT_SNIPPETS = {
   'components/dice': "import { DiceRoller } from 'tint/dice'",
   'components/form': "import { FormLayout, TextField, SelectField } from 'tint/form'",
   'components/character-card': "import { CharacterCardEditorForm } from 'tint/character-card'",
+  'components/feed': "import { FeedLayout, ReaderPane, SplitPane } from 'tint/feed'",
+  'components/activity': "import { ActivityFeed } from 'tint/activity'",
+  'components/policy': "import { PolicyTable, PolicyEditor, PolicyDryRun } from 'tint/policy'",
+  'components/notify': "import { NotificationBell, NotificationList } from 'tint/notify'",
   'graph': "import { InteractiveGraphView } from 'tint/graph'",
 } satisfies Record<DocRoutePath, string>
 

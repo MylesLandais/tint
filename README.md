@@ -60,7 +60,9 @@ is linked from there, including `#/components/editor` (the rich-text buffer),
 `#/components/chat`, `#/components/media-player`, `#/components/video-player`,
 `#/components/media` (the primitives the players are built from),
 `#/components/code`, `#/components/panel`, `#/components/settings-popout`,
-`#/components/dice`, `#/components/graph`, `#/components/telemetry`, and `#/components/audio-input`.
+`#/components/dice`, `#/components/graph`, `#/components/telemetry`,
+`#/components/audio-input`, `#/components/feed`, `#/components/activity`,
+`#/components/policy`, and `#/components/notify`.
 
 Doc pages are declared once in `src/docs/routes.ts`; the router, the page title, the
 breadcrumb, and the index cards all read from that list, so a new entry appears
@@ -90,6 +92,17 @@ service map drawn with `tint/graph` — it does not collect, export, or ship a t
 ```tsx
 import { TraceViewer, TraceServiceMap } from 'tint/telemetry'
 import 'tint/graph/styles.css'
+```
+
+Subscriptions, policy rules, notifications, and Digg-style activity are separate
+focused packages. The host owns the documents; Tint presents them. Lua is edited
+and highlighted in the policy editor — it is never executed in the browser:
+
+```tsx
+import { FeedLayout, SplitPane, ReaderPane } from 'tint/feed'
+import { NotificationBell, deriveNotifications, NotificationSettingsPanel } from 'tint/notify'
+import { PolicyTable, PolicyEditor, applyPolicyCommand } from 'tint/policy'
+import { ActivityFeed, sortActivityEvents } from 'tint/activity'
 ```
 
 Audio playback and microphone capture are separate focused packages. `AudioInput` captures
