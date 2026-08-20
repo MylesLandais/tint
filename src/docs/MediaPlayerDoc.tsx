@@ -136,6 +136,23 @@ const audioOnlyProps = [
     defaultValue: "''",
     description: 'Artwork alt text; leave empty when the image repeats the track metadata.',
   },
+  {
+    name: 'playing',
+    type: 'boolean',
+    description:
+      'When true, seek to the start and play; when false, pause. Omit to leave transport under the player’s own controls.',
+  },
+  {
+    name: 'playbackNonce',
+    type: 'number',
+    description:
+      'When this value changes, seek to 0 and play. Chat Repeat uses it so the same src restarts instead of becoming a no-op.',
+  },
+  {
+    name: 'onEnded',
+    type: '() => void',
+    description: 'Called when the clip finishes. Chat uses this to clear the conversation playback slot.',
+  },
 ]
 
 const videoOnlyProps = [

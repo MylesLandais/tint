@@ -12,8 +12,10 @@ import {
   chatDemoScenarios,
   demoAssistant,
   demoHuman,
+  demoMaya,
   earlierDemoMessages,
   initialDemoMessages,
+  MAYA_TTS_SRC,
   type ChatDemoMessage,
   type ChatDemoScenarioId,
   type PreferencePart,
@@ -97,10 +99,11 @@ function pendingAssistantMessage(
   id: string,
   title: string,
   createdAt: number,
+  actor: ChatDemoMessage['actor'] = demoAssistant,
 ): ChatDemoMessage {
   return {
     id,
-    actor: demoAssistant,
+    actor,
     createdAt,
     status: 'streaming',
     parts: [
@@ -499,6 +502,55 @@ export function useChatDemo() {
     [schedule, updateMessage],
   )
 
+  const runGroupScenario = useCallback(
+    (messageId: string) => {
+      schedule(() => {
+        updateMessage(messageId, (message) => ({
+          ...message,
+          actor: demoMaya,
+          parts: [
+            {
+              ...message.parts[0]!,
+              status: 'complete',
+              durationMs: 280,
+              title: 'Choosing a cached voice clip',
+              text: 'Maya’s line is already recorded. Replay uses the same bytes.',
+            },
+            {
+              id: `${messageId}-answer`,
+              type: 'text',
+              format: 'markdown',
+              status: 'streaming',
+              text: '',
+            },
+          ],
+        }))
+        streamAnswer(
+          messageId,
+          `${messageId}-answer`,
+          [
+            "I'm **Maya**. This turn is a cached clip, not a live TTS call. ",
+            'Use **Replay** to hear the same line again — Tint keeps one speaker at a time.',
+          ],
+          [
+            {
+              id: `${messageId}-audio`,
+              type: 'audio',
+              src: MAYA_TTS_SRC,
+              artist: 'Maya',
+              title: 'Maya',
+              duration: 2,
+              transcript:
+                "I'm Maya. This turn is a cached clip, not a live TTS call. Use Replay to hear the same line again.",
+              waveform: [2, 6, 9, 4, 7, 3, 8, 5, 2, 6, 4, 7],
+            },
+          ],
+        )
+      }, 360)
+    },
+    [schedule, streamAnswer, updateMessage],
+  )
+
   const beginRun = useCallback(
     (
       payload: ChatSubmitPayload,
@@ -520,8 +572,11 @@ export function useChatDemo() {
           ? 'Inspecting attachment metadata'
           : activeScenario === 'preference'
             ? 'Preparing candidate responses'
-            : 'Planning response',
+            : activeScenario === 'group'
+              ? 'Choosing a cached voice clip'
+              : 'Planning response',
         runTime + 1_000,
+        activeScenario === 'group' ? demoMaya : demoAssistant,
       )
       const next = [
         ...(options?.baseMessages ?? messages),
@@ -543,12 +598,14 @@ export function useChatDemo() {
         runAttachmentScenario(assistantId, payload.attachments)
       }
       if (activeScenario === 'preference') runPreferenceScenario(assistantId)
+      if (activeScenario === 'group') runGroupScenario(assistantId)
     },
     [
       clearTimers,
       messages,
       runAttachmentScenario,
       runErrorScenario,
+      runGroupScenario,
       runPreferenceScenario,
       runResearchScenario,
       runStreamingScenario,
@@ -605,6 +662,8 @@ export function useChatDemo() {
         runAttachmentScenario(messageId, lastPayloadRef.current?.attachments ?? [])
       } else if (scenarioId === 'preference') {
         runPreferenceScenario(messageId)
+      } else if (scenarioId === 'group') {
+        runGroupScenario(messageId)
       } else {
         runStreamingScenario(messageId)
       }
@@ -613,6 +672,7 @@ export function useChatDemo() {
       clearTimers,
       runAttachmentScenario,
       runErrorScenario,
+      runGroupScenario,
       runPreferenceScenario,
       runResearchScenario,
       runStreamingScenario,

@@ -1,9 +1,10 @@
-import { Bot, Check, Copy, RotateCcw, Square, User } from 'lucide-react'
-import { memo, useCallback, useMemo } from 'react'
+import { Bot, Check, Copy, RotateCcw, Square, User, Volume2 } from 'lucide-react'
+import { memo, useCallback, useMemo, useRef, useState } from 'react'
 import { cn } from '../../lib/utils'
 import { Icon, Spinner } from '../icon'
 import { ChatMessageActions, ChatMessageContent } from './ChatPrimitives'
 import { ChatMessagePartView } from './ChatParts'
+import { useChatPlayback } from './ChatPlaybackContext'
 import { stripBidi } from './sanitize'
 import { useCopied } from '../../lib/useCopied'
 import type {
@@ -41,6 +42,12 @@ function textContent<TCustomPart extends ChatCustomPart>(
     .join('\n\n')
 }
 
+function hasAudioPart<TCustomPart extends ChatCustomPart>(
+  message: ChatMessageData<TCustomPart>,
+) {
+  return message.parts.some((part) => part.type === 'audio')
+}
+
 function ChatMessageImpl<TCustomPart extends ChatCustomPart = never>({
   message,
   alignment = 'start',
@@ -51,6 +58,8 @@ function ChatMessageImpl<TCustomPart extends ChatCustomPart = never>({
   onAction,
   onToolApproval,
   onRenderError,
+  enableSpeak = false,
+  speakingMessageId,
   className,
   ...props
 }: ChatMessageProps<TCustomPart>) {
@@ -61,6 +70,17 @@ function ChatMessageImpl<TCustomPart extends ChatCustomPart = never>({
   const actorName = stripBidi(message.actor.name)
   const busy = message.status === 'streaming' || message.status === 'sending'
   const canRetry = message.status === 'error' || message.status === 'stopped'
+  const playback = useChatPlayback()
+  const speakingId = speakingMessageId ?? playback?.speakingMessageId ?? null
+  const isSpeaking = speakingId === message.id
+  const hasAudio = hasAudioPart(message)
+  const [hasSpoken, setHasSpoken] = useState(false)
+  const rootRef = useRef<HTMLElement>(null)
+  const canSpeak =
+    enableSpeak &&
+    !busy &&
+    (hasAudio || copyText.trim().length > 0)
+  const showReplay = hasAudio || isSpeaking || hasSpoken
 
   // A recoverable error part renders its own contextual Retry. Showing the
   // message-level one as well gives two controls that emit an identical payload.
@@ -79,6 +99,19 @@ function ChatMessageImpl<TCustomPart extends ChatCustomPart = never>({
     onAction?.({ messageId: message.id, action: 'copy' })
   }
 
+  const speak = useCallback(() => {
+    setHasSpoken(true)
+    playback?.requestSpeak(message.id)
+    const media = rootRef.current?.querySelector('audio')
+    if (media) {
+      media.currentTime = 0
+      void media.play().catch(() => {
+        /* The player records failure from its own `play()` rejection. */
+      })
+    }
+    onAction?.({ messageId: message.id, action: 'speak' })
+  }, [onAction, playback, message.id])
+
   return (
     <article
       aria-label={`${actorName}, ${timestamp || 'message'}`}
@@ -88,6 +121,7 @@ function ChatMessageImpl<TCustomPart extends ChatCustomPart = never>({
       data-status={message.status}
       data-alignment={alignment}
       data-group-position={groupPosition}
+      data-speaking={isSpeaking ? '' : undefined}
       className={cn(
         'group/message flex min-w-0 gap-3 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-tint-accent focus-visible:ring-offset-4',
         alignment === 'end' && 'flex-row-reverse',
@@ -95,6 +129,7 @@ function ChatMessageImpl<TCustomPart extends ChatCustomPart = never>({
         className,
       )}
       {...props}
+      ref={rootRef}
     >
       {showAvatar && alignment !== 'center' ? (
         <span
@@ -207,9 +242,24 @@ function ChatMessageImpl<TCustomPart extends ChatCustomPart = never>({
           <ChatMessageActions
             className={cn(
               'transition-opacity sm:opacity-0 sm:group-hover/message:opacity-100 sm:group-focus-within/message:opacity-100',
+              (enableSpeak || message.status === 'streaming') && 'sm:opacity-100',
               message.status === 'streaming' && 'ml-auto',
             )}
           >
+            {canSpeak ? (
+              <button
+                type="button"
+                onClick={speak}
+                aria-pressed={isSpeaking || undefined}
+                aria-label={
+                  showReplay ? `Replay ${actorName}` : `Play ${actorName}`
+                }
+                className="inline-flex items-center gap-1 rounded-md px-2 py-1.5 text-xs font-medium text-tint-muted hover:bg-tint-surface hover:text-tint-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tint-accent"
+              >
+                <Icon icon={Volume2} size="sm" />
+                {showReplay ? 'Replay' : 'Play'}
+              </button>
+            ) : null}
             <button
               type="button"
               onClick={copyMessage}

@@ -34,6 +34,7 @@ import { MediaPlayer } from '../media-player'
 import { Icon, Spinner, StatusIcon, STATUS_ICONS } from '../icon'
 import type { StatusName } from '../icon'
 import { safeHref, stripBidi } from './sanitize'
+import { useChatPlayback } from './ChatPlaybackContext'
 import { useCopied } from '../../lib/useCopied'
 import type {
   ChatApprovalPart,
@@ -44,6 +45,7 @@ import type {
   ChatCustomPart,
   ChatErrorPart,
   ChatFilePart,
+  ChatId,
   ChatImagePart,
   ChatMessageData,
   ChatMessageActionPayload,
@@ -293,9 +295,15 @@ export function ChatFile({
 
 export function ChatAudio({
   part,
+  messageId,
   className,
   ...props
-}: ChatRichPartProps<ChatAudioPart>) {
+}: ChatRichPartProps<ChatAudioPart> & { messageId?: ChatId }) {
+  const playback = useChatPlayback()
+  const isSpeaking = Boolean(
+    messageId && playback && playback.speakingMessageId === messageId,
+  )
+
   return (
     <section
       data-chat-part="audio"
@@ -320,6 +328,21 @@ export function ChatAudio({
         artworkAlt={part.artworkAlt}
         duration={part.duration}
         waveform={part.waveform}
+        playing={playback && messageId ? isSpeaking : undefined}
+        playbackNonce={isSpeaking ? playback?.speakGeneration : undefined}
+        onEnded={() => {
+          if (messageId) playback?.clearSpeak(messageId)
+        }}
+        onPlay={() => {
+          if (messageId && playback && playback.speakingMessageId !== messageId) {
+            playback.requestSpeak(messageId)
+          }
+        }}
+        onPause={() => {
+          if (messageId && playback?.speakingMessageId === messageId) {
+            playback.clearSpeak(messageId)
+          }
+        }}
       />
       {part.transcript ? (
         <details className="mt-2 text-sm">
@@ -712,10 +735,12 @@ export function ChatError({
 /** Shared dispatcher for built-in part types (message body and preference columns). */
 export function ChatBuiltInPart({
   part,
+  messageId,
   onApproval,
   onRetry,
 }: {
   part: ChatBuiltInMessagePart
+  messageId?: ChatId
   onApproval?: (approved: boolean, reason?: string) => void
   onRetry?: () => void
 }) {
@@ -729,7 +754,7 @@ export function ChatBuiltInPart({
     case 'file':
       return <ChatFile part={part} />
     case 'audio':
-      return <ChatAudio part={part} />
+      return <ChatAudio part={part} messageId={messageId} />
     case 'sources':
       return <ChatSources part={part} />
     case 'reasoning':
@@ -865,6 +890,7 @@ export function ChatMessagePartView<TCustomPart extends ChatCustomPart = never>(
     content = (
       <ChatBuiltInPart
         part={part}
+        messageId={message.id}
         onRetry={onRetry}
         // Only approval parts can produce a decision, so the handler exists only
         // for them rather than being defended against inside the callback.

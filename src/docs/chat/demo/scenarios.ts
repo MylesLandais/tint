@@ -18,6 +18,7 @@ export type ChatDemoScenarioId =
   | 'error'
   | 'attachment'
   | 'preference'
+  | 'group'
 
 export type ChatDemoScenario = {
   id: ChatDemoScenarioId
@@ -38,6 +39,16 @@ export const demoAssistant: ChatActor = {
   kind: 'assistant',
   description: 'Local component demo',
 }
+
+export const demoMaya: ChatActor = {
+  id: 'demo-maya',
+  name: 'Maya',
+  kind: 'assistant',
+  description: 'Group-chat character',
+}
+
+/** Cached local clip for the group-chat TTS fixture. No outbound network. */
+export const MAYA_TTS_SRC = '/audio/maya.wav'
 
 export const chatDemoScenarios: readonly ChatDemoScenario[] = [
   {
@@ -70,6 +81,13 @@ export const chatDemoScenarios: readonly ChatDemoScenario[] = [
     description:
       'Two candidate answers side by side — a layout shell over ordinary built-in parts.',
     prompt: 'Show me two ways to debounce a search input.',
+  },
+  {
+    id: 'group',
+    label: 'Group chat TTS',
+    description:
+      'You and Maya. Replay restarts the same cached clip — Tint never calls a speech API.',
+    prompt: 'Maya, introduce yourself.',
   },
 ] as const
 

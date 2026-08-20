@@ -49,6 +49,17 @@ export type MediaPlayerAudioProps = MediaPlayerBaseProps & {
   artwork?: string
   /** Artwork alternative text. Keep empty when the image only repeats the track metadata. */
   artworkAlt?: string
+  /**
+   * When true, seek to the start and play; when false, pause. Omit to leave
+   * transport under the player's own controls.
+   */
+  playing?: boolean
+  /**
+   * When this value changes, seek to 0 and play. Chat Repeat uses it so the
+   * same `src` restarts instead of becoming a no-op.
+   */
+  playbackNonce?: number
+  onEnded?: () => void
 }
 
 export type MediaPlayerVideoProps = MediaPlayerBaseProps & {
@@ -120,6 +131,9 @@ function MediaPlayerAudio(props: MediaPlayerAudioProps) {
     onPause,
     onPrevious,
     onNext,
+    playing: playingOverride,
+    playbackNonce,
+    onEnded,
   } = props
 
   const rootRef = useRef<HTMLDivElement>(null)
@@ -133,6 +147,9 @@ function MediaPlayerAudio(props: MediaPlayerAudioProps) {
     durationHint,
     onPlay,
     onPause,
+    onEnded,
+    playing: playingOverride,
+    playbackNonce,
   })
   const { playing, currentTime, duration, volume, muted, buffering, failed } = state
 

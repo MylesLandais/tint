@@ -118,10 +118,45 @@ describe('MediaPlayer (audio)', () => {
     const { container, rerender } = render(
       <MediaPlayer kind="audio" src="track.mp3" label="Track" size="sm" />,
     )
-    expect(container.querySelector('[data-tint-media-player]')).toHaveAttribute('data-size', 'sm')
+    expect(container.querySelector('[data-tint-media-player]')).toHaveAttribute(
+      'data-size',
+      'sm',
+    )
 
     rerender(<MediaPlayer kind="audio" src="track.mp3" label="Track" />)
     expect(container.querySelector('[data-tint-media-player]')).not.toHaveAttribute('data-size')
+  })
+
+  it('starts from the beginning when playing is set or playbackNonce changes', () => {
+    const play = vi
+      .spyOn(HTMLMediaElement.prototype, 'play')
+      .mockResolvedValue(undefined)
+
+    const { rerender } = render(
+      <MediaPlayer
+        kind="audio"
+        src="track.mp3"
+        label="Track"
+        playing
+        playbackNonce={1}
+      />,
+    )
+
+    expect(play).toHaveBeenCalled()
+    play.mockClear()
+
+    rerender(
+      <MediaPlayer
+        kind="audio"
+        src="track.mp3"
+        label="Track"
+        playing
+        playbackNonce={2}
+      />,
+    )
+    expect(play).toHaveBeenCalled()
+
+    play.mockRestore()
   })
 })
 

@@ -12,6 +12,7 @@ import {
 import { cn } from '../../lib/utils'
 import { Spinner } from '../icon'
 import { ChatMessage } from './ChatMessage'
+import { ChatPlaybackContext, type ChatPlaybackSlot } from './ChatPlaybackContext'
 import { ChatEmptyState, ChatScrollToBottom } from './ChatPrimitives'
 import { stripBidi } from './sanitize'
 import type {
@@ -81,6 +82,9 @@ export function ChatMessageList<TCustomPart extends ChatCustomPart = never>({
   onMessageAction,
   onToolApproval,
   onRenderError,
+  enableSpeak = false,
+  speakingMessageId,
+  onSpeakingMessageIdChange,
   className,
   onScroll,
   onKeyDown,
@@ -109,6 +113,48 @@ export function ChatMessageList<TCustomPart extends ChatCustomPart = never>({
   )
   const positions = useMemo(() => groupPositions(messages), [messages])
   const isEmpty = messages.length === 0
+  const [internalSpeaking, setInternalSpeaking] = useState<ChatId | null>(null)
+  const [speakGeneration, setSpeakGeneration] = useState(0)
+  const speaking = speakingMessageId !== undefined ? speakingMessageId : internalSpeaking
+  const speakingRef = useRef(speaking)
+  speakingRef.current = speaking
+
+  const requestSpeak = useCallback(
+    (messageId: ChatId) => {
+      setSpeakGeneration((generation) =>
+        speakingRef.current === messageId ? generation + 1 : 1,
+      )
+      if (speakingMessageId === undefined) setInternalSpeaking(messageId)
+      onSpeakingMessageIdChange?.(messageId)
+    },
+    [onSpeakingMessageIdChange, speakingMessageId],
+  )
+
+  const clearSpeak = useCallback(
+    (messageId: ChatId) => {
+      if (speakingRef.current !== messageId) return
+      if (speakingMessageId === undefined) setInternalSpeaking(null)
+      onSpeakingMessageIdChange?.(null)
+    },
+    [onSpeakingMessageIdChange, speakingMessageId],
+  )
+
+  useEffect(() => {
+    if (!speaking) return
+    if (messages.some((message) => message.id === speaking)) return
+    if (speakingMessageId === undefined) setInternalSpeaking(null)
+    onSpeakingMessageIdChange?.(null)
+  }, [messages, onSpeakingMessageIdChange, speaking, speakingMessageId])
+
+  const playback = useMemo<ChatPlaybackSlot>(
+    () => ({
+      speakingMessageId: speaking,
+      speakGeneration,
+      requestSpeak,
+      clearSpeak,
+    }),
+    [clearSpeak, requestSpeak, speakGeneration, speaking],
+  )
 
   const setFollowing = useCallback(
     (next: boolean) => {
@@ -308,39 +354,43 @@ export function ChatMessageList<TCustomPart extends ChatCustomPart = never>({
         {messages.length === 0 ? (
           emptyState ?? <ChatEmptyState />
         ) : (
-          <div
-            ref={contentRef}
-            className="mx-auto flex w-full max-w-3xl flex-col gap-5"
-          >
-            {messages.map((message, index) => {
-              const position = positions[index] ?? 'solo'
-              const startsGroup = position === 'solo' || position === 'first'
+          <ChatPlaybackContext.Provider value={enableSpeak ? playback : null}>
+            <div
+              ref={contentRef}
+              className="mx-auto flex w-full max-w-3xl flex-col gap-5"
+            >
+              {messages.map((message, index) => {
+                const position = positions[index] ?? 'solo'
+                const startsGroup = position === 'solo' || position === 'first'
 
-              return (
-                <ChatMessage
-                  key={message.id}
-                  message={message}
-                  alignment={
-                    message.actor.id === currentActorId
-                      ? 'end'
-                      : message.actor.kind === 'system'
-                        ? 'center'
-                        : 'start'
-                  }
-                  groupPosition={position}
-                  showActor={startsGroup}
-                  showAvatar={startsGroup}
-                  tabIndex={
-                    enableRovingFocus ? (index === activeIndex ? 0 : -1) : undefined
-                  }
-                  renderPart={renderPart}
-                  onAction={onMessageAction}
-                  onToolApproval={onToolApproval}
-                  onRenderError={onRenderError}
-                />
-              )
-            })}
-          </div>
+                return (
+                  <ChatMessage
+                    key={message.id}
+                    message={message}
+                    alignment={
+                      message.actor.id === currentActorId
+                        ? 'end'
+                        : message.actor.kind === 'system'
+                          ? 'center'
+                          : 'start'
+                    }
+                    groupPosition={position}
+                    showActor={startsGroup}
+                    showAvatar={startsGroup}
+                    tabIndex={
+                      enableRovingFocus ? (index === activeIndex ? 0 : -1) : undefined
+                    }
+                    renderPart={renderPart}
+                    enableSpeak={enableSpeak}
+                    speakingMessageId={speaking}
+                    onAction={onMessageAction}
+                    onToolApproval={onToolApproval}
+                    onRenderError={onRenderError}
+                  />
+                )
+              })}
+            </div>
+          </ChatPlaybackContext.Provider>
         )}
       </div>
 

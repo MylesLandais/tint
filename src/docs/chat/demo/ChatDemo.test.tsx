@@ -93,4 +93,28 @@ describe('ChatDemo scenario runner', () => {
       'false',
     )
   })
+
+  it('replays Maya from a local audio fixture without fetching TTS', () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch')
+    const play = vi
+      .spyOn(HTMLMediaElement.prototype, 'play')
+      .mockResolvedValue(undefined)
+
+    render(<ChatDemo />)
+    fireEvent.change(screen.getByRole('combobox', { name: 'Demo scenario' }), {
+      target: { value: 'group' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Replay' }))
+    act(() => vi.advanceTimersByTime(5000))
+
+    const replayMaya = screen.getByRole('button', { name: 'Replay Maya' })
+    expect(document.querySelector('[data-chat-part="audio"]')).toBeInTheDocument()
+    fireEvent.click(replayMaya)
+
+    expect(replayMaya).toHaveAttribute('aria-pressed', 'true')
+    expect(play).toHaveBeenCalled()
+    expect(fetchSpy).not.toHaveBeenCalled()
+
+    play.mockRestore()
+  })
 })
