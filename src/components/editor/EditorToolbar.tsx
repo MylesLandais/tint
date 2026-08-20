@@ -57,6 +57,34 @@ function ToolbarButton({
   )
 }
 
+const EMPTY_TOOLBAR_STATE = {
+  block: 'paragraph' as const,
+  bullet: false,
+  ordered: false,
+  quote: false,
+  codeBlock: false,
+  codeLanguage: 'plaintext',
+  canUndo: false,
+  canRedo: false,
+  extensionNames: [] as string[],
+}
+
+const EMPTY_BUBBLE_STATE = {
+  bold: false,
+  italic: false,
+  underline: false,
+  strike: false,
+  code: false,
+  link: false,
+  extensionNames: [] as string[],
+}
+
+function extensionNames(editor: TiptapEditor | null | undefined) {
+  const extensions = editor?.extensionManager?.extensions
+  if (!extensions) return [] as string[]
+  return extensions.map((extension) => extension.name)
+}
+
 export function EditorToolbar({
   editor,
   end,
@@ -64,29 +92,42 @@ export function EditorToolbar({
   editor: TiptapEditor
   end?: ReactNode
 }) {
-  const extensions = new Set(editor.extensionManager.extensions.map((extension) => extension.name))
+  const state =
+    useEditorState({
+      editor,
+      selector: ({ editor: current }) => {
+        // TipTap can hand a null / torn-down editor through during concurrent
+        // remounts (e.g. when `extensions` identity changes). Never touch `.can`
+        // or `.extensionManager` without a guard — that blanked the docs page.
+        if (!current?.extensionManager) return EMPTY_TOOLBAR_STATE
+        const names = extensionNames(current)
+        const hasHistory = names.includes('undoRedo')
+        return {
+          block: current.isActive('heading', { level: 1 })
+            ? 'heading-1'
+            : current.isActive('heading', { level: 2 })
+              ? 'heading-2'
+              : current.isActive('heading', { level: 3 })
+                ? 'heading-3'
+                : 'paragraph',
+          bullet: current.isActive('bulletList'),
+          ordered: current.isActive('orderedList'),
+          quote: current.isActive('blockquote'),
+          codeBlock: current.isActive('codeBlock'),
+          codeLanguage: (current.getAttributes('codeBlock').language as string | null) ?? 'plaintext',
+          canUndo: hasHistory && current.can().undo(),
+          canRedo: hasHistory && current.can().redo(),
+          extensionNames: names,
+        }
+      },
+    }) ?? EMPTY_TOOLBAR_STATE
+
+  if (!editor.extensionManager) return null
+
+  const extensions = new Set(state.extensionNames)
   const hasHeading = extensions.has('heading')
   const hasParagraph = extensions.has('paragraph')
   const hasHistory = extensions.has('undoRedo')
-  const state = useEditorState({
-    editor,
-    selector: ({ editor: current }) => ({
-      block: current.isActive('heading', { level: 1 })
-        ? 'heading-1'
-        : current.isActive('heading', { level: 2 })
-          ? 'heading-2'
-          : current.isActive('heading', { level: 3 })
-            ? 'heading-3'
-            : 'paragraph',
-      bullet: current.isActive('bulletList'),
-      ordered: current.isActive('orderedList'),
-      quote: current.isActive('blockquote'),
-      codeBlock: current.isActive('codeBlock'),
-      codeLanguage: (current.getAttributes('codeBlock').language as string | null) ?? 'plaintext',
-      canUndo: hasHistory && current.can().undo(),
-      canRedo: hasHistory && current.can().redo(),
-    }),
-  })
 
   return (
     <div
@@ -219,18 +260,26 @@ export function EditorToolbar({
 }
 
 export function EditorBubbleMenu({ editor }: { editor: TiptapEditor }) {
-  const extensions = new Set(editor.extensionManager.extensions.map((extension) => extension.name))
-  const state = useEditorState({
-    editor,
-    selector: ({ editor: current }) => ({
-      bold: current.isActive('bold'),
-      italic: current.isActive('italic'),
-      underline: current.isActive('underline'),
-      strike: current.isActive('strike'),
-      code: current.isActive('code'),
-      link: current.isActive('link'),
-    }),
-  })
+  const state =
+    useEditorState({
+      editor,
+      selector: ({ editor: current }) => {
+        if (!current?.extensionManager) return EMPTY_BUBBLE_STATE
+        return {
+          bold: current.isActive('bold'),
+          italic: current.isActive('italic'),
+          underline: current.isActive('underline'),
+          strike: current.isActive('strike'),
+          code: current.isActive('code'),
+          link: current.isActive('link'),
+          extensionNames: extensionNames(current),
+        }
+      },
+    }) ?? EMPTY_BUBBLE_STATE
+
+  if (!editor.extensionManager) return null
+
+  const extensions = new Set(state.extensionNames)
 
   const setLink = () => {
     const previous = String(editor.getAttributes('link').href ?? '')

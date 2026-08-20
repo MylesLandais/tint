@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   defaultValuesForSchema,
   getAtPath,
+  isFormFileValue,
   setAtPath,
   validateForm,
   type FormSchema,
@@ -64,6 +65,47 @@ describe('validateForm', () => {
     })
     expect(result.issues[0]?.code).toBe('FORM_EMAIL')
   })
+
+  it('validates repeatable itemSchema fields relative to each row', () => {
+    const nested: FormSchema = {
+      id: 'lore',
+      version: '1',
+      title: 'Lore',
+      sections: [
+        {
+          id: 'book',
+          title: 'Book',
+          fields: [
+            {
+              name: 'entries',
+              kind: 'repeatable',
+              label: 'Entries',
+              itemSchema: {
+                id: 'entry',
+                title: '',
+                fields: [
+                  { name: 'keys', kind: 'tags', label: 'Keys', required: true },
+                  { name: 'count', kind: 'number', label: 'Count', min: 1, max: 3 },
+                ],
+              },
+            },
+          ],
+        },
+      ],
+    }
+
+    const missing = validateForm(nested, { entries: [{ keys: ['keep'], count: 99 }, { keys: [], count: 2 }] })
+    expect(missing.ok).toBe(false)
+    expect(missing.issues).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ code: 'FORM_MAX', path: 'entries.0.count' }),
+        expect.objectContaining({ code: 'FORM_REQUIRED', path: 'entries.1.keys' }),
+      ]),
+    )
+
+    const filled = validateForm(nested, { entries: [{ keys: ['keep'], count: 2 }] })
+    expect(filled).toEqual({ ok: true, issues: [] })
+  })
 })
 
 describe('values paths', () => {
@@ -72,6 +114,11 @@ describe('values paths', () => {
     const next = setAtPath(original, 'data.greetings.1', 'hello')
     expect(getAtPath(next, 'data.greetings.1')).toBe('hello')
     expect(original.data.greetings).toEqual(['hi'])
+  })
+
+  it('rejects a file value that is missing mimeType', () => {
+    expect(isFormFileValue({ name: 'a.png', objectUrl: 'blob:1' })).toBe(false)
+    expect(isFormFileValue({ name: 'a.png', mimeType: 'image/png', objectUrl: 'blob:1' })).toBe(true)
   })
 
   it('fills defaults for dotted paths without clobbering siblings', () => {

@@ -71,5 +71,9 @@ export function appendAtPath(values: FormValues, path: string, item: unknown): F
 export function isFormFileValue(value: unknown): value is FormFileValue {
   if (value == null || typeof value !== 'object') return false
   const file = value as FormFileValue
-  return typeof file.name === 'string' && typeof file.objectUrl === 'string'
+  return (
+    typeof file.name === 'string' &&
+    typeof file.mimeType === 'string' &&
+    typeof file.objectUrl === 'string'
+  )
 }

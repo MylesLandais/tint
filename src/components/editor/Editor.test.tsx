@@ -163,4 +163,37 @@ describe('Editor', () => {
       'Duplicate Tiptap extension "paragraph"',
     )
   })
+
+  it('keeps the toolbar mounted across an extensions remount without throwing', async () => {
+    const first = [Extension.create({ name: 'toolbarRemountA' })]
+    const second = [Extension.create({ name: 'toolbarRemountB' })]
+    const onValueChange = vi.fn()
+
+    const { rerender } = render(
+      <Editor
+        value={FIRST_DOCUMENT}
+        onValueChange={onValueChange}
+        expanded
+        onExpandedChange={() => {}}
+        extensions={first}
+      />,
+    )
+
+    expect(await screen.findByRole('toolbar', { name: 'Document formatting' })).toBeInTheDocument()
+
+    rerender(
+      <Editor
+        value={FIRST_DOCUMENT}
+        onValueChange={onValueChange}
+        expanded
+        onExpandedChange={() => {}}
+        extensions={second}
+      />,
+    )
+
+    expect(await screen.findByRole('toolbar', { name: 'Document formatting' })).toBeInTheDocument()
+    expect(await screen.findByRole('textbox', { name: 'Document editor' })).toHaveTextContent(
+      'First draft',
+    )
+  })
 })

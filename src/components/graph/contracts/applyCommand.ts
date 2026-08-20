@@ -89,8 +89,19 @@ export function applyCommand(
       })
     }
 
-    case 'viewport.set':
-      return commit(document, { viewport: { ...command.viewport } })
+    case 'viewport.set': {
+      const current = document.viewport
+      const next = command.viewport
+      if (
+        current &&
+        current.x === next.x &&
+        current.y === next.y &&
+        current.zoom === next.zoom
+      ) {
+        return document
+      }
+      return commit(document, { viewport: { ...next } })
+    }
 
     case 'node.create': {
       // The registry is the single source for a new node's shape. Before this,

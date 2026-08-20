@@ -24,7 +24,7 @@ import {
 } from 'tint/character-card'
 import 'tint/form/styles.css'
 
-const [card, setCard] = useState(emptyTavernCard)
+const [card, setCard] = useState(() => emptyTavernCard())
 
 <CharacterCardEditorForm
   value={card}
@@ -130,7 +130,10 @@ export function CharacterCardDoc() {
               className="rounded-md border border-tint-border px-3 py-1.5 text-sm text-tint-ink hover:bg-tint-surface"
               onClick={() => {
                 setCard(emptyTavernCard())
-                setAvatar(null)
+                setAvatar((current) => {
+                  if (current?.objectUrl) URL.revokeObjectURL(current.objectUrl)
+                  return null
+                })
                 setMessage(null)
               }}
             >
@@ -169,10 +172,13 @@ export function CharacterCardDoc() {
                 void file.arrayBuffer().then((buffer) => {
                   try {
                     setCard(extractTavernCard(new Uint8Array(buffer)))
-                    setAvatar({
-                      name: file.name,
-                      mimeType: file.type || 'image/png',
-                      objectUrl: URL.createObjectURL(file),
+                    setAvatar((current) => {
+                      if (current?.objectUrl) URL.revokeObjectURL(current.objectUrl)
+                      return {
+                        name: file.name,
+                        mimeType: file.type || 'image/png',
+                        objectUrl: URL.createObjectURL(file),
+                      }
                     })
                     setMessage(`Imported ${file.name}`)
                   } catch (cause) {

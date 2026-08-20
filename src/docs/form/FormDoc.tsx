@@ -51,6 +51,7 @@ const props = [
   { name: 'transport', type: 'FormTransport', description: 'validate then submit. Field issues resolve; transport failures reject.' },
   { name: 'onSubmit', type: '(envelope: FormSubmitEnvelope) => void | Promise<void>', description: 'Called after client (and transport) validation succeeds.' },
   { name: 'onValidation', type: '(issues: readonly FormIssue[]) => void', description: 'Receives the issues from the submit-time client validate.' },
+  { name: 'onSubmitError', type: '(error: unknown) => void', description: 'Called when transport or onSubmit rejects. The form also shows the message in its banner.' },
 ]
 
 function parseSchema(text: string): { schema: FormSchema | null; error: string | null } {

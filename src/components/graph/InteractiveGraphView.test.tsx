@@ -4,12 +4,14 @@ import { InteractiveGraphView } from './InteractiveGraphView'
 import { demoGraphDocument } from '../../docs/graph/fixtures/demoDocument'
 import {
   handleId,
+  mergeFlowNodesFromDocument,
   portIdFromHandle,
   selectionFromFlow,
   toFlowEdges,
   toFlowNodes,
 } from './adapter/mappers'
 import { createDefaultNodeRegistry } from './nodes/defaultRegistry'
+import { applyCommand } from './contracts'
 
 describe('graph mappers', () => {
   it('maps the demo document into flow nodes and edges', () => {
@@ -53,6 +55,45 @@ describe('graph mappers', () => {
 
     expect(selection.nodeIds.has('n-trigger')).toBe(true)
     expect(selection.primary).toEqual({ kind: 'node', id: 'n-trigger' })
+  })
+
+  it('keeps live drag positions when merging a mid-drag document revision', () => {
+    const live = toFlowNodes(demoGraphDocument).map((node) =>
+      node.id === 'n-trigger'
+        ? { ...node, position: { x: 120, y: 200 }, selected: true }
+        : node,
+    )
+    const relocated = {
+      ...demoGraphDocument,
+      nodes: demoGraphDocument.nodes.map((node) =>
+        node.id === 'n-trigger' ? { ...node, position: { x: 0, y: 80 } } : node,
+      ),
+      revision: 'r99',
+    }
+
+    const merged = mergeFlowNodesFromDocument(relocated, live, new Set(['n-trigger']))
+    const trigger = merged.find((node) => node.id === 'n-trigger')
+
+    expect(trigger?.position).toEqual({ x: 120, y: 200 })
+    expect(trigger?.selected).toBe(true)
+  })
+
+  it('takes document positions once the drag has ended', () => {
+    const live = toFlowNodes(demoGraphDocument).map((node) =>
+      node.id === 'n-trigger' ? { ...node, position: { x: 120, y: 200 } } : node,
+    )
+    const committed = {
+      ...demoGraphDocument,
+      nodes: demoGraphDocument.nodes.map((node) =>
+        node.id === 'n-trigger' ? { ...node, position: { x: 40, y: 60 } } : node,
+      ),
+    }
+
+    const merged = mergeFlowNodesFromDocument(committed, live)
+    expect(merged.find((node) => node.id === 'n-trigger')?.position).toEqual({
+      x: 40,
+      y: 60,
+    })
   })
 })
 
@@ -123,5 +164,41 @@ describe('InteractiveGraphView', () => {
 
     expect(screen.getByLabelText('Event')).toHaveValue('webhook.intake')
     expect(screen.getByRole('button', { name: 'Apply' })).toBeInTheDocument()
+  })
+
+  /**
+   * Drag-end commits used to go through both onNodePositionsCommit and
+   * onCommand, each applying node.move. Simulating the fixed single-command
+   * path: one move (+ optional final viewport) must not runaway-revise.
+   */
+  it('counts one revision per drag-end move, not one per mid-drag viewport', () => {
+    const registry = createDefaultNodeRegistry()
+    let current = demoGraphDocument
+    const commands = [
+      {
+        type: 'node.move' as const,
+        nodeIds: ['n-trigger'],
+        positions: { 'n-trigger': { x: 40, y: 90 } },
+      },
+      {
+        type: 'viewport.set' as const,
+        viewport: { x: 12, y: 8, zoom: 0.95 },
+      },
+      {
+        type: 'viewport.set' as const,
+        viewport: { x: 12, y: 8, zoom: 0.95 },
+      },
+    ]
+
+    for (const command of commands) {
+      current = applyCommand(current, command, registry)
+    }
+
+    expect(current.revision).toBe('r3')
+    expect(current.nodes.find((node) => node.id === 'n-trigger')?.position).toEqual({
+      x: 40,
+      y: 90,
+    })
+    expect(current.viewport).toEqual({ x: 12, y: 8, zoom: 0.95 })
   })
 })

@@ -38,6 +38,33 @@ export function toFlowNodes(document: GraphDocument): GraphFlowNode[] {
   }))
 }
 
+/**
+ * Merge a document revision into live flow nodes.
+ *
+ * While a pointer drag is in flight, keep the live xyflow positions for those
+ * nodes — a mid-drag document update (viewport commit, host patch) must not yank
+ * them back to pre-drag document coords.
+ */
+export function mergeFlowNodesFromDocument(
+  document: GraphDocument,
+  previous: readonly GraphFlowNode[],
+  draggingIds: ReadonlySet<string> = new Set(),
+): GraphFlowNode[] {
+  const priorById = new Map(previous.map((node) => [node.id, node]))
+  return toFlowNodes(document).map((node) => {
+    const prior = priorById.get(node.id)
+    return {
+      ...prior,
+      ...node,
+      position: prior && draggingIds.has(node.id) ? prior.position : node.position,
+      selected: prior?.selected ?? false,
+      width: prior?.width,
+      height: prior?.height,
+      measured: prior?.measured,
+    }
+  })
+}
+
 export function toFlowEdges(document: GraphDocument): GraphFlowEdge[] {
   return document.edges.map((edge) => ({
     id: edge.id,
