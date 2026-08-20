@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.6",
   "type": "module",
-  "description": "Tint \u2014 controlled React components for media and rich chat interfaces.",
+  "description": "Tint — controlled React components for media and rich chat interfaces.",
   "files": [
     "src",
     "!src/docs",
@@ -62,6 +62,7 @@
   },
   "dependencies": {
     "@tiptap/core": "^3.29.2",
+    "@tiptap/extension-bubble-menu": "3.29.2",
     "@tiptap/extension-code-block-lowlight": "^3.29.2",
     "@tiptap/extensions": "^3.29.2",
     "@tiptap/html": "^3.29.2",
