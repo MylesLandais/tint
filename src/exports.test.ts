@@ -57,10 +57,23 @@ describe('docs coverage', () => {
     const routes = read('src/docs/routes.ts')
     // Components whose entry point is deliberately not a docs page.
     const EXEMPT = new Set(['auth-client', 'auth'])
+    // Small chrome primitives share the umbrella `components/chrome` page.
+    const CHROME_PAGE = new Set([
+      'badge',
+      'progress',
+      'dialog',
+      'context-menu',
+      'tree',
+      'toast',
+    ])
 
     const undocumented = SUBPATHS.map(([subpath]) => subpath.replace(/^\.\//, ''))
       .filter((name) => !EXEMPT.has(name) && !name.includes('/'))
-      .filter((name) => !routes.includes(`'components/${name}'`))
+      .filter((name) => {
+        if (routes.includes(`'components/${name}'`)) return false
+        if (CHROME_PAGE.has(name) && routes.includes("'components/chrome'")) return false
+        return true
+      })
 
     expect(undocumented).toEqual([])
   })

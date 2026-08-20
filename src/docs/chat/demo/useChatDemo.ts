@@ -18,7 +18,6 @@ import {
   demoJordan,
   demoMaya,
   earlierDemoMessages,
-  initialDemoMessages,
   JORDAN_TRANSCRIPT,
   MAYA_TRANSCRIPT,
   MAYA_TTS_SRC,

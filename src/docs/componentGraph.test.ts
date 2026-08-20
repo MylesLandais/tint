@@ -75,6 +75,12 @@ describe('docs dependency graph data', () => {
     for (const routePath of readRoutePaths()) {
       if (!routePath.startsWith('components/')) continue
       const dir = routePath.slice('components/'.length)
+      // Umbrella pages (e.g. chrome) document several directories; skip those.
+      try {
+        if (!statSync(path.join(COMPONENTS_DIR, dir)).isDirectory()) continue
+      } catch {
+        continue
+      }
       expect(nodeIds, `no graph node for ${routePath}`).toContain(dir)
     }
   })

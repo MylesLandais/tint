@@ -169,7 +169,8 @@ describe('InteractiveGraphView', () => {
   /**
    * Drag-end commits used to go through both onNodePositionsCommit and
    * onCommand, each applying node.move. Simulating the fixed single-command
-   * path: one move (+ optional final viewport) must not runaway-revise.
+   * path: one move bumps once; viewport.set is layout and must not runaway-
+   * revise (identical frames are also a no-op).
    */
   it('counts one revision per drag-end move, not one per mid-drag viewport', () => {
     const registry = createDefaultNodeRegistry()
@@ -194,7 +195,7 @@ describe('InteractiveGraphView', () => {
       current = applyCommand(current, command, registry)
     }
 
-    expect(current.revision).toBe('r3')
+    expect(current.revision).toBe('r2')
     expect(current.nodes.find((node) => node.id === 'n-trigger')?.position).toEqual({
       x: 40,
       y: 90,
