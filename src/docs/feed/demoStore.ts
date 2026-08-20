@@ -29,14 +29,23 @@ type Listener = () => void
 
 let feed: FeedDocument = structuredClone(DEMO_FEED)
 let policy: PolicyDocument = structuredClone(DEMO_POLICY)
+/**
+ * Cached snapshot for `useSyncExternalStore`.
+ *
+ * Returning `{ feed, policy }` from the getter every call looks like a new
+ * store on every render and React enters an infinite update loop — which is
+ * how the Feed docs page rendered blank.
+ */
+let snapshot: DemoFeedStoreSnapshot = { feed, policy }
 const listeners = new Set<Listener>()
 
 function emit() {
+  snapshot = { feed, policy }
   for (const listener of listeners) listener()
 }
 
 export function getDemoFeedStore(): DemoFeedStoreSnapshot {
-  return { feed, policy }
+  return snapshot
 }
 
 export function subscribeDemoFeedStore(listener: Listener): () => void {
