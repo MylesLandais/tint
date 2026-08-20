@@ -97,6 +97,16 @@ const ROUTE_DATA = [
     ],
   },
   {
+    path: 'components/telemetry',
+    label: 'Telemetry',
+    blurb: 'Waterfall Gantt, RED metrics, and a service map for host-owned agent traces.',
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      { id: 'service-map', label: 'Service map' },
+      ...USAGE_AND_API,
+    ],
+  },
+  {
     path: 'components/socket',
     label: 'Socket',
     blurb: 'Types-only contracts for graph and workbench socket wiring.',
@@ -235,4 +245,10 @@ export function findRoute(path: string): DocRoute | undefined {
 
 export function hrefFor(route: DocRoute): string {
   return `#/${route.path}`
+}
+
+/** Hash path without `#/` and without a query string or leftover fragment. */
+export function pathFromHash(hash: string): string {
+  const raw = hash.startsWith('#/') ? hash.slice(2) : hash.startsWith('#') ? hash.slice(1) : hash
+  return raw.split(/[?#]/)[0] ?? ''
 }

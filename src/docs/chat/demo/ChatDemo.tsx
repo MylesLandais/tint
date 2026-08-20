@@ -1,6 +1,6 @@
+import { useState } from 'react'
 import {
   CheckCircle2,
-  ChevronDown,
   FlaskConical,
   RotateCcw,
   Sparkles,
@@ -12,15 +12,19 @@ import {
   ChatPreference,
 } from '../../../components/chat'
 import { Icon } from '../../../components/icon'
+import { Panel } from '../../../components/panel'
+import { TraceViewer } from '../../../components/telemetry/TraceViewer'
 import { cn } from '../../../lib/utils'
 import { useChatDemo } from './useChatDemo'
-import type { ChatDemoScenarioId, PreferencePart } from './scenarios'
+import type { PreferencePart } from './scenarios'
 
 export function ChatDemo() {
   const demo = useChatDemo()
+  const [traceOpen, setTraceOpen] = useState(true)
   const scenario = demo.scenarios.find((item) => item.id === demo.scenarioId)!
   const active =
     demo.composerState === 'streaming' || demo.composerState === 'submitting'
+  const groupTrace = demo.scenarioId === 'group' ? demo.traces[0] : undefined
 
   return (
     <div className="overflow-hidden rounded-2xl border border-tint-border bg-tint-surface shadow-[0_20px_60px_rgba(30,42,58,0.10)]">
@@ -46,27 +50,6 @@ export function ChatDemo() {
         </div>
 
         <div className="flex items-center gap-2">
-          <label className="relative min-w-0 flex-1 sm:flex-none">
-            <span className="sr-only">Demo scenario</span>
-            <select
-              value={demo.scenarioId}
-              onChange={(event) =>
-                demo.setScenarioId(event.target.value as ChatDemoScenarioId)
-              }
-              className="h-9 w-full appearance-none rounded-lg border border-tint-border bg-tint-panel pr-8 pl-3 text-xs font-medium outline-none hover:bg-tint-surface focus:border-tint-accent focus:ring-2 focus:ring-tint-accent-soft sm:w-40"
-            >
-              {demo.scenarios.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.label}
-                </option>
-              ))}
-            </select>
-            <Icon
-              icon={ChevronDown}
-              size="sm"
-              className="pointer-events-none absolute top-1/2 right-2.5 -translate-y-1/2 text-tint-muted"
-            />
-          </label>
           <button
             type="button"
             onClick={demo.replay}
@@ -84,6 +67,34 @@ export function ChatDemo() {
             <Icon icon={RotateCcw} size="sm" />
           </button>
         </div>
+      </div>
+
+      <div
+        role="radiogroup"
+        aria-label="Demo scenario"
+        className="flex flex-wrap gap-1 border-b border-tint-border bg-tint-panel px-3 py-2 sm:px-4"
+      >
+        {demo.scenarios.map((item) => {
+          const pressed = demo.scenarioId === item.id
+          return (
+            <button
+              key={item.id}
+              type="button"
+              role="radio"
+              aria-checked={pressed}
+              onClick={() => demo.setScenarioId(item.id)}
+              className={cn(
+                'h-7 rounded-md border px-2 text-[0.6875rem] font-medium outline-none',
+                'focus-visible:ring-2 focus-visible:ring-tint-accent-soft',
+                pressed
+                  ? 'border-tint-accent bg-tint-accent-soft text-tint-accent'
+                  : 'border-tint-border bg-tint-surface text-tint-muted hover:text-tint-ink',
+              )}
+            >
+              {item.label}
+            </button>
+          )
+        })}
       </div>
 
       <div className="border-b border-tint-border bg-tint-surface px-4 py-2.5 text-xs text-tint-muted">
@@ -104,6 +115,9 @@ export function ChatDemo() {
           onMessageAction={demo.messageAction}
           onToolApproval={demo.toolApproval}
           enableSpeak={demo.scenarioId === 'group'}
+          onSpeakingMessageIdChange={(messageId) => {
+            if (messageId) demo.recordSpeak(messageId)
+          }}
           renderPart={(part, context) => {
             if (part.type !== 'custom' || part.kind !== 'preference') return undefined
             return (
@@ -139,12 +153,31 @@ export function ChatDemo() {
         />
       </ChatConversation>
 
+      {groupTrace ? (
+        <div className="border-t border-tint-border bg-tint-surface p-3">
+          <Panel
+            title="Agent traces"
+            status={
+              <span className="font-mono text-[0.6875rem] text-tint-muted">
+                {groupTrace.spans.length} spans · {groupTrace.traceId}
+              </span>
+            }
+            expanded={traceOpen}
+            onExpandedChange={setTraceOpen}
+          >
+            <div className="p-3">
+              <TraceViewer trace={groupTrace} />
+            </div>
+          </Panel>
+        </div>
+      ) : null}
+
       <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-tint-border bg-tint-panel px-4 py-2.5 text-[0.6875rem] text-tint-muted">
         <span className="inline-flex items-center gap-1.5">
           <Icon icon={CheckCircle2} size="sm" className="text-tint-success" />
           No fetch, socket, persistence, or AI SDK
         </span>
-        <span>Deterministic fixtures · local timers · controlled state</span>
+        <span>Deterministic fixtures · local timers · mocked traces</span>
       </footer>
     </div>
   )

@@ -8,18 +8,29 @@ import type {
   ChatSubmitPayload,
   ChatToolApprovalPayload,
 } from '../../../components/chat'
+import type { TelemetryTrace } from '../../../components/telemetry'
 import {
   chatDemoScenarios,
+  chatDemoScenarioFromHash,
+  chatDemoShouldAutoReplay,
   demoAssistant,
   demoHuman,
+  demoJordan,
   demoMaya,
   earlierDemoMessages,
   initialDemoMessages,
+  JORDAN_TRANSCRIPT,
+  MAYA_TRANSCRIPT,
   MAYA_TTS_SRC,
   type ChatDemoMessage,
   type ChatDemoScenarioId,
   type PreferencePart,
 } from './scenarios'
+import {
+  createGroupTraceSession,
+  type GroupTraceSession,
+  type MockGroupAgent,
+} from './mockAgentProvider'
 
 const STREAM_DELAY = 84
 const DEMO_BASE_TIME = Date.parse('2026-08-02T15:01:00Z')
@@ -119,12 +130,17 @@ function pendingAssistantMessage(
 }
 
 export function useChatDemo() {
-  const [scenarioId, setScenarioIdState] =
-    useState<ChatDemoScenarioId>('research')
+  const [scenarioId, setScenarioIdState] = useState<ChatDemoScenarioId>(
+    () => chatDemoScenarioFromHash(window.location.hash) ?? 'research',
+  )
   const [messages, setMessages] =
     useState<readonly ChatDemoMessage[]>(initialDemoMessages)
   const [draft, setDraft] = useState(
-    chatDemoScenarios.find((scenario) => scenario.id === 'research')?.prompt ?? '',
+    () =>
+      chatDemoScenarios.find(
+        (scenario) =>
+          scenario.id === (chatDemoScenarioFromHash(window.location.hash) ?? 'research'),
+      )?.prompt ?? '',
   )
   const [attachments, setAttachments] =
     useState<readonly ChatAttachmentData[]>([])
@@ -137,6 +153,16 @@ export function useChatDemo() {
   const timersRef = useRef<number[]>([])
   const failedOnceRef = useRef(false)
   const lastPayloadRef = useRef<ChatSubmitPayload | null>(null)
+  const [traces, setTraces] = useState<readonly TelemetryTrace[]>([])
+  const groupTraceRef = useRef<GroupTraceSession | null>(null)
+
+  const upsertTrace = useCallback((trace: TelemetryTrace) => {
+    setTraces((current) => {
+      const index = current.findIndex((entry) => entry.traceId === trace.traceId)
+      if (index === -1) return [...current, trace]
+      return current.map((entry, entryIndex) => (entryIndex === index ? trace : entry))
+    })
+  }, [])
 
   const clearTimers = useCallback(() => {
     for (const timer of timersRef.current) window.clearTimeout(timer)
@@ -166,6 +192,7 @@ export function useChatDemo() {
       partId: string,
       chunks: readonly string[],
       endingParts: readonly DemoPart[] = [],
+      options?: { releaseComposer?: boolean; onComplete?: () => void },
     ) => {
       chunks.forEach((chunk, index) => {
         schedule(() => {
@@ -185,7 +212,8 @@ export function useChatDemo() {
                 ...endingParts,
               ],
             }))
-            setComposerState('idle')
+            if (options?.releaseComposer !== false) setComposerState('idle')
+            options?.onComplete?.()
           }
         }, STREAM_DELAY * (index + 1))
       })
@@ -503,9 +531,9 @@ export function useChatDemo() {
   )
 
   const runGroupScenario = useCallback(
-    (messageId: string) => {
+    (mayaId: string, jordanId: string, session: GroupTraceSession) => {
       schedule(() => {
-        updateMessage(messageId, (message) => ({
+        updateMessage(mayaId, (message) => ({
           ...message,
           actor: demoMaya,
           parts: [
@@ -517,7 +545,7 @@ export function useChatDemo() {
               text: 'Maya’s line is already recorded. Replay uses the same bytes.',
             },
             {
-              id: `${messageId}-answer`,
+              id: `${mayaId}-answer`,
               type: 'text',
               format: 'markdown',
               status: 'streaming',
@@ -526,29 +554,96 @@ export function useChatDemo() {
           ],
         }))
         streamAnswer(
-          messageId,
-          `${messageId}-answer`,
+          mayaId,
+          `${mayaId}-answer`,
           [
             "I'm **Maya**. This turn is a cached clip, not a live TTS call. ",
             'Use **Replay** to hear the same line again — Tint keeps one speaker at a time.',
           ],
           [
             {
-              id: `${messageId}-audio`,
+              id: `${mayaId}-audio`,
               type: 'audio',
               src: MAYA_TTS_SRC,
               artist: 'Maya',
               title: 'Maya',
               duration: 2,
-              transcript:
-                "I'm Maya. This turn is a cached clip, not a live TTS call. Use Replay to hear the same line again.",
+              transcript: MAYA_TRANSCRIPT,
               waveform: [2, 6, 9, 4, 7, 3, 8, 5, 2, 6, 4, 7],
             },
           ],
+          {
+            releaseComposer: false,
+            onComplete: () => {
+              upsertTrace(session.afterMaya())
+              schedule(() => {
+                setMessages((current) => {
+                  if (current.some((message) => message.id === jordanId)) return current
+                  const maya = current.find((message) => message.id === mayaId)
+                  const createdAt =
+                    typeof maya?.createdAt === 'number' ? maya.createdAt + 2_000 : Date.now()
+                  return [
+                    ...current,
+                    pendingAssistantMessage(
+                      jordanId,
+                      "Picking up Maya's thread",
+                      createdAt,
+                      demoJordan,
+                    ),
+                  ]
+                })
+                schedule(() => {
+                  updateMessage(jordanId, (message) => ({
+                    ...message,
+                    actor: demoJordan,
+                    parts: [
+                      {
+                        ...message.parts[0]!,
+                        status: 'complete',
+                        durationMs: 240,
+                        title: 'Answering after Maya',
+                        text: 'Jordan reuses the same cached bytes under a different actor.',
+                      },
+                      {
+                        id: `${jordanId}-answer`,
+                        type: 'text',
+                        format: 'markdown',
+                        status: 'streaming',
+                        text: '',
+                      },
+                    ],
+                  }))
+                  streamAnswer(
+                    jordanId,
+                    `${jordanId}-answer`,
+                    [
+                      "I'm **Jordan**. Maya's clip is cached; mine is the same fixture with a different actor. ",
+                      'The **trace** covers both of us — one conversation, nested agent spans.',
+                    ],
+                    [
+                      {
+                        id: `${jordanId}-audio`,
+                        type: 'audio',
+                        src: MAYA_TTS_SRC,
+                        artist: 'Jordan',
+                        title: 'Jordan',
+                        duration: 2,
+                        transcript: JORDAN_TRANSCRIPT,
+                        waveform: [3, 7, 5, 8, 4, 6, 9, 2, 5, 7, 3, 6],
+                      },
+                    ],
+                    {
+                      onComplete: () => upsertTrace(session.afterJordan()),
+                    },
+                  )
+                }, 280)
+              }, 180)
+            },
+          },
         )
       }, 360)
     },
-    [schedule, streamAnswer, updateMessage],
+    [schedule, streamAnswer, updateMessage, upsertTrace],
   )
 
   const beginRun = useCallback(
@@ -564,7 +659,9 @@ export function useChatDemo() {
       const sequence = sequenceRef.current
       const activeScenario = options?.scenario ?? scenarioId
       const humanId = `demo-user-${sequence}`
-      const assistantId = `demo-assistant-${sequence}`
+      const assistantId =
+        activeScenario === 'group' ? `demo-maya-${sequence}` : `demo-assistant-${sequence}`
+      const jordanId = `demo-jordan-${sequence}`
       const runTime = DEMO_BASE_TIME + sequence * 60_000
       const assistant = pendingAssistantMessage(
         assistantId,
@@ -590,6 +687,8 @@ export function useChatDemo() {
       setAttachments([])
       setComposerState('streaming')
       setLoadingEarlier(false)
+      setTraces([])
+      groupTraceRef.current = null
 
       if (activeScenario === 'research') runResearchScenario(assistantId)
       if (activeScenario === 'streaming') runStreamingScenario(assistantId)
@@ -598,7 +697,15 @@ export function useChatDemo() {
         runAttachmentScenario(assistantId, payload.attachments)
       }
       if (activeScenario === 'preference') runPreferenceScenario(assistantId)
-      if (activeScenario === 'group') runGroupScenario(assistantId)
+      if (activeScenario === 'group') {
+        const session = createGroupTraceSession({
+          sequence,
+          userText: payload.text,
+        })
+        groupTraceRef.current = session
+        upsertTrace(session.afterUser())
+        runGroupScenario(assistantId, jordanId, session)
+      }
     },
     [
       clearTimers,
@@ -610,6 +717,7 @@ export function useChatDemo() {
       runResearchScenario,
       runStreamingScenario,
       scenarioId,
+      upsertTrace,
     ],
   )
 
@@ -663,7 +771,17 @@ export function useChatDemo() {
       } else if (scenarioId === 'preference') {
         runPreferenceScenario(messageId)
       } else if (scenarioId === 'group') {
-        runGroupScenario(messageId)
+        const sequence = sequenceRef.current
+        const jordanId = `demo-jordan-${sequence}`
+        setMessages((current) => current.filter((message) => message.id !== jordanId))
+        const session = createGroupTraceSession({
+          sequence,
+          userText: lastPayloadRef.current?.text ?? '',
+        })
+        groupTraceRef.current = session
+        setTraces([])
+        upsertTrace(session.afterUser())
+        runGroupScenario(messageId, jordanId, session)
       } else {
         runStreamingScenario(messageId)
       }
@@ -677,6 +795,7 @@ export function useChatDemo() {
       runResearchScenario,
       runStreamingScenario,
       scenarioId,
+      upsertTrace,
     ],
   )
 
@@ -890,6 +1009,8 @@ export function useChatDemo() {
     setDraft(
       chatDemoScenarios.find((scenario) => scenario.id === scenarioId)?.prompt ?? '',
     )
+    setTraces([])
+    groupTraceRef.current = null
   }, [clearTimers, scenarioId])
 
   const replay = useCallback(() => {
@@ -921,6 +1042,8 @@ export function useChatDemo() {
       setDraft(
         chatDemoScenarios.find((scenario) => scenario.id === next)?.prompt ?? '',
       )
+      setTraces([])
+      groupTraceRef.current = null
     },
     [clearTimers],
   )
@@ -935,11 +1058,28 @@ export function useChatDemo() {
     }, 420)
   }, [hasEarlier, loadingEarlier, schedule])
 
+  const recordSpeak = useCallback((messageId: string | null) => {
+    if (!messageId) return
+    const session = groupTraceRef.current
+    if (!session) return
+    const agent: MockGroupAgent = messageId.includes('jordan') ? 'jordan' : 'maya'
+    upsertTrace(session.recordReplay(agent))
+  }, [upsertTrace])
+
+  const replayRef = useRef(replay)
+  replayRef.current = replay
+
+  useEffect(() => {
+    if (!chatDemoShouldAutoReplay(window.location.hash)) return
+    replayRef.current()
+  }, [])
+
   return {
     scenarioId,
     setScenarioId,
     scenarios: chatDemoScenarios,
     messages,
+    traces,
     draft,
     setDraft,
     attachments,
@@ -956,5 +1096,6 @@ export function useChatDemo() {
     loadEarlier,
     reset,
     replay,
+    recordSpeak,
   }
 }

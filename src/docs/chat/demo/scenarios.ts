@@ -47,8 +47,21 @@ export const demoMaya: ChatActor = {
   description: 'Group-chat character',
 }
 
+export const demoJordan: ChatActor = {
+  id: 'demo-jordan',
+  name: 'Jordan',
+  kind: 'assistant',
+  description: 'Group-chat character',
+}
+
 /** Cached local clip for the group-chat TTS fixture. No outbound network. */
 export const MAYA_TTS_SRC = '/audio/maya.wav'
+
+export const MAYA_TRANSCRIPT =
+  "I'm Maya. This turn is a cached clip, not a live TTS call. Use Replay to hear the same line again."
+
+export const JORDAN_TRANSCRIPT =
+  "I'm Jordan. Maya's clip is cached; mine is the same fixture with a different actor. The trace covers both of us."
 
 export const chatDemoScenarios: readonly ChatDemoScenario[] = [
   {
@@ -86,10 +99,23 @@ export const chatDemoScenarios: readonly ChatDemoScenario[] = [
     id: 'group',
     label: 'Group chat TTS',
     description:
-      'You and Maya. Replay restarts the same cached clip — Tint never calls a speech API.',
-    prompt: 'Maya, introduce yourself.',
+      'You, Maya, and Jordan. One mock trace spans both agents; Replay uses the same cached clip.',
+    prompt: 'Maya, introduce yourself — then Jordan, add a beat.',
   },
 ] as const
+
+export function chatDemoScenarioFromHash(hash: string): ChatDemoScenarioId | undefined {
+  const queryIndex = hash.indexOf('?')
+  if (queryIndex === -1) return undefined
+  const value = new URLSearchParams(hash.slice(queryIndex + 1)).get('scenario')
+  return chatDemoScenarios.find((scenario) => scenario.id === value)?.id
+}
+
+export function chatDemoShouldAutoReplay(hash: string): boolean {
+  const queryIndex = hash.indexOf('?')
+  if (queryIndex === -1) return false
+  return new URLSearchParams(hash.slice(queryIndex + 1)).get('replay') === '1'
+}
 
 export const initialDemoMessages: readonly ChatDemoMessage[] = [
   {

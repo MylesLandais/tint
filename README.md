@@ -60,7 +60,7 @@ is linked from there, including `#/components/editor` (the rich-text buffer),
 `#/components/chat`, `#/components/media-player`, `#/components/video-player`,
 `#/components/media` (the primitives the players are built from),
 `#/components/code`, `#/components/panel`, `#/components/settings-popout`,
-`#/components/dice`, `#/components/graph`, and `#/components/audio-input`.
+`#/components/dice`, `#/components/graph`, `#/components/telemetry`, and `#/components/audio-input`.
 
 Doc pages are declared once in `src/docs/routes.ts`; the router, the page title, the
 breadcrumb, and the index cards all read from that list, so a new entry appears
@@ -82,6 +82,14 @@ Chat components can be imported from the package root or the focused subpath:
 
 ```tsx
 import { ChatComposer, ChatConversation, ChatMessageList } from 'tint/chat'
+```
+
+Agent traces are host-owned spans. Tint lays them out as a waterfall Gantt, RED metrics, and a
+service map drawn with `tint/graph` — it does not collect, export, or ship a tracing backend:
+
+```tsx
+import { TraceViewer, TraceServiceMap } from 'tint/telemetry'
+import 'tint/graph/styles.css'
 ```
 
 Audio playback and microphone capture are separate focused packages. `AudioInput` captures
@@ -407,6 +415,7 @@ src/
   vendor/yjs/                  # vendored Yjs v13 CRDT engine
   components/graph/            # controlled node canvas — contracts, adapter, node views
   vendor/xyflow/               # vendored xyflow graph engine
+  components/telemetry/        # waterfall Gantt, RED metrics, and a graph service map for traces
   components/form/             # FormLayout, form_inputs, and the submit Promise contract
   components/character-card/   # Tavern Card V2 editor composed on FormLayout
   components/theme/            # scheme/theme hooks and controlled toggles
