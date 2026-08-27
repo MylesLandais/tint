@@ -1,6 +1,10 @@
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
+import {
+  parseHexColor,
+  validateColorTokenPair,
+} from '../test/contrastGuard.js'
 
 /**
  * The safety net that replaced the hex fallbacks.
@@ -66,6 +70,43 @@ function tokensBridged() {
 
 const THEME_FILES = readdirSync(THEMES_DIR).filter((f) => f.endsWith('.css'))
 
+type Scheme = 'light' | 'dark'
+type TokenPair = readonly [foreground: string, background: string]
+
+const CONTRAST_PAIRS: readonly TokenPair[] = [
+  ['ink', 'bg'],
+  ['ink', 'surface'],
+  ['ink', 'panel'],
+  ['muted', 'bg'],
+  ['muted', 'surface'],
+  ['muted', 'panel'],
+  ['on-accent', 'accent'],
+  ['on-accent', 'accent-hover'],
+  ['danger-ink', 'danger-soft'],
+  ['warning-ink', 'warning-soft'],
+  ['success-ink', 'success-soft'],
+  ['info-ink', 'info-soft'],
+  ['code-ink', 'code'],
+  ['code-muted', 'code'],
+] as const
+
+function themeTokens(file: string): Map<string, string> {
+  const text = readFileSync(join(THEMES_DIR, file), 'utf8')
+  return new Map(
+    [...text.matchAll(/--tint-([a-z0-9-]+)\s*:\s*([^;]+);/g)].map(
+      ([, token, value]) => [token!, value!.trim()],
+    ),
+  )
+}
+
+function resolveColor(value: string, scheme: Scheme): string {
+  const lightDark = /^light-dark\(\s*(#[\da-f]{6,8})\s*,\s*(#[\da-f]{6,8})\s*\)$/i.exec(
+    value,
+  )
+  if (lightDark) return scheme === 'light' ? lightDark[1]! : lightDark[2]!
+  return value
+}
+
 describe('theme contract', () => {
   it('ships more than one theme to compare', () => {
     expect(THEME_FILES.length).toBeGreaterThan(1)
@@ -98,6 +139,22 @@ describe('theme contract', () => {
     const extra = [...tokensDeclaredIn(file)].filter((t) => !base.has(t)).sort()
 
     expect(extra).toEqual([])
+  })
+
+  it.each(THEME_FILES)('%s keeps semantic color pairs at WCAG AA contrast', (file) => {
+    const tokens = themeTokens(file)
+
+    for (const scheme of ['light', 'dark'] as const) {
+      for (const [foregroundToken, backgroundToken] of CONTRAST_PAIRS) {
+        const foreground = resolveColor(tokens.get(foregroundToken)!, scheme)
+        const background = resolveColor(tokens.get(backgroundToken)!, scheme)
+        validateColorTokenPair(
+          `${file}/${scheme}: --tint-${foregroundToken} on --tint-${backgroundToken}`,
+          parseHexColor(foreground),
+          parseHexColor(background),
+        )
+      }
+    }
   })
 
   it('bridges every contract token into a Tailwind utility', () => {

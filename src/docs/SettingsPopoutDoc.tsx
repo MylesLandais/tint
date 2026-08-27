@@ -3,8 +3,31 @@ import { Settings } from 'lucide-react'
 import { SettingsPopout, type SettingsPopoutItem } from '../components/settings-popout'
 import { Icon } from '../components/icon'
 import { CodeBlock } from './components/CodeBlock'
-import { DocsPage, DocsPreview, DocsSection } from './components/DocsPage'
+import {
+  DocsCallout,
+  DocsDemo,
+  DocsFooter,
+  DocsPage,
+  DocsSection,
+} from './components/DocsPage'
 import { PropsTable } from './components/PropsTable'
+
+const previewDemoCode = `const [open, setOpen] = useState(false)
+const [value, setValue] = useState('speed-2')
+
+<div className="relative">
+  <button onClick={() => setOpen(o => !o)} aria-haspopup="dialog" aria-expanded={open}>
+    Player settings
+  </button>
+  <SettingsPopout
+    isOpen={open}
+    onOpenChange={setOpen}
+    items={items}
+    value={value}
+    onSelect={setValue}
+    label="Player settings"
+  />
+</div>`
 
 const usage = `import { SettingsPopout } from 'tint/settings-popout'
 
@@ -38,6 +61,29 @@ const props = [
   { name: 'className', type: 'string', description: 'Extra classes for the panel.' },
 ]
 
+const signature = `export type SettingsPopoutProps = {
+  /** Whether the popout is visible. */
+  isOpen: boolean
+  /** Called when the popout should close. */
+  onOpenChange: (isOpen: boolean) => void
+  /** Selectable entries, optionally grouped. */
+  items: readonly SettingsPopoutItem[]
+  /** Currently selected id. Highlighted on open and marked with a check. */
+  value?: string
+  /** Called with the chosen id. The popout closes itself afterwards. */
+  onSelect?: (id: string) => void
+  /** Accessible name for the dialog and its listbox. */
+  label?: string
+  /** Search input placeholder. */
+  placeholder?: string
+  /** Replaces the default keyboard hints. */
+  footer?: ReactNode
+  /** Shown when the query matches nothing. */
+  emptySearchText?: ReactNode
+  /** Extra classes for the panel. */
+  className?: string
+}`
+
 const ITEMS: SettingsPopoutItem[] = [
   { id: 'speed-0.5', label: '0.5x', group: 'Playback speed', description: 'Half speed' },
   { id: 'speed-1', label: '1x', group: 'Playback speed', description: 'Normal speed' },
@@ -56,17 +102,12 @@ export function SettingsPopoutDoc() {
       route="components/settings-popout"
       title="Settings Popout"
       intro="A searchable, keyboard-driven picker for grouped choices. It is what the video player’s gear button opens, and it works anywhere a short list needs filtering and a single selection."
-      note={
-        <>
-          Positioned absolutely against the nearest positioned ancestor, so wrap it and
-          its trigger in a <code>relative</code> container.
-        </>
-      }
     >
       <DocsSection id="preview" title="Preview">
         {/* Tall enough that the upward-opening popout stays inside the preview. */}
-        <DocsPreview className="flex min-h-[26rem] items-end justify-center">
-          <div className="relative">
+        <DocsDemo code={previewDemoCode}>
+          <div className="flex min-h-[26rem] items-end justify-center">
+            <div className="relative">
             <button
               type="button"
               onClick={() => setOpen((current) => !current)}
@@ -85,8 +126,9 @@ export function SettingsPopoutDoc() {
               onSelect={setValue}
               label="Player settings"
             />
+            </div>
           </div>
-        </DocsPreview>
+        </DocsDemo>
         <p className="mt-3 text-sm text-tint-muted">
           Selected: <code className="text-tint-accent">{value}</code>. Open it and press{' '}
           <kbd>Escape</kbd> — focus returns to the trigger rather than dropping to the
@@ -100,20 +142,36 @@ export function SettingsPopoutDoc() {
         description="Fully controlled: it holds the search query and the keyboard cursor, and nothing else."
       >
         <CodeBlock code={usage} />
-        <div className="mt-4 rounded-xl border border-tint-border bg-tint-surface/60 p-4 text-sm leading-6 text-tint-muted">
-          <strong className="font-semibold text-tint-ink">Keyboard.</strong> Focus lands
-          in the search field on open. <kbd>↑</kbd>/<kbd>↓</kbd> move the cursor and wrap,{' '}
-          <kbd>Home</kbd>/<kbd>End</kbd> jump to the ends, <kbd>Enter</kbd> selects, and{' '}
-          <kbd>Escape</kbd> closes and restores focus to whatever opened it. The popout is
-          deliberately <em>non-modal</em> — it does not trap focus, and it does not claim{' '}
-          <code>aria-modal</code>, which would tell a screen reader the rest of the page
-          had gone away.
+        <div className="mt-4 space-y-4">
+          <div className="rounded-xl border border-tint-border bg-tint-surface/60 p-4 text-sm leading-6 text-tint-muted">
+            <strong className="font-semibold text-tint-ink">Keyboard.</strong> Focus lands
+            in the search field on open. <kbd>↑</kbd>/<kbd>↓</kbd> move the cursor and wrap,{' '}
+            <kbd>Home</kbd>/<kbd>End</kbd> jump to the ends, <kbd>Enter</kbd> selects, and{' '}
+            <kbd>Escape</kbd> closes and restores focus to whatever opened it.
+          </div>
+          <DocsCallout variant="warning" title="Needs a positioned ancestor">
+            The popout is positioned absolutely against the nearest positioned ancestor, so
+            wrap it and its trigger in a <code>relative</code> container — otherwise it
+            anchors to some distant ancestor up the tree.
+          </DocsCallout>
+          <DocsCallout variant="note" title="Deliberately non-modal">
+            It does not trap focus, and it does not claim <code>aria-modal</code>, which
+            would tell a screen reader the rest of the page had gone away.
+          </DocsCallout>
         </div>
       </DocsSection>
 
       <DocsSection id="api" title="API">
+        <p className="mb-3 text-sm leading-6 text-tint-muted">
+          The full prop signature, from the source:
+        </p>
+        <div className="mb-6">
+          <CodeBlock code={signature} language="tsx" />
+        </div>
         <PropsTable rows={props} />
       </DocsSection>
+
+      <DocsFooter />
     </DocsPage>
   )
 }

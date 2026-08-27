@@ -14,6 +14,45 @@
 export { InteractiveGraphView } from './InteractiveGraphView'
 export type { InteractiveGraphViewProps } from './InteractiveGraphView'
 
+/**
+ * The projections: one `GraphDocument`, rendered as something other than a node
+ * editor.
+ *
+ * Pure functions plus thin views over them, deliberately. The editor is already
+ * a projection of the document — the dependency one — and the open question
+ * these exist to answer is whether the same document survives being read as a
+ * network, a schedule, and a trace. Anything that turns out to need its own
+ * document shape is that question being answered "no", and should stay visible
+ * as such rather than get absorbed into a second contract.
+ */
+export { ForceGraphView } from './ForceGraphView'
+export type { ForceGraphViewProps } from './ForceGraphView'
+export { TimelineView } from './TimelineView'
+export type { TimelineViewProps } from './TimelineView'
+
+export { createForceLayout, forceLayout, stepForceLayout } from './projections/force'
+export type { ForceLayoutOptions, ForceLayoutState } from './projections/force'
+export { topologicalLanes } from './projections/dependency'
+export type { DependencyProjection } from './projections/dependency'
+export { projectTimeline } from './projections/timeline'
+export type {
+  GraphSpan,
+  TimelineInterval,
+  TimelineOptions,
+  TimelineProjection,
+  TimelineTrack,
+  TimelineVariant,
+} from './projections/timeline'
+
+/**
+ * The status vocabulary was already shipped in the node chrome but not
+ * exported, so a host rendering its own legend beside these views had to
+ * re-declare the seven names — which is how the three-vocabulary problem
+ * `nodes/nodeStatus.ts` documents got started the first time.
+ */
+export { nodeStatusLabel, resolveNodeStatus } from './nodes/nodeStatus'
+export type { NodeStatus } from './nodes/nodeStatus'
+
 export {
   applyCommand,
   createGraphNodeFormTransport,

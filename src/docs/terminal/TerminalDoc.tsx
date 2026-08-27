@@ -1,8 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { TerminalConsole, type TerminalOutput, type TerminalSession, type TerminalStatus } from '../../components/terminal'
 import { CodeBlock } from '../components/CodeBlock'
-import { DocsNav } from '../components/DocsNav'
 import { PropsTable } from '../components/PropsTable'
+import {
+  DocsCallout,
+  DocsDemo,
+  DocsFooter,
+  DocsPage,
+  DocsSection,
+} from '../components/DocsPage'
 
 class DemoTerminalSession implements TerminalSession {
   private listeners = new Set<(chunk: TerminalOutput) => void>()
@@ -38,16 +44,16 @@ class DemoTerminalSession implements TerminalSession {
         this.historyIndex = this.history.length
         this.line = ''
         this.prompt()
-      } else if (character === '\u007f') {
+      } else if (character === '') {
         if (this.line) {
           this.line = this.line.slice(0, -1)
           this.emit('\b \b')
         }
-      } else if (character === '\u0003') {
+      } else if (character === '') {
         this.emit('^C\r\n')
         this.line = ''
         this.prompt()
-      } else if (character === '\u000c') {
+      } else if (character === '') {
         this.emit('\x1b[2J\x1b[H')
         this.prompt()
       } else if (character >= ' ') {
@@ -110,6 +116,42 @@ class DemoTerminalSession implements TerminalSession {
     }
   }
 }
+
+const terminalSignature = `export type TerminalConsoleProps = {
+  session: TerminalSession
+  status: 'connecting' | 'connected' | 'disconnected' | 'error'
+  expanded: boolean
+  onExpandedChange: (expanded: boolean) => void
+  title?: ReactNode
+  statusMessage?: string
+  onReconnect?: () => void
+  onClear?: () => void
+  label?: string
+  options?: Omit<ITerminalOptions, 'theme' | 'disableStdin'>
+  className?: string
+  bodyClassName?: string
+  viewportClassName?: string
+}`
+
+const panelSignature = `export type PanelProps = Omit<HTMLAttributes<HTMLDivElement>, 'title'> & {
+  title: ReactNode
+  icon?: ReactNode
+  status?: ReactNode
+  actions?: ReactNode
+  expanded: boolean
+  onExpandedChange: (expanded: boolean) => void
+  headerClassName?: string
+  bodyClassName?: string
+}`
+
+const previewDemoCode = `<TerminalConsole
+  session={session}
+  status={status}
+  expanded={expanded}
+  onExpandedChange={setExpanded}
+  onReconnect={reconnect}
+  options={{ fontSize: 14 }}
+/>`
 
 const usageCode = `import { TerminalConsole, type TerminalSession } from 'tint/terminal'
 
@@ -177,20 +219,17 @@ export function TerminalDoc() {
   }
 
   return (
-    <main className="min-h-screen px-4 py-8 sm:px-6 lg:px-10 lg:py-12">
-      <div className="mx-auto max-w-[1200px]">
-        <DocsNav current="components/terminal" />
-
-        <section className="mb-8 max-w-3xl">
-          <p className="m-0 text-xs font-semibold tracking-[0.14em] text-tint-accent uppercase">Interactive runtime</p>
-          <h1 className="mt-2 mb-3 text-3xl font-semibold tracking-tight text-tint-ink sm:text-4xl">TerminalConsole</h1>
-          <p className="m-0 text-base leading-7 text-tint-muted">
-            A full browser terminal emulator. Tint renders VT output and forwards raw input;
-            your application owns the shell, process, and transport.
-          </p>
-        </section>
-
-        <section className="mb-14">
+    <DocsPage
+      route="components/terminal"
+      title="TerminalConsole"
+      intro="A full browser terminal emulator. Tint renders VT output and forwards raw input; your application owns the shell, process, and transport."
+    >
+      <DocsSection
+        id="preview"
+        title="Preview"
+        description="A mock PTY session with a few built-in commands — try help, echo, or the arrow keys for history."
+      >
+        <DocsDemo code={previewDemoCode}>
           <div className="mb-3 flex flex-wrap items-center gap-2">
             <span className="rounded-full bg-tint-warning-soft px-2.5 py-1 text-xs text-tint-warning-ink">Mock PTY — no real shell</span>
             <button
@@ -211,29 +250,53 @@ export function TerminalDoc() {
             onReconnect={reconnect}
             options={{ fontSize: 14 }}
           />
-        </section>
+        </DocsDemo>
+      </DocsSection>
 
-        <section id="usage" className="mb-14 max-w-3xl scroll-mt-24">
-          <h2 className="mb-3 text-2xl font-semibold tracking-tight text-tint-ink">Usage</h2>
+      <DocsSection
+        id="usage"
+        title="Usage"
+        description={
+          <>
+            Wire a <code>TerminalSession</code> to your transport — a WebSocket here — and hand it
+            to the console together with the controlled <code>status</code> and{' '}
+            <code>expanded</code> state.
+          </>
+        }
+      >
+        <div className="space-y-6">
           <CodeBlock code={usageCode} language="tsx" />
-          <div className="mt-4 rounded-xl border border-tint-border bg-tint-surface/60 p-4 text-sm leading-6 text-tint-muted">
-            <strong className="font-semibold text-tint-ink">Two lifecycle notes.</strong>{' '}
+          <DocsCallout variant="note" title="Two lifecycle notes">
             <code>options</code> is read once on mount; later changes are ignored, because
             rebuilding the terminal would discard scrollback and the cursor. And a new{' '}
-            <code>session</code> object <em>resets</em> the emulator — keep it
-            referentially stable unless a reset is what you want.
-          </div>
-        </section>
+            <code>session</code> object <em>resets</em> the emulator — keep it referentially
+            stable unless a reset is what you want.
+          </DocsCallout>
+        </div>
+      </DocsSection>
 
-        <section id="api" className="scroll-mt-24">
-          <h2 className="mb-2 text-2xl font-semibold tracking-tight text-tint-ink">API</h2>
-          <p className="mb-6 max-w-2xl text-tint-muted">Required props are marked with an asterisk.</p>
-          <h3 className="mb-3 text-lg font-semibold text-tint-ink">TerminalConsole</h3>
-          <PropsTable rows={terminalProps} />
-          <h3 className="mt-10 mb-3 text-lg font-semibold text-tint-ink">Panel</h3>
-          <PropsTable rows={panelProps} />
-        </section>
-      </div>
-    </main>
+      <DocsSection id="api" title="API" description="Required props are marked with an asterisk.">
+        <div className="space-y-10">
+          <div>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">TerminalConsole</h3>
+            <p className="mb-3 text-sm leading-6 text-tint-muted">
+              The full prop signature, from the source:
+            </p>
+            <CodeBlock code={terminalSignature} language="tsx" className="mb-4" />
+            <PropsTable rows={terminalProps} />
+          </div>
+          <div>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">Panel</h3>
+            <p className="mb-3 text-sm leading-6 text-tint-muted">
+              The full prop signature, from the source:
+            </p>
+            <CodeBlock code={panelSignature} language="tsx" className="mb-4" />
+            <PropsTable rows={panelProps} />
+          </div>
+        </div>
+      </DocsSection>
+
+      <DocsFooter />
+    </DocsPage>
   )
 }

@@ -11,9 +11,32 @@ import {
 } from '../../components/auth'
 import '../../components/auth/styles.css'
 import { CodeBlock } from '../components/CodeBlock'
-import { DocsNav } from '../components/DocsNav'
+import { DocsCallout, DocsDemo, DocsFooter, DocsPage, DocsSection } from '../components/DocsPage'
 import { PropsTable } from '../components/PropsTable'
 import { createDemoTransport, DEMO_CREDENTIALS, DEMO_TOTP_CODE } from './demoTransport'
+
+const previewDemoCode = `const client = createAuthClient({ transport })
+
+function SignInScreen() {
+  const { client, snapshot } = useAuth()
+  const { isSignedIn, user, task } = useSession()
+
+  if (isSignedIn) return <p>Signed in as {user?.email}</p>
+  if (task === 'mfa') return <TotpForm onSubmit={client.mfa.verifyTotp} />
+
+  return (
+    <SignInForm
+      email={email}
+      password={password}
+      onEmailChange={setEmail}
+      onPasswordChange={setPassword}
+      onSubmit={() => client.signIn.password({ email, password })}
+      busy={snapshot.busy}
+      error={snapshot.error?.message}
+      labels={labels}
+    />
+  )
+}`
 
 const LABELS: SignInFormLabels = {
   email: 'Email',
@@ -86,6 +109,50 @@ async function post(path: string, body?: unknown) {
   })
   if (!response.ok) throw await authErrorFromResponse(response)
   return response.json()
+}`
+
+const signInFormSignature = `export type SignInFormProps = {
+  email: string
+  password: string
+  busy?: boolean
+  error?: ReactNode
+  labels: SignInFormLabels
+  emailPlaceholder?: string
+  passwordPlaceholder?: string
+  onEmailChange(value: string): void
+  onPasswordChange(value: string): void
+  onSubmit(): void | Promise<void>
+  className?: string
+}`
+
+const oauthSignature = `export type OAuthOption = { id: string; label: string; href: string; icon?: ReactNode }
+
+export type OAuthButtonsProps = {
+  providers: readonly OAuthOption[]
+  ariaLabel: string
+  className?: string
+}`
+
+const sessionSignature = `// The object useSession() derives from the snapshot:
+{
+  session: AuthSession | null
+  user: AuthUser | null
+  status: AuthStatus
+  task: AuthTask | null
+  isLoaded: boolean
+  isSignedIn: boolean
+}`
+
+const transportSignature = `export type AuthTransport = {
+  getConfig(): Promise<AuthConfig>
+  getSession(): Promise<AuthSession | null>
+  signInPassword?(input: PasswordSignInInput): Promise<AuthFlowResult>
+  signUpPassword?(input: PasswordSignUpInput): Promise<AuthFlowResult>
+  requestPasswordReset?(input: PasswordResetRequestInput): Promise<AuthFlowResult>
+  verifyTotp?(input: TotpVerifyInput): Promise<AuthFlowResult>
+  selectOrganization?(input: OrganizationSelectInput): Promise<AuthFlowResult>
+  signOut(): Promise<void>
+  oauthStartUrl(provider: OAuthProviderId, returnTo?: string): string
 }`
 
 const signInFormProps = [
@@ -274,82 +341,113 @@ export function AuthDoc() {
   )
 
   return (
-    <main className="min-h-screen px-4 py-8 sm:px-6 lg:px-10 lg:py-12">
-      <div className="mx-auto max-w-[1200px]">
-        <DocsNav current="components/auth" />
-
-        <section className="mb-8 max-w-3xl">
-          <p className="m-0 text-xs font-semibold tracking-[0.14em] text-tint-accent uppercase">
-            Identity
-          </p>
-          <h1 className="mt-2 mb-3 text-3xl font-semibold tracking-tight text-tint-ink sm:text-4xl">
-            Auth
-          </h1>
-          <p className="m-0 text-base leading-7 text-tint-muted">
-            Controlled sign-in primitives over a transport-agnostic session client. Your application
-            owns the network; Tint owns the state machine and the markup.
-          </p>
-        </section>
-
-        <section id="preview" className="mb-14 scroll-mt-24">
-          <div className="mb-3 flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-tint-warning-soft px-2.5 py-1 text-xs text-tint-warning-ink">
-              Demo transport — no network
-            </span>
-          </div>
+    <DocsPage
+      route="components/auth"
+      title="Auth"
+      intro="Controlled sign-in primitives over a transport-agnostic session client. Your application owns the network; Tint owns the state machine and the markup."
+    >
+      <DocsSection
+        id="preview"
+        title="Preview"
+        description="Sign in, pass MFA, sign out — every step runs through the client state machine, and the AuthSnapshot panel tracks it live."
+      >
+        <DocsDemo code={previewDemoCode}>
           <AuthProvider client={client}>
             <AuthDemo />
           </AuthProvider>
+        </DocsDemo>
 
-          <div className="mt-6 overflow-x-auto rounded-xl border border-tint-border bg-tint-panel">
-            <table className="min-w-full border-collapse text-left text-sm">
-              <thead className="bg-tint-surface text-tint-muted">
-                <tr>
-                  <th className="px-4 py-3 font-medium">Email</th>
-                  <th className="px-4 py-3 font-medium">Password</th>
-                  <th className="px-4 py-3 font-medium">Result</th>
+        <div className="mt-4">
+          <DocsCallout variant="note" title="Demo transport — no network">
+            The page talks to an in-memory transport, so nothing leaves the browser. The credential
+            table below is the full fixture; the transport also omits <code>signUpPassword</code>{' '}
+            to show how unsupported flows fail.
+          </DocsCallout>
+        </div>
+
+        <div className="mt-6 overflow-x-auto rounded-xl border border-tint-border bg-tint-panel">
+          <table className="min-w-full border-collapse text-left text-sm">
+            <thead className="bg-tint-surface text-tint-muted">
+              <tr>
+                <th className="px-4 py-3 font-medium">Email</th>
+                <th className="px-4 py-3 font-medium">Password</th>
+                <th className="px-4 py-3 font-medium">Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              {DEMO_CREDENTIALS.map((row) => (
+                <tr key={row.email} className="border-t border-tint-border align-top">
+                  <td className="px-4 py-3 font-mono text-[13px] text-tint-accent">{row.email}</td>
+                  <td className="px-4 py-3 font-mono text-[13px] text-tint-ink">{row.password}</td>
+                  <td className="px-4 py-3 text-tint-muted">{row.outcome}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {DEMO_CREDENTIALS.map((row) => (
-                  <tr key={row.email} className="border-t border-tint-border align-top">
-                    <td className="px-4 py-3 font-mono text-[13px] text-tint-accent">{row.email}</td>
-                    <td className="px-4 py-3 font-mono text-[13px] text-tint-ink">{row.password}</td>
-                    <td className="px-4 py-3 text-tint-muted">{row.outcome}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </DocsSection>
+
+      <DocsSection
+        id="usage"
+        title="Usage"
+        description="Wire the client into an AuthProvider, then drive SignInForm from controlled state. The snapshot carries busy and error back to the form."
+      >
+        <CodeBlock code={usageCode} language="tsx" />
+        <p className="mt-6 mb-3 max-w-3xl text-sm leading-6 text-tint-muted">
+          The client talks to your backend through one interface. Which optional methods you
+          implement is what decides which flows exist.
+        </p>
+        <CodeBlock code={transportCode} language="ts" />
+      </DocsSection>
+
+      <DocsSection id="api" title="API" description="Required props are marked with an asterisk.">
+        <div className="space-y-10">
+          <div>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">SignInForm</h3>
+            <p className="mt-0 mb-3 text-sm leading-6 text-tint-muted">
+              The full prop signature, from the source:
+            </p>
+            <div className="mb-4">
+              <CodeBlock code={signInFormSignature} language="tsx" />
+            </div>
+            <PropsTable rows={signInFormProps} />
           </div>
-        </section>
+          <div>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">OAuthButtons</h3>
+            <p className="mt-0 mb-3 text-sm leading-6 text-tint-muted">
+              The full prop signature, from the source:
+            </p>
+            <div className="mb-4">
+              <CodeBlock code={oauthSignature} language="tsx" />
+            </div>
+            <PropsTable rows={oauthProps} />
+          </div>
+          <div>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">useSession()</h3>
+            <p className="mt-0 mb-3 text-sm leading-6 text-tint-muted">
+              The derived session shape, from the source:
+            </p>
+            <div className="mb-4">
+              <CodeBlock code={sessionSignature} language="tsx" />
+            </div>
+            <PropsTable rows={sessionProps} />
+          </div>
+          <div>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">AuthTransport</h3>
+            <p className="mt-0 mb-3 text-sm leading-6 text-tint-muted">
+              The full transport signature, from the source:
+            </p>
+            <div className="mb-4">
+              <CodeBlock code={transportSignature} language="tsx" />
+            </div>
+            <PropsTable rows={transportProps} />
+          </div>
+        </div>
+      </DocsSection>
 
-        <section id="usage" className="mb-14 max-w-3xl scroll-mt-24">
-          <h2 className="mb-3 text-2xl font-semibold tracking-tight text-tint-ink">Usage</h2>
-          <CodeBlock code={usageCode} language="tsx" />
-          <p className="mt-6 mb-3 text-tint-muted">
-            The client talks to your backend through one interface. Which optional methods you
-            implement is what decides which flows exist.
-          </p>
-          <CodeBlock code={transportCode} language="ts" />
-        </section>
-
-        <section id="api" className="scroll-mt-24">
-          <h2 className="mb-2 text-2xl font-semibold tracking-tight text-tint-ink">API</h2>
-          <p className="mb-6 max-w-2xl text-tint-muted">Required props are marked with an asterisk.</p>
-
-          <h3 className="mb-3 text-lg font-semibold text-tint-ink">SignInForm</h3>
-          <PropsTable rows={signInFormProps} />
-
-          <h3 className="mt-10 mb-3 text-lg font-semibold text-tint-ink">OAuthButtons</h3>
-          <PropsTable rows={oauthProps} />
-
-          <h3 className="mt-10 mb-3 text-lg font-semibold text-tint-ink">useSession()</h3>
-          <PropsTable rows={sessionProps} />
-
-          <h3 className="mt-10 mb-3 text-lg font-semibold text-tint-ink">AuthTransport</h3>
-          <PropsTable rows={transportProps} />
-        </section>
-      </div>
-    </main>
+      <DocsFooter>
+        <span>Demo transport: in-memory fixture, no network</span>
+      </DocsFooter>
+    </DocsPage>
   )
 }

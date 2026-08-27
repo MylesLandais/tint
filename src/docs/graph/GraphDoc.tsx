@@ -11,6 +11,7 @@ import {
 import '../../components/graph/graph.css'
 import '../../components/form/styles.css'
 import { demoGraphDocument } from './fixtures/demoDocument'
+import { GraphProjectionsDemo } from './GraphProjectionsDemo'
 import { loadComfyLtx23WithMockDiagnostics } from './fixtures/comfy/loadComfyFixture'
 import {
   createMockI2VRun,
@@ -29,7 +30,13 @@ import {
   type ValidationIssue,
 } from '../../components/graph'
 import { CodeBlock } from '../components/CodeBlock'
-import { DocsPage, DocsSection } from '../components/DocsPage'
+import {
+  DocsCallout,
+  DocsDemo,
+  DocsFooter,
+  DocsPage,
+  DocsSection,
+} from '../components/DocsPage'
 import { PropsTable } from '../components/PropsTable'
 
 const usageCode = `import { useState } from 'react'
@@ -62,6 +69,39 @@ export function Workflow({ workflow }) {
 // the component would have used:
 //   onCommand={(command) => store.dispatch(applyCommand(document, command, registry))}
 `
+
+const previewDemoCode = `// The host owns the document and feeds the result back in.
+const [document, setDocument] = useState(() => parseComfyWorkflow(workflow))
+
+<InteractiveGraphView
+  document={document}
+  readonly={readonly}
+  selection={selection}
+  validationByNodeId={validationByNodeId}
+  runtimeByNodeId={runtimeByNodeId}
+  viewport={followViewport}
+  onDocumentChange={setDocument}
+  onSelectionChange={setSelection}
+  onViewportChange={setViewport}
+  onCommand={onCommand}
+/>`
+
+const signatureCode = `export type InteractiveGraphViewProps = {
+  document: GraphDocument
+  registry?: NodeRegistry
+  readonly?: boolean
+  selection?: GraphSelection
+  validationByNodeId?: NodeValidationMap
+  runtimeByNodeId?: ReadonlyMap<string, NodeRuntimeSummary>
+  viewport?: GraphViewport
+  className?: string
+  showInspector?: boolean
+  showFullscreenControl?: boolean
+  onDocumentChange?: (document: GraphDocument) => void
+  onSelectionChange?: (selection: GraphSelection) => void
+  onViewportChange?: (viewport: GraphViewport) => void
+  onCommand?: (command: GraphCommand) => void
+}`
 
 const props = [
   {
@@ -263,7 +303,11 @@ export function GraphDoc() {
         </>
       }
     >
-        <DocsSection id="preview" title="Live preview">
+        <DocsSection
+          id="preview"
+          title="Preview"
+          description="Two fixtures, one surface: a ComfyUI LTX-2.3 workflow with mock diagnostics, and a small domain-neutral demo graph. Toggle read-only to see the graph stay inspectable while editing is disabled."
+        >
           <div className="mb-3 flex flex-wrap items-center gap-3">
             <div className="inline-flex rounded-md border border-tint-border p-0.5 text-sm">
               <ModeButton active={mode === 'comfy'} onClick={() => switchMode('comfy')}>
@@ -364,20 +408,22 @@ export function GraphDoc() {
             </div>
           ) : null}
 
-          <div ref={previewRef}>
-            <InteractiveGraphView
-              document={document}
-              readonly={readonly}
-              selection={selection}
-              validationByNodeId={validationByNodeId}
-              runtimeByNodeId={runtimeByNodeId}
-              viewport={followViewport}
-              onDocumentChange={setDocument}
-              onSelectionChange={setSelection}
-              onViewportChange={setViewport}
-              onCommand={onCommand}
-            />
-          </div>
+          <DocsDemo code={previewDemoCode}>
+            <div ref={previewRef}>
+              <InteractiveGraphView
+                document={document}
+                readonly={readonly}
+                selection={selection}
+                validationByNodeId={validationByNodeId}
+                runtimeByNodeId={runtimeByNodeId}
+                viewport={followViewport}
+                onDocumentChange={setDocument}
+                onSelectionChange={setSelection}
+                onViewportChange={setViewport}
+                onCommand={onCommand}
+              />
+            </div>
+          </DocsDemo>
 
           <div className="mt-3 grid gap-3 md:grid-cols-4">
             <StatusCard label="Mode" value={mode === 'comfy' ? 'Comfy LTX-2.3' : 'Demo'} />
@@ -410,12 +456,53 @@ export function GraphDoc() {
           title="Usage"
           description="The host owns the document: pass it in, take the next one out. Nothing is applied behind your back."
         >
-          <CodeBlock code={usageCode} language="tsx" />
+          <div className="space-y-6">
+            <CodeBlock code={usageCode} language="tsx" />
+            <DocsCallout variant="warning" title="Controlled-state contracts">
+              The document a command produces only sticks if you return it through{' '}
+              <code>document</code> — nothing is applied otherwise. Controlled{' '}
+              <code>selection</code> is latched on the first render; clear it with{' '}
+              <code>emptySelection()</code>, not <code>undefined</code>.
+            </DocsCallout>
+          </div>
+        </DocsSection>
+
+        <DocsSection
+          id="projections"
+          title="Projections"
+          description="The canvas is one reading of a graph document — the dependency one. These are the others: a force-directed network, and a single interval model rendered as a schedule, a trace, and an editable range. All four share one document and one selection; none of them knows the others exist."
+        >
+          <div className="space-y-6">
+            <GraphProjectionsDemo />
+            <DocsCallout variant="note" title="Time is an overlay, not a document field">
+              <code>GraphDocument</code> describes structure; a run describes
+              time. Spans are passed beside the document, like{' '}
+              <code>runtimeByNodeId</code> already is, so one graph can carry as
+              many runs as you keep. That is also why an edit in the{' '}
+              <code>range</code> variant arrives as <code>onSpanChange</code> and
+              not as a <code>GraphCommand</code> — a scheduled range is authored
+              configuration, an observed one is runtime, and collapsing the two
+              into the command union would erase the difference.
+            </DocsCallout>
+          </div>
         </DocsSection>
 
         <DocsSection id="api" title="API">
-          <PropsTable rows={props} />
+          <div className="space-y-4">
+            <p className="m-0 text-sm text-tint-muted">
+              The full prop signature, from the source:
+            </p>
+            <CodeBlock code={signatureCode} language="tsx" />
+            <PropsTable rows={props} />
+          </div>
         </DocsSection>
+
+        <DocsFooter>
+          <span>
+            Demo fixtures: ComfyUI LTX-2.3 workflow, a domain-neutral demo graph, and the
+            projections ontology seed
+          </span>
+        </DocsFooter>
     </DocsPage>
   )
 }
