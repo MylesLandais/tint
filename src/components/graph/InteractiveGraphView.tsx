@@ -17,6 +17,19 @@ import { NodeInspectorForm, describeConfiguration } from './NodeInspectorForm'
 import { useFullscreen } from '../../lib/useFullscreen'
 import { cn } from '../../lib/utils'
 
+/**
+ * `import.meta.env.DEV`, reached without requiring `vite/client` types.
+ *
+ * Tint ships TypeScript source, so this file is compiled inside the host's
+ * program. `import.meta.env` is a Vite augmentation of `ImportMeta`; a host
+ * that does not list `vite/client` in `types` has no such property, and this
+ * dev-only warning became a compile error in their build — for a component
+ * they were only importing. Vite still statically replaces the member access,
+ * so the dead branch is still eliminated in production.
+ */
+const IS_DEV = (import.meta as { env?: { DEV?: boolean } }).env?.DEV === true
+
+
 /** One frame past the fullscreen transition, so the container has its final size. */
 const REMEASURE_DELAY_MS = 50
 
@@ -95,7 +108,7 @@ export function InteractiveGraphView({
   const [uncontrolledSelection, setUncontrolledSelection] =
     useState<GraphSelection>(emptySelection)
 
-  if (import.meta.env.DEV && isControlled !== (controlledSelection != null)) {
+  if (IS_DEV && isControlled !== (controlledSelection != null)) {
     console.error(
       'InteractiveGraphView: `selection` switched between controlled and uncontrolled. ' +
         'Pass a selection for the component\'s whole lifetime, or never — use ' +
