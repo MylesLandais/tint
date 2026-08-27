@@ -1,7 +1,7 @@
 {
   "name": "tint",
   "private": true,
-  "version": "0.1.6",
+  "version": "0.1.7",
   "type": "module",
   "description": "Tint \u2014 controlled React components for media and rich chat interfaces.",
   "files": [
