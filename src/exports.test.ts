@@ -58,9 +58,18 @@ describe('docs coverage', () => {
     // Components whose entry point is deliberately not a docs page.
     const EXEMPT = new Set(['auth-client', 'auth'])
 
+    // Members of a grouped page (see GROUPED_ROUTE_MEMBERS in routes.ts) are
+    // documented by that page rather than by a route of their own.
+    const groupedBlock = routes.match(/GROUPED_ROUTE_MEMBERS = \{([\s\S]*?)\n\}/)
+    const groupedMembers = new Set(
+      groupedBlock
+        ? [...groupedBlock[1].matchAll(/'([^':]+)'(?!\s*:)/g)].map((match) => match[1])
+        : [],
+    )
+
     const undocumented = SUBPATHS.map(([subpath]) => subpath.replace(/^\.\//, ''))
       .filter((name) => !EXEMPT.has(name) && !name.includes('/'))
-      .filter((name) => !routes.includes(`'components/${name}'`))
+      .filter((name) => !routes.includes(`'components/${name}'`) && !groupedMembers.has(name))
 
     expect(undocumented).toEqual([])
   })

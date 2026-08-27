@@ -19,6 +19,13 @@ import type { NodeRegistry } from './registry'
  *
  * Returns the same document reference when nothing changed, so a host can use
  * identity to skip a render.
+ *
+ * Identity and revision are separate signals, and `viewport.set` is why: it
+ * returns a *new* document carrying the *same* revision. Reference identity
+ * answers "is this the same object"; the revision answers "did the graph
+ * change". A camera move is a yes to the first and a no to the second, so
+ * anything that rebuilds on graph structure — a layout, a compile, a hash —
+ * should watch the revision, not the reference.
  */
 export function applyCommand(
   document: GraphDocument,
@@ -100,7 +107,9 @@ export function applyCommand(
       ) {
         return document
       }
-      return commit(document, { viewport: { ...next } })
+      // `commitLayout`, not `commit`: panning and zooming are viewport state,
+      // not document edits, and must not bump `revision`.
+      return commitLayout(document, { viewport: { ...next } })
     }
 
     case 'node.create': {
@@ -130,11 +139,32 @@ export function applyCommand(
   }
 }
 
+/** A change to the graph itself. Bumps the revision. */
 function commit(
   document: GraphDocument,
   changes: Partial<GraphDocument>,
 ): GraphDocument {
   return { ...document, ...changes, revision: nextRevision(document.revision) }
+}
+
+/**
+ * A change to how the graph is *looked at*. Leaves the revision alone.
+ *
+ * The camera is view state. `docs/rfcs/0003-workflow-graph-semantics.md` already
+ * excludes layout state from the execution hash, and a revision is the signal
+ * that something execution-relevant changed — panning is not that.
+ *
+ * It is also what broke the canvas. `viewport.set` used to `commit`, so every
+ * pan produced a new revision *and* a new `document.viewport` object; the canvas
+ * re-applied that object with `setViewport`, xyflow fired `onMoveEnd` for the
+ * programmatic move, and the next `viewport.set` arrived unprompted. The
+ * revision climbed forever and every subscriber keyed on it re-ran with it.
+ */
+function commitLayout(
+  document: GraphDocument,
+  changes: Partial<GraphDocument>,
+): GraphDocument {
+  return { ...document, ...changes }
 }
 
 /**

@@ -1,0 +1,92 @@
+/*
+ * `.tint-button` — the shared button surface.
+ *
+ * Plain CSS rather than Tailwind utilities, unlike most components, because it
+ * has to work on an element this package never renders. Hosts style anchors,
+ * submit inputs, and their own buttons with it — an OAuth link is an `<a>` and
+ * cannot be a `<Button>` — and a utility-composed class cannot be applied by
+ * name. The `Button` component is a convenience over this, not the only way in.
+ *
+ * Variant and size are data attributes for the same reason: an anchor gets them
+ * with no JavaScript involved.
+ */
+
+.tint-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-sizing: border-box;
+  min-height: 2.25rem;
+  padding: 0.5rem 0.875rem;
+  border: 1px solid var(--tint-border);
+  border-radius: 0.45rem;
+  background: var(--tint-surface);
+  color: var(--tint-ink);
+  font: inherit;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.tint-button:hover:not(:disabled, [aria-disabled='true']) {
+  border-color: var(--tint-border-strong);
+}
+
+.tint-button:focus-visible {
+  outline: 2px solid var(--tint-accent);
+  outline-offset: 2px;
+}
+
+.tint-button:disabled,
+.tint-button[aria-disabled='true'] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Variants. `secondary` is the bare default above, named so hosts can be
+   explicit rather than relying on the absence of an attribute. */
+.tint-button[data-variant='primary'] {
+  border-color: transparent;
+  background: var(--tint-accent);
+  color: var(--tint-on-accent);
+}
+
+.tint-button[data-variant='primary']:hover:not(:disabled, [aria-disabled='true']) {
+  background: var(--tint-accent-hover);
+}
+
+.tint-button[data-variant='ghost'] {
+  border-color: transparent;
+  background: transparent;
+}
+
+.tint-button[data-variant='ghost']:hover:not(:disabled, [aria-disabled='true']) {
+  background: var(--tint-accent-soft);
+  border-color: transparent;
+}
+
+.tint-button[data-variant='danger'] {
+  border-color: var(--tint-danger);
+  background: var(--tint-danger-soft);
+  color: var(--tint-danger-ink);
+}
+
+/* Sizes. `md` matches the 2.75rem control height the form inputs use, so a
+   button sitting beside a field lines up with it. */
+.tint-button[data-size='sm'] {
+  min-height: 1.875rem;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.85rem;
+}
+
+.tint-button[data-size='md'] {
+  min-height: 2.75rem;
+  padding: 0.625rem 1rem;
+}
+
+.tint-button[data-size='lg'] {
+  min-height: 3rem;
+  padding: 0.75rem 1.25rem;
+  font-size: 1.05rem;
+}

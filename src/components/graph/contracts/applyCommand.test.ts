@@ -157,18 +157,36 @@ describe('applyCommand', () => {
     expect(next.revision).toBe('r1')
   })
 
-  it('sets the viewport and bumps the revision once', () => {
+  /**
+   * The camera moved and the graph did not, so the revision must not move
+   * either.
+   *
+   * Bumping it here is what closed a feedback loop: the fresh
+   * `document.viewport` object flowed back into the canvas, which re-applied it
+   * with `setViewport`, which made xyflow fire `onMoveEnd` again — d3's
+   * programmatic transform carries `sourceEvent: null` and the end handler only
+   * ignores `sourceEvent.internal`. The revision counted up on its own for as
+   * long as the page stayed open.
+   */
+  it('moves the camera without bumping the revision', () => {
+    const before = document()
     const next = applyCommand(
-      document(),
+      before,
       { type: 'viewport.set', viewport: { x: 10, y: 20, zoom: 1.5 } },
       registry,
     )
 
     expect(next.viewport).toEqual({ x: 10, y: 20, zoom: 1.5 })
-    expect(next.revision).toBe('r2')
+    expect(next.revision).toBe('r1')
+    expect(next).not.toBe(before)
   })
 
-  it('ignores an identical viewport.set without bumping the revision', () => {
+  /**
+   * The same camera position twice returns the *same object*, not an equal one.
+   * The revision no longer moves either way, so identity is what stops a
+   * redundant `viewport.set` from re-rendering every consumer of the document.
+   */
+  it('ignores an identical viewport.set', () => {
     const withViewport = applyCommand(
       document(),
       { type: 'viewport.set', viewport: { x: 10, y: 20, zoom: 1.5 } },
@@ -181,7 +199,17 @@ describe('applyCommand', () => {
     )
 
     expect(again).toBe(withViewport)
-    expect(again.revision).toBe('r2')
+    expect(again.revision).toBe('r1')
+  })
+
+  it('still bumps the revision when the graph itself changes', () => {
+    expect(
+      applyCommand(
+        document(),
+        { type: 'node.move', nodeIds: ['a'], positions: { a: { x: 5, y: 5 } } },
+        registry,
+      ).revision,
+    ).toBe('r2')
   })
 })
 

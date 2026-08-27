@@ -782,3 +782,213 @@
   white-space: nowrap;
   border: 0;
 }
+
+/*
+ * Projections.
+ *
+ * The network and interval views over the same document. They share the node
+ * status vocabulary with the canvas above (`resolveNodeStatus`), so the colours
+ * are read from the same custom properties rather than re-picked here.
+ */
+.tint-force-graph {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--tint-border);
+  border-radius: 0.5rem;
+  background: var(--tint-surface);
+}
+
+.tint-force-graph__canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.tint-force-graph__edge {
+  stroke: var(--tint-border-strong);
+  stroke-width: 1;
+  opacity: 0.7;
+}
+
+.tint-force-graph__edge[data-kind='governed_by'] {
+  stroke: var(--tint-warning);
+  stroke-dasharray: 4 3;
+}
+
+.tint-force-graph__edge[data-kind='contains'] {
+  stroke-dasharray: 2 4;
+  opacity: 0.45;
+}
+
+.tint-force-graph__node {
+  cursor: pointer;
+  outline: none;
+}
+
+.tint-force-graph__node:focus-visible .tint-force-graph__dot {
+  stroke: var(--tint-accent);
+  stroke-width: 3;
+}
+
+.tint-force-graph__dot {
+  fill: var(--tint-muted);
+  transition: r 120ms ease, fill 120ms ease;
+}
+
+.tint-force-graph__node[data-selected='true'] .tint-force-graph__dot {
+  fill: var(--tint-accent);
+}
+
+.tint-force-graph__node[data-status='running'] .tint-force-graph__dot {
+  fill: var(--tint-info);
+}
+
+.tint-force-graph__node[data-status='succeeded'] .tint-force-graph__dot {
+  fill: var(--tint-success);
+}
+
+.tint-force-graph__node[data-status='failed'] .tint-force-graph__dot,
+.tint-force-graph__node[data-status='error'] .tint-force-graph__dot {
+  fill: var(--tint-danger);
+}
+
+.tint-force-graph__node[data-status='warning'] .tint-force-graph__dot {
+  fill: var(--tint-warning);
+}
+
+.tint-force-graph__label {
+  fill: var(--tint-ink);
+  font-size: 11px;
+  paint-order: stroke;
+  stroke: var(--tint-surface);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.tint-timeline {
+  width: 100%;
+  border: 1px solid var(--tint-border);
+  border-radius: 0.5rem;
+  background: var(--tint-surface);
+  padding: 0.5rem;
+  overflow-x: auto;
+}
+
+.tint-timeline__empty {
+  margin: 0;
+  padding: 0.75rem;
+  color: var(--tint-muted);
+  font-size: 0.85rem;
+}
+
+.tint-timeline__tracks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.2rem;
+}
+
+.tint-timeline__track {
+  display: grid;
+  grid-template-columns: minmax(6rem, 12rem) minmax(0, 1fr);
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tint-timeline__track-label {
+  font-size: 0.72rem;
+  color: var(--tint-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tint-timeline__lane {
+  position: relative;
+  height: 1.35rem;
+  border-radius: 0.25rem;
+  background: color-mix(in srgb, var(--tint-border) 35%, transparent);
+}
+
+.tint-timeline__bar {
+  position: absolute;
+  top: 0.15rem;
+  bottom: 0.15rem;
+  min-width: 2px;
+  border-radius: 0.2rem;
+  background: var(--tint-muted);
+}
+
+.tint-timeline__bar[data-status='running'] {
+  background: var(--tint-info);
+}
+
+.tint-timeline__bar[data-status='succeeded'] {
+  background: var(--tint-success);
+}
+
+.tint-timeline__bar[data-status='failed'],
+.tint-timeline__bar[data-status='error'] {
+  background: var(--tint-danger);
+}
+
+.tint-timeline__bar[data-status='warning'] {
+  background: var(--tint-warning);
+}
+
+.tint-timeline__bar[data-selected='true'] {
+  outline: 2px solid var(--tint-accent);
+  outline-offset: 1px;
+}
+
+.tint-timeline__bar-body {
+  all: unset;
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.tint-timeline__bar-body:focus-visible {
+  outline: 2px solid var(--tint-accent);
+  outline-offset: 1px;
+}
+
+.tint-timeline__bar-label {
+  display: block;
+  padding-inline: 0.3rem;
+  font-size: 0.68rem;
+  line-height: 1.05rem;
+  color: var(--tint-on-accent);
+  white-space: nowrap;
+}
+
+/*
+ * The drag handles are 8px wide but sit on a bar that can be 2px: they are
+ * pulled outward so an interval near zero duration is still grabbable.
+ */
+.tint-timeline__handle {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  width: 8px;
+  cursor: ew-resize;
+  background: transparent;
+  touch-action: none;
+}
+
+.tint-timeline__handle[data-edge='start'] {
+  left: -4px;
+}
+
+.tint-timeline__handle[data-edge='end'] {
+  right: -4px;
+}
+
+.tint-timeline__handle:focus-visible {
+  outline: 2px solid var(--tint-accent);
+  border-radius: 0.15rem;
+}
