@@ -387,125 +387,59 @@ export function BoardDoc() {
       </DocsSection>
 
       <DocsSection id="api" title="API">
+        <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">BoardLayout</h3>
         <PropsTable
           rows={[
-            {
-              name: 'cards',
-              type: 'readonly BoardCardModel[]',
-              required: true,
-              description: 'Host-owned widget cards for BoardLayout.',
-            },
-            {
-              name: 'lanes',
-              type: 'readonly BoardLane[]',
-              required: true,
-              description: 'Lane definitions. Kanban renders one column per lane; masonry ignores them for packing.',
-            },
-            {
-              name: 'variant',
-              type: "BoardLayoutVariant ('masonry' | 'kanban')",
-              description: 'Placement mode. Defaults to masonry (DataMasonry pack).',
-            },
-            {
-              name: 'selectedId',
-              type: 'string | null',
-              description: 'Highlighted card id.',
-            },
-            {
-              name: 'onSelect',
-              type: '(cardId: string) => void',
-              description: 'Card selection intent.',
-            },
-            {
-              name: 'renderActions',
-              type: '(card: BoardCardModel) => ReactNode',
-              description: 'Optional per-card trailing actions (e.g. Move to…).',
-            },
-            {
-              name: 'renderPreview',
-              type: '(card: BoardCardModel) => ReactNode',
-              description: 'Optional body below the card chrome.',
-            },
-            {
-              name: 'empty',
-              type: 'ReactNode',
-              description: 'Empty-board copy.',
-            },
-            {
-              name: 'density',
-              type: 'MasonryDensity',
-              description: 'DataMasonry density passthrough when variant is masonry.',
-            },
-            {
-              name: 'targetWidth',
-              type: 'number',
-              description: 'Ideal column width for auto density.',
-            },
-            {
-              name: 'gap',
-              type: 'number',
-              description: 'Gap between masonry cells, in pixels.',
-            },
-            {
-              name: 'label',
-              type: 'string',
-              description: 'Accessible name for the masonry list.',
-            },
-            {
-              name: 'card',
-              type: 'BoardCardModel',
-              required: true,
-              description: 'BoardCard chrome model (kind, title, preview).',
-            },
-            {
-              name: 'selected',
-              type: 'boolean',
-              description: 'Selected ring on BoardCard.',
-            },
-            {
-              name: 'onSelect',
-              type: '(cardId: string) => void',
-              description: 'BoardCard click / keyboard activation.',
-            },
-            {
-              name: 'actions',
-              type: 'ReactNode',
-              description: 'Trailing actions on BoardCard (clicks do not select).',
-            },
-            {
-              name: 'children',
-              type: 'ReactNode',
-              description: 'BoardCard preview body, or BoardDetail live surface.',
-            },
-            {
-              name: 'empty',
-              type: 'ReactNode',
-              description: 'BoardDetail empty-state copy when card is null.',
-            },
-            {
-              name: 'value',
-              type: 'BoardLayoutVariant',
-              required: true,
-              description: 'BoardLayoutToggle current variant.',
-            },
-            {
-              name: 'onChange',
-              type: '(variant: BoardLayoutVariant) => void',
-              required: true,
-              description: 'BoardLayoutToggle change intent.',
-            },
-            {
-              name: 'disabled',
-              type: 'boolean',
-              description: 'Disables the layout toggle.',
-            },
-            {
-              name: 'className',
-              type: 'string',
-              description: 'Optional class on BoardLayoutToggle.',
-            },
+            { name: 'cards', type: 'readonly BoardCardModel[]', required: true, description: 'Host-owned widget cards.' },
+            { name: 'lanes', type: 'readonly BoardLane[]', required: true, description: 'Lane definitions; kanban renders one column per lane.' },
+            { name: 'variant', type: "BoardLayoutVariant ('masonry' | 'kanban')", description: 'Placement mode. Defaults to masonry (DataMasonry pack).' },
+            { name: 'selectedId', type: 'string | null', description: 'Highlighted card id.' },
+            { name: 'onSelect', type: '(cardId: string) => void', description: 'Card selection intent.' },
+            { name: 'renderActions', type: '(card: BoardCardModel) => ReactNode', description: 'Trailing actions rendered on each card.' },
+            { name: 'renderPreview', type: '(card: BoardCardModel) => ReactNode', description: 'Card preview body — the live graph, table, or player surface.' },
+            { name: 'empty', type: 'ReactNode', description: 'Shown in place of the pack when there are no cards.' },
+            { name: 'density', type: "'comfortable' | 'compact'", description: 'Passed through to DataMasonry.' },
+            { name: 'targetWidth', type: 'number', description: 'Preferred column width in pixels for the masonry pack.' },
+            { name: 'gap', type: 'number', description: 'Gap between packed cards, in pixels.' },
+            { name: 'label', type: 'string', description: 'Accessible name for the board region.' },
           ]}
         />
+
+        <div className="mt-8">
+          <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">BoardCard</h3>
+          <PropsTable
+          rows={[
+            { name: 'card', type: 'BoardCardModel', required: true, description: 'Chrome model: kind, title, and preview.' },
+            { name: 'selected', type: 'boolean', description: 'Draws the selected ring.' },
+            { name: 'onSelect', type: '(cardId: string) => void', description: 'Click and keyboard activation.' },
+            { name: 'children', type: 'ReactNode', description: 'Preview body rendered inside the card.' },
+            { name: 'actions', type: 'ReactNode', description: 'Trailing actions; clicks here do not select the card.' },
+          ]}
+          />
+        </div>
+
+        <div className="mt-8">
+          <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">BoardDetail</h3>
+          <PropsTable
+          rows={[
+            { name: 'card', type: 'BoardCardModel | null', required: true, description: 'The focused card, or null for the empty state.' },
+            { name: 'children', type: 'ReactNode', description: 'The live surface for the focused card.' },
+            { name: 'empty', type: 'ReactNode', description: 'Empty-state copy shown when card is null.' },
+          ]}
+          />
+        </div>
+
+        <div className="mt-8">
+          <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">BoardLayoutToggle</h3>
+          <PropsTable
+          rows={[
+            { name: 'value', type: 'BoardLayoutVariant', required: true, description: 'Current variant.' },
+            { name: 'onChange', type: '(variant: BoardLayoutVariant) => void', required: true, description: 'Change intent.' },
+            { name: 'disabled', type: 'boolean', description: 'Disables the toggle.' },
+            { name: 'className', type: 'string', description: 'Optional class on the toggle.' },
+          ]}
+          />
+        </div>
       </DocsSection>
     </DocsPage>
   )
