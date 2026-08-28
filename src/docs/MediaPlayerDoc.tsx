@@ -105,6 +105,22 @@ type MediaPlayerAudioProps = MediaPlayerBaseProps & {
   artist?: string
   artwork?: string
   artworkAlt?: string
+  playing?: boolean
+  playbackNonce?: number
+  remote?: RemoteMediaController
+  onEnded?: () => void
+}
+
+type RemoteMediaController = {
+  playing: boolean
+  currentTime: number
+  duration: number
+  volume: number
+  muted?: boolean
+  onPlay: () => void
+  onPause: () => void
+  onSeek: (positionSeconds: number) => void
+  onVolumeChange: (level: number) => void
 }
 
 type MediaPlayerVideoProps = MediaPlayerBaseProps & {
@@ -227,6 +243,13 @@ const audioOnlyProps = [
     type: 'number',
     description:
       'When this value changes, seek to 0 and play. Chat Repeat uses it so the same src restarts instead of becoming a no-op.',
+  },
+  {
+    name: 'remote',
+    type: 'RemoteMediaController',
+    badge: 'audio only',
+    description:
+      'Uses authoritative daemon transport/time/volume while src remains a generic network audio sink.',
   },
   {
     name: 'onEnded',
