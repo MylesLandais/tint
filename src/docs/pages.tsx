@@ -14,9 +14,11 @@ import { MediaPrimitivesDoc } from './MediaPrimitivesDoc'
 import { PanelDoc } from './PanelDoc'
 import { ButtonDoc } from './ButtonDoc'
 import { SettingsPopoutDoc } from './SettingsPopoutDoc'
+import { ScrollingLabelDoc } from './ScrollingLabelDoc'
 import { SocketDoc } from './SocketDoc'
 import { VideoPlayerDoc } from './VideoPlayerDoc'
 import { FeedDoc } from './feed/FeedDoc'
+import { BoardDoc } from './board/BoardDoc'
 import { ActivityDoc } from './activity/ActivityDoc'
 import { PolicyDoc } from './policy/PolicyDoc'
 import { NotifyDoc } from './notify/NotifyDoc'
@@ -78,10 +80,12 @@ export const DOC_PAGES = {
   'components/panel': PanelDoc,
   'components/button': ButtonDoc,
   'components/settings-popout': SettingsPopoutDoc,
+  'components/scrolling-label': ScrollingLabelDoc,
   'components/dice': DiceDoc,
   'components/icon': IconsDoc,
   'components/theme': ThemeDoc,
   'components/feed': FeedDoc,
+  'components/board': BoardDoc,
   'components/activity': ActivityDoc,
   'components/policy': PolicyDoc,
   'components/notify': NotifyDoc,

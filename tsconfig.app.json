@@ -35,6 +35,7 @@
   "exclude": [
     "src/styles/themes.test.ts",
     "src/components/icon/no-raw-lucide-imports.test.ts",
+    "src/components/scrolling-label/contract.test.ts",
     "src/exports.test.ts",
     "src/vendor/checksums.test.ts",
     "src/vendor/boundary.test.ts",

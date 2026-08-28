@@ -272,6 +272,50 @@
   }
 
   /*
+   * ScrollingLabel: ping-pong marquee over the measured overflow distance
+   * (`--tint-scrolling-label-distance`), which the component stamps inline.
+   * The 1.5s start delay is the animation delay; removing the animation on
+   * hover/focus both pauses and resets the offset to zero so the title stays
+   * readable and clickable, and leaving restarts the delay. `40%/60%/90%`
+   * shares are mirrored in FORWARD_SHARE in ScrollingLabel.tsx.
+   */
+  @keyframes tint-scrolling-label {
+    0% {
+      transform: translateX(0);
+    }
+    35% {
+      transform: translateX(calc(-1 * var(--tint-scrolling-label-distance, 0px)));
+    }
+    55% {
+      transform: translateX(calc(-1 * var(--tint-scrolling-label-distance, 0px)));
+    }
+    90% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  [data-scrolling-label][data-overflowing] [data-scrolling-label-content] {
+    animation: tint-scrolling-label var(--tint-scrolling-label-duration, 6s) linear 1.5s infinite;
+  }
+
+  [data-scrolling-label]:is(:hover, :focus-within) [data-scrolling-label-content] {
+    animation: none;
+  }
+
+  /* No scrolling under reduced motion; the label degrades to a static ellipsis. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-scrolling-label] [data-scrolling-label-content] {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      animation: none;
+    }
+  }
+
+  /*
    * The player keeps its `max-w-*`, radius and margin in fullscreen, so
    * requesting it produced a postcard centred on a black screen. These override
    * utilities, hence `!important` — they lose to Tailwind's layer otherwise.

@@ -229,6 +229,15 @@ const ROUTE_DATA = [
     ],
   },
   {
+    path: 'components/scrolling-label',
+    label: 'Scrolling Label',
+    blurb: 'Single-line text that marquees only when it overflows, pausing and resetting on hover.',
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      ...USAGE_AND_API,
+    ],
+  },
+  {
     path: 'components/settings-popout',
     label: 'Settings Popout',
     blurb: 'A searchable, keyboard-driven picker for player settings and other grouped choices.',
@@ -282,6 +291,15 @@ const ROUTE_DATA = [
     path: 'components/feed',
     label: 'Feed',
     blurb: 'Subscriptions workbench: layout variants, split panes, reader, and narration over a host-owned FeedDocument.',
+    sections: [
+      { id: 'preview', label: 'Workbench' },
+      ...USAGE_AND_API,
+    ],
+  },
+  {
+    path: 'components/board',
+    label: 'Board',
+    blurb: 'Flat board of rich-media widget cards — graphs, tables, and media — packed with DataMasonry or kanban lanes.',
     sections: [
       { id: 'preview', label: 'Workbench' },
       ...USAGE_AND_API,
@@ -369,6 +387,8 @@ export const ROUTE_GROUPS = {
   'components/activity': 'Chat & content',
   'components/policy': 'Data & infra',
   'components/notify': 'Data & infra',
+  'components/board': 'Data & infra',
+  'components/scrolling-label': 'Theming & layout',
   'graph': 'Meta',
 } satisfies Record<DocRoutePath, DocGroup>
 

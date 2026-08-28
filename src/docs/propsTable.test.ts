@@ -224,6 +224,31 @@ const CASES: readonly Case[] = [
     names: ['FeedEntryRowProps'],
   },
   {
+    doc: 'src/docs/ScrollingLabelDoc.tsx',
+    types: 'src/components/scrolling-label/ScrollingLabel.tsx',
+    names: ['ScrollingLabelProps'],
+  },
+  {
+    doc: 'src/docs/board/BoardDoc.tsx',
+    types: 'src/components/board/BoardLayout.tsx',
+    names: ['BoardLayoutProps'],
+  },
+  {
+    doc: 'src/docs/board/BoardDoc.tsx',
+    types: 'src/components/board/BoardCard.tsx',
+    names: ['BoardCardProps'],
+  },
+  {
+    doc: 'src/docs/board/BoardDoc.tsx',
+    types: 'src/components/board/BoardDetail.tsx',
+    names: ['BoardDetailProps'],
+  },
+  {
+    doc: 'src/docs/board/BoardDoc.tsx',
+    types: 'src/components/board/BoardLayoutToggle.tsx',
+    names: ['BoardLayoutToggleProps'],
+  },
+  {
     doc: 'src/docs/activity/ActivityDoc.tsx',
     types: 'src/components/activity/ActivityFeed.tsx',
     names: ['ActivityFeedProps'],

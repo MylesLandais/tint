@@ -452,6 +452,7 @@ src/
   components/theme/            # scheme/theme hooks and controlled toggles
   components/icon/             # Icon / StatusIcon, the size scale, the status registry
   components/dice/             # DiceRoller — a worked example of extending Icon
+  components/scrolling-label/  # single-line label that marquees only on overflow
   components/panel/            # controlled disclosure shell shared by workbench surfaces
   components/editor/           # controlled Tiptap rich-text editor
   components/terminal/         # xterm emulator with a consumer-owned runtime adapter

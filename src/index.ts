@@ -99,6 +99,9 @@ export type { ButtonProps, ButtonSize, ButtonVariant } from './components/button
 export { ProgressBar } from './components/progress'
 export type { ProgressBarProps } from './components/progress'
 
+export { ScrollingLabel } from './components/scrolling-label'
+export type { ScrollingLabelProps } from './components/scrolling-label'
+
 export { Dialog } from './components/dialog'
 export type { DialogProps } from './components/dialog'
 
@@ -342,6 +345,33 @@ export type {
   TextHighlight,
   ViewModeToggleProps,
 } from './components/feed'
+
+export {
+  BoardCard,
+  BoardDetail,
+  BoardLayout,
+  BoardLayoutToggle,
+  applyBoardCommand,
+  cardsForLane,
+  nextBoardRevision,
+} from './components/board'
+export type {
+  BoardCardId,
+  BoardCardKind,
+  BoardCardModel,
+  BoardCardPreview,
+  BoardCardProps,
+  BoardCommand,
+  BoardDetailProps,
+  BoardDocument,
+  BoardId,
+  BoardLane,
+  BoardLaneId,
+  BoardLayoutProps,
+  BoardLayoutToggleProps,
+  BoardLayoutVariant,
+  RevisionToken as BoardRevisionToken,
+} from './components/board'
 
 export {
   DEFAULT_NOTIFICATION_SETTINGS,

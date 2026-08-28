@@ -38,6 +38,8 @@ const IMPORT_SNIPPETS = {
   'components/activity': "import { ActivityFeed } from 'tint/activity'",
   'components/policy': "import { PolicyTable, PolicyEditor, PolicyDryRun } from 'tint/policy'",
   'components/notify': "import { NotificationBell, NotificationList } from 'tint/notify'",
+  'components/board': "import { BoardLayout, BoardCard, BoardDetail } from 'tint/board'",
+  'components/scrolling-label': "import { ScrollingLabel } from 'tint/scrolling-label'",
   'graph': "import { InteractiveGraphView } from 'tint/graph'",
 } satisfies Record<DocRoutePath, string>
 
