@@ -1,14 +1,24 @@
 # tint
 
 Tint is a React component library for media, rich chat, drafting, and interactive
-workbench interfaces. It includes **MediaPlayer** (one entry point for audio and video),
-controlled **AudioInput** and **Chat** components, a WYSIWYG **Editor**, and a
-runtime-agnostic **TerminalConsole**.
+workbench interfaces. Every component is **controlled**: it renders what you pass and
+reports intent back through callbacks. None of them fetch, persist, or own a store.
 
-The documentation site contains an interactive, client-only Chat demo alongside prop tables for
-each component. The research that informed Chat's controlled architecture, accessibility
-contract, and exported TypeScript API lives in the author's personal notes rather than this
-repo.
+Broadly it covers:
+
+- **Media** — `MediaPlayer` (one entry point for audio and video), `VideoPlayer`, the
+  scrubber/volume/waveform primitives underneath them, and `AudioInput`.
+- **Chat and content** — controlled `Chat` primitives, a WYSIWYG `Editor` on Tiptap, a
+  runtime-agnostic `TerminalConsole` on xterm, highlighted code blocks, and the
+  `Feed` / `Activity` reading surfaces.
+- **Data and infra** — `DataTable`, `InteractiveGraphView`, `Board`, telemetry views,
+  `Policy` rule editing, `Notify`, collaboration sessions on Yjs, and auth forms.
+- **Theming and layout** — the `--tint-*` token contract, seven themes, `Panel`,
+  `Button`, and the icon scale.
+
+The documentation site is the reference: every component has a live demo and a prop
+table, and the prop tables are guarded by a test that fails when a component grows a
+prop nobody documented.
 
 ## Installation
 
@@ -53,22 +63,50 @@ Local Traefik exposes it at the repo-specific origin `http://tint.localhost`.
 `http://127.0.0.1:45173` is the direct-upstream diagnostic URL, not the normal
 browser entrypoint.
 
-Open `http://tint.localhost/` for the component index — every documented component
-is linked from there, including `#/components/editor` (the rich-text buffer),
-`#/components/terminal` (the mock PTY-backed terminal), `#/components/auth`,
-`#/components/form` (schema-driven layouts), `#/components/character-card`,
-`#/components/chat`, `#/components/media-player`, `#/components/video-player`,
-`#/components/media` (the primitives the players are built from),
-`#/components/code`, `#/components/panel`, `#/components/settings-popout`,
-`#/components/dice`, `#/components/graph`, `#/components/telemetry`,
-`#/components/audio-input`, `#/components/feed`, `#/components/activity`,
-`#/components/policy`, and `#/components/notify`.
+Open `http://tint.localhost/` for the component index. Rather than listing the routes
+here — where they go stale — see `src/docs/routes.ts`, which is the single registry the
+router, page titles, breadcrumbs, sidebar groups, index cards, and the `⌘K` / `Ctrl-K` search
+palette all read from. Adding an entry there makes a page appear in every one of them at
+once, and the type system will not let you add a route without also adding its page
+component, its sidebar group, and its import snippet.
 
-Doc pages are declared once in `src/docs/routes.ts`; the router, the page title, the
-breadcrumb, and the index cards all read from that list, so a new entry appears
-everywhere at once.
+`#/graph` renders the dependency graph between component packages. It is generated data,
+not a runtime scan — regenerate it with `python3 scripts/gen-docs-graph.py` after adding
+a component or changing what one imports.
 
 Demo video: [Big Buck Bunny](https://test-videos.co.uk/bigbuckbunny/mp4-h264) (MP4 H.264) stored at `public/videos/big-buck-bunny.mp4`.
+
+## Working with the gateway checkout
+
+Tint is consumed by the `Workspace-end` application gateway as a git submodule at
+`third_party/tint`, registered as an npm workspace and pinned to a commit. That means
+there are normally **two checkouts of this repo on a workstation**: this one, where
+library work happens, and the gateway's, which is a pinned copy the web clients build
+against.
+
+The pin is what keeps them honest, so changes flow one way:
+
+1. Make the change here, on a branch, and land it on `main`.
+2. In the gateway, move the submodule to that commit and commit the new gitlink.
+3. Run `npm run check` from the gateway root. It runs `check:tint` first — Tint's own
+   `src/consumer-contract.test.ts` — so an upstream break is reported before any app
+   check muddies it.
+
+Editing inside `third_party/tint` works, since it is a real clone, but anything left
+uncommitted there is invisible to this checkout and easy to lose to a later
+`git submodule update`. If you find changes there, commit them on a branch and push
+before touching the pin.
+
+Two things bite consumers, both because Tint ships TypeScript source rather than a build:
+
+- A consumer's `tsc` compiles our files inside *their* program, under *their*
+  `tsconfig.json` — a different program from the one `npm run build` checks here.
+  `src/consumer-contract.test.ts` exists to catch that gap; run it before bumping the pin.
+- React and `@types/react` must resolve to exactly one copy, or component props produce a
+  wall of "not assignable" errors between two nominally distinct copies of identical types.
+
+The gateway side of this — cloning with submodules, the React pinning rules, and how to
+diagnose both — is documented in that repo at `docs/operations/local-environment.md`.
 
 ## Using the component
 
@@ -435,43 +473,66 @@ Swap to `<Icon icon={Sun} size="sm" />` to stay aligned with the rest of the lib
 src/
   components/media-player/     # unified audio/video MediaPlayer
   components/video-player/     # the immersive video surface MediaPlayer kind="video" delegates to
-  components/media/            # shared scrubber, volume control, waveform, placeholder, and time formatting
+  components/media/            # shared scrubber, volume control, waveform, placeholder, time formatting
   components/audio-input/      # controlled microphone/transcriber seam
   components/settings-popout/  # searchable settings popout
   components/chat/             # controlled chat primitives and rich parts
   components/code/             # highlighted code blocks and tabbed examples
+  components/feed/             # reading surfaces: split pane, reader, highlights, narration
+  components/activity/         # forum-shaped activity feed over threads and posts
+  components/board/            # widget cards packed as masonry or kanban lanes
+  components/policy/           # rule table, editor, and dry-run matching
+  components/notify/           # notification bell, list, and quiet-hours settings
   components/table/            # controlled DataTable and its pure behavior core
-  vendor/tanstack-table-core/  # vendored TanStack table engine
-  components/collab/           # Yjs CollabConfig + createCollabSession
-  vendor/yjs/                  # vendored Yjs v13 CRDT engine
   components/graph/            # controlled node canvas — contracts, adapter, node views
-  vendor/xyflow/               # vendored xyflow graph engine
-  components/telemetry/        # waterfall Gantt, RED metrics, and a graph service map for traces
-  components/form/             # FormLayout, form_inputs, and the submit Promise contract
+  components/telemetry/        # waterfall Gantt, RED metrics, graph service map for traces
+  components/collab/           # Yjs CollabConfig + createCollabSession
+  components/form/             # FormLayout, form inputs, and the submit Promise contract
   components/character-card/   # Tavern Card V2 editor composed on FormLayout
+  components/auth/             # controlled sign-in form and OAuth links
+  components/socket/           # transport-agnostic socket contracts
+  components/editor/           # controlled Tiptap rich-text editor
+  components/terminal/         # xterm emulator with a consumer-owned runtime adapter
+  components/panel/            # controlled disclosure shell shared by workbench surfaces
+  components/badge/ dialog/ context-menu/ progress/ toast/ tree/
+                               # small overlay and feedback chrome, documented as one page
+  components/button/           # the shared button surface, as a component and a bare class
   components/theme/            # scheme/theme hooks and controlled toggles
   components/icon/             # Icon / StatusIcon, the size scale, the status registry
   components/dice/             # DiceRoller — a worked example of extending Icon
   components/scrolling-label/  # single-line label that marquees only on overflow
-  components/panel/            # controlled disclosure shell shared by workbench surfaces
-  components/editor/           # controlled Tiptap rich-text editor
-  components/terminal/         # xterm emulator with a consumer-owned runtime adapter
-  components/auth/             # controlled sign-in form and OAuth links
+  vendor/tanstack-table-core/  # vendored TanStack table engine
+  vendor/yjs/                  # vendored Yjs v13 CRDT engine
+  vendor/xyflow/               # vendored xyflow graph engine
   auth/client/                 # transport-agnostic session client
   lib/                         # internal cross-component helpers — not a public subpath
   styles/contract.css          # the annotated token contract
   styles/themes/               # tint, solarized, gruvbox, catppuccin ×4
-  docs/                        # component docs and demos
+  docs/                        # the docs site: one page per component
   docs/routes.ts               # the docs route registry — add a page here first
+  docs/shell/                  # docs chrome: sidebar shell and the search palette
+  docs/components/             # shared page furniture (DocsPage, PropsTable, CodeBlock)
+  docs/fixtures/               # demo documents for the workbench pages; not published
+  docs/generated/              # generated data — regenerate, never hand-edit
   index.ts                     # library exports
+scripts/gen-docs-graph.py      # regenerates docs/generated/docsGraph.ts
 public/videos/                 # demo media assets
 ```
 
+Neither `src/docs` nor any test file is published — see `files` in `package.json`.
+
 ## Scripts
 
-| Command         | Description              |
-| --------------- | ------------------------ |
-| `npm run dev`   | Start the docs site      |
-| `npm run build` | Typecheck and build docs |
-| `npm run lint`  | Lint the project         |
-| `npm test`      | Run the test suite       |
+| Command                              | Description                                  |
+| ------------------------------------ | -------------------------------------------- |
+| `npm run dev`                        | Start the docs site                          |
+| `npm run build`                      | Typecheck and build docs                     |
+| `npm run lint`                       | Lint the project                             |
+| `npm test`                           | Run the test suite                           |
+| `python3 scripts/gen-docs-graph.py`  | Regenerate the component dependency graph    |
+
+Several tests are guards rather than unit tests, and are worth knowing by name:
+`consumer-contract.test.ts` typechecks every entry point the way a host does,
+`propsTable.test.ts` fails when a component grows an undocumented prop,
+`componentGraph.test.ts` fails when the generated graph drifts from the real imports,
+and `routing.test.tsx` covers the route registry itself.
