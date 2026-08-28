@@ -6,9 +6,8 @@
  * must not grow a global mutation store. All writes are mock; no server.
  */
 
+import { DEMO_FEED, DEMO_POLICY } from '../fixtures/demoDocuments'
 import {
-  DEMO_FEED,
-  DEMO_POLICY,
   nextFeedRevision,
   type Channel,
   type FeedDocument,

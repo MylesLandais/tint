@@ -1,5 +1,5 @@
 import { useMemo, useState, useSyncExternalStore } from 'react'
-import { DEMO_NOTIFY_SETTINGS } from '../../components/feed'
+import { DEMO_NOTIFY_SETTINGS } from '../fixtures/demoDocuments'
 import {
   NotificationBell,
   NotificationList,

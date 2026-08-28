@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { sortActivityEvents } from './contracts'
-import { DEMO_ACTIVITY } from '../feed/fixtures'
+import { DEMO_ACTIVITY } from '../../docs/fixtures/demoDocuments'
 
 describe('sortActivityEvents', () => {
   it('ranks hot, new, and top differently', () => {

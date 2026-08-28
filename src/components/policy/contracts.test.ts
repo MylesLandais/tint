@@ -7,8 +7,8 @@ import {
   type PolicyDocument,
   type PolicyRule,
 } from './contracts'
-import { DEMO_FEED } from '../feed/fixtures'
-import { DEMO_POLICY } from '../feed/fixtures'
+import { DEMO_FEED } from '../../docs/fixtures/demoDocuments'
+import { DEMO_POLICY } from '../../docs/fixtures/demoDocuments'
 
 const builderRule = DEMO_POLICY.rules.find((rule) => rule.id === 'pol-mk-cache')!
 

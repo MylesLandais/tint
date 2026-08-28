@@ -4,7 +4,7 @@ import {
   type ActivitySort,
   type ForumPost,
 } from '../../components/activity'
-import { DEMO_ACTIVITY } from '../../components/feed'
+import { DEMO_ACTIVITY } from '../fixtures/demoDocuments'
 import { Badge } from '../../components/badge'
 import { CodeBlock } from '../components/CodeBlock'
 import { DocsPage, DocsPreview, DocsSection } from '../components/DocsPage'

@@ -4,7 +4,7 @@ import {
   deriveNotifications,
   isInQuietHours,
 } from './contracts'
-import { DEMO_FEED } from '../feed/fixtures'
+import { DEMO_FEED } from '../../docs/fixtures/demoDocuments'
 
 describe('isInQuietHours', () => {
   it('handles a same-day window', () => {

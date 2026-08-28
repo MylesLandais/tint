@@ -297,10 +297,6 @@ export {
 export type * from './components/character-card'
 
 export {
-  DEMO_ACTIVITY,
-  DEMO_FEED,
-  DEMO_NOTIFY_SETTINGS,
-  DEMO_POLICY,
   FeedEntryCard,
   FeedEntryRow,
   FeedLayout,

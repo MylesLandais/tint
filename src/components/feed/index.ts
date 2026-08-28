@@ -22,13 +22,6 @@ export {
   sourcesForChannel,
 } from './contracts'
 
-export {
-  DEMO_ACTIVITY,
-  DEMO_FEED,
-  DEMO_NOTIFY_SETTINGS,
-  DEMO_POLICY,
-} from './fixtures'
-
 export { FeedEntryCard } from './FeedEntryCard'
 export type { FeedEntryCardProps } from './FeedEntryCard'
 

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
+import { DEMO_FEED } from '../fixtures/demoDocuments'
 import {
-  DEMO_FEED,
   FeedLayout,
   NarrationTransport,
   ReaderPane,
