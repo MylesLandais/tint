@@ -299,10 +299,12 @@ const ROUTE_DATA = [
   {
     path: 'components/calendar',
     label: 'Calendar',
-    blurb: 'Controlled month grid — single-day events in their cell, multi-day events packed into lanes as continuous bars.',
+    blurb: 'Controlled month grid, an iCalendar parser with RRULE expansion, and a CalDAV client.',
     sections: [
       { id: 'preview', label: 'Workbench' },
-      ...USAGE_AND_API,
+      { id: 'usage', label: 'Usage' },
+      { id: 'ical', label: 'iCalendar and CalDAV' },
+      { id: 'api', label: 'API' },
     ],
   },
   {

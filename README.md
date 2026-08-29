@@ -11,8 +11,9 @@ Broadly it covers:
 - **Chat and content** — controlled `Chat` primitives, a WYSIWYG `Editor` on Tiptap, a
   runtime-agnostic `TerminalConsole` on xterm, highlighted code blocks, and the
   `Feed` / `Activity` reading surfaces.
-- **Data and infra** — `DataTable`, `InteractiveGraphView`, `Board`, telemetry views,
-  `Policy` rule editing, `Notify`, collaboration sessions on Yjs, and auth forms.
+- **Data and infra** — `DataTable`, `InteractiveGraphView`, `Board`, `Calendar` (with an
+  iCalendar parser and a CalDAV client), telemetry views, `Policy` rule editing, `Notify`,
+  collaboration sessions on Yjs, and auth forms.
 - **Theming and layout** — the `--tint-*` token contract, seven themes, `Panel`,
   `Button`, and the icon scale.
 
@@ -481,6 +482,8 @@ src/
   components/feed/             # reading surfaces: split pane, reader, highlights, narration
   components/activity/         # forum-shaped activity feed over threads and posts
   components/board/            # widget cards packed as masonry or kanban lanes
+  components/calendar/         # month grid, iCalendar (RFC 5545) parsing, RRULE expansion
+  calendar/client/             # CalDAV (RFC 4791) client — transport injected by the host
   components/policy/           # rule table, editor, and dry-run matching
   components/notify/           # notification bell, list, and quiet-hours settings
   components/table/            # controlled DataTable and its pure behavior core

@@ -28,3 +28,27 @@ export type { CalendarMonthViewProps } from './CalendarMonthView'
 
 export { CalendarToolbar } from './CalendarToolbar'
 export type { CalendarToolbarProps } from './CalendarToolbar'
+
+export type { ICalDateValue, ICalEvent, ICalProperty } from './ical'
+export {
+  calendarEventToICal,
+  escapeText,
+  formatICalDate,
+  icalEventToCalendarEvent,
+  parseCalendarEvents,
+  parseContentLine,
+  parseDuration,
+  parseICalDate,
+  parseICalendar,
+  toICalendar,
+  unescapeText,
+  unfoldLines,
+} from './ical'
+
+export type { ByDay, RecurrenceFrequency, RecurrenceRule, RecurrenceWindow } from './recurrence'
+export {
+  expandCalendarEvents,
+  expandICalEvent,
+  expandRecurrence,
+  parseRecurrenceRule,
+} from './recurrence'

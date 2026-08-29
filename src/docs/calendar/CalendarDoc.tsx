@@ -43,6 +43,37 @@ const signature = `type CalendarEvent = {
   payload?: unknown
 }`
 
+const icalCode = `import { parseCalendarEvents, toICalendar } from 'tint/calendar'
+
+// A CalDAV or .ics feed in; CalendarEvent[] out.
+const events = parseCalendarEvents(icsText, { source: 'work' })
+
+// And back out again, ready to PUT.
+const ics = toICalendar(events)`
+
+const recurrenceCode = `import { parseICalendar, expandCalendarEvents } from 'tint/calendar'
+
+// Expansion is always bounded — an RRULE with no COUNT or UNTIL is infinite.
+const instances = expandCalendarEvents(parseICalendar(icsText), {
+  from: new Date('2026-03-01'),
+  to: new Date('2026-03-31'),
+})`
+
+const caldavCode = `import { createCalDavClient, createFetchTransport } from 'tint/calendar-client'
+
+// The client never calls fetch itself; the host owns credentials and proxying.
+const client = createCalDavClient({
+  transport: createFetchTransport({ headers: { Authorization: auth } }),
+  baseUrl: 'https://dav.example.com/',
+  source: 'work',
+})
+
+const [calendar] = await client.listCalendars()
+const events = await client.listEvents(calendar.href, window)
+
+// Writes are ETag-guarded, so a lost race fails instead of clobbering.
+await client.putResource(href, ics, { ifMatch: etag })`
+
 const themingCode = `/* \`source\` is an open string. Tint puts it on the DOM and stops there,
    so a host can colour its own categories without tint knowing them. */
 [data-tint-calendar-event][data-source='proposed'] {
@@ -188,6 +219,72 @@ export function CalendarDoc() {
           categories.
         </p>
         <CodeBlock code={themingCode} language="css" />
+      </DocsSection>
+
+      <DocsSection id="ical" title="iCalendar and CalDAV">
+        <p className="mb-3 text-sm text-tint-muted">
+          The grid renders <code>CalendarEvent</code>s. These layers are how real ones arrive.
+          Both are pure except the transport, and all three are optional — a host with its own
+          sync can ignore them entirely.
+        </p>
+
+        <h3 className="mt-2 mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+          Parsing and serialising
+        </h3>
+        <p className="mb-3 text-sm text-tint-muted">
+          Handles what a real feed actually contains: folded lines, parameters, <code>TEXT</code>{' '}
+          escaping, <code>DATE</code> vs <code>DATE-TIME</code>, UTC, <code>TZID</code> resolved
+          against the runtime's IANA database, and <code>DURATION</code> in place of{' '}
+          <code>DTEND</code>. Not modelled: <code>VTIMEZONE</code> blocks, <code>VALARM</code>,{' '}
+          <code>VFREEBUSY</code>, and attendees.
+        </p>
+        <CodeBlock code={icalCode} />
+
+        <h3 className="mt-6 mb-3 text-lg font-semibold tracking-tight text-tint-ink">Recurrence</h3>
+        <p className="mb-3 text-sm text-tint-muted">
+          <code>RRULE</code> expansion with <code>EXDATE</code>, <code>RDATE</code>, and{' '}
+          <code>RECURRENCE-ID</code> overrides — so "the third Tuesday moved to Wednesday" renders
+          once, in the right place, rather than twice. Supported rule parts:{' '}
+          <code>FREQ</code> (daily/weekly/monthly/yearly), <code>INTERVAL</code>,{' '}
+          <code>COUNT</code>, <code>UNTIL</code>, <code>BYDAY</code> including ordinals like{' '}
+          <code>-1FR</code>, <code>BYMONTHDAY</code>, <code>BYMONTH</code>,{' '}
+          <code>BYSETPOS</code>, and <code>WKST</code>. Anything unhandled is reported on{' '}
+          <code>rule.unsupported</code> rather than silently dropped.
+        </p>
+        <CodeBlock code={recurrenceCode} />
+
+        <DocsCallout variant="note" title="Recurrence follows the event's own clock">
+          <p className="m-0">
+            Expansion happens in the zone <code>DTSTART</code> is anchored to, not the viewer's. A
+            09:00Z series stays at 09:00Z across a daylight-saving change, while a series anchored
+            to <code>TZID=Europe/Oslo</code> stays at 09:00 in Oslo and shifts in UTC. Expanding in
+            local time instead would move every instance after a transition — and make an{' '}
+            <code>EXDATE</code> naming the true instant stop matching.
+          </p>
+        </DocsCallout>
+
+        <h3 className="mt-6 mb-3 text-lg font-semibold tracking-tight text-tint-ink">
+          CalDAV client
+        </h3>
+        <p className="mb-3 text-sm text-tint-muted">
+          Ships as its own entry point, <code>tint/calendar-client</code>, so a host that only
+          renders components never pulls an HTTP client into its bundle. It does principal and
+          calendar-home discovery, time-ranged <code>calendar-query</code> reports, ETag-guarded
+          writes, and <code>ctag</code> polling for cheap change detection.
+        </p>
+        <CodeBlock code={caldavCode} />
+
+        <DocsCallout variant="note" title="Expansion is done locally by default">
+          <p className="m-0">
+            <code>calendar-query</code> can ask a server to expand recurrences, but support is
+            uneven and several widely-deployed servers ignore it or return subtly wrong instances.
+            The client requests raw <code>calendar-data</code> and expands with the code above,
+            which gives the same answer everywhere. Pass <code>expand: true</code> for a server you
+            trust to do it. Note also that CalDAV servers rarely send usable CORS headers, so the
+            normal deployment is a server-side proxy — which is exactly why the transport is
+            injected rather than assumed.
+          </p>
+        </DocsCallout>
       </DocsSection>
 
       <DocsSection id="api" title="API">

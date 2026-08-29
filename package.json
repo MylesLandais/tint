@@ -51,6 +51,7 @@
     "./feed": "./src/components/feed/index.ts",
     "./board": "./src/components/board/index.ts",
     "./calendar": "./src/components/calendar/index.ts",
+    "./calendar-client": "./src/calendar/client/index.ts",
     "./notify": "./src/components/notify/index.ts",
     "./policy": "./src/components/policy/index.ts",
     "./activity": "./src/components/activity/index.ts",
