@@ -19,6 +19,7 @@ import { SocketDoc } from './SocketDoc'
 import { VideoPlayerDoc } from './VideoPlayerDoc'
 import { FeedDoc } from './feed/FeedDoc'
 import { BoardDoc } from './board/BoardDoc'
+import { CalendarDoc } from './calendar/CalendarDoc'
 import { ActivityDoc } from './activity/ActivityDoc'
 import { PolicyDoc } from './policy/PolicyDoc'
 import { NotifyDoc } from './notify/NotifyDoc'
@@ -86,6 +87,7 @@ export const DOC_PAGES = {
   'components/theme': ThemeDoc,
   'components/feed': FeedDoc,
   'components/board': BoardDoc,
+  'components/calendar': CalendarDoc,
   'components/activity': ActivityDoc,
   'components/policy': PolicyDoc,
   'components/notify': NotifyDoc,

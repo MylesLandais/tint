@@ -297,6 +297,15 @@ const ROUTE_DATA = [
     ],
   },
   {
+    path: 'components/calendar',
+    label: 'Calendar',
+    blurb: 'Controlled month grid — single-day events in their cell, multi-day events packed into lanes as continuous bars.',
+    sections: [
+      { id: 'preview', label: 'Workbench' },
+      ...USAGE_AND_API,
+    ],
+  },
+  {
     path: 'components/board',
     label: 'Board',
     blurb: 'Flat board of rich-media widget cards — graphs, tables, and media — packed with DataMasonry or kanban lanes.',
@@ -388,6 +397,7 @@ export const ROUTE_GROUPS = {
   'components/policy': 'Data & infra',
   'components/notify': 'Data & infra',
   'components/board': 'Data & infra',
+  'components/calendar': 'Data & infra',
   'components/scrolling-label': 'Theming & layout',
   'graph': 'Meta',
 } satisfies Record<DocRoutePath, DocGroup>

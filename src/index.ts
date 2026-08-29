@@ -431,3 +431,20 @@ export type {
   ForumPost,
   ForumThread,
 } from './components/activity'
+
+export {
+  CalendarMonthView,
+  CalendarToolbar,
+  buildMonthGrid,
+  buildWeekSpans,
+  dedupeEvents,
+  enumerateDateKeys,
+  eventDateRange,
+  eventsOverlap,
+  fromDateKey,
+  isMultiDay,
+  nextCalendarMonth,
+  previousCalendarMonth,
+  toDateKey,
+} from './components/calendar'
+export type * from './components/calendar'

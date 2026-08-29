@@ -224,6 +224,16 @@ const CASES: readonly Case[] = [
     names: ['FeedEntryRowProps'],
   },
   {
+    doc: 'src/docs/calendar/CalendarDoc.tsx',
+    types: 'src/components/calendar/CalendarMonthView.tsx',
+    names: ['CalendarMonthViewProps'],
+  },
+  {
+    doc: 'src/docs/calendar/CalendarDoc.tsx',
+    types: 'src/components/calendar/CalendarToolbar.tsx',
+    names: ['CalendarToolbarProps'],
+  },
+  {
     doc: 'src/docs/ScrollingLabelDoc.tsx',
     types: 'src/components/scrolling-label/ScrollingLabel.tsx',
     names: ['ScrollingLabelProps'],
