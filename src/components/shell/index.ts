@@ -40,3 +40,4 @@ export type {
 } from "./Workspace";
 
 export { ResponsiveNavRail, type ResponsiveNavRailProps } from "./Shell";
+export { WorkspaceSplit, type WorkspaceSplitProps } from "./WorkspaceSplit";

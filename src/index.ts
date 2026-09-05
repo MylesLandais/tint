@@ -305,6 +305,7 @@ export {
   TopNav,
   WorkspaceHeader,
   WorkspaceTabs,
+  WorkspaceSplit,
   MetadataPanel,
   DetailSheet,
   FilterBar,

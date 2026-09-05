@@ -48,6 +48,7 @@ const ROUTE_DATA = [
       { id: 'preview', label: 'Preview' },
       { id: 'top-nav', label: 'Top navigation' },
       { id: 'workspace', label: 'Workspace content' },
+      { id: 'split-layout', label: 'Resizable layout' },
       ...USAGE_AND_API,
     ],
   },
