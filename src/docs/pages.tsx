@@ -4,6 +4,7 @@ import { ChatComponentDoc } from './chat/ChatComponentDoc'
 import { CollabDoc } from './collab/CollabDoc'
 import { IconsDoc } from './IconsDoc'
 import { MediaPlayerDoc } from './MediaPlayerDoc'
+import { ReleaseChartDoc } from './ReleaseChartDoc'
 import { TableDoc } from './table/TableDoc'
 import { ChromeDoc } from './ChromeDoc'
 import { ThemeDoc } from './ThemeDoc'
@@ -16,6 +17,7 @@ import { ButtonDoc } from './ButtonDoc'
 import { SettingsPopoutDoc } from './SettingsPopoutDoc'
 import { SocketDoc } from './SocketDoc'
 import { VideoPlayerDoc } from './VideoPlayerDoc'
+import { ShellDoc } from './ShellDoc'
 
 /**
  * Path -> page component, kept apart from `routes.ts` so that the route data
@@ -54,7 +56,9 @@ const CharacterCardDoc = lazy(() =>
  * here (or vice versa) is a compile error, so the two can never drift.
  */
 export const DOC_PAGES = {
+  'components/shell': ShellDoc,
   'components/media-player': MediaPlayerDoc,
+  'components/release-chart': ReleaseChartDoc,
   'components/chat': ChatComponentDoc,
   'components/audio-input': AudioInputDoc,
   'components/table': TableDoc,

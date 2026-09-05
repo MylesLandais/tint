@@ -11,6 +11,8 @@ import { DOC_ROUTES, findRoute, hrefFor, type DocRoutePath } from '../routes'
  * copy it. Names come from each component's real `index.ts` exports.
  */
 const IMPORT_SNIPPETS = {
+  'components/release-chart': "import { ReleaseChart } from 'tint/release-chart'",
+  'components/shell': "import { AppShell, NavRail, WorkspaceHeader } from 'tint/shell'",
   'components/media-player': "import { MediaPlayer } from 'tint/media-player'",
   'components/video-player': "import { VideoPlayer } from 'tint/video-player'",
   'components/media': "import { Slider, VolumeControl, Waveform } from 'tint/media'",

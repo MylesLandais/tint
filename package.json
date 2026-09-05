@@ -1,7 +1,7 @@
 {
   "name": "tint",
   "private": true,
-  "version": "0.1.7",
+  "version": "0.2.0",
   "type": "module",
   "description": "Tint \u2014 controlled React components for media and rich chat interfaces.",
   "files": [
@@ -20,7 +20,9 @@
   },
   "exports": {
     ".": "./src/index.ts",
+    "./shell": "./src/components/shell/index.ts",
     "./media-player": "./src/components/media-player/index.ts",
+    "./release-chart": "./src/components/release-chart/index.ts",
     "./video-player": "./src/components/video-player/index.ts",
     "./media": "./src/components/media/index.ts",
     "./code": "./src/components/code/index.ts",
@@ -58,7 +60,8 @@
     "./themes/latte.css": "./src/styles/themes/latte.css",
     "./themes/frappe.css": "./src/styles/themes/frappe.css",
     "./themes/macchiato.css": "./src/styles/themes/macchiato.css",
-    "./themes/mocha.css": "./src/styles/themes/mocha.css"
+    "./themes/mocha.css": "./src/styles/themes/mocha.css",
+    "./scatter-plot": "./src/components/scatter-plot/index.ts"
   },
   "dependencies": {
     "@tiptap/core": "^3.29.2",
