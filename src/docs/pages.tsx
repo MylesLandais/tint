@@ -1,9 +1,11 @@
+import { AnnotationDoc } from './AnnotationDoc'
 import { lazy, type ComponentType } from 'react'
 import type { DocRoutePath } from './routes'
 import { ChatComponentDoc } from './chat/ChatComponentDoc'
 import { CollabDoc } from './collab/CollabDoc'
 import { IconsDoc } from './IconsDoc'
 import { MediaPlayerDoc } from './MediaPlayerDoc'
+import { ReleaseChartDoc } from './ReleaseChartDoc'
 import { TableDoc } from './table/TableDoc'
 import { ChromeDoc } from './ChromeDoc'
 import { ThemeDoc } from './ThemeDoc'
@@ -19,12 +21,14 @@ import { SocketDoc } from './SocketDoc'
 import { VideoPlayerDoc } from './VideoPlayerDoc'
 import { FeedDoc } from './feed/FeedDoc'
 import { BoardDoc } from './board/BoardDoc'
+import { VaultTasksDoc } from './board/VaultTasksDoc'
 import { CalendarDoc } from './calendar/CalendarDoc'
 import { ActivityDoc } from './activity/ActivityDoc'
 import { PolicyDoc } from './policy/PolicyDoc'
 import { NotifyDoc } from './notify/NotifyDoc'
 import { TileMapDoc } from './TileMapDoc'
 import { MediaWorkspaceDoc } from './MediaWorkspaceDoc'
+import { ShellDoc } from './ShellDoc'
 
 /**
  * Path -> page component, kept apart from `routes.ts` so that the route data
@@ -66,9 +70,12 @@ const ClientFrameworkDoc = lazy(() =>
  * here (or vice versa) is a compile error, so the two can never drift.
  */
 export const DOC_PAGES = {
+  'components/annotation': AnnotationDoc,
   'components/media-player': MediaPlayerDoc,
+  'components/release-chart': ReleaseChartDoc,
   'components/tile-map': TileMapDoc,
   'components/media-workspace': MediaWorkspaceDoc,
+  'components/shell': ShellDoc,
   'components/chat': ChatComponentDoc,
   'components/audio-input': AudioInputDoc,
   'components/table': TableDoc,
@@ -95,6 +102,7 @@ export const DOC_PAGES = {
   'components/theme': ThemeDoc,
   'components/feed': FeedDoc,
   'components/board': BoardDoc,
+  'vault-tasks': VaultTasksDoc,
   'components/calendar': CalendarDoc,
   'components/activity': ActivityDoc,
   'components/policy': PolicyDoc,

@@ -33,6 +33,13 @@ const USAGE_AND_API: readonly DocSection[] = [
 ]
 
 const ROUTE_DATA = [
+  { path: 'components/annotation', label: 'Annotation Canvas', blurb: 'Controlled frame geometry, masks and track interpolation for media curation.', sections: [{ id: 'preview', label: 'Preview' }, ...USAGE_AND_API] },
+  {
+    path: 'components/release-chart',
+    label: 'Release Chart',
+    blurb: 'Controlled score-versus-size visualization with supplied values and an accessible data table.',
+    sections: [{ id: 'preview', label: 'Preview' }, { id: 'api', label: 'API' }],
+  },
   {
     path: 'components/media-player',
     label: 'Media Player',
@@ -64,6 +71,12 @@ const ROUTE_DATA = [
     path: 'components/media-workspace',
     label: 'Gateway Media',
     blurb: 'Media discovery workspace with release evaluation, indexer status, selection, and preview queue actions.',
+    sections: [{ id: 'preview', label: 'Preview' }, ...USAGE_AND_API],
+  },
+  {
+    path: 'components/shell',
+    label: 'Shell',
+    blurb: 'Application chrome primitives for navigation, workspace context, status, and responsive layouts.',
     sections: [{ id: 'preview', label: 'Preview' }, ...USAGE_AND_API],
   },
   {
@@ -350,6 +363,15 @@ const ROUTE_DATA = [
     ],
   },
   {
+    path: 'vault-tasks',
+    label: 'Vault Sprint Board',
+    blurb: 'Open journal items extracted from the Obsidian daily notes onto kanban lanes, with triage that survives regeneration.',
+    sections: [
+      { id: 'preview', label: 'Workbench' },
+      { id: 'usage', label: 'Usage' },
+    ],
+  },
+  {
     path: 'components/activity',
     label: 'Activity',
     blurb: 'Digg-style ranked activity stream with optional forum-thread expansion.',
@@ -393,7 +415,7 @@ export type DocRoutePath = (typeof ROUTE_DATA)[number]['path']
  */
 export const GROUPED_ROUTE_MEMBERS = {
   'components/chrome': ['badge', 'context-menu', 'dialog', 'progress', 'toast', 'tree'],
-  'components/client-framework': ['identity', 'surface', 'status', 'navigation', 'menu', 'media-assets', 'charts', 'workspace-grid', 'release-chart'],
+  'components/client-framework': ['identity', 'surface', 'status', 'navigation', 'menu', 'media-assets', 'charts', 'workspace-grid', 'release-chart', 'scatter-plot'],
 } satisfies Partial<Record<DocRoutePath, string[]>>
 
 /**
@@ -406,8 +428,11 @@ export type DocGroup = (typeof DOC_GROUPS)[number]
 
 export const ROUTE_GROUPS = {
   'components/media-player': 'Media',
+  'components/release-chart': 'Media',
   'components/tile-map': 'Media',
   'components/media-workspace': 'Data & infra',
+  'components/annotation': 'Data & infra',
+  'components/shell': 'Theming & layout',
   'components/video-player': 'Media',
   'components/media': 'Media',
   'components/audio-input': 'Media',
@@ -436,6 +461,7 @@ export const ROUTE_GROUPS = {
   'components/policy': 'Data & infra',
   'components/notify': 'Data & infra',
   'components/board': 'Data & infra',
+  'vault-tasks': 'Data & infra',
   'components/calendar': 'Data & infra',
   'components/scrolling-label': 'Theming & layout',
   'graph': 'Meta',

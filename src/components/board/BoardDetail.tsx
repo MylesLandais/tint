@@ -6,6 +6,7 @@ const KIND_LABEL: Record<BoardCardKind, string> = {
   graph: 'GRAPH',
   table: 'TABLE',
   media: 'MEDIA',
+  task: 'TASK',
 }
 
 export type BoardDetailProps = Omit<HTMLAttributes<HTMLElement>, 'title'> & {
@@ -59,7 +60,14 @@ export function BoardDetail({
           <p className="m-0 text-[0.625rem] font-semibold tracking-[0.14em] text-tint-muted uppercase">
             {KIND_LABEL[card.kind]}
           </p>
-          <h2 className="m-0 mt-0.5 truncate text-sm font-semibold text-tint-ink">{card.title}</h2>
+          <h2
+            className={cn(
+              'm-0 mt-0.5 text-sm font-semibold text-tint-ink',
+              card.kind === 'task' ? 'break-words' : 'truncate',
+            )}
+          >
+            {card.title}
+          </h2>
         </div>
       </header>
       <div data-tint-board-detail-body="" className="min-h-0 flex-1 overflow-auto">

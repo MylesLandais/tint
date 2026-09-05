@@ -18,6 +18,7 @@ const KIND_LABEL: Record<BoardCardKind, string> = {
   graph: 'GRAPH',
   table: 'TABLE',
   media: 'MEDIA',
+  task: 'TASK',
 }
 
 /**
@@ -67,7 +68,18 @@ export function BoardCard({
           <p className="m-0 text-[0.625rem] font-semibold tracking-[0.14em] text-tint-muted uppercase">
             {KIND_LABEL[card.kind]}
           </p>
-          <h3 className="m-0 mt-1 truncate text-sm font-semibold text-tint-ink">{card.title}</h3>
+          {/* Widget titles are labels and truncate; a task title is a sentence,
+              and a lane of clipped sentences cannot be triaged. */}
+          <h3
+            className={cn(
+              'm-0 mt-1 text-sm text-tint-ink',
+              card.kind === 'task'
+                ? 'font-medium break-words'
+                : 'truncate font-semibold',
+            )}
+          >
+            {card.title}
+          </h3>
         </div>
         {actions ? <div className="shrink-0">{actions}</div> : null}
       </header>

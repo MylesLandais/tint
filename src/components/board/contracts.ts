@@ -10,8 +10,15 @@ export type BoardCardId = string
 export type BoardLaneId = string
 export type RevisionToken = string
 
-/** Shipped widget kinds. Hosts extend via `renderPreview` / `renderDetail`. */
-export type BoardCardKind = 'graph' | 'table' | 'media'
+/**
+ * Shipped widget kinds. Hosts extend via `renderPreview` / `renderDetail`.
+ *
+ * `task` has no live surface of its own — it is a unit of work whose detail is
+ * text the host supplies. It is a real member rather than a `payload` flavour
+ * of another kind because the kind label is user-visible, and a task card
+ * reading GRAPH is worse than a wider union.
+ */
+export type BoardCardKind = 'graph' | 'table' | 'media' | 'task'
 
 export type BoardLane = {
   id: BoardLaneId

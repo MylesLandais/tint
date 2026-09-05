@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.2.0",
   "type": "module",
-  "description": "Tint — controlled React components for media and rich chat interfaces.",
+  "description": "Tint \u2014 controlled React components for media and rich chat interfaces.",
   "files": [
     "src",
     "!src/docs",
@@ -21,11 +21,8 @@
   },
   "exports": {
     ".": "./src/index.ts",
-<<<<<<< HEAD
     "./client": "./src/client/index.ts",
-=======
     "./shell": "./src/components/shell/index.ts",
->>>>>>> origin/main
     "./media-player": "./src/components/media-player/index.ts",
     "./release-chart": "./src/components/release-chart/index.ts",
     "./video-player": "./src/components/video-player/index.ts",
@@ -82,7 +79,8 @@
     "./themes/frappe.css": "./src/styles/themes/frappe.css",
     "./themes/macchiato.css": "./src/styles/themes/macchiato.css",
     "./themes/mocha.css": "./src/styles/themes/mocha.css",
-    "./scatter-plot": "./src/components/scatter-plot/index.ts"
+    "./scatter-plot": "./src/components/scatter-plot/index.ts",
+    "./annotation": "./src/components/annotation/index.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

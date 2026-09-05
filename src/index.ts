@@ -12,8 +12,8 @@ export type { MediaSize } from './components/media-player'
 export { TileMapViewport, canEnter, createMockExplorationClient, createPokeforceExplorationClient, createMockTileMap, movePoint } from './components/tile-map'
 export { createPokeforceTileMap } from './components/tile-map'
 export type { ExplorationClient, ExplorationSnapshot, PokeforceChunk, PokeforceMapPack, PokeforceMapRecord, TileCell, TileEntity, TileMapDocument, TileMapMove, TileMapViewportProps, TileTerrain } from './components/tile-map'
-export { MediaWorkspace } from './components/media-workspace'
-export type { MediaRelease, MediaWorkspaceProps } from './components/media-workspace'
+export { EventReviewControls, MediaWorkspace } from './components/media-workspace'
+export type { EventReviewControlsProps, EventReviewOption, MediaRelease, MediaWorkspaceProps } from './components/media-workspace'
 export type {
   MediaPlayerAudioProps,
   MediaPlayerProps,
@@ -598,3 +598,41 @@ export type {
   BrowserAudioEnvironment,
   BrowserMidnight128Runtime,
 } from './components/audio-react/browserMidnight128Runtime'
+
+export { AnnotationCanvas, interpolateGeometry, splitTrack, joinTracks } from './components/annotation'
+export type { AnnotationCanvasProps, AnnotationRegion, AnnotationTool, RegionGeometry } from './components/annotation'
+export {
+  CommandPalette,
+  ErrorBanner,
+  LoadingState,
+  NavRail,
+  StatusBar,
+  WorkspaceHeader,
+  TopNav,
+  WorkspaceTabs,
+  MetadataPanel,
+  DetailSheet,
+  FilterBar,
+  ResponsiveNavRail,
+} from './components/shell'
+export type {
+  CommandPaletteItem,
+  CommandPaletteProps,
+  ErrorBannerProps,
+  LoadingStateProps,
+  NavGroup,
+  NavRailItem,
+  NavRailProps,
+  StatusItem,
+  ConnectionState,
+  ConnectionStateValue,
+  StatusBarProps,
+  WorkspaceBreadcrumb,
+  WorkspaceHeaderProps,
+  TopNavProps,
+  WorkspaceTab,
+  WorkspaceTabsProps,
+  MetadataPanelProps,
+  ResponsiveNavRailProps,
+} from './components/shell'
+export { ScatterPlot } from './components/scatter-plot'
