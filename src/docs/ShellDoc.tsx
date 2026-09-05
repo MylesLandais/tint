@@ -4,6 +4,7 @@ import { Icon } from "../components/icon";
 import {
   AppShell,
   WorkspaceTabs,
+  WorkspaceSplit,
   MetadataPanel,
   DetailSheet,
   FilterBar,
@@ -77,6 +78,7 @@ export function ShellDoc() {
   const [tab, setTab] = useState("info"),
     [detailOpen, setDetailOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [toolsWidth, setToolsWidth] = useState(200);
   return (
     <DocsPage
       route="components/shell"
@@ -257,6 +259,31 @@ export function ShellDoc() {
           WorkspaceTabs uses arrow, Home and End keys. DetailSheet shares
           Dialog’s focus and Escape contract. ResponsiveNavRail takes mobileOpen
           and onMobileOpenChange, showing a navigation drawer below 768px.
+        </p>
+      </DocsSection>
+      <DocsSection id="split-layout" title="Resizable workspace layout">
+        <DocsDemo code={`import { WorkspaceSplit } from 'tint/shell'
+
+<WorkspaceSplit size={toolsWidth} onSizeChange={setToolsWidth}
+  minSize={120} maxSize={320} label="Resize tools"
+  first={<Tools />} second={<Canvas />} />`}>
+          <WorkspaceSplit size={toolsWidth} onSizeChange={setToolsWidth}
+            minSize={120} maxSize={320} label="Resize tools" style={{height: 220}}
+            first={<div className="bg-tint-panel p-4">Domain tools</div>}
+            second={<div className="bg-tint-surface p-4">Workspace canvas</div>} />
+        </DocsDemo>
+        <p>
+          Nest WorkspaceSplit to compose sidebars, inspectors and bottom docks.
+          The host owns sizes, workspace identity, storage and domain content.
+          Set direction="vertical" for stacked panes and primary="second" for
+          a fixed bottom or right pane. Size, minSize and maxSize are pixels;
+          give the container enough room for its fixed pane and a 5px separator.
+          Each pane scrolls when its content exceeds the available space.
+        </p>
+        <p>
+          Drag a separator or focus it and use the arrow keys (10px), Shift with
+          arrows (50px), Home (minimum), or End (maximum). Layout restoration
+          updates controlled sizes without remounting pane content.
         </p>
       </DocsSection>
       <DocsFooter />
