@@ -158,6 +158,32 @@ describe('MediaPlayer (audio)', () => {
 
     play.mockRestore()
   })
+
+  it('uses daemon state and callbacks in remote-control mode', () => {
+    const onPause = vi.fn()
+    const onSeek = vi.fn()
+    render(
+      <MediaPlayer
+        kind="audio"
+        src="/api/player/output.wav"
+        label="Remote track"
+        remote={{
+          playing: true,
+          currentTime: 42,
+          duration: 180,
+          volume: 0.7,
+          onPlay: vi.fn(),
+          onPause,
+          onSeek,
+          onVolumeChange: vi.fn(),
+        }}
+      />,
+    )
+
+    expect(screen.getByText('0:42')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Pause Remote track' }))
+    expect(onPause).toHaveBeenCalledOnce()
+  })
 })
 
 describe('MediaPlayer (video)', () => {

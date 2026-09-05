@@ -3,7 +3,10 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
-  plugins: [react()],
+  // The parent workspace hosts Vite 6 consumers while Tint uses Vite 8. At
+  // runtime Vitest accepts the standard plugin contract; only the duplicate
+  // nominal Vite types disagree when this submodule is built in the workspace.
+  plugins: [react() as never],
   resolve: {
     alias: {
       '@': path.resolve(import.meta.dirname, './src'),

@@ -21,7 +21,11 @@
   },
   "exports": {
     ".": "./src/index.ts",
+<<<<<<< HEAD
     "./client": "./src/client/index.ts",
+=======
+    "./shell": "./src/components/shell/index.ts",
+>>>>>>> origin/main
     "./media-player": "./src/components/media-player/index.ts",
     "./release-chart": "./src/components/release-chart/index.ts",
     "./video-player": "./src/components/video-player/index.ts",
@@ -77,7 +81,8 @@
     "./themes/latte.css": "./src/styles/themes/latte.css",
     "./themes/frappe.css": "./src/styles/themes/frappe.css",
     "./themes/macchiato.css": "./src/styles/themes/macchiato.css",
-    "./themes/mocha.css": "./src/styles/themes/mocha.css"
+    "./themes/mocha.css": "./src/styles/themes/mocha.css",
+    "./scatter-plot": "./src/components/scatter-plot/index.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

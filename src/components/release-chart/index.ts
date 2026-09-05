@@ -1,1 +1,1 @@
-export { ReleaseChart } from './ReleaseChart'
+export { ReleaseChart } from "./ReleaseChart";

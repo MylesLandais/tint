@@ -41,6 +41,19 @@ type MediaPlayerBaseProps = {
   onNext?: () => void
 }
 
+/** Authoritative transport supplied by a remote playback daemon. */
+export type RemoteMediaController = {
+  playing: boolean
+  currentTime: number
+  duration: number
+  volume: number
+  muted?: boolean
+  onPlay: () => void
+  onPause: () => void
+  onSeek: (positionSeconds: number) => void
+  onVolumeChange: (level: number) => void
+}
+
 export type MediaPlayerAudioProps = MediaPlayerBaseProps & {
   kind: 'audio'
   /** Optional artist, speaker, or source shown above the title. */
@@ -59,6 +72,11 @@ export type MediaPlayerAudioProps = MediaPlayerBaseProps & {
    * same `src` restarts instead of becoming a no-op.
    */
   playbackNonce?: number
+  /**
+   * Make the chrome a remote control while `src` remains a generic network
+   * audio sink. Provider identities, SDKs, and credentials stay server-side.
+   */
+  remote?: RemoteMediaController
   onEnded?: () => void
 }
 
@@ -133,25 +151,79 @@ function MediaPlayerAudio(props: MediaPlayerAudioProps) {
     onNext,
     playing: playingOverride,
     playbackNonce,
+    remote,
     onEnded,
   } = props
 
   const rootRef = useRef<HTMLDivElement>(null)
   const mediaElementRef = useRef<HTMLMediaElement | null>(null)
+  const lastAudibleVolumeRef = useRef(1)
   const setMediaRef = useCallback((element: HTMLAudioElement | HTMLVideoElement | null) => {
     mediaElementRef.current = element
   }, [])
 
-  const { state, actions, mediaEventHandlers } = useMediaPlayback(mediaElementRef, {
+  const { state, actions: localActions, mediaEventHandlers } = useMediaPlayback(mediaElementRef, {
     src,
     durationHint,
     onPlay,
     onPause,
     onEnded,
-    playing: playingOverride,
+    playing: remote ? undefined : playingOverride,
     playbackNonce,
   })
-  const { playing, currentTime, duration, volume, muted, buffering, failed } = state
+  const playing = remote?.playing ?? state.playing
+  const currentTime = remote?.currentTime ?? state.currentTime
+  const duration = remote?.duration ?? state.duration
+  const volume = remote?.volume ?? state.volume
+  const muted = remote?.muted ?? state.muted
+  const { buffering, failed } = state
+  const startNetworkSink = useCallback(() => {
+    try {
+      const attempt = mediaElementRef.current?.play()
+      void attempt?.catch(() => undefined)
+    } catch {
+      // Browsers may reject programmatic playback until the first gesture.
+    }
+  }, [])
+  useEffect(() => {
+    if (!remote || !mediaElementRef.current) return
+    const element = mediaElementRef.current
+    const level = Math.min(Math.max(remote.volume, 0), 1)
+    element.volume = level
+    if (level > 0) lastAudibleVolumeRef.current = level
+    if (remote.playing) {
+      // A direct transport click satisfies autoplay policy; state arriving
+      // from another controller may still require one local user gesture.
+      startNetworkSink()
+    } else {
+      element.pause()
+    }
+  }, [remote?.playing, remote?.volume, startNetworkSink])
+  const actions = remote
+    ? {
+        toggle: () => {
+          if (remote.playing) {
+            mediaElementRef.current?.pause()
+            remote.onPause()
+          } else {
+            // This user gesture unlocks the generic network audio sink under
+            // browser autoplay policies; the daemon remains authoritative.
+            startNetworkSink()
+            remote.onPlay()
+          }
+        },
+        seek: (percentage: number) => {
+          if (remote.duration > 0) remote.onSeek((percentage / 100) * remote.duration)
+        },
+        changeVolume: (percentage: number) => {
+          const level = percentage / 100
+          if (mediaElementRef.current) mediaElementRef.current.volume = level
+          if (level > 0) lastAudibleVolumeRef.current = level
+          remote.onVolumeChange(level)
+        },
+        toggleMute: () => remote.onVolumeChange(remote.muted ? lastAudibleVolumeRef.current : 0),
+      }
+    : localActions
 
   const artwork = props.artwork
   const [artworkFailed, setArtworkFailed] = useState(false)
