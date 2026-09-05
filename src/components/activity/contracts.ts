@@ -3,7 +3,9 @@
  *
  * Activity is a separate document from FeedDocument: different rows, different sort,
  * not a density toggle on the same list.
- */
+*/
+
+import type { Identity } from '../identity'
 
 export type ActivityId = string
 export type RevisionToken = string
@@ -29,6 +31,7 @@ export type ActivityEvent = {
   shareCount: number
   /** Source / author attribution line. */
   attribution: string
+  actor?: Identity
   sourceId?: string
   entryId?: string
   /** When set, the activity page can expand a Level1Techs-shaped thread. */
@@ -59,7 +62,7 @@ export type ForumThread = {
 export type ForumPost = {
   id: string
   threadId: string
-  author: string
+  author: Identity | string
   createdAt: string
   body: string
   depth: number

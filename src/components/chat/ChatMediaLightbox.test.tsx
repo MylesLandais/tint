@@ -60,7 +60,7 @@ describe('ChatMediaLightbox', () => {
     fireEvent.keyDown(document, { key: 'Escape' })
     expect(onClose).toHaveBeenCalledTimes(2)
 
-    const backdrop = document.querySelector('[data-chat-lightbox]')
+    const backdrop = document.querySelector('[data-tint-media-lightbox]')
     expect(backdrop).toBeTruthy()
     fireEvent.mouseDown(backdrop!)
     expect(onClose).toHaveBeenCalledTimes(3)

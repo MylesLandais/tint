@@ -1,17 +1,26 @@
 export { formatTime, MediaPlaceholder, Slider, VolumeControl, Waveform } from './components/media'
+export { ReleaseChart } from './components/release-chart'
 export type {
   MediaPlaceholderProps,
   SliderProps,
   VolumeControlProps,
   WaveformProps,
 } from './components/media'
-export { MediaPlayer } from './components/media-player'
+export { MediaPlayer, PlaybackQueue } from './components/media-player'
 export { MEDIA_SIZES, MEDIA_SIZE_MD_MAX_REM, MEDIA_SIZE_SM_MAX_REM } from './components/media-player'
 export type { MediaSize } from './components/media-player'
+export { TileMapViewport, canEnter, createMockExplorationClient, createPokeforceExplorationClient, createMockTileMap, movePoint } from './components/tile-map'
+export { createPokeforceTileMap } from './components/tile-map'
+export type { ExplorationClient, ExplorationSnapshot, PokeforceChunk, PokeforceMapPack, PokeforceMapRecord, TileCell, TileEntity, TileMapDocument, TileMapMove, TileMapViewportProps, TileTerrain } from './components/tile-map'
+export { MediaWorkspace } from './components/media-workspace'
+export type { MediaRelease, MediaWorkspaceProps } from './components/media-workspace'
 export type {
   MediaPlayerAudioProps,
   MediaPlayerProps,
   MediaPlayerVideoProps,
+  PlaybackQueueItem,
+  PlaybackQueueProps,
+  PlaybackQueueStatus,
 } from './components/media-player'
 export { VideoPlayer } from './components/video-player'
 export type { VideoPlayerProps } from './components/video-player'
@@ -254,7 +263,7 @@ export {
   TextField,
   ToggleField,
   appendAtPath,
-  createAuthFormSchema,
+  createCredentialFormSchema,
   createFormSubmitEnvelope,
   createIdempotencyKey,
   createMemoryFormTransport,
@@ -374,11 +383,14 @@ export {
   NotificationBell,
   NotificationList,
   NotificationSettingsPanel,
-  deriveNotifications,
+  deriveFeedNotifications,
   isInQuietHours,
 } from './components/notify'
 export type {
   Notification,
+  NotificationAction,
+  NotificationTone,
+  FeedNotification,
   NotificationBellProps,
   NotificationKind,
   NotificationListProps,
@@ -464,3 +476,125 @@ export {
   unfoldLines,
 } from './components/calendar'
 export type * from './components/calendar'
+
+export { Avatar, AvatarGroup } from './components/identity'
+export type * from './components/identity'
+export { Card, Surface } from './components/surface'
+export type * from './components/surface'
+export { ConnectionStatus, EmptyState, ErrorState, Skeleton } from './components/status'
+export type * from './components/status'
+export { AppShell, Breadcrumbs, NavigationList } from './components/navigation'
+export type * from './components/navigation'
+export { Menu, Popover, Tabs } from './components/menu'
+export type * from './components/menu'
+export { GalleryGrid, MediaLightbox, UploadDropzone, UploadQueue } from './components/media-assets'
+export type * from './components/media-assets'
+export { BarChart, MetricCard, TimeSeriesChart, chartValue } from './components/charts'
+export type * from './components/charts'
+export { WorkspaceGrid, applyWorkspaceCommand } from './components/workspace-grid'
+export type * from './components/workspace-grid'
+
+export { compileTransition } from './components/dj/transitionCompiler'
+export { applyDJSetCommand, generateAutoTransitions } from './components/dj/commands'
+export { parseDJSet, serializeDJSet } from './components/dj/serialization'
+export type * from './components/dj/contracts'
+
+export {
+  beatToPixel,
+  createTimelineViewport,
+  pixelToBeat,
+  timelineVisibleRange,
+  withTimelineScroll,
+  withTimelineZoom,
+} from './components/timeline/viewport'
+export { BeatGridOverlay } from './components/timeline/BeatGridOverlay'
+export type { BeatGridOverlayProps } from './components/timeline/BeatGridOverlay'
+export { TransitionRegion } from './components/timeline/TransitionRegion'
+export type { TransitionRegionProps } from './components/timeline/TransitionRegion'
+export { WaveformCanvas } from './components/timeline/WaveformCanvas'
+export type { WaveformCanvasProps } from './components/timeline/WaveformCanvas'
+export { AutomationLane } from './components/timeline/AutomationLane'
+export type { AutomationLaneProps } from './components/timeline/AutomationLane'
+export type * from './components/timeline/contracts'
+
+export { DualWaveform } from './components/dj/DualWaveform'
+export type {
+  DualWaveformProps,
+  DualWaveformTrack,
+  DualWaveformTransition,
+} from './components/dj/DualWaveform'
+export { TransitionPresetPicker } from './components/dj/TransitionPresetPicker'
+export type { TransitionPresetPickerProps } from './components/dj/TransitionPresetPicker'
+export { TransitionAuditionControls } from './components/dj/TransitionAuditionControls'
+export type {
+  TransitionAuditionControlsProps,
+  TransitionAuditionState,
+} from './components/dj/TransitionAuditionControls'
+
+export { AudioEngineProvider, useAudioEngine } from './components/audio-engine/AudioEngineProvider'
+export type {
+  AudioEngineBinding,
+  AudioEngineProviderProps,
+} from './components/audio-engine/AudioEngineProvider'
+export {
+  createAudioEngineStore,
+  probeAudioCapabilities,
+} from './components/audio-engine/store'
+export type {
+  AudioCapabilities,
+  AudioCapabilityEnvironment,
+  AudioEngineBackend,
+  AudioEngineDiagnostics,
+  AudioEngineSnapshot,
+  AudioEngineStore,
+  CreateAudioEngineStoreOptions,
+} from './components/audio-engine/store'
+export { scheduleAutomationLane } from './components/audio-engine/automationScheduler'
+export type {
+  AutomationScheduleTiming,
+  SchedulableAudioParam,
+} from './components/audio-engine/automationScheduler'
+export { WebAudioAuditionBackend } from './components/audio-engine/WebAudioAuditionBackend'
+export type {
+  AuditionBuffers,
+  WebAudioAuditionBackendOptions,
+} from './components/audio-engine/WebAudioAuditionBackend'
+export {
+  AudioBufferRegistry,
+  bindDJSetTransitions,
+} from './components/audio-engine/AudioBufferRegistry'
+export { decodeLocalAudioFiles } from './components/audio-engine/decodeLocalAudioFiles'
+export type {
+  AudioDecoder,
+  DecodedLocalTrack,
+} from './components/audio-engine/decodeLocalAudioFiles'
+export { ImportTracksDialog } from './components/dj/ImportTracksDialog'
+export type { ImportTracksDialogProps } from './components/dj/ImportTracksDialog'
+export { AnalysisQueue } from './components/dj/AnalysisQueue'
+export type {
+  AnalysisQueueItem,
+  AnalysisQueueProps,
+  AnalysisQueueStatus,
+} from './components/dj/AnalysisQueue'
+export { createTrackImportStore } from './components/audio-engine/trackImportStore'
+export type {
+  CreateTrackImportStoreOptions,
+  TrackImportItem,
+  TrackImportSnapshot,
+  TrackImportState,
+  TrackImportStore,
+} from './components/audio-engine/trackImportStore'
+export { TrackImportController } from './components/audio-react/TrackImportController'
+export type { TrackImportControllerProps } from './components/audio-react/TrackImportController'
+export {
+  createMidnight128Set,
+  identifyMidnight128Track,
+} from './components/dj/midnight128'
+export type { ImportedMidnight128Track } from './components/dj/midnight128'
+export { Midnight128Workspace } from './components/audio-react/Midnight128Workspace'
+export type { Midnight128WorkspaceProps } from './components/audio-react/Midnight128Workspace'
+export { createBrowserMidnight128Runtime } from './components/audio-react/browserMidnight128Runtime'
+export type {
+  BrowserAudioEnvironment,
+  BrowserMidnight128Runtime,
+} from './components/audio-react/browserMidnight128Runtime'

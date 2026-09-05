@@ -1,5 +1,6 @@
 import type { HTMLAttributes, ReactNode } from 'react'
 import { Badge } from '../badge'
+import { Surface } from '../surface'
 import { cn } from '../../lib/utils'
 import type { BoardCard as BoardCardModel, BoardCardKind } from './contracts'
 
@@ -37,16 +38,15 @@ export function BoardCard({
   const { preview } = card
 
   return (
-    <article
+    <Surface
+      as="article"
       data-tint-board-card=""
       data-kind={card.kind}
       data-selected={selected || undefined}
-      className={cn(
-        'flex flex-col overflow-hidden rounded-xl border border-tint-border bg-tint-panel text-left shadow-sm transition',
-        selected && 'ring-2 ring-tint-accent',
-        onSelect && 'cursor-pointer hover:bg-tint-surface',
-        className,
-      )}
+      elevation="sm"
+      interactive={Boolean(onSelect)}
+      selected={selected}
+      className={cn('flex flex-col overflow-hidden text-left', onSelect && 'cursor-pointer', className)}
       onClick={onSelect ? () => onSelect(card.id) : undefined}
       onKeyDown={
         onSelect
@@ -99,6 +99,6 @@ export function BoardCard({
 
         {children}
       </div>
-    </article>
+    </Surface>
   )
 }

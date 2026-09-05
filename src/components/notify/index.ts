@@ -1,12 +1,15 @@
 export type {
   Notification,
+  NotificationAction,
   NotificationKind,
+  NotificationTone,
+  FeedNotification,
   NotificationSettings,
   NotifyChannel,
 } from './contracts'
 export {
   DEFAULT_NOTIFICATION_SETTINGS,
-  deriveNotifications,
+  deriveFeedNotifications,
   isInQuietHours,
 } from './contracts'
 

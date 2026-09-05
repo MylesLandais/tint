@@ -51,7 +51,7 @@ function ChannelSelect({
  * Per-source / per-policy channel picker.
  *
  * Settings are a controlled document — the bell derives rows via
- * `deriveNotifications`, so flipping a source to `off` must not leave stale
+ * `deriveFeedNotifications`, so flipping a source to `off` must not leave stale
  * invented toasts in a parallel store.
  */
 export function NotificationSettingsPanel({

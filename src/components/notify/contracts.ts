@@ -1,24 +1,35 @@
 /**
  * Notification read model over FeedDocument matches — never a second inventing store.
  *
- * `deriveNotifications` is pure: the bell only shows rows the feed + settings can explain.
+ * `deriveFeedNotifications` is pure: the bell only shows rows the feed + settings can explain.
  */
 
+import type { Identity } from '../identity'
 import type { FeedDocument, PolicyDisposition } from '../feed/contracts'
 
-export type NotificationKind = 'match' | 'artifact_ready' | 'source_health' | 'system'
+export type NotificationKind = string
+export type NotificationTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger'
+export type NotificationAction = { id: string; label: string; href?: string; onSelect?: () => void; tone?: NotificationTone }
 
 export type Notification = {
   id: string
+  kind: NotificationKind
+  title: string
+  subtitle?: string
+  createdAt: string
+  read: boolean
+  href?: string
+  actor?: Identity
+  actions?: readonly NotificationAction[]
+  tone?: NotificationTone
+  metadata?: Readonly<Record<string, unknown>>
+}
+
+/** Feed-policy projection fields stay on the feed-specific derivative. */
+export type FeedNotification = Notification & {
   entryId?: string
   policyId?: string
   sourceId?: string
-  kind: NotificationKind
-  title: string
-  createdAt: string
-  read: boolean
-  /** Deep link into the host (docs demo uses hash routes). */
-  href: string
   disposition?: PolicyDisposition
 }
 
@@ -77,15 +88,15 @@ export function isInQuietHours(
  * Instant channels produce one row per match. `off` drops them. `digest` is
  * still projected (hosts batch delivery); quiet hours only suppress `instant`.
  */
-export function deriveNotifications(
+export function deriveFeedNotifications(
   document: FeedDocument,
   settings: NotificationSettings,
   options?: { now?: Date; readIds?: ReadonlySet<string> },
-): readonly Notification[] {
+): readonly FeedNotification[] {
   const now = options?.now ?? new Date()
   const readIds = options?.readIds ?? new Set<string>()
   const byId = new Map(document.entries.map((entry) => [entry.id, entry]))
-  const out: Notification[] = []
+  const out: FeedNotification[] = []
 
   for (const match of document.matches) {
     const entry = byId.get(match.entryId)
@@ -109,6 +120,10 @@ export function deriveNotifications(
       createdAt: match.matchedAt,
       read: readIds.has(id),
       href: `#/components/feed?entry=${encodeURIComponent(match.entryId)}&policy=${encodeURIComponent(match.policyId)}`,
+      actions: [
+        { id: 'open', label: 'Open entry', href: `#/components/feed?entry=${encodeURIComponent(match.entryId)}` },
+        { id: 'why', label: 'Why', href: `#/components/policy?policy=${encodeURIComponent(match.policyId)}` },
+      ],
       disposition: match.disposition,
     })
   }
@@ -127,6 +142,7 @@ export function deriveNotifications(
       createdAt: entry.publishedAt,
       read: readIds.has(id),
       href: `#/components/feed?entry=${encodeURIComponent(entry.id)}`,
+      actions: [{ id: 'open', label: 'Open entry', href: `#/components/feed?entry=${encodeURIComponent(entry.id)}` }],
     })
   }
 
@@ -143,6 +159,8 @@ export function deriveNotifications(
       createdAt: now.toISOString(),
       read: readIds.has(id),
       href: `#/components/feed?source=${encodeURIComponent(source.id)}`,
+      tone: 'warning',
+      actions: [{ id: 'open', label: 'Inspect source', href: `#/components/feed?source=${encodeURIComponent(source.id)}` }],
     })
   }
 

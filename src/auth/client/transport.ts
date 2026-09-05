@@ -1,30 +1,33 @@
+import type { OperationOptions } from '../../client/types'
 import { UnsupportedAuthOperationError } from './errors'
 import type {
   AuthConfig,
   AuthFlowResult,
+  AuthOperation,
   AuthSession,
+  CredentialRecoveryRequestInput,
+  IdentifierVerificationInput,
   OAuthProviderId,
   OrganizationSelectInput,
   PasswordResetInput,
-  PasswordResetRequestInput,
   PasswordSignInInput,
   PasswordSignUpInput,
   TotpVerifyInput,
-  VerifyEmailInput,
 } from './types'
 
 export type AuthTransport = {
-  getConfig(): Promise<AuthConfig>
-  getSession(): Promise<AuthSession | null>
-  signInPassword?(input: PasswordSignInInput): Promise<AuthFlowResult>
-  signUpPassword?(input: PasswordSignUpInput): Promise<AuthFlowResult>
-  requestEmailVerification?(): Promise<AuthFlowResult>
-  verifyEmail?(input: VerifyEmailInput): Promise<AuthFlowResult>
-  requestPasswordReset?(input: PasswordResetRequestInput): Promise<AuthFlowResult>
-  resetPassword?(input: PasswordResetInput): Promise<AuthFlowResult>
-  verifyTotp?(input: TotpVerifyInput): Promise<AuthFlowResult>
-  selectOrganization?(input: OrganizationSelectInput): Promise<AuthFlowResult>
-  signOut(): Promise<void>
+  getConfig(options?: OperationOptions): Promise<AuthConfig>
+  getSession(options?: OperationOptions): Promise<AuthSession | null>
+  signInPassword?(input: PasswordSignInInput, options?: OperationOptions): Promise<AuthFlowResult>
+  signUpPassword?(input: PasswordSignUpInput, options?: OperationOptions): Promise<AuthFlowResult>
+  requestIdentifierVerification?(options?: OperationOptions): Promise<AuthFlowResult>
+  verifyIdentifier?(input: IdentifierVerificationInput, options?: OperationOptions): Promise<AuthFlowResult>
+  requestCredentialRecovery?(input: CredentialRecoveryRequestInput, options?: OperationOptions): Promise<AuthFlowResult>
+  resetPassword?(input: PasswordResetInput, options?: OperationOptions): Promise<AuthFlowResult>
+  verifyTotp?(input: TotpVerifyInput, options?: OperationOptions): Promise<AuthFlowResult>
+  selectOrganization?(input: OrganizationSelectInput, options?: OperationOptions): Promise<AuthFlowResult>
+  execute?<Input, Result>(operation: AuthOperation<Input, Result>, input: Input, options?: OperationOptions): Promise<Result>
+  signOut(options?: OperationOptions): Promise<void>
   oauthStartUrl(provider: OAuthProviderId, returnTo?: string): string
 }
 

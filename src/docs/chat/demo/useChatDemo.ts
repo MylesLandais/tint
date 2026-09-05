@@ -196,7 +196,28 @@ function userMessage(
       text: payload.text,
     })
   }
+  const imageAttachments = payload.attachments.filter(
+    (attachment) => attachment.mediaType.startsWith('image/') && (attachment.url || attachment.previewUrl),
+  )
+  const stackedImageIds = new Set(
+    imageAttachments.length > 1 ? imageAttachments.map((attachment) => attachment.id) : [],
+  )
+  if (imageAttachments.length > 1) {
+    parts.push({
+      id: `${id}-image-stack`,
+      type: 'images',
+      layout: 'stack',
+      caption: 'Attached images',
+      images: imageAttachments.map((attachment) => ({
+        id: attachment.id,
+        src: attachment.url ?? attachment.previewUrl ?? '',
+        alt: attachment.name,
+        href: attachment.url,
+      })),
+    })
+  }
   for (const attachment of payload.attachments) {
+    if (stackedImageIds.has(attachment.id)) continue
     parts.push({
       id: `${id}-${attachment.id}`,
       type: 'file',
@@ -578,13 +599,14 @@ export function useChatDemo() {
           messageId,
           `${messageId}-answer`,
           [
-            'Four local variations — click any cell to open the lightbox, then use ',
+            'Four local variations — click the image stack to open the lightbox, then use ',
             '← / → or the chevrons to move between them.',
           ],
           [
             {
               id: `${messageId}-gallery`,
               type: 'images',
+              layout: 'stack',
               caption: 'vibrant California poppies at golden hour',
               images: [
                 {

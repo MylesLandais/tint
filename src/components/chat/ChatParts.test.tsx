@@ -208,5 +208,39 @@ describe('image gallery parts', () => {
 
     const thumb = document.querySelector('[data-chat-part="file"] img')
     expect(thumb).toHaveAttribute('src', '/images/gallery-1.svg')
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open image: poppy.png' }))
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    expect(screen.getAllByAltText('poppy.png').length).toBeGreaterThan(0)
+  })
+
+  it('renders an Apple-style image stack that opens into the shared lightbox', () => {
+    render(
+      <ChatMessage
+        message={messageWith([
+          {
+            id: 'gallery-stack',
+            type: 'images',
+            layout: 'stack',
+            caption: 'Reference set',
+            images: [
+              { id: 'a', src: '/images/gallery-1.svg', alt: 'First reference' },
+              { id: 'b', src: '/images/gallery-2.svg', alt: 'Second reference' },
+              { id: 'c', src: '/images/gallery-3.svg', alt: 'Third reference' },
+            ],
+          },
+        ])}
+      />,
+    )
+
+    const stack = document.querySelector('[data-chat-images-layout="stack"]')
+    expect(stack).toHaveAttribute('data-count', '3')
+    expect(stack?.querySelectorAll('img')).toHaveLength(3)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open image stack: 3 items' }))
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    expect(screen.getAllByAltText('First reference').length).toBeGreaterThan(0)
+    fireEvent.click(screen.getByRole('button', { name: 'Next' }))
+    expect(screen.getAllByAltText('Second reference').length).toBeGreaterThan(0)
   })
 })

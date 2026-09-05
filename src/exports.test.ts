@@ -59,7 +59,7 @@ describe('docs coverage', () => {
     // `auth` is documented as part of its component page; the two `*-client`
     // subpaths are transport layers a host wires up, documented in prose on the
     // page for the components they feed rather than as pages of their own.
-    const EXEMPT = new Set(['auth-client', 'auth', 'calendar-client'])
+    const EXEMPT = new Set(['auth', 'client'])
 
     // Members of a grouped page (see GROUPED_ROUTE_MEMBERS in routes.ts) are
     // documented by that page rather than by a route of their own.
@@ -107,7 +107,7 @@ describe('package exports', () => {
    * else must be reachable from the root, or the focused import each docs page
    * advertises would be the only way to get at it.
    */
-  const STANDALONE_ENTRY_POINTS = ['./auth', './calendar-client']
+  const STANDALONE_ENTRY_POINTS = ['./auth', './calendar', './client']
 
   it.each(
     SUBPATHS.filter(

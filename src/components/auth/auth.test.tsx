@@ -1,9 +1,9 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
-import { OAuthButtons, SignInForm } from './index'
+import { IdentifierSignInForm, OAuthButtons } from './index'
 
 const labels = {
-  email: 'Email',
+  identifier: 'Email or username',
   password: 'Password',
   submit: 'Sign in',
   submitting: 'Signing in…',
@@ -11,23 +11,23 @@ const labels = {
   hidePassword: 'Hide password',
 }
 
-describe('SignInForm', () => {
+describe('IdentifierSignInForm', () => {
   it('is controlled and submits through the host callback', () => {
     const onEmailChange = vi.fn()
     const onPasswordChange = vi.fn()
     const onSubmit = vi.fn()
     render(
-      <SignInForm
-        email="operator@example.test"
+      <IdentifierSignInForm
+        identifier="operator@example.test"
         password="secret"
         labels={labels}
-        onEmailChange={onEmailChange}
+        onIdentifierChange={onEmailChange}
         onPasswordChange={onPasswordChange}
         onSubmit={onSubmit}
       />,
     )
 
-    fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'next@example.test' } })
+    fireEvent.change(screen.getByLabelText('Email or username'), { target: { value: 'next@example.test' } })
     fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'next-secret' } })
     fireEvent.submit(screen.getByRole('button', { name: 'Sign in' }).closest('form')!)
 
@@ -38,13 +38,13 @@ describe('SignInForm', () => {
 
   it('exposes busy and error state accessibly', () => {
     render(
-      <SignInForm
-        email=""
+      <IdentifierSignInForm
+        identifier=""
         password=""
         busy
         error="The credentials were not accepted."
         labels={labels}
-        onEmailChange={() => {}}
+        onIdentifierChange={() => {}}
         onPasswordChange={() => {}}
         onSubmit={() => {}}
       />,

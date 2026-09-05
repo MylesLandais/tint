@@ -23,6 +23,8 @@ import { CalendarDoc } from './calendar/CalendarDoc'
 import { ActivityDoc } from './activity/ActivityDoc'
 import { PolicyDoc } from './policy/PolicyDoc'
 import { NotifyDoc } from './notify/NotifyDoc'
+import { TileMapDoc } from './TileMapDoc'
+import { MediaWorkspaceDoc } from './MediaWorkspaceDoc'
 
 /**
  * Path -> page component, kept apart from `routes.ts` so that the route data
@@ -55,6 +57,9 @@ const FormDoc = lazy(() => import('./form/FormDoc').then((module) => ({ default:
 const CharacterCardDoc = lazy(() =>
   import('./character-card/CharacterCardDoc').then((module) => ({ default: module.CharacterCardDoc })),
 )
+const ClientFrameworkDoc = lazy(() =>
+  import('./ClientFrameworkDoc').then((module) => ({ default: module.ClientFrameworkDoc })),
+)
 
 /**
  * `satisfies` is load-bearing: adding a route to the registry without a page
@@ -62,6 +67,8 @@ const CharacterCardDoc = lazy(() =>
  */
 export const DOC_PAGES = {
   'components/media-player': MediaPlayerDoc,
+  'components/tile-map': TileMapDoc,
+  'components/media-workspace': MediaWorkspaceDoc,
   'components/chat': ChatComponentDoc,
   'components/audio-input': AudioInputDoc,
   'components/table': TableDoc,
@@ -75,6 +82,7 @@ export const DOC_PAGES = {
   'components/socket': SocketDoc,
   'components/collab': CollabDoc,
   'components/auth': AuthDoc,
+  'components/client-framework': ClientFrameworkDoc,
   'components/video-player': VideoPlayerDoc,
   'components/media': MediaPrimitivesDoc,
   'components/code': CodeDoc,

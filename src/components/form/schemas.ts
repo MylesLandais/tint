@@ -1,17 +1,17 @@
 import type { FormSchema } from './contracts'
 
-/** Email + password. `SignInForm` fills labels from `SignInFormLabels`. */
-export function createAuthFormSchema(labels: {
-  email: string
+/** Identifier + password. Auth forms choose whether the identifier is a username or email. */
+export function createCredentialFormSchema(labels: {
+  identifier: string
   password: string
   showPassword: string
   hidePassword: string
-  emailPlaceholder?: string
+  identifierPlaceholder?: string
   passwordPlaceholder?: string
 }): FormSchema {
   return {
-    id: 'auth.sign-in',
-    version: '1',
+    id: 'auth.credentials',
+    version: '2',
     title: '',
     sections: [
       {
@@ -19,11 +19,11 @@ export function createAuthFormSchema(labels: {
         title: '',
         fields: [
           {
-            name: 'email',
-            kind: 'email',
-            label: labels.email,
+            name: 'identifier',
+            kind: 'text',
+            label: labels.identifier,
             required: true,
-            placeholder: labels.emailPlaceholder,
+            placeholder: labels.identifierPlaceholder,
           },
           {
             name: 'password',

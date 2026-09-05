@@ -1,5 +1,6 @@
 import type { HTMLAttributes, ReactNode } from 'react'
 import { Badge, type BadgeTone } from '../badge'
+import { Avatar } from '../identity'
 import { cn } from '../../lib/utils'
 import type { ActivityEvent, ActivitySignal } from './contracts'
 
@@ -34,8 +35,9 @@ export function ActivityFeedRow({
   className,
   ...props
 }: ActivityFeedRowProps) {
+  const Component = onSelect ? 'div' : 'article'
   return (
-    <article
+    <Component
       data-tint-activity-row=""
       data-selected={selected || undefined}
       className={cn(
@@ -63,6 +65,7 @@ export function ActivityFeedRow({
         {event.rank ?? '—'}
       </span>
       <div className="min-w-0">
+        {event.actor ? <div className="mb-1 flex items-center gap-2 text-xs text-tint-muted"><Avatar identity={event.actor} size="xs" decorative />{event.actor.name}</div> : null}
         <h3 className="m-0 text-sm font-semibold text-tint-ink">
           <a
             href={event.href}
@@ -73,7 +76,7 @@ export function ActivityFeedRow({
           </a>
         </h3>
         <p className="m-0 mt-1 text-xs text-tint-muted">
-          {event.attribution}
+          {event.actor?.name ?? event.attribution}
           <span className="mx-1">·</span>
           <time dateTime={event.publishedAt}>
             {new Date(event.publishedAt).toLocaleString()}
@@ -93,6 +96,6 @@ export function ActivityFeedRow({
         <span title="Shares">{event.shareCount} s</span>
         {actions}
       </div>
-    </article>
+    </Component>
   )
 }

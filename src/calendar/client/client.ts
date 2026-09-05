@@ -15,6 +15,7 @@
  */
 
 import type { CalendarEvent } from '../../components/calendar'
+import type { OperationOptions } from '../../client/types'
 import { parseICalendar } from '../../components/calendar/ical'
 import { expandCalendarEvents } from '../../components/calendar/recurrence'
 import { CalDavError, calDavErrorForStatus } from './errors'
@@ -90,8 +91,8 @@ export class CalDavClient {
     this.source = options.source
   }
 
-  private async request(request: CalDavRequest) {
-    const response = await this.transport.send(request)
+  private async request(request: CalDavRequest, options?: OperationOptions) {
+    const response = await this.transport.send(request, options)
     // 207 Multi-Status is the success case for PROPFIND and REPORT.
     if (response.status >= 400) {
       throw calDavErrorForStatus(response.status, this.detailFrom(response.text))
@@ -106,7 +107,7 @@ export class CalDavClient {
   }
 
   /** `PROPFIND` for the principal, then its calendar home. RFC 4791 §6.2.1. */
-  async discoverCalendarHome(): Promise<string> {
+  async discoverCalendarHome(options?: OperationOptions): Promise<string> {
     const principalBody =
       `<?xml version="1.0" encoding="utf-8"?>` +
       `<d:propfind ${XMLNS}><d:prop><d:current-user-principal/></d:prop></d:propfind>`
@@ -116,7 +117,7 @@ export class CalDavClient {
       url: this.baseUrl,
       headers: { Depth: '0', 'Content-Type': 'application/xml; charset=utf-8' },
       body: principalBody,
-    })
+    }, options)
 
     const principalRoot = parseXml(principalResponse.text)
     const principalHref = principalRoot
@@ -137,7 +138,7 @@ export class CalDavClient {
       url: resolveHref(principalHref, this.baseUrl),
       headers: { Depth: '0', 'Content-Type': 'application/xml; charset=utf-8' },
       body: homeBody,
-    })
+    }, options)
 
     const homeRoot = parseXml(homeResponse.text)
     const homeSet = homeRoot ? find(homeRoot, 'calendar-home-set') : undefined
@@ -154,8 +155,8 @@ export class CalDavClient {
    * Non-calendar collections and ones that do not accept `VEVENT` (a
    * to-do-only list, say) are filtered out.
    */
-  async listCalendars(homeUrl?: string): Promise<CalDavCalendar[]> {
-    const url = homeUrl ?? (await this.discoverCalendarHome())
+  async listCalendars(homeUrl?: string, options?: OperationOptions): Promise<CalDavCalendar[]> {
+    const url = homeUrl ?? (await this.discoverCalendarHome(options))
     const body =
       `<?xml version="1.0" encoding="utf-8"?>` +
       `<d:propfind ${XMLNS} ${APPLE_NS}><d:prop>` +
@@ -168,7 +169,7 @@ export class CalDavClient {
       url,
       headers: { Depth: '1', 'Content-Type': 'application/xml; charset=utf-8' },
       body,
-    })
+    }, options)
 
     const root = parseXml(response.text)
     if (!root) throw new CalDavError('malformed_response', 'PROPFIND returned no XML.')
@@ -203,6 +204,7 @@ export class CalDavClient {
     calendarHref: string,
     window: { from: Date; to: Date },
     options: { expand?: boolean } = {},
+    operation?: OperationOptions,
   ): Promise<CalDavResource[]> {
     const range = `<c:time-range start="${toUtcStamp(window.from)}" end="${toUtcStamp(window.to)}"/>`
     const calendarData = options.expand
@@ -223,7 +225,7 @@ export class CalDavClient {
       url: calendarHref,
       headers: { Depth: '1', 'Content-Type': 'application/xml; charset=utf-8' },
       body,
-    })
+    }, operation)
 
     const root = parseXml(response.text)
     if (!root) throw new CalDavError('malformed_response', 'REPORT returned no XML.')
@@ -253,8 +255,9 @@ export class CalDavClient {
     calendarHref: string,
     window: { from: Date; to: Date },
     options: { expand?: boolean } = {},
+    operation?: OperationOptions,
   ): Promise<CalendarEvent[]> {
-    const resources = await this.queryResources(calendarHref, window, options)
+    const resources = await this.queryResources(calendarHref, window, options, operation)
     return resources.flatMap((resource) => {
       if (!resource.data) return []
       const parsed = parseICalendar(resource.data)
@@ -263,12 +266,12 @@ export class CalDavClient {
   }
 
   /** Fetch one resource, with its current ETag for a later guarded write. */
-  async getResource(href: string): Promise<CalDavResource> {
+  async getResource(href: string, options?: OperationOptions): Promise<CalDavResource> {
     const response = await this.request({
       method: 'GET',
       url: href,
       headers: { Accept: 'text/calendar' },
-    })
+    }, options)
     return {
       href,
       ...(response.headers.etag ? { etag: response.headers.etag } : {}),
@@ -288,21 +291,21 @@ export class CalDavClient {
   async putResource(
     href: string,
     icalendar: string,
-    options: { ifMatch?: string; ifNoneMatch?: boolean } = {},
+    options: { ifMatch?: string; ifNoneMatch?: boolean } & OperationOptions = {},
   ): Promise<{ etag?: string }> {
     const headers: Record<string, string> = { 'Content-Type': 'text/calendar; charset=utf-8' }
     if (options.ifMatch) headers['If-Match'] = options.ifMatch
     else if (options.ifNoneMatch) headers['If-None-Match'] = '*'
 
-    const response = await this.request({ method: 'PUT', url: href, headers, body: icalendar })
+    const response = await this.request({ method: 'PUT', url: href, headers, body: icalendar }, options)
     return response.headers.etag ? { etag: response.headers.etag } : {}
   }
 
   /** Delete a resource, optionally guarded by its ETag. */
-  async deleteResource(href: string, options: { ifMatch?: string } = {}): Promise<void> {
+  async deleteResource(href: string, options: { ifMatch?: string } & OperationOptions = {}): Promise<void> {
     const headers: Record<string, string> = {}
     if (options.ifMatch) headers['If-Match'] = options.ifMatch
-    await this.request({ method: 'DELETE', url: href, headers })
+    await this.request({ method: 'DELETE', url: href, headers }, options)
   }
 
   /**
@@ -312,7 +315,7 @@ export class CalDavClient {
    * the collection does, so an unchanged value means the last result is still
    * good.
    */
-  async getCtag(calendarHref: string): Promise<string | undefined> {
+  async getCtag(calendarHref: string, options?: OperationOptions): Promise<string | undefined> {
     const body =
       `<?xml version="1.0" encoding="utf-8"?>` +
       `<d:propfind ${XMLNS} ${APPLE_NS}><d:prop><cs:getctag/></d:prop></d:propfind>`
@@ -321,7 +324,7 @@ export class CalDavClient {
       url: calendarHref,
       headers: { Depth: '0', 'Content-Type': 'application/xml; charset=utf-8' },
       body,
-    })
+    }, options)
     const root = parseXml(response.text)
     return root ? textOf(root, 'getctag') : undefined
   }

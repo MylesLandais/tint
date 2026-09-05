@@ -2,6 +2,7 @@ import { FormAbortError, FormAuthorizationError, FormError, FormTransportError, 
 import type { FormSchema } from './schema'
 import type { FormIssue, FormValidationResult } from './validate'
 import type { FormValues } from './values'
+import type { OperationOptions } from '../../../client/types'
 
 /**
  * Client → server (or in-memory host) contract for a form submit.
@@ -21,11 +22,7 @@ import type { FormValues } from './values'
  * 7. Non-idempotent writes do not retry unless `idempotencyKey` is supplied.
  */
 
-export type AsyncOperationOptions = {
-  signal?: AbortSignal
-  requestId?: string
-  deadlineMs?: number
-}
+export type AsyncOperationOptions = OperationOptions
 
 export type OperationTiming = {
   startedAt: string

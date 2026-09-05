@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { MediaPlayer } from '../components/media-player'
 import { CodeBlock } from './components/CodeBlock'
 import { PropsTable } from './components/PropsTable'
+import { Midnight128BrowserDemo } from './Midnight128BrowserDemo'
 import {
   DocsCallout,
   DocsDemo,
@@ -385,6 +386,14 @@ export function MediaPlayerDoc() {
             </div>
           </div>
         </DocsDemo>
+      </DocsSection>
+
+      <DocsSection
+        id="midnight-128"
+        title="Midnight 128 browser demo"
+        description="Load three local reference tracks, decode them in the browser, generate both automatic transitions, and audition the compiled Web Audio schedules."
+      >
+        <Midnight128BrowserDemo />
       </DocsSection>
 
       <DocsSection

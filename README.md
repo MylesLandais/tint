@@ -23,8 +23,10 @@ prop nobody documented.
 
 ## Installation
 
+Tint is private. Pin a reviewed Git commit (or use the gateway's pinned submodule/workspace) instead of requesting it from the public npm registry:
+
 ```bash
-npm install tint
+npm install github:MylesLandais/tint#<commit-sha>
 ```
 
 Tint ships **raw TypeScript source** rather than a compiled bundle — every export
@@ -76,6 +78,24 @@ not a runtime scan — regenerate it with `python3 scripts/gen-docs-graph.py` af
 a component or changing what one imports.
 
 Demo video: [Big Buck Bunny](https://test-videos.co.uk/bigbuckbunny/mp4-h264) (MP4 H.264) stored at `public/videos/big-buck-bunny.mp4`.
+
+## PokéForce map client
+
+The Tile Map page uses the independent reconstruction source in
+`~/Downloads/pokeforce-source.zip` and the locally installed PFCK cache. The
+checked-in browser pack contains only the selected Johto spawn region and the
+New Bark laboratory; the source and private cache remain external.
+
+Regenerate it after obtaining a new source/cache pair:
+
+```bash
+uv run --with xxhash --with zstandard --with msgpack \
+  python scripts/generate-pokeforce-map-pack.py
+```
+
+The exporter records both input hashes in `public/pokeforce/map.json`. The docs
+demo falls back to its deterministic mock if the pack is unavailable, and uses
+the decoded pack when served locally.
 
 ## Working with the gateway checkout
 
@@ -147,10 +167,41 @@ import {
   channelPath,
   resolveAttribution,
 } from 'tint/feed'
-import { NotificationBell, deriveNotifications, NotificationSettingsPanel } from 'tint/notify'
+import { NotificationBell, deriveFeedNotifications, NotificationSettingsPanel } from 'tint/notify'
 import { PolicyTable, PolicyEditor, applyPolicyCommand } from 'tint/policy'
 import { ActivityFeed, sortActivityEvents } from 'tint/activity'
 ```
+
+## Application client
+
+Tint 0.2 provides one optional application boundary for transport-backed state. The application constructs the adapters; Tint coordinates lifecycle and exposes capability-specific hooks. Visual components remain controlled and work without the provider.
+
+```tsx
+import { createBrowserPlaybackAdapter, createTintClient, TintClientProvider } from 'tint/client'
+import { createAuthClient } from 'tint/auth'
+
+const client = createTintClient({
+  request,
+  auth: createAuthClient({ transport: authTransport }),
+  navigation,
+  realtime,
+  uploads,
+  storage,
+  playback: createBrowserPlaybackAdapter(),
+})
+
+root.render(
+  <TintClientProvider client={client}>
+    <App />
+  </TintClientProvider>,
+)
+```
+
+The 0.1 migration map is in [`docs/migrations/0.2.md`](docs/migrations/0.2.md).
+
+`createBrowserPlaybackAdapter()` keeps metadata for the current playback queue in
+`localStorage` and synchronizes it across tabs. It deliberately excludes media source URLs, so
+signed streams and credentials never enter the persisted queue record.
 
 Audio playback and microphone capture are separate focused packages. `AudioInput` captures
 the stream and forwards it to a host-supplied `AudioTranscriber`; it does not choose a speech

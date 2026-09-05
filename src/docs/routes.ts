@@ -43,10 +43,28 @@ const ROUTE_DATA = [
     aliases: ['components/audio-player'],
     sections: [
       { id: 'preview', label: 'Preview' },
+      { id: 'midnight-128', label: 'Midnight 128 demo' },
       { id: 'usage', label: 'Usage' },
       { id: 'features', label: 'Features' },
       { id: 'api', label: 'API' },
     ],
+  },
+  {
+    path: 'components/tile-map',
+    label: 'Tile Map',
+    blurb: 'Controlled 2D map rendering for Godot-derived chunks, assets, collision, entities, and camera input.',
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      { id: 'usage', label: 'Usage' },
+      { id: 'boundary', label: 'Service boundary' },
+      { id: 'api', label: 'API' },
+    ],
+  },
+  {
+    path: 'components/media-workspace',
+    label: 'Gateway Media',
+    blurb: 'Media discovery workspace with release evaluation, indexer status, selection, and preview queue actions.',
+    sections: [{ id: 'preview', label: 'Preview' }, ...USAGE_AND_API],
   },
   {
     path: 'components/chat',
@@ -54,6 +72,7 @@ const ROUTE_DATA = [
     blurb: 'Message list, composer, and streaming-friendly primitives for conversational UI.',
     sections: [
       { id: 'preview', label: 'Preview' },
+      { id: 'threads-mvp', label: 'Threads MVP' },
       { id: 'usage', label: 'Usage' },
       { id: 'features', label: 'Features' },
       { id: 'api', label: 'API' },
@@ -168,6 +187,20 @@ const ROUTE_DATA = [
       { id: 'editor', label: 'Editor' },
       { id: 'schema', label: 'Schema' },
       { id: 'usage', label: 'Usage' },
+      { id: 'api', label: 'API' },
+    ],
+  },
+  {
+    path: 'components/client-framework',
+    label: 'Client Framework',
+    blurb: 'Root client adapters plus shared identity, navigation, media, chart, and workspace primitives.',
+    sections: [
+      { id: 'client', label: 'Root client' },
+      { id: 'foundations', label: 'Foundations' },
+      { id: 'navigation', label: 'Navigation' },
+      { id: 'media', label: 'Media' },
+      { id: 'data', label: 'Data and workspaces' },
+      { id: 'boundaries', label: 'Boundaries' },
       { id: 'api', label: 'API' },
     ],
   },
@@ -360,6 +393,7 @@ export type DocRoutePath = (typeof ROUTE_DATA)[number]['path']
  */
 export const GROUPED_ROUTE_MEMBERS = {
   'components/chrome': ['badge', 'context-menu', 'dialog', 'progress', 'toast', 'tree'],
+  'components/client-framework': ['identity', 'surface', 'status', 'navigation', 'menu', 'media-assets', 'charts', 'workspace-grid', 'release-chart'],
 } satisfies Partial<Record<DocRoutePath, string[]>>
 
 /**
@@ -372,6 +406,8 @@ export type DocGroup = (typeof DOC_GROUPS)[number]
 
 export const ROUTE_GROUPS = {
   'components/media-player': 'Media',
+  'components/tile-map': 'Media',
+  'components/media-workspace': 'Data & infra',
   'components/video-player': 'Media',
   'components/media': 'Media',
   'components/audio-input': 'Media',
@@ -387,6 +423,7 @@ export const ROUTE_GROUPS = {
   'components/telemetry': 'Data & infra',
   'components/collab': 'Data & infra',
   'components/auth': 'Data & infra',
+  'components/client-framework': 'Data & infra',
   'components/theme': 'Theming & layout',
   'components/panel': 'Theming & layout',
   'components/button': 'Theming & layout',

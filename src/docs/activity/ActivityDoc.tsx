@@ -56,7 +56,7 @@ export function ActivityDoc() {
                     style={{ marginLeft: post.depth * 12 }}
                   >
                     <div className="mb-1 flex items-center gap-2 text-xs text-tint-muted">
-                      <Badge tone="neutral">{post.author}</Badge>
+                      <Badge tone="neutral">{typeof post.author === 'string' ? post.author : post.author.name}</Badge>
                       <time dateTime={post.createdAt}>
                         {new Date(post.createdAt).toLocaleString()}
                       </time>

@@ -39,8 +39,11 @@
     "src/exports.test.ts",
     "src/vendor/checksums.test.ts",
     "src/vendor/boundary.test.ts",
+    "src/dependency-boundary.test.ts",
+    "src/foundation-adoption.test.ts",
     "src/consumer-contract.test.ts",
     "src/docs/propsTable.test.ts",
-    "src/docs/componentGraph.test.ts"
+    "src/docs/componentGraph.test.ts",
+    "src/components/tile-map/pokeforcePack.test.ts"
   ]
 }

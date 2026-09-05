@@ -132,6 +132,7 @@ export function ChatComposer({
   state = 'idle',
   error,
   placeholder = 'Write a message…',
+  inputLabel = placeholder,
   submitLabel = 'Send message',
   stopLabel = 'Stop response',
   maxLength,
@@ -311,6 +312,7 @@ export function ChatComposer({
             value={value}
             onValueChange={onValueChange}
             submitOnEnter={submitOnEnter && !readOnly}
+            aria-label={inputLabel}
             placeholder={placeholder}
             maxLength={maxLength}
             readOnly={readOnly}

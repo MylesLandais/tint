@@ -4,7 +4,7 @@ import {
   NotificationBell,
   NotificationList,
   NotificationSettingsPanel,
-  deriveNotifications,
+  deriveFeedNotifications,
 } from '../../components/notify'
 import { CodeBlock } from '../components/CodeBlock'
 import { DocsPage, DocsPreview, DocsSection } from '../components/DocsPage'
@@ -18,7 +18,7 @@ const usage = `import {
   NotificationBell,
   NotificationList,
   NotificationSettingsPanel,
-  deriveNotifications,
+  deriveFeedNotifications,
 } from 'tint/notify'
 
 // Mount the bell once near the shell; host owns settings + read ids.
@@ -44,13 +44,10 @@ export function DocsNotificationShell({
   )
   const [settings, setSettings] = useState(DEMO_NOTIFY_SETTINGS)
   const notifications = useMemo(
-    () => deriveNotifications(feed, settings),
+    () => deriveFeedNotifications(feed, settings),
     [feed, settings],
   )
   const unread = notifications.filter((row) => !row.read).length
-  const sourceLabels = Object.fromEntries(
-    feed.sources.map((source) => [source.id, source.handle]),
-  )
 
   return (
     <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
@@ -62,7 +59,6 @@ export function DocsNotificationShell({
       >
         <NotificationList
           notifications={notifications}
-          sourceLabels={sourceLabels}
           groupBy="time"
         />
       </NotificationBell>
@@ -90,7 +86,7 @@ export function NotifyDoc() {
     <DocsPage
       route="components/notify"
       title="Notify"
-      intro="Bell, grouped list, and per-source/policy settings. Notifications are a read model over FeedDocument matches via deriveNotifications — the bell never invents rows."
+      intro="Generic bell and grouped list, plus an optional feed-policy projection via deriveFeedNotifications."
       note="Mount NotificationBell once near the docs shell (see DocsNotificationShell below) so Feed and Activity workbenches can share the same toast host."
     >
       <DocsSection id="preview" title="Preview">
@@ -149,27 +145,22 @@ export function NotifyDoc() {
               name: 'notifications',
               type: 'readonly Notification[]',
               required: true,
-              description: 'NotificationList rows from deriveNotifications.',
+              description: 'Generic notification rows or rows from deriveFeedNotifications.',
             },
             {
               name: 'groupBy',
-              type: "'time' | 'source'",
+              type: "'time' | 'kind'",
               description: 'Grouping axis for the list.',
             },
             {
-              name: 'sourceLabels',
-              type: 'Record<string, string>',
-              description: 'Labels when groupBy is source.',
+              name: 'groupKey',
+              type: '(notification: Notification) => string',
+              description: 'Optional application-defined grouping key.',
             },
             {
               name: 'onSelect',
               type: '(notification: Notification) => void',
               description: 'Row click intent.',
-            },
-            {
-              name: 'whyHref',
-              type: '(notification: Notification) => string | undefined',
-              description: 'Optional policy “why” link builder.',
             },
             {
               name: 'empty',

@@ -7,6 +7,7 @@ import type {
   Ref,
   TextareaHTMLAttributes,
 } from 'react'
+import type { Identity, Presence } from '../identity'
 
 /** Opaque application identifier. Stability matters: it keys React reconciliation. */
 export type ChatId = string
@@ -18,16 +19,12 @@ export type ChatTimestamp = string | number | Date
 export type ChatActorKind = 'human' | 'assistant' | 'system' | 'tool'
 
 /** Availability of a human actor. Presentation only; Tint never derives it. */
-export type ChatPresence = 'online' | 'away' | 'busy' | 'offline' | 'unknown'
+export type ChatPresence = Presence
 
-export type ChatActor = {
-  id: ChatId
+export type ChatActor = Omit<Identity, 'kind' | 'presence'> & {
   /** Display name. Bidi control characters are stripped before rendering. */
   name: string
   kind: ChatActorKind
-  /** Rendered as a decorative avatar with an empty `alt`. */
-  avatarUrl?: string
-  description?: string
   presence?: ChatPresence
 }
 
@@ -190,6 +187,8 @@ export type ChatImageAction = {
 export type ChatImagesPart = ChatPartBase & {
   type: 'images'
   images: readonly ChatImageItem[]
+  /** Visual treatment for the set. `grid` preserves individual previews; `stack` presents one compact pile that opens in the lightbox. */
+  layout?: 'grid' | 'stack'
   /** Optional caption above the grid (e.g. the generation prompt). */
   caption?: string
   /** Optional action buttons under the grid. */
@@ -510,6 +509,8 @@ export type ChatComposerProps = Omit<FormHTMLAttributes<HTMLFormElement>, 'onSub
   /** Announced once and associated with the input. */
   error?: string
   placeholder?: string
+  /** Accessible name for the composition textarea. Defaults to the placeholder. */
+  inputLabel?: string
   /** Accessible name for the send button. */
   submitLabel?: string
   /** Accessible name for the stop button, shown while `state` is `streaming`. */

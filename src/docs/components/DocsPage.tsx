@@ -12,6 +12,8 @@ import { DOC_ROUTES, findRoute, hrefFor, type DocRoutePath } from '../routes'
  */
 const IMPORT_SNIPPETS = {
   'components/media-player': "import { MediaPlayer } from 'tint/media-player'",
+  'components/tile-map': "import { TileMapViewport } from 'tint/tile-map'",
+  'components/media-workspace': "import { MediaWorkspace } from 'tint/media-workspace'",
   'components/video-player': "import { VideoPlayer } from 'tint/video-player'",
   'components/media': "import { Slider, VolumeControl, Waveform } from 'tint/media'",
   'components/audio-input': "import { AudioInput } from 'tint/audio-input'",
@@ -26,7 +28,8 @@ const IMPORT_SNIPPETS = {
   'components/socket': "import type { Socket, SocketSpec } from 'tint/socket'",
   'components/collab': "import { createCollabSession } from 'tint/collab'",
   'components/telemetry': "import { TraceViewer } from 'tint/telemetry'",
-  'components/auth': "import { AuthProvider, SignInForm } from 'tint/auth'",
+  'components/auth': "import { IdentifierSignInForm } from 'tint/auth'",
+  'components/client-framework': "import { createTintClient, TintClientProvider } from 'tint/client'",
   'components/theme': "import { ThemePicker, ThemeToggle } from 'tint/theme'",
   'components/panel': "import { Panel } from 'tint/panel'",
   'components/button': "import { Button } from 'tint/button'",

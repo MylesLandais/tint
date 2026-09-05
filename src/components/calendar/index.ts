@@ -52,3 +52,7 @@ export {
   expandRecurrence,
   parseRecurrenceRule,
 } from './recurrence'
+
+export { CalDavClient, createCalDavClient, createFetchTransport } from '../../calendar/client'
+export { CalDavError, calDavErrorForStatus } from '../../calendar/client'
+export type { CalDavCalendar, CalDavClientOptions, CalDavErrorCode, CalDavRequest, CalDavResource, CalDavResponse, CalDavTransport } from '../../calendar/client'

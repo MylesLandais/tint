@@ -300,6 +300,7 @@ export function ChatImages({
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const images = part.images
   const count = images.length
+  const isStack = part.layout === 'stack' && count > 1
 
   const openAt = (index: number) => {
     setLightboxIndex(index)
@@ -321,49 +322,88 @@ export function ChatImages({
         data-chat-part="images"
         data-status={part.status}
         data-count={count}
+        data-chat-images-layout={isStack ? 'stack' : 'grid'}
         className={cn('min-w-0 space-y-2', className)}
         {...props}
       >
         {part.caption ? (
           <p className="m-0 text-sm font-medium text-tint-ink">{stripBidi(part.caption)}</p>
         ) : null}
-        <div
-          className={cn(
-            'grid gap-0.5 overflow-hidden rounded-xl border border-tint-border bg-tint-border',
-            imagesGridClass(count),
-          )}
-        >
-          {images.map((image, index) => {
-            const spanFull =
-              count === 3 && index === 2 ? 'col-span-2 aspect-[2/1]' : 'aspect-square'
-            return (
-              <button
-                key={image.id}
-                type="button"
-                onClick={() => openAt(index)}
-                className={cn(
-                  'relative block overflow-hidden bg-tint-surface p-0 focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-tint-accent',
-                  spanFull,
-                )}
-                aria-label={
-                  image.alt
-                    ? `Open image ${index + 1}: ${stripBidi(image.alt)}`
-                    : `Open image ${index + 1}`
-                }
-              >
-                <img
-                  src={image.src}
-                  alt={image.alt}
-                  width={image.width}
-                  height={image.height}
-                  loading="lazy"
-                  decoding="async"
-                  className="size-full object-cover"
-                />
-              </button>
-            )
-          })}
-        </div>
+        {isStack ? (
+          <button
+            type="button"
+            onClick={() => openAt(0)}
+            className="group/stack flex w-full cursor-zoom-in items-center gap-4 rounded-xl border border-tint-border bg-tint-panel p-3 text-left hover:bg-tint-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tint-accent"
+            aria-label={`Open image stack: ${count} items`}
+          >
+            <span className="relative ml-2 block h-24 w-28 shrink-0" aria-hidden="true">
+              {images.slice(0, 3).map((image, index) => {
+                const layers = [
+                  'translate-x-0 -rotate-6',
+                  'translate-x-3 rotate-3',
+                  'translate-x-6 rotate-0',
+                ]
+                return (
+                  <img
+                    key={image.id}
+                    src={image.src}
+                    alt={image.alt}
+                    width={image.width}
+                    height={image.height}
+                    loading="lazy"
+                    decoding="async"
+                    className={cn(
+                      'absolute inset-y-0 left-0 h-24 w-20 rounded-lg border-2 border-tint-panel bg-tint-surface object-cover shadow-md transition-transform group-hover/stack:translate-y-[-2px]',
+                      layers[index],
+                    )}
+                  />
+                )
+              })}
+            </span>
+            <span className="min-w-0">
+              <span className="block text-sm font-semibold text-tint-ink">Image stack</span>
+              <span className="mt-0.5 block text-xs text-tint-muted">{count} items · Open lightbox</span>
+            </span>
+          </button>
+        ) : (
+          <div
+            className={cn(
+              'grid gap-0.5 overflow-hidden rounded-xl border border-tint-border bg-tint-border',
+              imagesGridClass(count),
+            )}
+          >
+            {images.map((image, index) => {
+              const spanFull =
+                count === 3 && index === 2 ? 'col-span-2 aspect-[2/1]' : 'aspect-square'
+              return (
+                <button
+                  key={image.id}
+                  type="button"
+                  onClick={() => openAt(index)}
+                  className={cn(
+                    'relative block overflow-hidden bg-tint-surface p-0 focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-tint-accent',
+                    spanFull,
+                  )}
+                  aria-label={
+                    image.alt
+                      ? `Open image ${index + 1}: ${stripBidi(image.alt)}`
+                      : `Open image ${index + 1}`
+                  }
+                >
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    width={image.width}
+                    height={image.height}
+                    loading="lazy"
+                    decoding="async"
+                    className="size-full object-cover"
+                  />
+                </button>
+              )
+            })}
+          </div>
+        )}
         {part.actions?.length ? (
           <div className="flex flex-wrap gap-2" data-chat-images-actions="">
             {part.actions.map((action) => (
@@ -407,42 +447,35 @@ function readableSize(size?: number) {
   return `${(size / (1024 * 1024)).toFixed(1)} MB`
 }
 
+export type ChatFileProps = ChatRichPartProps<ChatFilePart> & {
+  messageId?: ChatId
+  onAction?: (payload: ChatMessageActionPayload) => void
+}
+
 export function ChatFile({
   part,
+  messageId,
+  onAction,
   className,
   ...props
-}: ChatRichPartProps<ChatFilePart>) {
+}: ChatFileProps) {
+  const [lightboxOpen, setLightboxOpen] = useState(false)
   const { attachment } = part
   const isImage = attachment.mediaType.startsWith('image/')
   const preview = isImage ? attachment.previewUrl ?? attachment.url : undefined
+  const fullSizeImage = isImage ? attachment.url ?? attachment.previewUrl : undefined
   const icon = isImage ? (
     <Icon icon={ImageIcon} />
   ) : (
     <Icon icon={FileText} />
   )
 
-  return (
-    <article
-      data-chat-part="file"
-      data-status={attachment.status ?? part.status}
-      className={cn(
-        'flex min-w-0 items-center gap-3 rounded-xl border border-tint-border bg-tint-panel p-3',
-        className,
+  const details = (
+    <>
+      {preview ? <img src={preview} alt="" className="size-9 shrink-0 rounded-lg object-cover" /> : (
+        <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-tint-surface text-tint-muted">{icon}</span>
       )}
-      {...props}
-    >
-      {preview ? (
-        <img
-          src={preview}
-          alt=""
-          className="size-9 shrink-0 rounded-lg object-cover"
-        />
-      ) : (
-        <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-tint-surface text-tint-muted">
-          {icon}
-        </span>
-      )}
-      <div className="min-w-0 flex-1">
+      <div className="min-w-0 flex-1 text-left">
         <div className="truncate text-sm font-medium">{stripBidi(attachment.name)}</div>
         <div className="mt-0.5 text-xs text-tint-muted">
           {[
@@ -471,7 +504,58 @@ export function ChatFile({
           <p className="mt-1 text-xs text-tint-danger-ink">{attachment.error}</p>
         ) : null}
       </div>
-    </article>
+    </>
+  )
+
+  const openImage = () => {
+    setLightboxOpen(true)
+    if (messageId) {
+      onAction?.({
+        messageId,
+        action: 'image-open',
+        partId: part.id,
+        imageId: attachment.id,
+        imageIndex: 0,
+      })
+    }
+  }
+
+  return (
+    <>
+      <article
+        data-chat-part="file"
+        data-status={attachment.status ?? part.status}
+        className={cn('min-w-0 rounded-xl border border-tint-border bg-tint-panel', className)}
+        {...props}
+      >
+        {fullSizeImage && attachment.status !== 'uploading' ? (
+          <button
+            type="button"
+            onClick={openImage}
+            className="flex w-full cursor-zoom-in items-center gap-3 rounded-xl p-3 hover:bg-tint-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tint-accent"
+            aria-label={`Open image: ${stripBidi(attachment.name)}`}
+          >
+            {details}
+          </button>
+        ) : (
+          <div className="flex items-center gap-3 p-3">{details}</div>
+        )}
+      </article>
+      {fullSizeImage ? (
+        <ChatMediaLightbox
+          open={lightboxOpen}
+          images={[{
+            id: attachment.id,
+            src: fullSizeImage,
+            alt: stripBidi(attachment.name),
+            href: attachment.url,
+          }]}
+          index={0}
+          onClose={() => setLightboxOpen(false)}
+          onIndexChange={() => undefined}
+        />
+      ) : null}
+    </>
   )
 }
 
@@ -938,7 +1022,7 @@ export function ChatBuiltInPart({
     case 'images':
       return <ChatImages part={part} messageId={messageId} onAction={onAction} />
     case 'file':
-      return <ChatFile part={part} />
+      return <ChatFile part={part} messageId={messageId} onAction={onAction} />
     case 'audio':
       return <ChatAudio part={part} messageId={messageId} />
     case 'sources':

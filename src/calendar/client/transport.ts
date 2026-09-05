@@ -22,7 +22,7 @@ export type CalDavResponse = {
 }
 
 export type CalDavTransport = {
-  send(request: CalDavRequest): Promise<CalDavResponse>
+  send(request: CalDavRequest, options?: import('../../client/types').OperationOptions): Promise<CalDavResponse>
 }
 
 /**
@@ -38,12 +38,13 @@ export function createFetchTransport(
   const { fetch: fetchImpl, ...rest } = init
   const doFetch = fetchImpl ?? globalThis.fetch
   return {
-    async send(request) {
+    async send(request, options) {
       const response = await doFetch(request.url, {
         ...rest,
         method: request.method,
         headers: { ...(rest.headers as Record<string, string>), ...request.headers },
         body: request.body,
+        signal: options?.signal ?? rest.signal,
       })
       const headers: Record<string, string> = {}
       response.headers.forEach((value, key) => {

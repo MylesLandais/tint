@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   DEFAULT_NOTIFICATION_SETTINGS,
-  deriveNotifications,
+  deriveFeedNotifications,
   isInQuietHours,
 } from './contracts'
 import { DEMO_FEED } from '../../docs/fixtures/demoDocuments'
@@ -20,16 +20,16 @@ describe('isInQuietHours', () => {
   })
 })
 
-describe('deriveNotifications', () => {
+describe('deriveFeedNotifications', () => {
   it('projects matches the feed can explain', () => {
-    const rows = deriveNotifications(DEMO_FEED, DEFAULT_NOTIFICATION_SETTINGS)
+    const rows = deriveFeedNotifications(DEMO_FEED, DEFAULT_NOTIFICATION_SETTINGS)
     const matchIds = rows.filter((row) => row.kind === 'match').map((row) => row.id)
     expect(matchIds).toContain('match:pol-mk-cache:entry-mk-yt-1')
     expect(matchIds).toContain('match:pol-k2s-auto:entry-k2s-1')
   })
 
   it('honours per-source off and includes artifact + health rows', () => {
-    const rows = deriveNotifications(DEMO_FEED, {
+    const rows = deriveFeedNotifications(DEMO_FEED, {
       ...DEFAULT_NOTIFICATION_SETTINGS,
       bySource: { 'src-mk-yt': 'off' },
     })
@@ -45,7 +45,7 @@ describe('deriveNotifications', () => {
 
   it('never invents a match without a PolicyMatch row', () => {
     const empty = { ...DEMO_FEED, matches: [] as const }
-    const rows = deriveNotifications(empty, DEFAULT_NOTIFICATION_SETTINGS)
+    const rows = deriveFeedNotifications(empty, DEFAULT_NOTIFICATION_SETTINGS)
     expect(rows.every((row) => row.kind !== 'match')).toBe(true)
   })
 })

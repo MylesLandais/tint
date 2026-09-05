@@ -118,6 +118,11 @@ const CASES: readonly Case[] = [
     names: ['MediaPlayerAudioProps', 'MediaPlayerVideoProps'],
   },
   {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/components/media-player/PlaybackQueue.tsx',
+    names: ['PlaybackQueueProps'],
+  },
+  {
     doc: 'src/docs/VideoPlayerDoc.tsx',
     types: 'src/components/video-player/VideoPlayer.tsx',
     names: ['VideoPlayerProps'],
@@ -297,6 +302,66 @@ const CASES: readonly Case[] = [
     doc: 'src/docs/notify/NotifyDoc.tsx',
     types: 'src/components/notify/NotificationSettings.tsx',
     names: ['NotificationSettingsProps'],
+  },
+  {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/client/react.tsx',
+    names: ['TintClientProviderProps'],
+  },
+  {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/components/identity/Avatar.tsx',
+    names: ['AvatarProps', 'AvatarGroupProps'],
+  },
+  {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/components/surface/Surface.tsx',
+    names: ['SurfaceProps', 'CardProps'],
+  },
+  {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/components/status/Status.tsx',
+    names: ['SkeletonProps', 'EmptyStateProps', 'ErrorStateProps', 'ConnectionStatusProps'],
+  },
+  {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/components/navigation/Navigation.tsx',
+    names: ['NavigationListProps', 'BreadcrumbsProps', 'AppShellProps'],
+  },
+  {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/components/menu/Menu.tsx',
+    names: ['PopoverProps', 'MenuProps', 'TabsProps'],
+  },
+  {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/components/media-assets/UploadDropzone.tsx',
+    names: ['UploadDropzoneProps'],
+  },
+  {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/components/media-assets/UploadQueue.tsx',
+    names: ['UploadQueueProps'],
+  },
+  {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/components/media-assets/Gallery.tsx',
+    names: ['GalleryGridProps', 'MediaLightboxProps'],
+  },
+  {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/components/charts/types.ts',
+    names: ['ChartProps'],
+  },
+  {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/components/charts/Charts.tsx',
+    names: ['MetricCardProps'],
+  },
+  {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/components/workspace-grid/WorkspaceGrid.tsx',
+    names: ['WorkspaceGridProps'],
   },
 ]
 
