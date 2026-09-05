@@ -1,4 +1,5 @@
 export { formatTime, MediaPlaceholder, Slider, VolumeControl, Waveform } from './components/media'
+export { ReleaseChart } from './components/release-chart'
 export type {
   MediaPlaceholderProps,
   SliderProps,
@@ -292,3 +293,24 @@ export {
   toCharacterCardFormValues,
 } from './components/character-card'
 export type * from './components/character-card'
+
+export {
+  AppShell,
+  CommandPalette,
+  EmptyState,
+  ErrorBanner,
+  LoadingState,
+  NavRail,
+  StatusBar,
+  TopNav,
+  WorkspaceHeader,
+  WorkspaceTabs,
+  MetadataPanel,
+  DetailSheet,
+  FilterBar,
+  ResponsiveNavRail,
+} from './components/shell'
+export type * from './components/shell'
+
+export { ScatterPlot } from './components/scatter-plot'
+export type * from './components/scatter-plot'

@@ -34,6 +34,24 @@ const USAGE_AND_API: readonly DocSection[] = [
 
 const ROUTE_DATA = [
   {
+    path: 'components/release-chart',
+    aliases: ['components/scatter-plot'],
+    label: 'Release Chart',
+    blurb: 'Controlled score-versus-size visualization with supplied values and an accessible data table.',
+    sections: [{ id: 'preview', label: 'Preview' }, { id: 'api', label: 'API' }, { id: 'scatter', label: 'Generic comparisons' }],
+  },
+  {
+    path: 'components/shell',
+    label: 'Shell',
+    blurb: 'Application chrome for navigation, workspace headers, commands, status, and feedback states.',
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      { id: 'top-nav', label: 'Top navigation' },
+      { id: 'workspace', label: 'Workspace content' },
+      ...USAGE_AND_API,
+    ],
+  },
+  {
     path: 'components/media-player',
     label: 'Media Player',
     blurb: 'One container-responsive surface for audio and video: transport, waveform seek, volume, and a settings popout.',
@@ -306,7 +324,9 @@ export const DOC_GROUPS = ['Media', 'Chat & content', 'Data & infra', 'Theming &
 export type DocGroup = (typeof DOC_GROUPS)[number]
 
 export const ROUTE_GROUPS = {
+  'components/shell': 'Theming & layout',
   'components/media-player': 'Media',
+  'components/release-chart': 'Media',
   'components/video-player': 'Media',
   'components/media': 'Media',
   'components/audio-input': 'Media',
