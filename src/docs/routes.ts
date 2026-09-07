@@ -38,6 +38,7 @@ const ROUTE_DATA = [
   { path: 'components/annotation', label: 'Annotation Canvas', blurb: 'Controlled frame geometry, masks and track interpolation for media curation.', sections: [{ id: 'preview', label: 'Preview' }, ...USAGE_AND_API] },
   {
     path: 'components/release-chart',
+    aliases: ['components/scatter-plot'],
     label: 'Release Chart',
     blurb: 'Controlled score-versus-size visualization with supplied values and an accessible data table.',
     sections: [{ id: 'preview', label: 'Preview' }, { id: 'api', label: 'API' }],
@@ -221,6 +222,7 @@ const ROUTE_DATA = [
   },
   {
     path: 'components/auth',
+    aliases: ['components/auth-client'],
     label: 'Auth',
     blurb: 'Sign-in form, OAuth buttons, and a session client with an injectable transport.',
     sections: [

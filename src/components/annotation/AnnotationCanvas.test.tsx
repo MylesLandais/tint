@@ -4,7 +4,7 @@ import { AnnotationCanvas } from './AnnotationCanvas'
 import { interpolateGeometry, joinTracks } from './geometry'
 
 beforeEach(()=>{
-  vi.spyOn(HTMLCanvasElement.prototype,'getContext').mockReturnValue({clearRect:vi.fn()} as unknown as CanvasRenderingContext2D)
+  vi.spyOn(HTMLCanvasElement.prototype as { getContext(contextId: '2d'): CanvasRenderingContext2D | null },'getContext').mockReturnValue({clearRect:vi.fn()} as unknown as CanvasRenderingContext2D)
   vi.spyOn(SVGElement.prototype,'getBoundingClientRect').mockReturnValue({left:0,top:0,width:200,height:100} as DOMRect)
   SVGElement.prototype.setPointerCapture=vi.fn()
   SVGElement.prototype.hasPointerCapture=()=>false

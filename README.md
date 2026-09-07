@@ -590,3 +590,7 @@ Several tests are guards rather than unit tests, and are worth knowing by name:
 `propsTable.test.ts` fails when a component grows an undocumented prop,
 `componentGraph.test.ts` fails when the generated graph drifts from the real imports,
 and `routing.test.tsx` covers the route registry itself.
+
+## Source and collaboration
+
+See [tint Git history and collaboration](docs/git-history.md) for stable/dev branches, preserved history, cloning, and mirror recovery.
