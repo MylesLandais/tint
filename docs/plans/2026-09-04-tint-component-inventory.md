@@ -6,7 +6,7 @@ review snapshot for the PokéForce integration work.
 
 ## Public surface
 
-Tint currently exposes 45 TypeScript subpaths, including the new `tint/tile-map`
+Tint currently exposes 45 TypeScript subpaths, including the new `@nebula/tint/tile-map`
 package, plus the root package and stylesheet/theme entries. The component tree
 contains 48 directories. Engine-specific dependencies stay behind adapters and
 are not public contracts.

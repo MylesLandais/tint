@@ -30,7 +30,7 @@ const usageCode = `import {
   ChatMessageList,
   type ChatMessageData,
   type ChatSubmitPayload,
-} from 'tint/chat'
+} from '@nebula/tint/chat'
 import { useState } from 'react'
 
 export function Assistant() {

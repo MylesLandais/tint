@@ -1,9 +1,12 @@
 {
-  "name": "tint",
-  "private": true,
+  "name": "@nebula/tint",
   "version": "0.2.0",
   "type": "module",
   "description": "Tint \u2014 controlled React components for media and rich chat interfaces.",
+  "license": "UNLICENSED",
+  "publishConfig": {
+    "registry": "https://git.nebula-1.com/api/packages/nebula/npm/"
+  },
   "files": [
     "src",
     "!src/docs",

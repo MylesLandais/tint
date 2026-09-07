@@ -18,8 +18,8 @@ import {
   DEMO_FORM_SCHEMA,
   createMemoryFormTransport,
   defaultValuesForSchema,
-} from 'tint/form'
-import 'tint/form/styles.css'
+} from '@nebula/tint/form'
+import '@nebula/tint/form/styles.css'
 
 const [values, setValues] = useState(() => defaultValuesForSchema(DEMO_FORM_SCHEMA))
 const transport = createMemoryFormTransport({

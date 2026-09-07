@@ -1,6 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { ReleaseChart } from "tint/release-chart";
+import { ReleaseChart } from "@nebula/tint/release-chart";
 
 describe("ReleaseChart", () => {
   it("plots only supplied scores and exposes the exact data in an accessible table", () => {

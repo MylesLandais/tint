@@ -20,7 +20,7 @@ import { describe, expect, it } from 'vitest'
  * bundled into `index.js`, so those modules exist at type level only. Nothing
  * imported the shim. Here, `include: ["src"]` loaded it and everything passed.
  * In a consumer, `lib0/observable` resolved to nothing, `Doc extends
- * ObservableV2<DocEvents>` lost its base, and `tint/collab` failed to compile
+ * ObservableV2<DocEvents>` lost its base, and `@nebula/tint/collab` failed to compile
  * with three errors the consumer could do nothing about:
  *
  *     broadcast.ts(76,7):  Property 'on' does not exist on type 'Doc'.

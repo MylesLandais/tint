@@ -25,7 +25,7 @@ const roll = () => {
 
 <DiceRoller kind="d20" value={value} rolling={rolling} onRoll={roll} />`
 
-const usageCode = `import { DiceRoller } from 'tint/dice'
+const usageCode = `import { DiceRoller } from '@nebula/tint/dice'
 
 const [value, setValue] = useState(1)
 const [rolling, setRolling] = useState(false)
@@ -40,8 +40,8 @@ async function roll() {
 
 <DiceRoller kind="d20" value={value} rolling={rolling} onRoll={roll} />`
 
-const glyphUsageCode = `import { Icon } from 'tint/icon'
-import { D20 } from 'tint/dice'
+const glyphUsageCode = `import { Icon } from '@nebula/tint/icon'
+import { D20 } from '@nebula/tint/dice'
 
 // lucide ships Dice1–Dice6 but no d10/d20, so those two faces are
 // hand-authored glyphs rendered through the same Icon seam.

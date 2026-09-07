@@ -23,8 +23,8 @@ const GROUP_ICONS: Record<DocGroup, LucideIcon> = {
 
 const INSTALL_SNIPPET = `npm install tint`
 
-const HERO_USAGE = `import { MediaPlayer } from 'tint/media-player'
-import 'tint/styles.css'
+const HERO_USAGE = `import { MediaPlayer } from '@nebula/tint/media-player'
+import '@nebula/tint/styles.css'
 
 export function NowPlaying() {
   return (

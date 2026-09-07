@@ -36,7 +36,7 @@ const usage = `import {
   SourceHealthBadge,
   channelPath,
   resolveAttribution,
-} from 'tint/feed'`
+} from '@nebula/tint/feed'`
 
 type FilterId = 'all' | 'new' | 'unread' | 'matched'
 

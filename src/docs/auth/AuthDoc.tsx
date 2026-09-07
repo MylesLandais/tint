@@ -45,9 +45,9 @@ const LABELS: IdentifierSignInFormLabels = {
   hidePassword: 'Hide password',
 }
 
-const usageCode = `import { createAuthClient, IdentifierSignInForm } from 'tint/auth'
-import { createTintClient, TintClientProvider, useAuth, useSession } from 'tint/client'
-import 'tint/auth/styles.css'
+const usageCode = `import { createAuthClient, IdentifierSignInForm } from '@nebula/tint/auth'
+import { createTintClient, TintClientProvider, useAuth, useSession } from '@nebula/tint/client'
+import '@nebula/tint/auth/styles.css'
 
 // The client is transport-agnostic: implement AuthTransport against your backend.
 const auth = createAuthClient({ transport: httpTransport })
@@ -83,7 +83,7 @@ function SignInScreen() {
   )
 }`
 
-const transportCode = `import { authErrorFromResponse, type AuthTransport } from 'tint/auth'
+const transportCode = `import { authErrorFromResponse, type AuthTransport } from '@nebula/tint/auth'
 
 export const httpTransport: AuthTransport = {
   // Required — everything else is optional, and a missing method makes the

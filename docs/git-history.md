@@ -29,3 +29,22 @@ git clone --recurse-submodules https://git.nebula-1.com/nebula/tint.git
 Use your own Forgejo access token for HTTPS or your registered SSH key through the tailnet Git endpoint. Local `origin` points to Forgejo and `github` retains the original GitHub URL. Push and merge in Forgejo. A repository-scoped SSH deploy key permits Forgejo to update GitHub after pushes, with an hourly retry. Check Settings → Repository → Mirror Settings for the last result and use Synchronize Now to retry.
 
 Do not independently push to GitHub: its refs are replicas and can be overwritten by synchronization. Preserve an unexpected GitHub-only commit in Forgejo before retrying a mirror. Private repositories require explicit repository or organization membership.
+
+## Packages
+
+Tint publishes as `@nebula/tint` to the organization's Forgejo npm registry:
+
+```
+https://git.nebula-1.com/api/packages/nebula/npm/
+```
+
+Map the `@nebula` scope to that URL in a consumer's `.npmrc` and leave the default
+registry alone, so only nebula names resolve privately. Installing needs a Forgejo
+access token with `read:package`; publishing needs `write:package`. Tokens are passed
+through `NODE_AUTH_TOKEN` and are never committed — CI reads the `FORGEJO_NPM_TOKEN`
+repository secret. Releases are cut by pushing a `v<version>` tag to Forgejo; see the
+README for the full flow.
+
+The registry is part of the canonical Forgejo instance, not the GitHub mirror. Mirroring
+replicates branches and tags, not packages, so a tag reaching GitHub does not publish
+anything there.

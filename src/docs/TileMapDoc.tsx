@@ -4,7 +4,7 @@ import { Surface } from '../components/surface'
 import { DocsCallout, DocsDemo, DocsPage, DocsSection } from './components/DocsPage'
 
 const demoCode = `import { useState } from 'react'
-import { TileMapViewport, createMockExplorationClient } from 'tint/tile-map'
+import { TileMapViewport, createMockExplorationClient } from '@nebula/tint/tile-map'
 
 const client = createMockExplorationClient()
 const snapshot = useSyncExternalStore(client.subscribe, client.getSnapshot)

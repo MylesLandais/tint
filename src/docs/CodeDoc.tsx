@@ -8,7 +8,7 @@ import {
 } from './components/DocsPage'
 import { PropsTable } from './components/PropsTable'
 
-const tabsUsage = `import { CodeTabs } from 'tint/code'
+const tabsUsage = `import { CodeTabs } from '@nebula/tint/code'
 
 <CodeTabs
   label="Install"
@@ -18,7 +18,7 @@ const tabsUsage = `import { CodeTabs } from 'tint/code'
   ]}
 />`
 
-const highlightUsage = `import { HighlightedCode } from 'tint/code'
+const highlightUsage = `import { HighlightedCode } from '@nebula/tint/code'
 
 <pre>
   <HighlightedCode
@@ -30,7 +30,7 @@ const highlightUsage = `import { HighlightedCode } from 'tint/code'
   />
 </pre>`
 
-const registerUsage = `import { lowlight } from 'tint/code'
+const registerUsage = `import { lowlight } from '@nebula/tint/code'
 import kotlin from 'highlight.js/lib/languages/kotlin'
 
 // Tint registers a fixed subset; register more onto the shared instance.

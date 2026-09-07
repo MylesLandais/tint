@@ -1,11 +1,11 @@
 # EventReviewControls
 
 ```tsx
-import { EventReviewControls, type EventReviewControlsProps } from 'tint/media-workspace'
-import 'tint/styles.css'
+import { EventReviewControls, type EventReviewControlsProps } from '@nebula/tint/media-workspace'
+import '@nebula/tint/styles.css'
 ```
 
-Also exported from `tint`. This is the canonical source package, not the separate legacy `@tint/react` compiled package. Consumers need React 19, Tailwind v4, and a TypeScript-aware bundler as described in the repository README.
+Also exported from `@nebula/tint`. This is the canonical source package, not the separate legacy `@tint/react` compiled package. Consumers need React 19, Tailwind v4, and a TypeScript-aware bundler as described in the repository README.
 
 ## Controlled contract
 

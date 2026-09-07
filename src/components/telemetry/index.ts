@@ -3,7 +3,7 @@
  *
  * What is deliberately *not* here: collectors, exporters, and the mock chat/TTS
  * provider. Those belong in the host (the docs demo lives in `src/docs/chat/demo/`).
- * The waterfall is first-party SVG; the service map reuses `tint/graph`.
+ * The waterfall is first-party SVG; the service map reuses `@nebula/tint/graph`.
  */
 export type {
   TelemetryAttributeValue,

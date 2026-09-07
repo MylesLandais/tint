@@ -3,7 +3,7 @@ import { CodeBlock } from './components/CodeBlock'
 import { DocsCallout, DocsDemo, DocsFooter, DocsPage, DocsSection } from './components/DocsPage'
 import { PropsTable } from './components/PropsTable'
 
-const usage = `import { ScrollingLabel } from 'tint/scrolling-label'
+const usage = `import { ScrollingLabel } from '@nebula/tint/scrolling-label'
 
 <ScrollingLabel text={track.title} className="w-48" />`
 

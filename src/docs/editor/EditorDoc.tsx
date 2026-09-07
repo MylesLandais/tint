@@ -181,7 +181,7 @@ function CodeTemplateBuilder() {
   )
 }
 
-const usageCode = `import { Editor, type EditorDocument } from 'tint/editor'
+const usageCode = `import { Editor, type EditorDocument } from '@nebula/tint/editor'
 import { useState } from 'react'
 
 const emptyDocument: EditorDocument = {

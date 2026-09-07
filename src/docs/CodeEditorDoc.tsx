@@ -1,7 +1,7 @@
 import { CodeBlock } from './components/CodeBlock'
 import { DocsPage, DocsSection } from './components/DocsPage'
 
-const usage = `import { CodeEditor } from 'tint/code-editor'
+const usage = `import { CodeEditor } from '@nebula/tint/code-editor'
 
 // The host creates and retains the collaboration session and presence.
 <CodeEditor session={session} presence={presence} label="Shared Lua source" />`

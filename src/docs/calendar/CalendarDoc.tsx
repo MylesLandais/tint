@@ -15,7 +15,7 @@ import {
   DEMO_CALENDAR_TODAY,
 } from '../fixtures/demoCalendar'
 
-const usage = `import { CalendarMonthView, CalendarToolbar } from 'tint/calendar'
+const usage = `import { CalendarMonthView, CalendarToolbar } from '@nebula/tint/calendar'
 
 // The host owns the month and the selection; the grid owns neither.
 const [view, setView] = useState({ year: 2026, month: 3 })
@@ -43,7 +43,7 @@ const signature = `type CalendarEvent = {
   payload?: unknown
 }`
 
-const icalCode = `import { parseCalendarEvents, toICalendar } from 'tint/calendar'
+const icalCode = `import { parseCalendarEvents, toICalendar } from '@nebula/tint/calendar'
 
 // A CalDAV or .ics feed in; CalendarEvent[] out.
 const events = parseCalendarEvents(icsText, { source: 'work' })
@@ -51,7 +51,7 @@ const events = parseCalendarEvents(icsText, { source: 'work' })
 // And back out again, ready to PUT.
 const ics = toICalendar(events)`
 
-const recurrenceCode = `import { parseICalendar, expandCalendarEvents } from 'tint/calendar'
+const recurrenceCode = `import { parseICalendar, expandCalendarEvents } from '@nebula/tint/calendar'
 
 // Expansion is always bounded — an RRULE with no COUNT or UNTIL is infinite.
 const instances = expandCalendarEvents(parseICalendar(icsText), {
@@ -59,7 +59,7 @@ const instances = expandCalendarEvents(parseICalendar(icsText), {
   to: new Date('2026-03-31'),
 })`
 
-const caldavCode = `import { createCalDavClient, createFetchTransport } from 'tint/calendar-client'
+const caldavCode = `import { createCalDavClient, createFetchTransport } from '@nebula/tint/calendar-client'
 
 // The client never calls fetch itself; the host owns credentials and proxying.
 const client = createCalDavClient({

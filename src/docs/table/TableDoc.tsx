@@ -36,7 +36,7 @@ const usageCode = `import {
   deriveRows,
   type TableColumn,
   type TableSort,
-} from 'tint/table'
+} from '@nebula/tint/table'
 import { useMemo, useState } from 'react'
 
 const columns: TableColumn<Track>[] = [

@@ -21,7 +21,7 @@ import { Button } from '../../components/button'
 import { createWorkflowNodeRegistry } from './workflowDefinitions'
 import { workflowForName } from './workflowFixtures'
 
-const usage = `import { PolicyTable, PolicyEditor, PolicyDryRun, applyPolicyCommand } from 'tint/policy'`
+const usage = `import { PolicyTable, PolicyEditor, PolicyDryRun, applyPolicyCommand } from '@nebula/tint/policy'`
 
 function PolicyWorkbench() {
   const { feed, policy } = useSyncExternalStore(

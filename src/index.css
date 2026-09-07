@@ -9,7 +9,7 @@
 /*
  * tint ships raw source, and every component is styled with Tailwind utilities.
  * Tailwind v4 excludes node_modules from automatic content detection, so without
- * this an app that installs the package and imports `tint/styles.css` gets the
+ * this an app that installs the package and imports `@nebula/tint/styles.css` gets the
  * token contract and the @layer components blocks below — and none of the
  * utility classes the components actually use, which renders them nearly
  * unstyled.

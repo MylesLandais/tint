@@ -25,7 +25,7 @@ const previewDemoCode = `<ThemeToggle value={preference} onChange={setPreference
 
 <ThemePicker value={theme} onChange={setTheme} themes={THEMES} />`
 
-const usageCode = `import { ThemePicker, ThemeToggle, useColorScheme, useThemeName } from 'tint/theme'
+const usageCode = `import { ThemePicker, ThemeToggle, useColorScheme, useThemeName } from '@nebula/tint/theme'
 
 const THEMES = [
   { value: 'tint', label: 'Tint' },

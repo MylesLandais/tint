@@ -5,11 +5,11 @@ import { describe, expect, it } from 'vitest'
 /**
  * The package's two entry styles have to agree.
  *
- * `tint` (the root barrel) and `tint/<component>` (the focused subpaths) are
+ * `@nebula/tint` (the root barrel) and `@nebula/tint/<component>` (the focused subpaths) are
  * both documented, and a value that exists on one but not the other is a paper
  * cut you only discover at the import site. Thirteen table values — including
  * `toDeriveFilters` and `toTableSort`, which the README's own example uses —
- * were reachable only from `tint/table`.
+ * were reachable only from `@nebula/tint/table`.
  *
  * Reads source rather than importing it: the point is what the barrels *declare*,
  * and several subpaths pull in xterm or Tiptap that a Node-side test should not
@@ -82,7 +82,7 @@ describe('package exports', () => {
   const rootValues = exportedValues(read('src/index.ts'))
 
   /**
-   * `settings-popout` shipped from the root barrel with no `tint/settings-popout`
+   * `settings-popout` shipped from the root barrel with no `@nebula/tint/settings-popout`
    * subpath, so the focused import documented for every other component silently
    * did not exist. This asserted that one path by name, which caught that case and
    * nothing else — a new component directory could still ship unexported.
@@ -102,7 +102,7 @@ describe('package exports', () => {
 
   /**
    * Transport clients are intentionally absent from the root barrel: they are
-   * reached as `tint/auth-client` and `tint/calendar-client` so that a host that
+   * reached as `@nebula/tint/auth-client` and `@nebula/tint/calendar-client` so that a host that
    * only renders components never pulls an HTTP client into its graph. Everything
    * else must be reachable from the root, or the focused import each docs page
    * advertises would be the only way to get at it.

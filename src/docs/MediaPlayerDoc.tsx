@@ -46,7 +46,7 @@ const previewDemoCode = `<MediaPlayer
   title="Big Buck Bunny"
 />`
 
-const audioUsageCode = `import { MediaPlayer } from 'tint'
+const audioUsageCode = `import { MediaPlayer } from '@nebula/tint'
 
 export function MiniPlayer() {
   return (
@@ -64,7 +64,7 @@ export function MiniPlayer() {
   )
 }`
 
-const videoUsageCode = `import { MediaPlayer } from 'tint'
+const videoUsageCode = `import { MediaPlayer } from '@nebula/tint'
 
 export function Example() {
   return (

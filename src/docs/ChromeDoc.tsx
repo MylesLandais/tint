@@ -14,12 +14,12 @@ import {
 } from './components/DocsPage'
 import { PropsTable } from './components/PropsTable'
 
-const usage = `import { Badge } from 'tint/badge'
-import { ProgressBar } from 'tint/progress'
-import { Dialog } from 'tint/dialog'
-import { ContextMenu } from 'tint/context-menu'
-import { TreeView } from 'tint/tree'
-import { ToastProvider, useToast } from 'tint/toast'`
+const usage = `import { Badge } from '@nebula/tint/badge'
+import { ProgressBar } from '@nebula/tint/progress'
+import { Dialog } from '@nebula/tint/dialog'
+import { ContextMenu } from '@nebula/tint/context-menu'
+import { TreeView } from '@nebula/tint/tree'
+import { ToastProvider, useToast } from '@nebula/tint/toast'`
 
 const TREE: TreeNode[] = [
   {

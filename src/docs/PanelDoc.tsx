@@ -12,7 +12,7 @@ import {
 } from './components/DocsPage'
 import { PropsTable } from './components/PropsTable'
 
-const usage = `import { Panel } from 'tint/panel'
+const usage = `import { Panel } from '@nebula/tint/panel'
 
 const [open, setOpen] = useState(true)
 

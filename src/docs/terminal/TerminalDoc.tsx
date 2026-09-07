@@ -153,7 +153,7 @@ const previewDemoCode = `<TerminalConsole
   options={{ fontSize: 14 }}
 />`
 
-const usageCode = `import { TerminalConsole, type TerminalSession } from 'tint/terminal'
+const usageCode = `import { TerminalConsole, type TerminalSession } from '@nebula/tint/terminal'
 
 const session: TerminalSession = {
   onOutput(listener) {

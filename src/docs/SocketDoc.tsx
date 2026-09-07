@@ -1,7 +1,7 @@
 import { CodeBlock } from './components/CodeBlock'
 import { DocsCallout, DocsPage, DocsSection } from './components/DocsPage'
 
-const usage = `import type { Socket, SocketSpec, SocketType } from 'tint/socket'
+const usage = `import type { Socket, SocketSpec, SocketType } from '@nebula/tint/socket'
 
 const imageType: SocketType = { name: 'IMAGE' }
 

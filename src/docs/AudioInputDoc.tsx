@@ -29,7 +29,7 @@ const previewDemoCode = `<ChatComposer
   }
 />`
 
-const usage = `import { AudioInput } from 'tint/audio-input'
+const usage = `import { AudioInput } from '@nebula/tint/audio-input'
 
 <AudioInput
   transcriber={transcriber}

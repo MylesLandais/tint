@@ -16,8 +16,8 @@ import {
   TraceViewer,
   TraceServiceMap,
   type TelemetryTrace,
-} from 'tint/telemetry'
-import 'tint/graph/styles.css'
+} from '@nebula/tint/telemetry'
+import '@nebula/tint/graph/styles.css'
 
 export function AgentTrace({ trace }: { trace: TelemetryTrace }) {
   const [spanId, setSpanId] = useState<string | null>(null)

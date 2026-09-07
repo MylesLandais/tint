@@ -6,7 +6,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-// The graph ships its stylesheet as `tint/graph/styles.css`, like auth. Hosts
+// The graph ships its stylesheet as `@nebula/tint/graph/styles.css`, like auth. Hosts
 // import it themselves; the component does not pull it in.
 import '../../components/graph/graph.css'
 import '../../components/form/styles.css'
@@ -46,8 +46,8 @@ import {
   createDefaultNodeRegistry,
   comfyNodeDefinition,
   parseComfyWorkflow,
-} from 'tint/graph'
-import 'tint/graph/styles.css'
+} from '@nebula/tint/graph'
+import '@nebula/tint/graph/styles.css'
 
 // ComfyUI is opt-in: the default registry is domain-neutral.
 const registry = createDefaultNodeRegistry()

@@ -29,7 +29,7 @@ const SEAMS = {
   yjs: ['src/components/collab/'],
   'tanstack-table-core': ['src/components/table/'],
   // The React adapter owns the runtime; the stylesheet owns the CSS import,
-  // and is delivered to hosts as `tint/graph/styles.css`.
+  // and is delivered to hosts as `@nebula/tint/graph/styles.css`.
   xyflow: ['src/components/graph/adapter/', 'src/components/graph/graph.css'],
 } as const
 

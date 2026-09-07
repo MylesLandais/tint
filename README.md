@@ -23,10 +23,20 @@ prop nobody documented.
 
 ## Installation
 
-Tint is private. Pin a reviewed Git commit (or use the gateway's pinned submodule/workspace) instead of requesting it from the public npm registry:
+Tint is private and published as `@nebula/tint` to the nebula organization's Forgejo
+package registry, not to npmjs.com. Point the `@nebula` scope at that registry — and
+only that scope, so everything else still resolves publicly — in your app's `.npmrc`:
+
+```
+@nebula:registry=https://git.nebula-1.com/api/packages/nebula/npm/
+//git.nebula-1.com/api/packages/nebula/npm/:_authToken=${NODE_AUTH_TOKEN}
+```
+
+The token is a Forgejo access token with the `read:package` scope, exported as
+`NODE_AUTH_TOKEN` rather than written into the file. Then:
 
 ```bash
-npm install github:MylesLandais/tint#<commit-sha>
+npm install @nebula/tint
 ```
 
 Tint ships **raw TypeScript source** rather than a compiled bundle — every export
@@ -44,7 +54,7 @@ every surface reads a `--tint-*` custom property and there is nothing to render
 against without it:
 
 ```tsx
-import 'tint/styles.css'
+import '@nebula/tint/styles.css'
 ```
 
 That single import carries the token contract, the default palette, and — via a
@@ -99,7 +109,11 @@ the decoded pack when served locally.
 
 ## Working with the gateway checkout
 
-Tint is consumed by the `Workspace-end` application gateway as a git submodule at
+There are two ways to consume Tint, and which one you want depends on how close your
+work is to the library. Apps that merely *use* Tint install the published package (see
+[Installation](#installation)) and move by version. The `Workspace-end` application
+gateway does not: library work and gateway work land on the same day, so it consumes
+Tint as a git submodule at
 `third_party/tint`, registered as an npm workspace and pinned to a commit. That means
 there are normally **two checkouts of this repo on a workstation**: this one, where
 library work happens, and the gateway's, which is a pinned copy the web clients build
@@ -118,6 +132,15 @@ uncommitted there is invisible to this checkout and easy to lose to a later
 `git submodule update`. If you find changes there, commit them on a branch and push
 before touching the pin.
 
+### Cutting a release
+
+Everyone else moves by published version. Bump `version` in `package.json` on `dev`,
+commit, and push a matching `v<version>` tag to Forgejo. `.forgejo/workflows/release.yml`
+runs lint, build and test, then publishes to the registry with the `FORGEJO_NPM_TOKEN`
+repository secret. If no Actions runner is registered on the instance, publish by hand
+with `NODE_AUTH_TOKEN=<forgejo-token> npm publish` — `publishConfig` in `package.json`
+pins the registry, so this cannot reach npmjs.com by accident.
+
 Two things bite consumers, both because Tint ships TypeScript source rather than a build:
 
 - A consumer's `tsc` compiles our files inside *their* program, under *their*
@@ -132,7 +155,7 @@ diagnose both — is documented in that repo at `docs/operations/local-environme
 ## Using the component
 
 ```tsx
-import { MediaPlayer } from 'tint'
+import { MediaPlayer } from '@nebula/tint'
 
 export function Example() {
   return <MediaPlayer kind="video" src="/videos/big-buck-bunny.mp4" label="Big Buck Bunny" />
@@ -142,15 +165,15 @@ export function Example() {
 Chat components can be imported from the package root or the focused subpath:
 
 ```tsx
-import { ChatComposer, ChatConversation, ChatMessageList } from 'tint/chat'
+import { ChatComposer, ChatConversation, ChatMessageList } from '@nebula/tint/chat'
 ```
 
 Agent traces are host-owned spans. Tint lays them out as a waterfall Gantt, RED metrics, and a
-service map drawn with `tint/graph` — it does not collect, export, or ship a tracing backend:
+service map drawn with `@nebula/tint/graph` — it does not collect, export, or ship a tracing backend:
 
 ```tsx
-import { TraceViewer, TraceServiceMap } from 'tint/telemetry'
-import 'tint/graph/styles.css'
+import { TraceViewer, TraceServiceMap } from '@nebula/tint/telemetry'
+import '@nebula/tint/graph/styles.css'
 ```
 
 Subscriptions, policy rules, notifications, and Digg-style activity are separate
@@ -166,10 +189,10 @@ import {
   ReaderPane,
   channelPath,
   resolveAttribution,
-} from 'tint/feed'
-import { NotificationBell, deriveFeedNotifications, NotificationSettingsPanel } from 'tint/notify'
-import { PolicyTable, PolicyEditor, applyPolicyCommand } from 'tint/policy'
-import { ActivityFeed, sortActivityEvents } from 'tint/activity'
+} from '@nebula/tint/feed'
+import { NotificationBell, deriveFeedNotifications, NotificationSettingsPanel } from '@nebula/tint/notify'
+import { PolicyTable, PolicyEditor, applyPolicyCommand } from '@nebula/tint/policy'
+import { ActivityFeed, sortActivityEvents } from '@nebula/tint/activity'
 ```
 
 ## Application client
@@ -177,8 +200,8 @@ import { ActivityFeed, sortActivityEvents } from 'tint/activity'
 Tint 0.2 provides one optional application boundary for transport-backed state. The application constructs the adapters; Tint coordinates lifecycle and exposes capability-specific hooks. Visual components remain controlled and work without the provider.
 
 ```tsx
-import { createBrowserPlaybackAdapter, createTintClient, TintClientProvider } from 'tint/client'
-import { createAuthClient } from 'tint/auth'
+import { createBrowserPlaybackAdapter, createTintClient, TintClientProvider } from '@nebula/tint/client'
+import { createAuthClient } from '@nebula/tint/auth'
 
 const client = createTintClient({
   request,
@@ -208,8 +231,8 @@ the stream and forwards it to a host-supplied `AudioTranscriber`; it does not ch
 service or send audio anywhere by itself:
 
 ```tsx
-import { AudioInput, type AudioTranscriber } from 'tint/audio-input'
-import { MediaPlayer } from 'tint/media-player'
+import { AudioInput, type AudioTranscriber } from '@nebula/tint/audio-input'
+import { MediaPlayer } from '@nebula/tint/media-player'
 
 <AudioInput
   transcriber={transcriber satisfies AudioTranscriber}
@@ -243,7 +266,7 @@ so an application can coordinate it with the rest of a workbench without Tint ch
 store:
 
 ```tsx
-import { Editor, type EditorDocument } from 'tint/editor'
+import { Editor, type EditorDocument } from '@nebula/tint/editor'
 
 const [document, setDocument] = useState<EditorDocument>({
   type: 'doc',
@@ -264,7 +287,7 @@ your PTY, WebSocket, worker, or browser runtime; Tint only forwards raw input an
 streamed output:
 
 ```tsx
-import { TerminalConsole, type TerminalSession } from 'tint/terminal'
+import { TerminalConsole, type TerminalSession } from '@nebula/tint/terminal'
 
 const session: TerminalSession = {
   onOutput(listener) {
@@ -299,7 +322,7 @@ import {
   type DataFilterModel,
   type DataSortingState,
   type TableColumn,
-} from 'tint/table'
+} from '@nebula/tint/table'
 
 const [filterModel, setFilterModel] = useState<DataFilterModel>({ items: [] })
 const [sorting, setSorting] = useState<DataSortingState>([])
@@ -318,7 +341,7 @@ Collaborative text is a typed config, not an editor. Hosts own the room name and
 provider mesh; tint vendored Yjs v13 and exposes `createCollabSession`:
 
 ```tsx
-import { createCollabSession } from 'tint/collab'
+import { createCollabSession } from '@nebula/tint/collab'
 
 const session = createCollabSession({
   room: 'workspace:crate:note:intro',
@@ -339,8 +362,8 @@ document state: it reports what the user did and hands back the document that
 results, so edits only stick if you pass the new document back.
 
 ```tsx
-import { InteractiveGraphView, applyCommand } from 'tint/graph'
-import 'tint/graph/styles.css'
+import { InteractiveGraphView, applyCommand } from '@nebula/tint/graph'
+import '@nebula/tint/graph/styles.css'
 
 const [document, setDocument] = useState(initialGraph)
 
@@ -351,14 +374,14 @@ const [document, setDocument] = useState(initialGraph)
 `onDocumentChange`. Hosts running their own store can ignore that callback and
 reduce `onCommand` themselves with the same function.
 
-The graph carries its own stylesheet — `tint/graph/styles.css`, alongside
-`tint/styles.css` — because it brings xyflow's CSS with it and non-graph
+The graph carries its own stylesheet — `@nebula/tint/graph/styles.css`, alongside
+`@nebula/tint/styles.css` — because it brings xyflow's CSS with it and non-graph
 consumers should not pay for that. ComfyUI workflow support is composed in via
 `comfyNodeDefinition`; the default registry is domain-neutral.
 
 A node kind may declare `formSchema`. The inspector then renders `FormLayout`
 and Apply submits `node.configure` through the same reducer. Inspector forms
-need `tint/form/styles.css` as well.
+need `@nebula/tint/form/styles.css` as well.
 
 `FormLayout` is schema-driven: the host owns `values`, Tint maps `FormSchema`
 onto labelled inputs and a `FormSubmitEnvelope`. Hosts persist through
@@ -366,8 +389,8 @@ onto labelled inputs and a `FormSubmitEnvelope`. Hosts persist through
 `SignInForm` and `CharacterCardEditorForm` are composed on this kit.
 
 ```tsx
-import { FormLayout, DEMO_FORM_SCHEMA, defaultValuesForSchema } from 'tint/form'
-import 'tint/form/styles.css'
+import { FormLayout, DEMO_FORM_SCHEMA, defaultValuesForSchema } from '@nebula/tint/form'
+import '@nebula/tint/form/styles.css'
 
 const [values, setValues] = useState(() => defaultValuesForSchema(DEMO_FORM_SCHEMA))
 
@@ -385,10 +408,10 @@ Components carry no hardcoded colors. Every surface reads a `--tint-*` custom pr
 so **the stylesheet is required** — without it there is nothing to render against:
 
 ```tsx
-import 'tint/styles.css'                   // contract + the default palette
-import 'tint/themes/solarized.css'         // optional
-import 'tint/themes/gruvbox.css'           // optional
-import 'tint/themes/mocha.css'             // optional — Catppuccin, one file per flavor
+import '@nebula/tint/styles.css'                   // contract + the default palette
+import '@nebula/tint/themes/solarized.css'         // optional
+import '@nebula/tint/themes/gruvbox.css'           // optional
+import '@nebula/tint/themes/mocha.css'             // optional — Catppuccin, one file per flavor
 ```
 
 The Catppuccin flavors ship as `latte.css`, `frappe.css`, `macchiato.css`, and `mocha.css`.
@@ -419,7 +442,7 @@ The state is a hook and the controls are controlled components, so an app with i
 preference store can supply its own values:
 
 ```tsx
-import { ThemeToggle, useColorScheme } from 'tint/theme'
+import { ThemeToggle, useColorScheme } from '@nebula/tint/theme'
 
 function Appearance() {
   const { preference, setPreference } = useColorScheme()
@@ -489,7 +512,7 @@ loading/success/error/… registry on top, so a status indicator is defined once
 across chat, table, and media-player instead of reimplemented per feature.
 
 ```tsx
-import { Icon, StatusIcon, Spinner } from 'tint/icon'
+import { Icon, StatusIcon, Spinner } from '@nebula/tint/icon'
 import { Search } from 'lucide-react'
 
 <Icon icon={Search} size="sm" />

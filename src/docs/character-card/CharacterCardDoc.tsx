@@ -21,8 +21,8 @@ import {
   CharacterCardEditorForm,
   emptyTavernCard,
   serializeTavernCard,
-} from 'tint/character-card'
-import 'tint/form/styles.css'
+} from '@nebula/tint/character-card'
+import '@nebula/tint/form/styles.css'
 
 const [card, setCard] = useState(() => emptyTavernCard())
 

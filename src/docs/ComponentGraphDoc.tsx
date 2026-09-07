@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef } from 'react'
-// The graph ships its stylesheet as `tint/graph/styles.css`, like auth. Hosts
+// The graph ships its stylesheet as `@nebula/tint/graph/styles.css`, like auth. Hosts
 // import it themselves; the component does not pull it in.
 import '../components/graph/graph.css'
 import {

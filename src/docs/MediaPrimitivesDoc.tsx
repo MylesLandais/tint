@@ -51,7 +51,7 @@ const [hover, setHover] = useState<number | null>(null)
 
 <MediaPlaceholder />`
 
-const usage = `import { Slider, VolumeControl, formatTime } from 'tint/media'
+const usage = `import { Slider, VolumeControl, formatTime } from '@nebula/tint/media'
 
 const [progress, setProgress] = useState(0)
 
@@ -65,7 +65,7 @@ const [progress, setProgress] = useState(0)
   onToggleMute={() => setMuted(m => !m)}
 />`
 
-const waveformUsage = `import { Waveform } from 'tint/media'
+const waveformUsage = `import { Waveform } from '@nebula/tint/media'
 
 // Peaks must already be normalized to 0..1, and \`color\` must be a literal
 // canvas-parseable colour — fillStyle cannot resolve var(--tint-accent).

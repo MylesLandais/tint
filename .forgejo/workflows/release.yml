@@ -1,0 +1,45 @@
+# Cutting a release: bump `version` in package.json, commit, then push a matching
+# `v<version>` tag to Forgejo. This runs the same gate as CI before publishing, so
+# a tag can never ship something that does not lint, build and test.
+#
+# Requires the repository secret FORGEJO_NPM_TOKEN — a Forgejo access token with
+# the `write:package` scope on the nebula organization. The registry itself comes
+# from `publishConfig` in package.json; `.npmrc` reads the token from the
+# environment so nothing credential-shaped is ever committed.
+#
+# If this instance has no Actions runner registered the workflow is inert, and a
+# release is cut by hand instead:
+#
+#     NODE_AUTH_TOKEN=<forgejo-token> npm publish
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm test
+
+      - name: Publish
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.FORGEJO_NPM_TOKEN }}

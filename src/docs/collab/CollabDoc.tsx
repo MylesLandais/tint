@@ -22,7 +22,7 @@ const right = createCollabSession({
 left.fragment.insert(0, 'hello')
 // right.fragment.toString() === 'hello'`
 
-const usageCode = `import { createCollabSession } from 'tint/collab'
+const usageCode = `import { createCollabSession } from '@nebula/tint/collab'
 
 const left = createCollabSession({
   room: 'workspace:demo:note:crate',

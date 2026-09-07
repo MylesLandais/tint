@@ -9,7 +9,7 @@ import {
 } from './components/DocsPage'
 import { PropsTable } from './components/PropsTable'
 
-const usage = `import { VideoPlayer } from 'tint/video-player'
+const usage = `import { VideoPlayer } from '@nebula/tint/video-player'
 
 <VideoPlayer
   src="/videos/big-buck-bunny.mp4"
@@ -19,7 +19,7 @@ const usage = `import { VideoPlayer } from 'tint/video-player'
   onPlay={() => analytics.track('play')}
 />`
 
-const viaMediaPlayer = `import { MediaPlayer } from 'tint/media-player'
+const viaMediaPlayer = `import { MediaPlayer } from '@nebula/tint/media-player'
 
 // Identical surface, reached through the unified entry point.
 <MediaPlayer kind="video" src="/videos/clip.mp4" label="Clip" />`

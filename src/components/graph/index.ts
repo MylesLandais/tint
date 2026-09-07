@@ -9,7 +9,7 @@
  * ["src"]` publishes the whole directory. They are docs material and now live in
  * `src/docs/graph/`.
  *
- * The stylesheet is a separate entry point, `tint/graph/styles.css`, like auth's.
+ * The stylesheet is a separate entry point, `@nebula/tint/graph/styles.css`, like auth's.
  */
 export { InteractiveGraphView } from './InteractiveGraphView'
 export type { InteractiveGraphViewProps } from './InteractiveGraphView'

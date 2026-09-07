@@ -3,7 +3,7 @@ import type {
   ChatCustomPart,
   ChatMessageData,
   ChatMessageListProps,
-} from 'tint/chat'
+} from '@nebula/tint/chat'
 
 type WeatherPart = ChatCustomPart & {
   kind: 'weather'

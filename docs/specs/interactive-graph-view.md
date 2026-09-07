@@ -39,7 +39,7 @@ An interactive node canvas for graph documents the host owns. It renders nodes
 and edges, reports what the user did, and computes the document that results. It
 does not persist anything, execute anything, or know what a node means.
 
-`tint/graph` is domain-neutral. A ComfyUI workflow parser ships alongside it as a
+`@nebula/tint/graph` is domain-neutral. A ComfyUI workflow parser ships alongside it as a
 worked example of mapping an external format onto the contracts — it is opt-in,
 not part of the default registry.
 
@@ -51,7 +51,7 @@ src/components/graph/
   adapter/       the only code that imports src/vendor/xyflow
   nodes/         node views + the default registry
   comfy/         ComfyUI workflow parsing (a consumer of the contracts)
-  graph.css      shipped to hosts as `tint/graph/styles.css`
+  graph.css      shipped to hosts as `@nebula/tint/graph/styles.css`
 src/vendor/xyflow/  the vendored engine — see PROVENANCE.md
 src/docs/graph/     the demo: fixtures, mock run, and the docs page
 ```
@@ -64,7 +64,7 @@ comment:
 | Only `adapter/` imports `src/vendor/xyflow` (including from CSS) | `src/vendor/boundary.test.ts` |
 | No barrel re-exports a vendored type | `src/vendor/boundary.test.ts` |
 | The vendored bundle matches its recorded checksum | `src/vendor/checksums.test.ts` |
-| The root barrel re-exports everything `tint/graph` exposes | `src/exports.test.ts` |
+| The root barrel re-exports everything `@nebula/tint/graph` exposes | `src/exports.test.ts` |
 
 `contracts/` is React-free and xyflow-free: it is the part a host can depend on
 without pulling the canvas — and without inheriting a rendering engine. Node

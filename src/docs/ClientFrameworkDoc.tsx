@@ -103,7 +103,7 @@ const frameworkApiRows = [
   { name: 'onDocumentChange', type: '(document, command) => void', required: true, description: 'Workspace mutation intent.' },
 ]
 
-const clientCode = `import { createTintClient, TintClientProvider } from 'tint/client'
+const clientCode = `import { createTintClient, TintClientProvider } from '@nebula/tint/client'
 
 const client = createTintClient({
   request,

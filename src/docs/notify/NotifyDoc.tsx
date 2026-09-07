@@ -19,7 +19,7 @@ const usage = `import {
   NotificationList,
   NotificationSettingsPanel,
   deriveFeedNotifications,
-} from 'tint/notify'
+} from '@nebula/tint/notify'
 
 // Mount the bell once near the shell; host owns settings + read ids.
 <NotificationBell unreadCount={unread} open={open} onOpenChange={setOpen}>

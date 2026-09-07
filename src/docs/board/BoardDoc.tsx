@@ -39,8 +39,8 @@ const usage = `import {
   BoardDetail,
   applyBoardCommand,
   cardsForLane,
-} from 'tint/board'
-import { SplitPane } from 'tint/feed'
+} from '@nebula/tint/board'
+import { SplitPane } from '@nebula/tint/feed'
 
 // Host owns the document. Switching Masonry / Kanban changes placement only.
 function Workbench({ document, onDocumentChange }) {

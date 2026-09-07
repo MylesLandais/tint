@@ -33,7 +33,7 @@ export function ReleaseChartDoc() {
         <pre className="overflow-auto rounded-lg bg-tint-surface p-4 text-xs">
           <code>
             {
-              "import { ReleaseChart } from 'tint/release-chart'\n\nfunction ReleaseChart(props: {\n  rows: readonly { id: string; size: number; score: number }[]\n})"
+              "import { ReleaseChart } from '@nebula/tint/release-chart'\n\nfunction ReleaseChart(props: {\n  rows: readonly { id: string; size: number; score: number }[]\n})"
             }
           </code>
         </pre>
@@ -47,7 +47,7 @@ export function ReleaseChartDoc() {
       <DocsSection id="scatter" title="Generic numeric comparisons">
         <DocsDemo
           code={
-            "import { ScatterPlot } from 'tint/scatter-plot'\n<ScatterPlot rows={rows} label='Comparison' xLabel='Cost' yLabel='Benefit' />"
+            "import { ScatterPlot } from '@nebula/tint/scatter-plot'\n<ScatterPlot rows={rows} label='Comparison' xLabel='Cost' yLabel='Benefit' />"
           }
         >
           <ScatterPlot

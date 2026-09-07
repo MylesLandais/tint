@@ -5,7 +5,7 @@ import { CodeBlock } from './components/CodeBlock'
 import { DocsCallout, DocsDemo, DocsFooter, DocsPage, DocsSection } from './components/DocsPage'
 import { PropsTable } from './components/PropsTable'
 
-const usage = `import { Button } from 'tint/button'
+const usage = `import { Button } from '@nebula/tint/button'
 
 <Button variant="primary" onClick={save}>Save</Button>
 <Button variant="danger" size="sm" onClick={remove}>Delete</Button>`

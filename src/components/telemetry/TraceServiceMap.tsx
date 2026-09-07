@@ -7,8 +7,8 @@ import type { TraceServiceMapProps } from './types'
 /**
  * Service topology for a trace, drawn with the public graph canvas.
  *
- * xyflow stays behind `tint/graph`. Hosts that render this must import
- * `tint/graph/styles.css` themselves — the same rule as InteractiveGraphView.
+ * xyflow stays behind `@nebula/tint/graph`. Hosts that render this must import
+ * `@nebula/tint/graph/styles.css` themselves — the same rule as InteractiveGraphView.
  */
 export function TraceServiceMap({
   trace,

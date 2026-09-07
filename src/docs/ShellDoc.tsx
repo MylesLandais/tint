@@ -52,7 +52,7 @@ const groups: NavGroup[] = [
 const statusItems: StatusItem[] = [
   { id: "saved", label: "All changes saved", tone: "success" },
 ];
-const example = `import { AppShell, NavRail, WorkspaceHeader, StatusBar } from 'tint/shell'
+const example = `import { AppShell, NavRail, WorkspaceHeader, StatusBar } from '@nebula/tint/shell'
 
 <AppShell
   nav={<NavRail groups={groups} activeId="home" onNavigate={navigate} />}
@@ -62,7 +62,7 @@ const example = `import { AppShell, NavRail, WorkspaceHeader, StatusBar } from '
 >
   <YourWorkspace />
 </AppShell>`;
-const topExample = `import { AppShell, TopNav, WorkspaceHeader, StatusBar } from 'tint/shell'
+const topExample = `import { AppShell, TopNav, WorkspaceHeader, StatusBar } from '@nebula/tint/shell'
 
 <AppShell
   navPosition="top"
@@ -206,7 +206,7 @@ export function ShellDoc() {
       <DocsSection id="workspace" title="Workspace content">
         <DocsDemo
           code={
-            "import { WorkspaceTabs, MetadataPanel, FilterBar, DetailSheet } from 'tint/shell'"
+            "import { WorkspaceTabs, MetadataPanel, FilterBar, DetailSheet } from '@nebula/tint/shell'"
           }
         >
           <FilterBar
@@ -262,7 +262,7 @@ export function ShellDoc() {
         </p>
       </DocsSection>
       <DocsSection id="split-layout" title="Resizable workspace layout">
-        <DocsDemo code={`import { WorkspaceSplit } from 'tint/shell'
+        <DocsDemo code={`import { WorkspaceSplit } from '@nebula/tint/shell'
 
 <WorkspaceSplit size={toolsWidth} onSizeChange={setToolsWidth}
   minSize={120} maxSize={320} label="Resize tools"

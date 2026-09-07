@@ -61,7 +61,7 @@ import {
   DocsSection,
 } from './components/DocsPage'
 
-const usageCode = `import { Icon, StatusIcon, Spinner } from 'tint/icon'
+const usageCode = `import { Icon, StatusIcon, Spinner } from '@nebula/tint/icon'
 import { Search } from 'lucide-react'
 
 export function Example() {
@@ -74,7 +74,7 @@ export function Example() {
   )
 }`
 
-const previewDemoCode = `import { Icon, StatusIcon, Spinner } from 'tint/icon'
+const previewDemoCode = `import { Icon, StatusIcon, Spinner } from '@nebula/tint/icon'
 import { Search } from 'lucide-react'
 
 <Icon icon={Search} size="sm" />
@@ -253,7 +253,7 @@ const diceRollerSignature = `type DiceRollerProps = Omit<HTMLAttributes<HTMLDivE
   label?: string
 }`
 
-const diceUsageCode = `import { DiceRoller } from 'tint/dice'
+const diceUsageCode = `import { DiceRoller } from '@nebula/tint/dice'
 import { useState } from 'react'
 
 export function Example() {

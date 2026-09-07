@@ -10,7 +10,7 @@ import { CodeBlock } from '../components/CodeBlock'
 import { DocsPage, DocsPreview, DocsSection } from '../components/DocsPage'
 import { PropsTable } from '../components/PropsTable'
 
-const usage = `import { ActivityFeed, ActivityFeedRow, sortActivityEvents } from 'tint/activity'`
+const usage = `import { ActivityFeed, ActivityFeedRow, sortActivityEvents } from '@nebula/tint/activity'`
 
 export function ActivityDoc() {
   const [sort, setSort] = useState<ActivitySort>('hot')

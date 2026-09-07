@@ -34,7 +34,7 @@ of xyflow types; only `src/components/graph/adapter/` imports this directory.
   `@xyflow/react` self-reference the upstream tree uses. Same role as
   `lib0-shims.d.ts` in the yjs vendor.
 - `style.css` — the upstream React Flow stylesheet, re-exported to hosts as
-  `tint/graph/styles.css`. (`base.css` is not vendored: nothing imported it.)
+  `@nebula/tint/graph/styles.css`. (`base.css` is not vendored: nothing imported it.)
 - `LICENSE` — unmodified upstream MIT text.
 
 Dropped: CJS/UMD builds, source maps, tests, and the unbundled multi-file ESM tree.

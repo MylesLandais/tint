@@ -1,13 +1,13 @@
 /*
- * The graph canvas stylesheet, imported by the host as `tint/graph/styles.css`
+ * The graph canvas stylesheet, imported by the host as `@nebula/tint/graph/styles.css`
  * — not by the component.
  *
  * It was a bare `import './graph.css'` inside InteractiveGraphView, the only
  * shipped component that imported its own stylesheet. Because the root barrel
- * re-exports the graph module, that made `import { ChatComposer } from 'tint'`
+ * re-exports the graph module, that made `import { ChatComposer } from '@nebula/tint'`
  * transitively pull this file and xyflow's 625 lines with it, and required
  * every consumer's bundler to handle a CSS import from inside node_modules
- * source. Delivery follows `tint/auth/styles.css` instead: an explicit subpath,
+ * source. Delivery follows `@nebula/tint/auth/styles.css` instead: an explicit subpath,
  * so only the graph's users pay for it.
  */
 @import '../../vendor/xyflow/style.css';

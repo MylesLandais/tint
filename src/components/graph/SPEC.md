@@ -10,9 +10,9 @@ running their own store can use it directly.
 Only `adapter/` may import `src/vendor/xyflow`, `graph.css` included. That is
 checked by `src/vendor/boundary.test.ts`, not by convention.
 
-The stylesheet ships to hosts as `tint/graph/styles.css`, like auth's — the
+The stylesheet ships to hosts as `@nebula/tint/graph/styles.css`, like auth's — the
 component does not import it. Inspector `FormLayout`s also need
-`tint/form/styles.css`.
+`@nebula/tint/form/styles.css`.
 
 ## Projections
 

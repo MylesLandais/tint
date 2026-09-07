@@ -29,7 +29,7 @@ const [value, setValue] = useState('speed-2')
   />
 </div>`
 
-const usage = `import { SettingsPopout } from 'tint/settings-popout'
+const usage = `import { SettingsPopout } from '@nebula/tint/settings-popout'
 
 const [open, setOpen] = useState(false)
 const [speed, setSpeed] = useState('1')
