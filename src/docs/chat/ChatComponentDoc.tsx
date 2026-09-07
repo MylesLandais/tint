@@ -10,6 +10,7 @@ import {
   DocsSection,
 } from '../components/DocsPage'
 import { ChatDemo } from './demo/ChatDemo'
+import { ZulipThreadsDemo } from './ZulipThreadsDemo'
 
 const previewDemoCode = `<ChatConversation className="h-[42rem]">
   <ChatMessageList
@@ -178,6 +179,11 @@ const composerProps = [
     type: 'ChatComposerState',
     defaultValue: "'idle'",
     description: 'Controls idle, submitting, streaming, disabled, and error modes.',
+  },
+  {
+    name: 'inputLabel',
+    type: 'string',
+    description: 'Accessible name for the composition textarea; defaults to the placeholder.',
   },
   {
     name: 'attachments',
@@ -665,6 +671,14 @@ export function ChatComponentDoc() {
         <DocsDemo code={previewDemoCode}>
           <ChatDemo />
         </DocsDemo>
+      </DocsSection>
+
+      <DocsSection
+        id="threads-mvp"
+        title="Channels and topic threads MVP"
+        description="A deterministic client slice that composes channel and topic navigation with the existing controlled transcript and composition buffer. Switching a topic narrows the message list, clears its unread count, and targets new messages to that durable channel/topic pair."
+      >
+        <ZulipThreadsDemo />
       </DocsSection>
 
       <DocsSection

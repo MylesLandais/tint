@@ -118,6 +118,11 @@ const CASES: readonly Case[] = [
     names: ['MediaPlayerAudioProps', 'MediaPlayerVideoProps'],
   },
   {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/components/media-player/PlaybackQueue.tsx',
+    names: ['PlaybackQueueProps'],
+  },
+  {
     doc: 'src/docs/VideoPlayerDoc.tsx',
     types: 'src/components/video-player/VideoPlayer.tsx',
     names: ['VideoPlayerProps'],
@@ -172,6 +177,191 @@ const CASES: readonly Case[] = [
     doc: 'src/docs/character-card/CharacterCardDoc.tsx',
     types: 'src/components/character-card/CharacterCardEditorForm.tsx',
     names: ['CharacterCardEditorFormProps'],
+  },
+  {
+    doc: 'src/docs/feed/FeedDoc.tsx',
+    types: 'src/components/feed/FeedLayout.tsx',
+    names: ['FeedLayoutProps'],
+  },
+  {
+    doc: 'src/docs/feed/FeedDoc.tsx',
+    types: 'src/components/feed/SplitPane.tsx',
+    names: ['SplitPaneProps'],
+  },
+  {
+    doc: 'src/docs/feed/FeedDoc.tsx',
+    types: 'src/components/feed/ReaderPane.tsx',
+    names: ['ReaderPaneProps'],
+  },
+  {
+    doc: 'src/docs/feed/FeedDoc.tsx',
+    types: 'src/components/feed/NarrationTransport.tsx',
+    names: ['NarrationTransportProps'],
+  },
+  {
+    doc: 'src/docs/feed/FeedDoc.tsx',
+    types: 'src/components/feed/SourceHealthBadge.tsx',
+    names: ['SourceHealthBadgeProps'],
+  },
+  {
+    doc: 'src/docs/feed/FeedDoc.tsx',
+    types: 'src/components/feed/ViewModeToggle.tsx',
+    names: ['ViewModeToggleProps'],
+  },
+  {
+    doc: 'src/docs/feed/FeedDoc.tsx',
+    types: 'src/components/feed/HighlightLayer.tsx',
+    names: ['HighlightLayerProps'],
+  },
+  {
+    doc: 'src/docs/feed/FeedDoc.tsx',
+    types: 'src/components/feed/SelectionToolbar.tsx',
+    names: ['SelectionToolbarProps'],
+  },
+  {
+    doc: 'src/docs/feed/FeedDoc.tsx',
+    types: 'src/components/feed/FeedEntryCard.tsx',
+    names: ['FeedEntryCardProps'],
+  },
+  {
+    doc: 'src/docs/feed/FeedDoc.tsx',
+    types: 'src/components/feed/FeedEntryRow.tsx',
+    names: ['FeedEntryRowProps'],
+  },
+  {
+    doc: 'src/docs/calendar/CalendarDoc.tsx',
+    types: 'src/components/calendar/CalendarMonthView.tsx',
+    names: ['CalendarMonthViewProps'],
+  },
+  {
+    doc: 'src/docs/calendar/CalendarDoc.tsx',
+    types: 'src/components/calendar/CalendarToolbar.tsx',
+    names: ['CalendarToolbarProps'],
+  },
+  {
+    doc: 'src/docs/ScrollingLabelDoc.tsx',
+    types: 'src/components/scrolling-label/ScrollingLabel.tsx',
+    names: ['ScrollingLabelProps'],
+  },
+  {
+    doc: 'src/docs/board/BoardDoc.tsx',
+    types: 'src/components/board/BoardLayout.tsx',
+    names: ['BoardLayoutProps'],
+  },
+  {
+    doc: 'src/docs/board/BoardDoc.tsx',
+    types: 'src/components/board/BoardCard.tsx',
+    names: ['BoardCardProps'],
+  },
+  {
+    doc: 'src/docs/board/BoardDoc.tsx',
+    types: 'src/components/board/BoardDetail.tsx',
+    names: ['BoardDetailProps'],
+  },
+  {
+    doc: 'src/docs/board/BoardDoc.tsx',
+    types: 'src/components/board/BoardLayoutToggle.tsx',
+    names: ['BoardLayoutToggleProps'],
+  },
+  {
+    doc: 'src/docs/activity/ActivityDoc.tsx',
+    types: 'src/components/activity/ActivityFeed.tsx',
+    names: ['ActivityFeedProps'],
+  },
+  {
+    doc: 'src/docs/activity/ActivityDoc.tsx',
+    types: 'src/components/activity/ActivityFeedRow.tsx',
+    names: ['ActivityFeedRowProps'],
+  },
+  {
+    doc: 'src/docs/policy/PolicyDoc.tsx',
+    types: 'src/components/policy/PolicyTable.tsx',
+    names: ['PolicyTableProps'],
+  },
+  {
+    doc: 'src/docs/policy/PolicyDoc.tsx',
+    types: 'src/components/policy/PolicyEditor.tsx',
+    names: ['PolicyEditorProps'],
+  },
+  {
+    doc: 'src/docs/policy/PolicyDoc.tsx',
+    types: 'src/components/policy/PolicyDryRun.tsx',
+    names: ['PolicyDryRunProps'],
+  },
+  {
+    doc: 'src/docs/notify/NotifyDoc.tsx',
+    types: 'src/components/notify/NotificationBell.tsx',
+    names: ['NotificationBellProps'],
+  },
+  {
+    doc: 'src/docs/notify/NotifyDoc.tsx',
+    types: 'src/components/notify/NotificationList.tsx',
+    names: ['NotificationListProps'],
+  },
+  {
+    doc: 'src/docs/notify/NotifyDoc.tsx',
+    types: 'src/components/notify/NotificationSettings.tsx',
+    names: ['NotificationSettingsProps'],
+  },
+  {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/client/react.tsx',
+    names: ['TintClientProviderProps'],
+  },
+  {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/components/identity/Avatar.tsx',
+    names: ['AvatarProps', 'AvatarGroupProps'],
+  },
+  {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/components/surface/Surface.tsx',
+    names: ['SurfaceProps', 'CardProps'],
+  },
+  {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/components/status/Status.tsx',
+    names: ['SkeletonProps', 'EmptyStateProps', 'ErrorStateProps', 'ConnectionStatusProps'],
+  },
+  {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/components/navigation/Navigation.tsx',
+    names: ['NavigationListProps', 'BreadcrumbsProps', 'AppShellProps'],
+  },
+  {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/components/menu/Menu.tsx',
+    names: ['PopoverProps', 'MenuProps', 'TabsProps'],
+  },
+  {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/components/media-assets/UploadDropzone.tsx',
+    names: ['UploadDropzoneProps'],
+  },
+  {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/components/media-assets/UploadQueue.tsx',
+    names: ['UploadQueueProps'],
+  },
+  {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/components/media-assets/Gallery.tsx',
+    names: ['GalleryGridProps', 'MediaLightboxProps'],
+  },
+  {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/components/charts/types.ts',
+    names: ['ChartProps'],
+  },
+  {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/components/charts/Charts.tsx',
+    names: ['MetricCardProps'],
+  },
+  {
+    doc: 'src/docs/ClientFrameworkDoc.tsx',
+    types: 'src/components/workspace-grid/WorkspaceGrid.tsx',
+    names: ['WorkspaceGridProps'],
   },
 ]
 

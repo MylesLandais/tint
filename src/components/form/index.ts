@@ -68,4 +68,4 @@ export type {
   TextFieldProps,
   ToggleFieldProps,
 } from './inputs'
-export { DEMO_FORM_SCHEMA, createAuthFormSchema } from './schemas'
+export { DEMO_FORM_SCHEMA, createCredentialFormSchema } from './schemas'

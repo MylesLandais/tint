@@ -1,4 +1,6 @@
+import { CodeEditorDoc } from './CodeEditorDoc'
 import {FramebufferDoc} from './FramebufferDoc'
+import { AnnotationDoc } from './AnnotationDoc'
 import { lazy, type ComponentType } from 'react'
 import type { DocRoutePath } from './routes'
 import { ChatComponentDoc } from './chat/ChatComponentDoc'
@@ -16,8 +18,18 @@ import { MediaPrimitivesDoc } from './MediaPrimitivesDoc'
 import { PanelDoc } from './PanelDoc'
 import { ButtonDoc } from './ButtonDoc'
 import { SettingsPopoutDoc } from './SettingsPopoutDoc'
+import { ScrollingLabelDoc } from './ScrollingLabelDoc'
 import { SocketDoc } from './SocketDoc'
 import { VideoPlayerDoc } from './VideoPlayerDoc'
+import { FeedDoc } from './feed/FeedDoc'
+import { BoardDoc } from './board/BoardDoc'
+import { VaultTasksDoc } from './board/VaultTasksDoc'
+import { CalendarDoc } from './calendar/CalendarDoc'
+import { ActivityDoc } from './activity/ActivityDoc'
+import { PolicyDoc } from './policy/PolicyDoc'
+import { NotifyDoc } from './notify/NotifyDoc'
+import { TileMapDoc } from './TileMapDoc'
+import { MediaWorkspaceDoc } from './MediaWorkspaceDoc'
 import { ShellDoc } from './ShellDoc'
 
 /**
@@ -51,15 +63,21 @@ const FormDoc = lazy(() => import('./form/FormDoc').then((module) => ({ default:
 const CharacterCardDoc = lazy(() =>
   import('./character-card/CharacterCardDoc').then((module) => ({ default: module.CharacterCardDoc })),
 )
+const ClientFrameworkDoc = lazy(() =>
+  import('./ClientFrameworkDoc').then((module) => ({ default: module.ClientFrameworkDoc })),
+)
 
 /**
  * `satisfies` is load-bearing: adding a route to the registry without a page
  * here (or vice versa) is a compile error, so the two can never drift.
  */
 export const DOC_PAGES = {
-  'components/shell': ShellDoc,
+  'components/annotation': AnnotationDoc,
   'components/media-player': MediaPlayerDoc,
   'components/release-chart': ReleaseChartDoc,
+  'components/tile-map': TileMapDoc,
+  'components/media-workspace': MediaWorkspaceDoc,
+  'components/shell': ShellDoc,
   'components/chat': ChatComponentDoc,
   'components/audio-input': AudioInputDoc,
   'components/table': TableDoc,
@@ -74,14 +92,24 @@ export const DOC_PAGES = {
   'components/collab': CollabDoc,
   'components/auth': AuthDoc,
   'components/framebuffer': FramebufferDoc,
+  'components/code-editor': CodeEditorDoc,
+  'components/client-framework': ClientFrameworkDoc,
   'components/video-player': VideoPlayerDoc,
   'components/media': MediaPrimitivesDoc,
   'components/code': CodeDoc,
   'components/panel': PanelDoc,
   'components/button': ButtonDoc,
   'components/settings-popout': SettingsPopoutDoc,
+  'components/scrolling-label': ScrollingLabelDoc,
   'components/dice': DiceDoc,
   'components/icon': IconsDoc,
   'components/theme': ThemeDoc,
+  'components/feed': FeedDoc,
+  'components/board': BoardDoc,
+  'vault-tasks': VaultTasksDoc,
+  'components/calendar': CalendarDoc,
+  'components/activity': ActivityDoc,
+  'components/policy': PolicyDoc,
+  'components/notify': NotifyDoc,
   'graph': ComponentGraphDoc,
 } satisfies Record<DocRoutePath, ComponentType>

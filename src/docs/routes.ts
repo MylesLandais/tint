@@ -33,25 +33,14 @@ const USAGE_AND_API: readonly DocSection[] = [
 ]
 
 const ROUTE_DATA = [
-  {path:'components/framebuffer',label:'GPU Framebuffer',blurb:'Live GPU frames from connected game clients.'},
+  { path: 'components/framebuffer', label: 'GPU Framebuffer', blurb: 'Live GPU frames from connected game clients.' },
+  { path: 'components/code-editor', label: 'Code Editor', blurb: 'Controlled CodeMirror editing and collaborative source buffers.', sections: USAGE_AND_API },
+  { path: 'components/annotation', label: 'Annotation Canvas', blurb: 'Controlled frame geometry, masks and track interpolation for media curation.', sections: [{ id: 'preview', label: 'Preview' }, ...USAGE_AND_API] },
   {
     path: 'components/release-chart',
-    aliases: ['components/scatter-plot'],
     label: 'Release Chart',
     blurb: 'Controlled score-versus-size visualization with supplied values and an accessible data table.',
-    sections: [{ id: 'preview', label: 'Preview' }, { id: 'api', label: 'API' }, { id: 'scatter', label: 'Generic comparisons' }],
-  },
-  {
-    path: 'components/shell',
-    label: 'Shell',
-    blurb: 'Application chrome for navigation, workspace headers, commands, status, and feedback states.',
-    sections: [
-      { id: 'preview', label: 'Preview' },
-      { id: 'top-nav', label: 'Top navigation' },
-      { id: 'workspace', label: 'Workspace content' },
-      { id: 'split-layout', label: 'Resizable layout' },
-      ...USAGE_AND_API,
-    ],
+    sections: [{ id: 'preview', label: 'Preview' }, { id: 'api', label: 'API' }],
   },
   {
     path: 'components/media-player',
@@ -63,10 +52,34 @@ const ROUTE_DATA = [
     aliases: ['components/audio-player'],
     sections: [
       { id: 'preview', label: 'Preview' },
+      { id: 'midnight-128', label: 'Midnight 128 demo' },
       { id: 'usage', label: 'Usage' },
       { id: 'features', label: 'Features' },
       { id: 'api', label: 'API' },
     ],
+  },
+  {
+    path: 'components/tile-map',
+    label: 'Tile Map',
+    blurb: 'Controlled 2D map rendering for Godot-derived chunks, assets, collision, entities, and camera input.',
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      { id: 'usage', label: 'Usage' },
+      { id: 'boundary', label: 'Service boundary' },
+      { id: 'api', label: 'API' },
+    ],
+  },
+  {
+    path: 'components/media-workspace',
+    label: 'Gateway Media',
+    blurb: 'Media discovery workspace with release evaluation, indexer status, selection, and preview queue actions.',
+    sections: [{ id: 'preview', label: 'Preview' }, ...USAGE_AND_API],
+  },
+  {
+    path: 'components/shell',
+    label: 'Shell',
+    blurb: 'Application chrome primitives for navigation, workspace context, status, and responsive layouts.',
+    sections: [{ id: 'preview', label: 'Preview' }, ...USAGE_AND_API],
   },
   {
     path: 'components/chat',
@@ -74,6 +87,7 @@ const ROUTE_DATA = [
     blurb: 'Message list, composer, and streaming-friendly primitives for conversational UI.',
     sections: [
       { id: 'preview', label: 'Preview' },
+      { id: 'threads-mvp', label: 'Threads MVP' },
       { id: 'usage', label: 'Usage' },
       { id: 'features', label: 'Features' },
       { id: 'api', label: 'API' },
@@ -192,6 +206,20 @@ const ROUTE_DATA = [
     ],
   },
   {
+    path: 'components/client-framework',
+    label: 'Client Framework',
+    blurb: 'Root client adapters plus shared identity, navigation, media, chart, and workspace primitives.',
+    sections: [
+      { id: 'client', label: 'Root client' },
+      { id: 'foundations', label: 'Foundations' },
+      { id: 'navigation', label: 'Navigation' },
+      { id: 'media', label: 'Media' },
+      { id: 'data', label: 'Data and workspaces' },
+      { id: 'boundaries', label: 'Boundaries' },
+      { id: 'api', label: 'API' },
+    ],
+  },
+  {
     path: 'components/auth',
     label: 'Auth',
     blurb: 'Sign-in form, OAuth buttons, and a session client with an injectable transport.',
@@ -249,6 +277,15 @@ const ROUTE_DATA = [
     ],
   },
   {
+    path: 'components/scrolling-label',
+    label: 'Scrolling Label',
+    blurb: 'Single-line text that marquees only when it overflows, pausing and resetting on hover.',
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      ...USAGE_AND_API,
+    ],
+  },
+  {
     path: 'components/settings-popout',
     label: 'Settings Popout',
     blurb: 'A searchable, keyboard-driven picker for player settings and other grouped choices.',
@@ -298,6 +335,71 @@ const ROUTE_DATA = [
       ...USAGE_AND_API,
     ],
   },
+  {
+    path: 'components/feed',
+    label: 'Feed',
+    blurb: 'Subscriptions workbench: layout variants, split panes, reader, and narration over a host-owned FeedDocument.',
+    sections: [
+      { id: 'preview', label: 'Workbench' },
+      ...USAGE_AND_API,
+    ],
+  },
+  {
+    path: 'components/calendar',
+    label: 'Calendar',
+    blurb: 'Controlled month grid, an iCalendar parser with RRULE expansion, and a CalDAV client.',
+    sections: [
+      { id: 'preview', label: 'Workbench' },
+      { id: 'usage', label: 'Usage' },
+      { id: 'ical', label: 'iCalendar and CalDAV' },
+      { id: 'api', label: 'API' },
+    ],
+  },
+  {
+    path: 'components/board',
+    label: 'Board',
+    blurb: 'Flat board of rich-media widget cards — graphs, tables, and media — packed with DataMasonry or kanban lanes.',
+    sections: [
+      { id: 'preview', label: 'Workbench' },
+      ...USAGE_AND_API,
+    ],
+  },
+  {
+    path: 'vault-tasks',
+    label: 'Vault Sprint Board',
+    blurb: 'Open journal items extracted from the Obsidian daily notes onto kanban lanes, with triage that survives regeneration.',
+    sections: [
+      { id: 'preview', label: 'Workbench' },
+      { id: 'usage', label: 'Usage' },
+    ],
+  },
+  {
+    path: 'components/activity',
+    label: 'Activity',
+    blurb: 'Digg-style ranked activity stream with optional forum-thread expansion.',
+    sections: [
+      { id: 'preview', label: 'Workbench' },
+      ...USAGE_AND_API,
+    ],
+  },
+  {
+    path: 'components/policy',
+    label: 'Policy',
+    blurb: 'Rule table, builder/Lua editor, mocked dry-run, and a read-only workflow graph.',
+    sections: [
+      { id: 'preview', label: 'Workbench' },
+      ...USAGE_AND_API,
+    ],
+  },
+  {
+    path: 'components/notify',
+    label: 'Notify',
+    blurb: 'Bell, grouped list, and per-source/policy channels derived from feed matches.',
+    sections: [
+      { id: 'preview', label: 'Preview' },
+      ...USAGE_AND_API,
+    ],
+  },
 ] as const satisfies readonly DocRouteShape[]
 
 /** Literal union of valid paths, so a typo in `<DocsNav current>` is a type error. */
@@ -315,6 +417,7 @@ export type DocRoutePath = (typeof ROUTE_DATA)[number]['path']
  */
 export const GROUPED_ROUTE_MEMBERS = {
   'components/chrome': ['badge', 'context-menu', 'dialog', 'progress', 'toast', 'tree'],
+  'components/client-framework': ['identity', 'surface', 'status', 'navigation', 'menu', 'media-assets', 'charts', 'workspace-grid', 'release-chart', 'scatter-plot'],
 } satisfies Partial<Record<DocRoutePath, string[]>>
 
 /**
@@ -326,10 +429,14 @@ export const DOC_GROUPS = ['Media', 'Chat & content', 'Data & infra', 'Theming &
 export type DocGroup = (typeof DOC_GROUPS)[number]
 
 export const ROUTE_GROUPS = {
-  'components/framebuffer':'Media',
-  'components/shell': 'Theming & layout',
+  'components/framebuffer': 'Media',
+  'components/code-editor': 'Data & infra',
   'components/media-player': 'Media',
   'components/release-chart': 'Media',
+  'components/tile-map': 'Media',
+  'components/media-workspace': 'Data & infra',
+  'components/annotation': 'Data & infra',
+  'components/shell': 'Theming & layout',
   'components/video-player': 'Media',
   'components/media': 'Media',
   'components/audio-input': 'Media',
@@ -345,6 +452,7 @@ export const ROUTE_GROUPS = {
   'components/telemetry': 'Data & infra',
   'components/collab': 'Data & infra',
   'components/auth': 'Data & infra',
+  'components/client-framework': 'Data & infra',
   'components/theme': 'Theming & layout',
   'components/panel': 'Theming & layout',
   'components/button': 'Theming & layout',
@@ -352,6 +460,14 @@ export const ROUTE_GROUPS = {
   'components/dice': 'Theming & layout',
   'components/form': 'Theming & layout',
   'components/character-card': 'Data & infra',
+  'components/feed': 'Chat & content',
+  'components/activity': 'Chat & content',
+  'components/policy': 'Data & infra',
+  'components/notify': 'Data & infra',
+  'components/board': 'Data & infra',
+  'vault-tasks': 'Data & infra',
+  'components/calendar': 'Data & infra',
+  'components/scrolling-label': 'Theming & layout',
   'graph': 'Meta',
 } satisfies Record<DocRoutePath, DocGroup>
 

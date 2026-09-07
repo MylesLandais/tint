@@ -20,6 +20,7 @@ export type ChatDemoScenarioId =
   | 'images'
   | 'preference'
   | 'group'
+  | 'subscriptions'
 
 export type ChatDemoScenario = {
   id: ChatDemoScenarioId
@@ -109,6 +110,13 @@ export const chatDemoScenarios: readonly ChatDemoScenario[] = [
     description:
       'You, Maya, and Jordan. One mock trace spans both agents; Replay uses the same cached clip.',
     prompt: 'Maya, introduce yourself — then Jordan, add a beat.',
+  },
+  {
+    id: 'subscriptions',
+    label: 'Subscriptions',
+    description:
+      'Maya echoes domain/workflow/disposition/notify, waits for yes, then writes Source + Policy with an opaque credentialRef.',
+    prompt: 'Subscribe to misskatie, notify, cache on release.',
   },
 ] as const
 

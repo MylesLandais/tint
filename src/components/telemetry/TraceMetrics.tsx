@@ -1,5 +1,6 @@
 import { Activity, AlertTriangle, Clock3 } from 'lucide-react'
 import { Icon } from '../icon'
+import { MetricCard } from '../charts'
 import { cn } from '../../lib/utils'
 import { formatDuration } from './layout'
 import { deriveTraceMetrics } from './metrics'
@@ -39,27 +40,17 @@ export function TraceMetrics({ trace, className }: TraceMetricsProps) {
       className={cn('grid gap-2 sm:grid-cols-3', className)}
     >
       {cards.map((card) => (
-        <article
+        <MetricCard
           key={card.key}
+          label={card.label}
+          value={card.value}
+          hint={card.hint}
+          icon={<Icon icon={card.icon} size="sm" />}
+          tone={'danger' in card && card.danger ? 'danger' : 'default'}
           className={cn(
-            'rounded-xl border border-tint-border bg-tint-panel px-3 py-2.5',
             'danger' in card && card.danger && 'border-tint-danger/40 bg-tint-danger-soft',
           )}
-        >
-          <p className="flex items-center gap-1.5 text-[0.6875rem] font-medium tracking-wide text-tint-muted uppercase">
-            <Icon icon={card.icon} size="sm" />
-            {card.label}
-          </p>
-          <p
-            className={cn(
-              'mt-1 text-lg font-semibold text-tint-ink',
-              'danger' in card && card.danger && 'text-tint-danger-ink',
-            )}
-          >
-            {card.value}
-          </p>
-          <p className="mt-0.5 text-[0.6875rem] text-tint-muted">{card.hint}</p>
-        </article>
+        />
       ))}
     </div>
   )

@@ -1,7 +1,8 @@
-import { Bot, Check, Copy, Reply, RotateCcw, Square, User, Volume2 } from 'lucide-react'
+import { Check, Copy, Reply, RotateCcw, Square, Volume2 } from 'lucide-react'
 import { memo, useCallback, useMemo, useRef, useState } from 'react'
 import { cn } from '../../lib/utils'
 import { Icon, Spinner } from '../icon'
+import { Avatar } from '../identity'
 import { ChatMessageActions, ChatMessageContent } from './ChatPrimitives'
 import { ChatMessagePartView } from './ChatParts'
 import { useChatPlayback } from './ChatPlaybackContext'
@@ -147,19 +148,7 @@ function ChatMessageImpl<TCustomPart extends ChatCustomPart = never>({
           )}
           aria-hidden="true"
         >
-          {message.actor.avatarUrl ? (
-            <img
-              src={message.actor.avatarUrl}
-              alt=""
-              className="size-full object-cover"
-            />
-          ) : message.actor.kind === 'assistant' ? (
-            <Icon icon={Bot} />
-          ) : message.actor.kind === 'human' ? (
-            <Icon icon={User} />
-          ) : (
-            actorName.slice(0, 1).toUpperCase()
-          )}
+          <Avatar identity={message.actor} size="sm" decorative className="size-8" />
         </span>
       ) : !showAvatar && alignment !== 'center' ? (
         <span className="size-8 shrink-0" aria-hidden="true" />

@@ -1,10 +1,11 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import { Menu, Search, X } from 'lucide-react'
+import { Search } from 'lucide-react'
 import { DOC_GROUPS, DOC_ROUTES, ROUTE_GROUPS, findRoute, hrefFor, type DocRoutePath } from '../routes'
 import { ThemeControls } from '../components/ThemeControls'
 import { Icon } from '../../components/icon'
 import { cn } from '../../lib/utils'
 import { SearchPalette } from './SearchPalette'
+import { AppShell } from '../../components/navigation'
 
 export type DocsShellProps = {
   /** Undefined on the landing page. */
@@ -36,80 +37,38 @@ export function DocsShell({ current, children }: DocsShellProps) {
   // Route changes close the mobile drawer; the palette manages itself.
   useEffect(() => setNavOpen(false), [current])
 
+  const brand = (
+    <a href="#/" className="flex items-center gap-2 font-semibold tracking-tight text-tint-ink">
+      <span aria-hidden="true" className="inline-flex size-6 items-center justify-center rounded-md bg-tint-accent text-xs text-tint-on-accent">t</span>
+      tint
+    </a>
+  )
+  const actions = (
+    <>
+      <button type="button" onClick={() => setSearchOpen(true)} className="flex cursor-pointer items-center gap-2 rounded-full border border-tint-border bg-tint-panel py-1.5 pr-2 pl-3 text-sm text-tint-muted transition-colors hover:border-tint-border-strong hover:text-tint-ink">
+        <Icon icon={Search} size="sm" /><span className="hidden sm:inline">Search…</span><kbd className="rounded-full bg-tint-surface px-1.5 py-0.5 text-xs font-semibold text-tint-muted">⌘K</kbd>
+      </button>
+      <ThemeControls />
+    </>
+  )
+
   return (
-    <div className="min-h-screen">
-      <header className="fixed inset-x-0 top-0 z-30 h-12 border-b border-tint-border bg-tint-bg">
-        <div className="flex h-full items-center gap-3 px-4 sm:px-5">
-          <button
-            type="button"
-            onClick={() => setNavOpen(true)}
-            aria-label="Open navigation"
-            className="cursor-pointer rounded-md p-1.5 text-tint-muted transition-colors hover:bg-tint-surface hover:text-tint-ink lg:hidden"
-          >
-            <Icon icon={Menu} size="sm" />
-          </button>
-          <a href="#/" className="flex items-center gap-2 font-semibold tracking-tight text-tint-ink">
-            <span
-              aria-hidden="true"
-              className="inline-flex size-6 items-center justify-center rounded-md bg-tint-accent text-xs text-tint-on-accent"
-            >
-              t
-            </span>
-            tint
-          </a>
-
-          <span className="ml-auto flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => setSearchOpen(true)}
-              className="flex cursor-pointer items-center gap-2 rounded-full border border-tint-border bg-tint-panel py-1.5 pr-2 pl-3 text-sm text-tint-muted transition-colors hover:border-tint-border-strong hover:text-tint-ink"
-            >
-              <Icon icon={Search} size="sm" />
-              <span className="hidden sm:inline">Search…</span>
-              <kbd className="rounded-full bg-tint-surface px-1.5 py-0.5 text-xs font-semibold text-tint-muted">
-                ⌘K
-              </kbd>
-            </button>
-            <ThemeControls />
-          </span>
-        </div>
-      </header>
-
-      <SidebarNav current={current} className="hidden lg:block" />
-
-      {navOpen ? (
-        <div className="fixed inset-0 z-40 lg:hidden">
-          <div
-            className="absolute inset-0 bg-tint-ink/30"
-            onClick={() => setNavOpen(false)}
-            aria-hidden="true"
-          />
-          <div className="absolute inset-y-0 left-0 w-64 bg-tint-bg shadow-xl">
-            <div className="flex h-12 items-center justify-between border-b border-tint-border px-4">
-              <span className="text-sm font-semibold text-tint-ink">Documentation</span>
-              <button
-                type="button"
-                onClick={() => setNavOpen(false)}
-                aria-label="Close navigation"
-                className="cursor-pointer rounded-md p-1.5 text-tint-muted transition-colors hover:bg-tint-surface hover:text-tint-ink"
-              >
-                <Icon icon={X} size="sm" />
-              </button>
-            </div>
-            <SidebarNav current={current} className="h-[calc(100%-3rem)]" />
-          </div>
-        </div>
-      ) : null}
-
-      <div className="pt-12 lg:pl-56">
+    <>
+      <AppShell
+        brand={brand}
+        actions={actions}
+        sidebar={<SidebarNav current={current} />}
+        sidebarOpen={navOpen}
+        onSidebarOpenChange={setNavOpen}
+        sidebarLabel="Documentation"
+      >
         <div className="flex">
           <div className="min-w-0 flex-1">{children}</div>
           <TableOfContents current={current} />
         </div>
-      </div>
-
+      </AppShell>
       <SearchPalette open={searchOpen} onClose={() => setSearchOpen(false)} />
-    </div>
+    </>
   )
 }
 
@@ -118,7 +77,7 @@ function SidebarNav({ current, className }: { current?: DocRoutePath; className?
     <nav
       aria-label="Documentation"
       className={cn(
-        'fixed top-12 bottom-0 left-0 w-56 overflow-y-auto border-r border-tint-border bg-tint-bg px-4 pt-5 pb-8 text-sm',
+        'min-h-full overflow-y-auto bg-tint-panel px-1 py-2 text-sm',
         className,
       )}
     >

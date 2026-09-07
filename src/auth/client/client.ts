@@ -1,21 +1,27 @@
+import type { OperationOptions } from '../../client/types'
 import { normalizeAuthError } from './errors'
 import { requireOperation, safeReturnTo, type AuthTransport } from './transport'
 import type {
   AuthEvent,
   AuthEventType,
   AuthFlowResult,
+  AuthOperation,
   AuthSnapshot,
+  CredentialRecoveryRequestInput,
+  IdentifierVerificationInput,
   OAuthProviderId,
   OrganizationSelectInput,
   PasswordResetInput,
-  PasswordResetRequestInput,
   PasswordSignInInput,
   PasswordSignUpInput,
   TotpVerifyInput,
-  VerifyEmailInput,
 } from './types'
 
 export type AuthClientOptions = { transport: AuthTransport; broadcastChannel?: string | false }
+
+const SERVER_AUTH_SNAPSHOT: AuthSnapshot = Object.freeze({
+  status: 'loading', busy: false, config: null, session: null, task: null, error: null,
+})
 
 export class AuthClient {
   private readonly transport: AuthTransport
@@ -24,20 +30,17 @@ export class AuthClient {
   private readonly channel: BroadcastChannel | null
   private revision = 0
   private initialized: Promise<void> | null = null
-  private snapshot: AuthSnapshot = {
-    status: 'loading', busy: false, config: null, session: null, task: null, error: null,
-  }
+  private snapshot: AuthSnapshot = SERVER_AUTH_SNAPSHOT
 
   constructor(options: AuthClientOptions) {
     this.transport = options.transport
     const channelName = options.broadcastChannel ?? 'tint-auth'
-    this.channel = channelName !== false && typeof BroadcastChannel !== 'undefined'
-      ? new BroadcastChannel(channelName)
-      : null
+    this.channel = channelName !== false && typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel(channelName) : null
     if (this.channel) this.channel.onmessage = () => void this.refresh(false)
   }
 
   readonly getSnapshot = (): AuthSnapshot => this.snapshot
+  readonly getServerSnapshot = (): AuthSnapshot => SERVER_AUTH_SNAPSHOT
   readonly subscribe = (listener: () => void): (() => void) => {
     this.listeners.add(listener)
     return () => this.listeners.delete(listener)
@@ -53,11 +56,11 @@ export class AuthClient {
     return this.initialized
   }
 
-  async refresh(broadcast = false): Promise<void> {
+  async refresh(broadcast = false, options?: OperationOptions): Promise<void> {
     const revision = ++this.revision
     this.patch({ busy: true, error: null })
     try {
-      const session = await this.transport.getSession()
+      const session = await this.transport.getSession(options)
       if (revision !== this.revision) return
       this.patch({ status: session ? 'signed_in' : 'signed_out', session, task: null, busy: false })
       this.emit(session ? 'SESSION_UPDATED' : 'SIGNED_OUT', broadcast)
@@ -68,54 +71,74 @@ export class AuthClient {
   }
 
   readonly signIn = {
-    password: (input: PasswordSignInInput) => this.flow(
-      requireOperation(this.transport.signInPassword, 'password sign-in').bind(this.transport), input,
+    password: (input: PasswordSignInInput, options?: OperationOptions) => this.flow(
+      requireOperation(this.transport.signInPassword, 'password sign-in').bind(this.transport), input, options,
     ),
   }
+
   readonly signUp = {
-    password: (input: PasswordSignUpInput) => this.flow(
-      requireOperation(this.transport.signUpPassword, 'password sign-up').bind(this.transport), input,
+    password: (input: PasswordSignUpInput, options?: OperationOptions) => this.flow(
+      requireOperation(this.transport.signUpPassword, 'password sign-up').bind(this.transport), input, options,
     ),
   }
-  readonly email = {
-    requestVerification: () => this.flow(
-      requireOperation(this.transport.requestEmailVerification, 'email verification').bind(this.transport), undefined,
+
+  readonly identifier = {
+    requestVerification: (options?: OperationOptions) => this.flowWithoutInput(
+      requireOperation(this.transport.requestIdentifierVerification, 'identifier verification').bind(this.transport), options,
     ),
-    verify: (input: VerifyEmailInput) => this.flow(
-      requireOperation(this.transport.verifyEmail, 'email verification').bind(this.transport), input,
-    ),
-  }
-  readonly password = {
-    requestReset: (input: PasswordResetRequestInput) => this.flow(
-      requireOperation(this.transport.requestPasswordReset, 'password recovery').bind(this.transport), input,
-    ),
-    reset: (input: PasswordResetInput) => this.flow(
-      requireOperation(this.transport.resetPassword, 'password reset').bind(this.transport), input,
+    verify: (input: IdentifierVerificationInput, options?: OperationOptions) => this.flow(
+      requireOperation(this.transport.verifyIdentifier, 'identifier verification').bind(this.transport), input, options,
     ),
   }
+
+  readonly credentials = {
+    requestRecovery: (input: CredentialRecoveryRequestInput, options?: OperationOptions) => this.flow(
+      requireOperation(this.transport.requestCredentialRecovery, 'credential recovery').bind(this.transport), input, options,
+    ),
+    resetPassword: (input: PasswordResetInput, options?: OperationOptions) => this.flow(
+      requireOperation(this.transport.resetPassword, 'password reset').bind(this.transport), input, options,
+    ),
+  }
+
   readonly mfa = {
-    verifyTotp: (input: TotpVerifyInput) => this.flow(
-      requireOperation(this.transport.verifyTotp, 'TOTP verification').bind(this.transport), input,
+    verifyTotp: (input: TotpVerifyInput, options?: OperationOptions) => this.flow(
+      requireOperation(this.transport.verifyTotp, 'TOTP verification').bind(this.transport), input, options,
     ),
   }
+
   readonly organizations = {
-    select: (input: OrganizationSelectInput) => this.flow(
-      requireOperation(this.transport.selectOrganization, 'organization selection').bind(this.transport), input,
+    select: (input: OrganizationSelectInput, options?: OperationOptions) => this.flow(
+      requireOperation(this.transport.selectOrganization, 'organization selection').bind(this.transport), input, options,
     ),
   }
+
   readonly oauth = {
-    url: (provider: OAuthProviderId, options: { returnTo?: string } = {}) =>
-      this.transport.oauthStartUrl(provider, safeReturnTo(options.returnTo)),
+    url: (provider: OAuthProviderId, options: { returnTo?: string } = {}) => this.transport.oauthStartUrl(provider, safeReturnTo(options.returnTo)),
     start: (provider: OAuthProviderId, options: { returnTo?: string } = {}) => {
       if (typeof window !== 'undefined') window.location.assign(this.oauth.url(provider, options))
     },
   }
 
-  async signOut(): Promise<void> {
+  async execute<Input, Result>(operation: AuthOperation<Input, Result>, input: Input, options?: OperationOptions): Promise<Result> {
+    const execute = requireOperation(this.transport.execute, operation.name).bind(this.transport)
+    const revision = ++this.revision
+    this.patch({ busy: true, error: null })
+    try {
+      return await execute(operation, input, options)
+    } catch (cause) {
+      const error = normalizeAuthError(cause)
+      if (revision === this.revision) this.patch({ error })
+      throw error
+    } finally {
+      if (revision === this.revision) this.patch({ busy: false })
+    }
+  }
+
+  async signOut(options?: OperationOptions): Promise<void> {
     ++this.revision
     this.patch({ busy: true, error: null })
     try {
-      await this.transport.signOut()
+      await this.transport.signOut(options)
       this.patch({ status: 'signed_out', busy: false, session: null, task: null })
       this.emit('SIGNED_OUT', true)
     } catch (cause) {
@@ -140,14 +163,30 @@ export class AuthClient {
     } catch (cause) {
       if (revision !== this.revision) return
       this.patch({ status: 'error', busy: false, error: normalizeAuthError(cause) })
+      throw this.snapshot.error
     }
   }
 
-  private async flow<Input>(operation: (input: Input) => Promise<AuthFlowResult>, input: Input): Promise<AuthFlowResult> {
+  private async flow<Input>(
+    operation: (input: Input, options?: OperationOptions) => Promise<AuthFlowResult>,
+    input: Input,
+    options?: OperationOptions,
+  ): Promise<AuthFlowResult> {
+    return this.runFlow(() => operation(input, options))
+  }
+
+  private async flowWithoutInput(
+    operation: (options?: OperationOptions) => Promise<AuthFlowResult>,
+    options?: OperationOptions,
+  ): Promise<AuthFlowResult> {
+    return this.runFlow(() => operation(options))
+  }
+
+  private async runFlow(operation: () => Promise<AuthFlowResult>): Promise<AuthFlowResult> {
     const revision = ++this.revision
     this.patch({ busy: true, error: null })
     try {
-      const result = await operation(input)
+      const result = await operation()
       if (revision !== this.revision) return result
       const status = result.task ? 'pending' : result.session ? 'signed_in' : 'signed_out'
       this.patch({ status, busy: false, session: result.session, task: result.task })

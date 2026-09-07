@@ -1,12 +1,19 @@
 import type { AuthProblemShape } from './types'
+import { TintError } from '../../client/errors'
 
-export class AuthError extends Error {
+export class AuthError extends TintError {
   readonly code: string
   readonly status?: number
   readonly retryAfter?: number
 
   constructor(code: string, message: string, options: { status?: number; retryAfter?: number; cause?: unknown } = {}) {
-    super(message, { cause: options.cause })
+    super({
+      code,
+      title: 'Authentication failed',
+      detail: message,
+      status: options.status,
+      retryAfterMs: options.retryAfter == null ? undefined : options.retryAfter * 1000,
+    }, { cause: options.cause })
     this.name = 'AuthError'
     this.code = code
     this.status = options.status

@@ -1,13 +1,11 @@
 import { useMemo, useState } from 'react'
 import { createAuthClient } from '../../auth/client'
+import { createTintClient, TintClientProvider, useAuth, useSession } from '../../client'
 import {
-  AuthProvider,
+  IdentifierSignInForm,
   OAuthButtons,
-  SignInForm,
-  useAuth,
-  useSession,
+  type IdentifierSignInFormLabels,
   type OAuthOption,
-  type SignInFormLabels,
 } from '../../components/auth'
 import '../../components/auth/styles.css'
 import { CodeBlock } from '../components/CodeBlock'
@@ -25,12 +23,12 @@ function SignInScreen() {
   if (task === 'mfa') return <TotpForm onSubmit={client.mfa.verifyTotp} />
 
   return (
-    <SignInForm
-      email={email}
+    <IdentifierSignInForm
+      identifier={email}
       password={password}
-      onEmailChange={setEmail}
+      onIdentifierChange={setEmail}
       onPasswordChange={setPassword}
-      onSubmit={() => client.signIn.password({ email, password })}
+      onSubmit={() => client.signIn.password({ identifier: email, password })}
       busy={snapshot.busy}
       error={snapshot.error?.message}
       labels={labels}
@@ -38,8 +36,8 @@ function SignInScreen() {
   )
 }`
 
-const LABELS: SignInFormLabels = {
-  email: 'Email',
+const LABELS: IdentifierSignInFormLabels = {
+  identifier: 'Email or username',
   password: 'Password',
   submit: 'Sign in',
   submitting: 'Signing in…',
@@ -47,18 +45,19 @@ const LABELS: SignInFormLabels = {
   hidePassword: 'Hide password',
 }
 
-const usageCode = `import { createAuthClient } from 'tint/auth-client'
-import { AuthProvider, SignInForm, useAuth, useSession } from 'tint/auth'
+const usageCode = `import { createAuthClient, IdentifierSignInForm } from 'tint/auth'
+import { createTintClient, TintClientProvider, useAuth, useSession } from 'tint/client'
 import 'tint/auth/styles.css'
 
 // The client is transport-agnostic: implement AuthTransport against your backend.
-const client = createAuthClient({ transport: httpTransport })
+const auth = createAuthClient({ transport: httpTransport })
+const client = createTintClient({ request, auth })
 
 export function App() {
   return (
-    <AuthProvider client={client}>
+    <TintClientProvider client={client}>
       <SignInScreen />
-    </AuthProvider>
+    </TintClientProvider>
   )
 }
 
@@ -71,12 +70,12 @@ function SignInScreen() {
   if (isSignedIn) return <p>Signed in as {user?.email}</p>
 
   return (
-    <SignInForm
-      email={email}
+    <IdentifierSignInForm
+      identifier={email}
       password={password}
-      onEmailChange={setEmail}
+      onIdentifierChange={setEmail}
       onPasswordChange={setPassword}
-      onSubmit={() => client.signIn.password({ email, password })}
+      onSubmit={() => client.signIn.password({ identifier: email, password })}
       busy={snapshot.busy}
       error={snapshot.error?.message}
       labels={labels}
@@ -84,7 +83,7 @@ function SignInScreen() {
   )
 }`
 
-const transportCode = `import { authErrorFromResponse, type AuthTransport } from 'tint/auth-client'
+const transportCode = `import { authErrorFromResponse, type AuthTransport } from 'tint/auth'
 
 export const httpTransport: AuthTransport = {
   // Required — everything else is optional, and a missing method makes the
@@ -111,15 +110,15 @@ async function post(path: string, body?: unknown) {
   return response.json()
 }`
 
-const signInFormSignature = `export type SignInFormProps = {
-  email: string
+const signInFormSignature = `export type IdentifierSignInFormProps = {
+  identifier: string
   password: string
   busy?: boolean
   error?: ReactNode
-  labels: SignInFormLabels
-  emailPlaceholder?: string
+  labels: IdentifierSignInFormLabels
+  identifierPlaceholder?: string
   passwordPlaceholder?: string
-  onEmailChange(value: string): void
+  onIdentifierChange(value: string): void
   onPasswordChange(value: string): void
   onSubmit(): void | Promise<void>
   className?: string
@@ -148,7 +147,7 @@ const transportSignature = `export type AuthTransport = {
   getSession(): Promise<AuthSession | null>
   signInPassword?(input: PasswordSignInInput): Promise<AuthFlowResult>
   signUpPassword?(input: PasswordSignUpInput): Promise<AuthFlowResult>
-  requestPasswordReset?(input: PasswordResetRequestInput): Promise<AuthFlowResult>
+  requestCredentialRecovery?(input: CredentialRecoveryRequestInput): Promise<AuthFlowResult>
   verifyTotp?(input: TotpVerifyInput): Promise<AuthFlowResult>
   selectOrganization?(input: OrganizationSelectInput): Promise<AuthFlowResult>
   signOut(): Promise<void>
@@ -156,15 +155,15 @@ const transportSignature = `export type AuthTransport = {
 }`
 
 const signInFormProps = [
-  { name: 'email', type: 'string', required: true, description: 'Controlled email value.' },
+  { name: 'identifier', type: 'string', required: true, description: 'Controlled username or email value.' },
   { name: 'password', type: 'string', required: true, description: 'Controlled password value.' },
-  { name: 'labels', type: 'SignInFormLabels', required: true, description: 'All six strings; the component ships no default copy.' },
-  { name: 'onEmailChange', type: '(value: string) => void', required: true, description: 'Receives each email keystroke.' },
+  { name: 'labels', type: 'IdentifierSignInFormLabels', required: true, description: 'All six strings; the component ships no default copy.' },
+  { name: 'onIdentifierChange', type: '(value: string) => void', required: true, description: 'Receives each identifier keystroke.' },
   { name: 'onPasswordChange', type: '(value: string) => void', required: true, description: 'Receives each password keystroke.' },
   { name: 'onSubmit', type: '() => void | Promise<void>', required: true, description: 'Fires on submit unless busy; the form calls preventDefault for you.' },
   { name: 'busy', type: 'boolean', defaultValue: 'false', description: 'Disables submit and swaps in the submitting label.' },
   { name: 'error', type: 'ReactNode', description: 'Rendered in a role="alert" region above the fields.' },
-  { name: 'emailPlaceholder', type: 'string', description: 'Placeholder for the email input.' },
+  { name: 'identifierPlaceholder', type: 'string', description: 'Placeholder for the identifier input.' },
   { name: 'passwordPlaceholder', type: 'string', description: 'Placeholder for the password input.' },
   { name: 'className', type: 'string', description: 'Appended to the tint-auth-form class.' },
 ]
@@ -192,7 +191,7 @@ const transportProps = [
   { name: 'signInPassword', type: '(input) => Promise<AuthFlowResult>', description: 'Omit to disable password sign-in.' },
   { name: 'signUpPassword', type: '(input) => Promise<AuthFlowResult>', description: 'Omit to disable registration.' },
   { name: 'verifyTotp', type: '(input) => Promise<AuthFlowResult>', description: 'Resolves a pending mfa task.' },
-  { name: 'requestPasswordReset', type: '(input) => Promise<AuthFlowResult>', description: 'Omit to disable recovery.' },
+  { name: 'requestCredentialRecovery', type: '(input) => Promise<AuthFlowResult>', description: 'Omit to disable recovery.' },
   { name: 'selectOrganization', type: '(input) => Promise<AuthFlowResult>', description: 'Resolves a choose_organization task.' },
 ]
 
@@ -235,7 +234,7 @@ function AuthDemo() {
           <div className="flex flex-col gap-4">
             <div>
               <p className="m-0 text-sm text-tint-muted">Signed in as</p>
-              <p className="m-0 text-lg font-semibold text-tint-ink">{user?.displayName}</p>
+              <p className="m-0 text-lg font-semibold text-tint-ink">{user?.name}</p>
               <p className="m-0 text-sm text-tint-muted">{user?.email}</p>
             </div>
             <button
@@ -279,12 +278,12 @@ function AuthDemo() {
           </form>
         ) : (
           <div className="flex flex-col gap-4">
-            <SignInForm
-              email={email}
+            <IdentifierSignInForm
+              identifier={email}
               password={password}
-              onEmailChange={setEmail}
+              onIdentifierChange={setEmail}
               onPasswordChange={setPassword}
-              onSubmit={() => attempt(() => client.signIn.password({ email, password }))}
+              onSubmit={() => attempt(() => client.signIn.password({ identifier: email, password }))}
               busy={snapshot.busy}
               error={snapshot.error?.message}
               labels={LABELS}
@@ -313,7 +312,7 @@ function AuthDemo() {
             type="button"
             onClick={() => {
               try {
-                void client.signUp.password({ email, password })
+                void client.signUp.password({ identifier: email, password })
               } catch (error) {
                 setUnsupported(error instanceof Error ? error.message : String(error))
               }
@@ -336,7 +335,10 @@ function AuthDemo() {
 export function AuthDoc() {
   // One client for the life of the page; the demo transport holds its state in a closure.
   const client = useMemo(
-    () => createAuthClient({ transport: createDemoTransport(), broadcastChannel: false }),
+    () => createTintClient({
+      request: { async send() { throw new Error('The auth demo uses its injected transport.') } },
+      auth: createAuthClient({ transport: createDemoTransport(), broadcastChannel: false }),
+    }),
     [],
   )
 
@@ -352,9 +354,9 @@ export function AuthDoc() {
         description="Sign in, pass MFA, sign out — every step runs through the client state machine, and the AuthSnapshot panel tracks it live."
       >
         <DocsDemo code={previewDemoCode}>
-          <AuthProvider client={client}>
+          <TintClientProvider client={client}>
             <AuthDemo />
-          </AuthProvider>
+          </TintClientProvider>
         </DocsDemo>
 
         <div className="mt-4">
@@ -390,7 +392,7 @@ export function AuthDoc() {
       <DocsSection
         id="usage"
         title="Usage"
-        description="Wire the client into an AuthProvider, then drive SignInForm from controlled state. The snapshot carries busy and error back to the form."
+        description="Wire auth into TintClientProvider, then drive IdentifierSignInForm from controlled state. The snapshot carries busy and error back to the form."
       >
         <CodeBlock code={usageCode} language="tsx" />
         <p className="mt-6 mb-3 max-w-3xl text-sm leading-6 text-tint-muted">
@@ -403,7 +405,7 @@ export function AuthDoc() {
       <DocsSection id="api" title="API" description="Required props are marked with an asterisk.">
         <div className="space-y-10">
           <div>
-            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">SignInForm</h3>
+            <h3 className="mb-3 text-lg font-semibold tracking-tight text-tint-ink">IdentifierSignInForm</h3>
             <p className="mt-0 mb-3 text-sm leading-6 text-tint-muted">
               The full prop signature, from the source:
             </p>

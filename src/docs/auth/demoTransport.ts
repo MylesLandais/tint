@@ -24,7 +24,7 @@ function sessionFor(email: string): AuthSession {
     user: {
       id: 'user_demo',
       principalRef: `user:${email}`,
-      displayName: email.split('@')[0] ?? 'Operator',
+      name: email.split('@')[0] ?? 'Operator',
       email,
       emailVerified: true,
     },
@@ -51,7 +51,8 @@ export function createDemoTransport(): AuthTransport {
     async getConfig() {
       await delay(200)
       return {
-        version: 'v1',
+        version: 'v2',
+        identifierKind: 'either',
         password: {
           enabled: true,
           signUpEnabled: false,
@@ -71,18 +72,18 @@ export function createDemoTransport(): AuthTransport {
       return session
     },
 
-    async signInPassword({ email, password }) {
+    async signInPassword({ identifier, password }) {
       await delay(450)
       if (password !== 'tint-demo') {
         throw new AuthError('invalid_credentials', 'The credentials were not accepted.', {
           status: 401,
         })
       }
-      if (email === 'mfa@example.test') {
-        pending = sessionFor(email)
+      if (identifier === 'mfa@example.test') {
+        pending = sessionFor(identifier)
         return { session: null, task: 'mfa', message: `Enter ${DEMO_TOTP_CODE} to continue.` }
       }
-      session = sessionFor(email)
+      session = sessionFor(identifier)
       return { session, task: null }
     },
 
@@ -106,7 +107,7 @@ export function createDemoTransport(): AuthTransport {
     // docs site away. Production reads `client.oauth.url(provider)`.
     oauthStartUrl: () => '#/components/auth',
 
-    // `signUpPassword`, `requestPasswordReset` and `selectOrganization` are left
+    // `signUpPassword`, `requestCredentialRecovery` and `selectOrganization` are left
     // undefined on purpose — calling them raises `UnsupportedAuthOperationError`,
     // which is how a deployment declares which flows it does not offer.
   }

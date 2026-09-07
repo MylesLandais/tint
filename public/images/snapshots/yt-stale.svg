@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360">
+  <rect width="640" height="360" fill="#2a3340"/>
+  <circle cx="320" cy="160" r="48" fill="#ffffff20"/>
+  <polygon points="308,134 308,186 348,160" fill="#dce3ec"/>
+  <text x="320" y="260" text-anchor="middle" font-family="IBM Plex Sans,system-ui,sans-serif" font-size="20" font-weight="600" fill="#dce3ec">Stale YouTube snapshot</text>
+  <text x="320" y="290" text-anchor="middle" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="12" fill="#8b97a8">local mock · not fetched</text>
+</svg>

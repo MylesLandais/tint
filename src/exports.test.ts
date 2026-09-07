@@ -55,8 +55,11 @@ describe('docs coverage', () => {
    */
   it('documents every component that has a package subpath', () => {
     const routes = read('src/docs/routes.ts')
-    // Components whose entry point is deliberately not a docs page.
-    const EXEMPT = new Set(['auth-client', 'auth'])
+    // Entry points that deliberately have no docs page of their own.
+    // `auth` is documented as part of its component page; the two `*-client`
+    // subpaths are transport layers a host wires up, documented in prose on the
+    // page for the components they feed rather than as pages of their own.
+    const EXEMPT = new Set(['auth', 'client'])
 
     // Members of a grouped page (see GROUPED_ROUTE_MEMBERS in routes.ts) are
     // documented by that page rather than by a route of their own.
@@ -97,12 +100,18 @@ describe('package exports', () => {
     expect(undeclared).toEqual([])
   })
 
+  /**
+   * Transport clients are intentionally absent from the root barrel: they are
+   * reached as `tint/auth-client` and `tint/calendar-client` so that a host that
+   * only renders components never pulls an HTTP client into its graph. Everything
+   * else must be reachable from the root, or the focused import each docs page
+   * advertises would be the only way to get at it.
+   */
+  const STANDALONE_ENTRY_POINTS = ['./auth', './calendar', './client']
+
   it.each(
     SUBPATHS.filter(
-      ([subpath]) =>
-        // Auth ships as its own entry point and is intentionally absent from the
-        // root barrel; see README.
-        !subpath.startsWith('./auth'),
+      ([subpath]) => !STANDALONE_ENTRY_POINTS.some((prefix) => subpath.startsWith(prefix)),
     ),
   )('re-exports everything %s exposes', (_subpath, target) => {
     const missing = [...exportedValues(read(target.replace(/^\.\//, '')))].filter(
