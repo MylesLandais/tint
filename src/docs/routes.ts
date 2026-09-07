@@ -33,6 +33,7 @@ const USAGE_AND_API: readonly DocSection[] = [
 ]
 
 const ROUTE_DATA = [
+  {path:'components/framebuffer',label:'GPU Framebuffer',blurb:'Live GPU frames from connected game clients.'},
   {
     path: 'components/release-chart',
     aliases: ['components/scatter-plot'],
@@ -325,6 +326,7 @@ export const DOC_GROUPS = ['Media', 'Chat & content', 'Data & infra', 'Theming &
 export type DocGroup = (typeof DOC_GROUPS)[number]
 
 export const ROUTE_GROUPS = {
+  'components/framebuffer':'Media',
   'components/shell': 'Theming & layout',
   'components/media-player': 'Media',
   'components/release-chart': 'Media',

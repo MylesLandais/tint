@@ -12,6 +12,7 @@ import { DOC_ROUTES, findRoute, hrefFor, type DocRoutePath } from '../routes'
  */
 const IMPORT_SNIPPETS = {
   'components/release-chart': "import { ReleaseChart } from 'tint/release-chart'",
+  'components/framebuffer': "import { Framebuffer } from 'tint/framebuffer'",
   'components/shell': "import { AppShell, NavRail, WorkspaceHeader } from 'tint/shell'",
   'components/media-player': "import { MediaPlayer } from 'tint/media-player'",
   'components/video-player': "import { VideoPlayer } from 'tint/video-player'",

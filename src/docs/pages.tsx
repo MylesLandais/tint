@@ -1,3 +1,4 @@
+import {FramebufferDoc} from './FramebufferDoc'
 import { lazy, type ComponentType } from 'react'
 import type { DocRoutePath } from './routes'
 import { ChatComponentDoc } from './chat/ChatComponentDoc'
@@ -72,6 +73,7 @@ export const DOC_PAGES = {
   'components/socket': SocketDoc,
   'components/collab': CollabDoc,
   'components/auth': AuthDoc,
+  'components/framebuffer': FramebufferDoc,
   'components/video-player': VideoPlayerDoc,
   'components/media': MediaPrimitivesDoc,
   'components/code': CodeDoc,

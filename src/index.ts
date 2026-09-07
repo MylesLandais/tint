@@ -304,6 +304,7 @@ export {
   StatusBar,
   TopNav,
   WorkspaceHeader,
+  WorkspaceLayout,
   WorkspaceTabs,
   WorkspaceSplit,
   MetadataPanel,
@@ -315,3 +316,5 @@ export type * from './components/shell'
 
 export { ScatterPlot } from './components/scatter-plot'
 export type * from './components/scatter-plot'
+
+export {Framebuffer} from './components/framebuffer'

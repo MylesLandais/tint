@@ -41,3 +41,5 @@ export type {
 
 export { ResponsiveNavRail, type ResponsiveNavRailProps } from "./Shell";
 export { WorkspaceSplit, type WorkspaceSplitProps } from "./WorkspaceSplit";
+export { WorkspaceLayout } from "./WorkspaceLayout";
+export type { WorkspaceDrawerMode, WorkspaceLayoutProps, WorkspaceLayoutTheme, WorkspaceSplitMode } from "./WorkspaceLayout";
