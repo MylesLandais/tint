@@ -19,6 +19,14 @@ const workbenchProxy: import('vite').ProxyOptions = {
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  build: {
+    rollupOptions: {
+      input: {
+        docs: path.resolve(import.meta.dirname, 'index.html'),
+        demos: path.resolve(import.meta.dirname, 'demos.html'),
+      },
+    },
+  },
   server: {
     host: '127.0.0.1',
     port: 45173,
