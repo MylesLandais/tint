@@ -20,6 +20,16 @@ describe('message versions and editing', () => {
     expect(screen.getByRole('button', { name: 'Next saved response' })).toBeDisabled()
   })
 
+  it('requests another response only when the host supplies an action', () => {
+    const generate = vi.fn()
+    const { rerender } = render(<ChatMessageAlternatives alternatives={[{ id: 'original' }]} value="original"
+      onValueChange={vi.fn()} onRegenerate={generate} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Generate another response' }))
+    expect(generate).toHaveBeenCalledOnce()
+    rerender(<ChatMessageAlternatives alternatives={[]} value="" onValueChange={vi.fn()} />)
+    expect(screen.queryByRole('button', { name: 'Generate another response' })).toBeNull()
+  })
+
   it('renders host editing controls through the list and preserves an error draft', () => {
     const save = vi.fn(), cancel = vi.fn(), change = vi.fn()
     render(<ChatMessageList messages={[{ id: 'one', actor: { id: 'a', name: 'Aster', kind: 'assistant' },

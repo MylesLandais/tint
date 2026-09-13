@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react'
 import { Icon } from '../icon'
 import { cn } from '../../lib/utils'
 
@@ -7,13 +7,15 @@ export type ChatMessageAlternativesProps = {
   alternatives: readonly { id: string; label?: string }[]
   value: string
   onValueChange: (id: string) => void
+  /** Request a new alternative from the host. Omit to hide the control. */
+  onRegenerate?: () => void
   disabled?: boolean
   label?: string
   className?: string
 }
 
 /** Controlled navigation through saved message versions; never generates text. */
-export function ChatMessageAlternatives({ alternatives, value, onValueChange,
+export function ChatMessageAlternatives({ alternatives, value, onValueChange, onRegenerate,
   disabled = false, label = 'Saved responses', className }: ChatMessageAlternativesProps) {
   const index = alternatives.findIndex((item) => item.id === value)
   const button = 'rounded p-1 text-tint-muted hover:bg-tint-surface focus-visible:outline-2 focus-visible:outline-tint-accent disabled:opacity-40'
@@ -32,6 +34,10 @@ export function ChatMessageAlternatives({ alternatives, value, onValueChange,
         onClick={() => onValueChange(alternatives[index + 1].id)}>
         <Icon icon={ChevronRight} size="sm" />
       </button>
+      {onRegenerate ? <button type="button" className={button} disabled={disabled}
+        aria-label="Generate another response" onClick={onRegenerate}>
+        <Icon icon={RotateCcw} size="sm" />
+      </button> : null}
     </div>
   )
 }

@@ -701,6 +701,8 @@ export function ChatComponentDoc() {
           </DocsDemo>
           <p className="text-sm text-tint-muted">
             ChatMessageAlternatives accepts stable string IDs in display order and emits onValueChange.
+            Its optional onRegenerate callback reveals a button requesting another response;
+            the host chooses the provider and stores the result. The demo uses local fixture text.
             ChatMessageEditor accepts a controlled value, onValueChange, onSave and onCancel;
             busy disables changes and error keeps the draft visible. Save with the button or
             Ctrl/Command+Enter; Escape cancels. The host owns revision checks and persistence.
