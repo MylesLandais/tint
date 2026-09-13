@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import {
   DEMO_FORM_SCHEMA,
   FormLayout,
+  ImportReview,
   createMemoryFormTransport,
   defaultValuesForSchema,
   type FormSchema,
@@ -71,6 +72,7 @@ function parseSchema(text: string): { schema: FormSchema | null; error: string |
 }
 
 export function FormDoc() {
+  const [imported, setImported] = useState(false)
   const [schemaText, setSchemaText] = useState(() => JSON.stringify(DEMO_FORM_SCHEMA, null, 2))
   const parsed = useMemo(() => parseSchema(schemaText), [schemaText])
   const schema = parsed.schema ?? DEMO_FORM_SCHEMA
@@ -102,6 +104,12 @@ export function FormDoc() {
         title="Preview"
         description="Edit the schema JSON. A valid document re-renders the form immediately."
       >
+        <ImportReview rows={[
+          { id: 'chats', label: 'Chats', files: 12, ready: 11, errors: 1 },
+          { id: 'images', label: 'Images', files: 8, ready: 0, errors: 0 },
+        ]} complete={imported} onImport={() => setImported(true)}
+          description="Preserve every file while showing which records are usable. The application owns preview and persistence."
+          notice="This demonstration changes local state only." />
         <DocsPreview className="grid gap-6 lg:grid-cols-2">
           <FormLayout
             schema={schema}
