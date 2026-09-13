@@ -61,6 +61,8 @@ export {
   ChatMessageActions,
   ChatMessageContent,
   ChatMessageList,
+  ChatMessageAlternatives,
+  ChatMessageEditor,
   ChatMessagePartView,
   ChatPartContainer,
   ChatPreference,

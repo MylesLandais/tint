@@ -315,6 +315,8 @@ export type ChatMessageData<TCustomPart extends ChatCustomPart = never> = {
   id: ChatId
   actor: ChatActor
   createdAt: ChatTimestamp
+  /** Display an original or human-readable time without parsing it as a date. */
+  timestampLabel?: string
   /** Rendered in order. Replace only the changed part while streaming. */
   parts: readonly ChatMessagePart<TCustomPart>[]
   status: ChatMessageStatus
@@ -436,6 +438,8 @@ export type ChatMessageListProps<TCustomPart extends ChatCustomPart = never> = O
   /** Replaces the default empty state. */
   emptyState?: ReactNode
   renderPart?: ChatPartRenderer<TCustomPart>
+  /** Host-owned controls below each message. */
+  renderMessageFooter?: (message: ChatMessageData<TCustomPart>) => ReactNode
   /** Access to the scroll viewport. */
   ref?: Ref<HTMLDivElement>
   onFollowOutputChange?: (following: boolean) => void
@@ -482,6 +486,8 @@ export type ChatMessageProps<TCustomPart extends ChatCustomPart = never> = Omit<
   showAvatar?: boolean
   renderPart?: ChatPartRenderer<TCustomPart>
   onAction?: (payload: ChatMessageActionPayload) => void
+  /** Host-owned controls below the message (editing, alternatives, citations). */
+  footer?: ReactNode
   onToolApproval?: (payload: ChatToolApprovalPayload) => void
   /**
    * Offer Play/Replay next to Copy. Off by default. Tint reports `speak`;

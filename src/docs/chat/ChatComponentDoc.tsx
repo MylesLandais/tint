@@ -11,6 +11,7 @@ import {
 } from '../components/DocsPage'
 import { ChatDemo } from './demo/ChatDemo'
 import { ZulipThreadsDemo } from './ZulipThreadsDemo'
+import { MessageEditingDemo } from './MessageEditingDemo'
 
 const previewDemoCode = `<ChatConversation className="h-[42rem]">
   <ChatMessageList
@@ -103,6 +104,8 @@ const chatConversationSignature = `type ChatConversationProps = HTMLAttributes<H
 }`
 
 const messageListProps = [
+  { name: 'renderMessageFooter', type: '(message: ChatMessageData) => ReactNode',
+    description: 'Host controls below each message. Compose ChatMessageAlternatives and ChatMessageEditor for saved versions and inline edits.' },
   {
     name: 'messages',
     type: 'readonly ChatMessageData[]',
@@ -687,6 +690,22 @@ export function ChatComponentDoc() {
         description="Import from the focused subpath or the package root. Applications own the data and reduce the callbacks into local state, a store, or a transport adapter."
       >
         <div className="space-y-6">
+          <DocsDemo code={`<ChatMessageList messages={messages}
+  renderMessageFooter={message => <ChatMessageAlternatives
+    alternatives={versions[message.id]} value={selected[message.id]}
+    onValueChange={id => selectVersion(message.id, id)} />}
+/>
+<ChatMessageEditor value={draft} onValueChange={setDraft}
+  onSave={save} onCancel={cancel} busy={saving} error={error} />`}>
+            <MessageEditingDemo />
+          </DocsDemo>
+          <p className="text-sm text-tint-muted">
+            ChatMessageAlternatives accepts stable string IDs in display order and emits onValueChange.
+            ChatMessageEditor accepts a controlled value, onValueChange, onSave and onCancel;
+            busy disables changes and error keeps the draft visible. Save with the button or
+            Ctrl/Command+Enter; Escape cancels. The host owns revision checks and persistence.
+            Standalone ChatMessage accepts the same controls through its footer prop.
+          </p>
           <div>
             <h3 className="mb-3 text-base font-semibold text-tint-ink">
               Controlled composition

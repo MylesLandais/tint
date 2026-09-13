@@ -59,6 +59,7 @@ function ChatMessageImpl<TCustomPart extends ChatCustomPart = never>({
   showAvatar = true,
   renderPart,
   onAction,
+  footer,
   onToolApproval,
   onRenderError,
   enableSpeak = false,
@@ -164,12 +165,14 @@ function ChatMessageImpl<TCustomPart extends ChatCustomPart = never>({
         {showActor ? (
           <header
             className={cn(
-              'mb-1.5 flex items-center gap-2 text-xs',
+              'mb-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs',
               alignment === 'end' && 'justify-end',
             )}
           >
             <span className="font-medium">{actorName}</span>
-            {timestamp ? (
+            {message.timestampLabel !== undefined ? (
+              <span className="break-words text-tint-muted">{stripBidi(message.timestampLabel)}</span>
+            ) : timestamp ? (
               <time
                 dateTime={new Date(message.createdAt).toISOString()}
                 className="text-tint-muted"
@@ -299,6 +302,7 @@ function ChatMessageImpl<TCustomPart extends ChatCustomPart = never>({
             ) : null}
           </ChatMessageActions>
         </footer>
+        {footer}
       </div>
     </article>
   )

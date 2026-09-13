@@ -5,6 +5,10 @@ export {
   ChatComposerInput,
 } from './ChatComposer'
 export { ChatMessage } from './ChatMessage'
+export { ChatMessageAlternatives } from './ChatMessageAlternatives'
+export type { ChatMessageAlternativesProps } from './ChatMessageAlternatives'
+export { ChatMessageEditor } from './ChatMessageEditor'
+export type { ChatMessageEditorProps } from './ChatMessageEditor'
 export { ChatMessageList } from './ChatMessageList'
 export { ChatMediaLightbox } from './ChatMediaLightbox'
 export {

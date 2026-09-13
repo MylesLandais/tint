@@ -77,6 +77,7 @@ export function ChatMessageList<TCustomPart extends ChatCustomPart = never>({
   enableRovingFocus = true,
   emptyState,
   renderPart,
+  renderMessageFooter,
   onFollowOutputChange,
   onLoadEarlier,
   onMessageAction,
@@ -393,6 +394,7 @@ export function ChatMessageList<TCustomPart extends ChatCustomPart = never>({
                     enableSpeak={enableSpeak}
                     speakingMessageId={speaking}
                     onAction={onMessageAction}
+                    footer={renderMessageFooter?.(message)}
                     onToolApproval={onToolApproval}
                     onRenderError={onRenderError}
                   />
