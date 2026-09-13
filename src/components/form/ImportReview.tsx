@@ -31,7 +31,7 @@ export function ImportReview({ rows, title = 'Review import', description, notic
     <h3 className="font-semibold text-tint-ink">{title}</h3>
     {description && <p className="text-sm text-tint-muted">{description}</p>}
     <div className="overflow-x-auto">
-      <table className="w-full text-left text-sm">
+      <table className="w-full text-left text-sm [&_th]:pr-3 [&_td]:pr-3">
         <caption className="sr-only">Import file coverage</caption>
         <thead><tr><th scope="col">Data</th><th scope="col">Files preserved</th><th scope="col">Ready to use</th><th scope="col">Read errors</th></tr></thead>
         <tbody>{rows.map(row => <tr key={row.id} className="border-t border-tint-border">
