@@ -292,6 +292,8 @@ export type * from './components/form'
 export {
   CHARACTER_CARD_FORM_SCHEMA,
   CharacterCardEditorForm,
+  CharacterDocumentEditor,
+  CharacterLibrary,
   EMPTY_AVATAR_PNG,
   TINT_DEPTH_PROMPT_KEY,
   TINT_TALKATIVENESS_KEY,

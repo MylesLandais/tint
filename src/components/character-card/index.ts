@@ -1,4 +1,8 @@
 export { CharacterCardEditorForm, cardFromFormValues, toCharacterCardFormValues } from './CharacterCardEditorForm'
+export { CharacterDocumentEditor } from './CharacterDocumentEditor'
+export type { CharacterDocument, CharacterDocumentEditorProps } from './CharacterDocumentEditor'
+export { CharacterLibrary } from './CharacterLibrary'
+export type { CharacterLibraryItem, CharacterLibraryProps } from './CharacterLibrary'
 export type { CharacterCardEditorFormProps, CharacterCardFormValues } from './CharacterCardEditorForm'
 export {
   emptyLoreEntry,

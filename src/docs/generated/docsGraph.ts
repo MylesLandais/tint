@@ -29,7 +29,7 @@ export const docsGraphNodes: readonly DocsGraphNode[] = [
   { id: "board", imports: ["badge", "button", "surface", "table"], position: {"x": 680, "y": -450} },
   { id: "button", imports: [], position: {"x": 0, "y": -975} },
   { id: "calendar", imports: ["button", "icon"], position: {"x": 340, "y": -1425} },
-  { id: "character-card", imports: ["form"], position: {"x": 340, "y": -1275} },
+  { id: "character-card", imports: ["form", "identity"], position: {"x": 340, "y": -1275} },
   { id: "charts", imports: ["surface"], position: {"x": 340, "y": -1125} },
   { id: "chat", imports: ["code", "icon", "identity", "media-assets", "media-player"], position: {"x": 1360, "y": 0} },
   { id: "code", imports: ["icon"], position: {"x": 340, "y": -975} },

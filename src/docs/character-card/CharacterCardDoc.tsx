@@ -2,6 +2,9 @@ import { useRef, useState } from 'react'
 import {
   CHARACTER_CARD_FORM_SCHEMA,
   CharacterCardEditorForm,
+  CharacterDocumentEditor,
+  CharacterLibrary,
+  type CharacterDocument,
   bytesFromObjectUrl,
   embedTavernCard,
   emptyTavernCard,
@@ -47,6 +50,25 @@ const props = [
   { name: 'onSubmit', type: '(envelope: FormSubmitEnvelope) => void | Promise<void>', description: 'Called after validation with the form envelope.' },
 ]
 
+const documentApi = `type CharacterDocumentEditorProps = {
+  value: CharacterDocument
+  onValueChange: (value: CharacterDocument) => void
+  onSubmit: (value: CharacterDocument) => void | Promise<void>
+  busy?: boolean
+  error?: ReactNode
+}
+
+type CharacterLibraryProps = {
+  items: readonly CharacterLibraryItem[]
+  query: string
+  onQueryChange: (query: string) => void
+  onSelect: (id: string) => void
+  onStartChat: (id: string) => void
+  onCreate: () => void
+  selectedId?: string | null
+  busy?: boolean
+}`
+
 function download(filename: string, bytes: string | Uint8Array, type: string) {
   const blob =
     typeof bytes === 'string'
@@ -61,6 +83,8 @@ function download(filename: string, bytes: string | Uint8Array, type: string) {
 }
 
 export function CharacterCardDoc() {
+  const [document, setDocument] = useState<CharacterDocument>({ spec: 'chara_card_v3', spec_version: '3.0', data: { name: 'Aster', first_mes: 'The archive is open.', tags: ['archive'], extensions: { custom: { preserved: true } } } })
+  const [query, setQuery] = useState('')
   const [card, setCard] = useState<TavernCardV2>(() => {
     const next = emptyTavernCard()
     next.data.name = 'Aiko'
@@ -89,10 +113,18 @@ export function CharacterCardDoc() {
     <DocsPage
       route="components/character-card"
       title="Character Card"
-      intro="A SillyTavern-shaped Character Card V2 editor, composed on FormLayout. Identity, greetings, personality, prompt overrides, creator metadata, and embedded lore — plus JSON and PNG round-trips."
+      intro="Browse characters and edit original V2 or V3 documents with controlled components. The FormLayout editors cover identity, greetings, personality, prompt overrides, creator metadata, and embedded lore."
       note="Group chats, HotSwap, live tokenizer counts, and World Info file linking stay host-app features. This kit edits the card."
     >
       <DocsSection id="editor" title="Editor">
+        <p><code>CharacterDocumentEditor</code> edits an original V2 or V3 document without replacing unknown fields or changing its version. Use it for imported archives; save conflicts and persistence belong to the host.</p>
+        <DocsPreview>
+          <CharacterLibrary items={[{ id: 'aster', name: String(document.data?.name ?? 'Aster'), tags: ['archive'] }]}
+            query={query} onQueryChange={setQuery} onSelect={() => setMessage('Editing Aster')}
+            onStartChat={() => setMessage('The host opens a persisted chat with this character.')}
+            onCreate={() => setMessage('The host creates an empty document.')} />
+          <CharacterDocumentEditor value={document} onValueChange={setDocument} onSubmit={() => setMessage('Original document saved in this demo.')} />
+        </DocsPreview>
         <DocsPreview>
           <div className="mb-4 flex flex-wrap gap-2">
             <button
@@ -212,6 +244,9 @@ export function CharacterCardDoc() {
       </DocsSection>
 
       <DocsSection id="api" title="API">
+        <CodeBlock code={documentApi} />
+        <p><code>CharacterDocument</code> retains the original envelope and unknown fields. Library items contain an <code>id</code>, <code>name</code>, and <code>tags</code>, with optional <code>description</code> and <code>imageUrl</code>. The host supplies portrait URLs and owns persistence, imports, and chat routing.</p>
+        <h3>CharacterCardEditorForm</h3>
         <PropsTable rows={props} />
       </DocsSection>
     </DocsPage>

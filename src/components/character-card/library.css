@@ -1,0 +1,20 @@
+.tint-character-library { min-width: 0; color: var(--tint-ink, inherit); }
+.tint-character-editor-sections { display: flex; flex-wrap: wrap; gap: .375rem; margin-bottom: 1rem; }
+.tint-character-editor-sections button { min-height: 2.75rem; border: 1px solid var(--tint-border, #555); border-radius: .375rem; background: var(--tint-surface, transparent); color: inherit; padding: .375rem .625rem; cursor: pointer; }
+.tint-character-editor-sections button[aria-pressed='true'] { border-color: var(--tint-accent, #89b4fa); }
+.tint-character-library-toolbar { display: flex; flex-wrap: wrap; align-items: end; gap: .75rem; }
+.tint-character-library-toolbar label { display: grid; gap: .4rem; flex: 1; min-width: 12rem; font-size: .875rem; }
+.tint-character-library input, .tint-character-library button { box-sizing: border-box; min-height: 2.75rem; border: 1px solid var(--tint-border, #555); border-radius: .4rem; background: var(--tint-surface, transparent); color: inherit; padding: .5rem .75rem; font: inherit; }
+.tint-character-library input { width: 100%; }
+.tint-character-library button { cursor: pointer; }
+.tint-character-library button:disabled { cursor: wait; opacity: .55; }
+.tint-character-library button:focus-visible, .tint-character-library input:focus-visible { outline: 2px solid var(--tint-accent, #89b4fa); outline-offset: 3px; }
+.tint-character-library-count { font-size: .875rem; color: var(--tint-muted, inherit); }
+.tint-character-library-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: 1rem; }
+.tint-character-library-grid > li { min-width: 0; display: flex; flex-direction: column; gap: .75rem; border: 1px solid var(--tint-border, #555); border-radius: .6rem; background: var(--tint-panel, transparent); padding: 1rem; overflow-wrap: anywhere; }
+.tint-character-library-grid > li[data-selected] { border-color: var(--tint-accent, #89b4fa); }
+.tint-character-library-identity { display: flex; align-items: center; gap: .75rem; }
+.tint-character-library-identity h3 { margin: 0; font-size: 1rem; }
+.tint-character-library-tags { display: flex; gap: .375rem; flex-wrap: wrap; }
+.tint-character-library-tags span { padding: .125rem .4rem; background: var(--tint-surface, transparent); border-radius: .25rem; color: var(--tint-muted, inherit); font-size: .75rem; }
+.tint-character-library-actions { margin-top: auto; display: flex; gap: .5rem; flex-wrap: wrap; }

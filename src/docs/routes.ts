@@ -198,7 +198,7 @@ const ROUTE_DATA = [
   {
     path: 'components/character-card',
     label: 'Character Card',
-    blurb: 'SillyTavern-shaped Character Card V2 editor composed on FormLayout, with JSON and PNG round-trips.',
+    blurb: 'Character library, original V2/V3 document editing, and a V2 card form with JSON and PNG round-trips.',
     sections: [
       { id: 'editor', label: 'Editor' },
       { id: 'schema', label: 'Schema' },
