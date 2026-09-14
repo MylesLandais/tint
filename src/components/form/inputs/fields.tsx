@@ -171,7 +171,7 @@ export type NumberFieldProps = Shared & {
   onChange: (value: number | string) => void
   min?: number
   max?: number
-  step?: number
+  step?: number | 'any'
   required?: boolean
 }
 

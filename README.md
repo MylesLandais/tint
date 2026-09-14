@@ -626,3 +626,10 @@ and `routing.test.tsx` covers the route registry itself.
 See [tint Git history and collaboration](docs/git-history.md) for stable/dev branches, preserved history, cloning, and mirror recovery.
 
 `RegexRulesEditor` from `@nebula/tint/form` edits ordered expression rules while preserving unknown fields. The host supplies placement labels and owns execution and persistence; see the [interactive Form docs](src/docs/form/FormDoc.tsx).
+
+`GroupEditor` from `@nebula/tint/form` edits ordered character references, muted
+members, speaker/prompt modes, reply delay and joined prompt templates. Import
+`@nebula/tint/form/styles.css`. The host provides character identities and mode
+labels and owns saves and speaker execution. Missing and duplicate imported
+members remain visible; hiding a prompt template does not erase it. See the
+[interactive Form docs](src/docs/form/FormDoc.tsx).

@@ -257,6 +257,7 @@ export {
   ImportReview,
   RegexRulesEditor,
   PersonaEditor,
+  GroupEditor,
   FormRevisionConflictError,
   FormTransportError,
   NumberField,
@@ -656,3 +657,5 @@ export type { FramebufferProps, Presenter } from './components/framebuffer'
 export { createEditorPresence, receiveEditorPresence, persistCollabSession } from './components/collab'
 export type { EditorPresence } from './components/collab'
 export type { WorkspaceSplitProps, WorkspaceLayoutProps, WorkspaceDrawerMode, WorkspaceLayoutTheme, WorkspaceSplitMode } from './components/shell'
+
+export type { GroupFields, GroupEditorProps, GroupCharacterOption } from './components/form'

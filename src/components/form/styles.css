@@ -106,4 +106,17 @@
   padding: 1rem;
 }
 .tint-persona-editor legend { padding-inline: 0.35rem; }
+.tint-group-editor { display: grid; gap: 1rem; min-width: 0; padding: 1rem; border: 1px solid var(--tint-border, #394150); border-radius: .75rem; }
+.tint-group-editor legend { padding-inline: .35rem; }
+.tint-group-editor__members { min-width: 0; border: 0; padding: 0; }
+.tint-group-editor__members ol { list-style: none; padding: 0; margin: .5rem 0 1rem; display: grid; gap: .65rem; }
+.tint-group-editor__members li { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; padding: .6rem; border: 1px solid var(--tint-border, #394150); border-radius: .4rem; }
+.tint-group-editor__member-name { flex: 1 1 10rem; min-width: 0; overflow-wrap: anywhere; }
+.tint-group-editor__member-name small { display: block; opacity: .7; }
+.tint-group-editor__actions { display: flex; flex-wrap: wrap; gap: .35rem; }
+.tint-group-editor button { font: inherit; color: inherit; background: transparent; border: 1px solid var(--tint-border, #394150); border-radius: .35rem; padding: .35rem .6rem; cursor: pointer; }
+.tint-group-editor button:disabled { opacity: .45; cursor: default; }
+.tint-group-editor__add { display: flex; flex-wrap: wrap; align-items: end; gap: .6rem; }
+.tint-group-editor__add > :first-child { flex: 1 1 12rem; min-width: 0; }
+.tint-group-editor__settings { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,14rem),1fr)); gap: 1rem; }
 .tint-persona-editor__depth { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: 1rem; }

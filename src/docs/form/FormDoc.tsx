@@ -5,6 +5,8 @@ import {
   ImportReview,
   RegexRulesEditor,
   PersonaEditor,
+  GroupEditor,
+  type GroupFields,
   type PersonaFields,
   type RegexRuleDocument,
   createMemoryFormTransport,
@@ -76,6 +78,7 @@ function parseSchema(text: string): { schema: FormSchema | null; error: string |
 }
 
 export function FormDoc() {
+  const [group,setGroup] = useState<GroupFields>({name:'Expedition',members:['aster','birch'],mutedMembers:[],strategy:0,promptMode:1,allowSelfReplies:false,delay:5,prefix:'',suffix:'',favorite:false})
   const [persona, setPersona] = useState<PersonaFields>({name:'Reader',title:'Navigator',description:'An explorer mapping unfamiliar places.',position:0,depth:2,role:0})
   const [rules, setRules] = useState<RegexRuleDocument[]>([{ scriptName: 'Hide annotations', findRegex: '/<note>.*?<\\/note>/g', replaceString: '', placement: [2], markdownOnly: true }])
   const [imported, setImported] = useState(false)
@@ -136,6 +139,32 @@ export function FormDoc() {
   value: { name: string; title: string; description: string;
     position: number; depth: number | string; role: number }
   onValueChange: (value: PersonaFields) => void
+  disabled?: boolean
+}`} />
+        </DocsPreview>
+        <DocsPreview>
+          <div><h3>Group settings</h3><p>Reorder, mute, add and remove members without losing unavailable references or hidden prompt templates. The host supplies mode labels and owns saves and speaker execution.</p>
+            <GroupEditor value={group} onValueChange={setGroup} characters={[{value:'aster',label:'Aster'},{value:'birch',label:'Birch'},{value:'cedar',label:'Cedar'}]}
+              strategies={[{value:0,label:'Natural'},{value:1,label:'List order'}]} promptModes={[{value:0,label:'Current character'},{value:1,label:'Join characters'}]} />
+          </div>
+          <CodeBlock language="tsx" code={`type GroupFields = {
+  name: string
+  members: string[]
+  mutedMembers: string[]
+  strategy: number
+  promptMode: number
+  allowSelfReplies: boolean
+  delay: number | string
+  prefix: string
+  suffix: string
+  favorite: boolean
+}
+type GroupEditorProps = {
+  value: GroupFields
+  onValueChange: (value: GroupFields) => void
+  characters: readonly { value: string; label: string }[]
+  strategies: readonly { value: number; label: string }[]
+  promptModes: readonly { value: number; label: string }[]
   disabled?: boolean
 }`} />
         </DocsPreview>
