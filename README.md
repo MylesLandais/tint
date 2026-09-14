@@ -388,6 +388,13 @@ onto labelled inputs and a `FormSubmitEnvelope`. Hosts persist through
 `FormTransport` (the same injectable-Promise shape as `AuthTransport`).
 `SignInForm` and `CharacterCardEditorForm` are composed on this kit.
 
+`PersonaEditor` is a controlled identity and description editor exported from
+`@nebula/tint/form`. It includes name, title, prompt placement, depth and role;
+the host owns catalog selection, avatars, revision checks and persistence.
+Import `@nebula/tint/form/styles.css`. Hidden depth/role values survive placement
+changes, and multiple editors receive distinct accessible field IDs. The Form
+documentation includes a live example and the prop signature.
+
 ```tsx
 import { FormLayout, DEMO_FORM_SCHEMA, defaultValuesForSchema } from '@nebula/tint/form'
 import '@nebula/tint/form/styles.css'

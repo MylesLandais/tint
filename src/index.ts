@@ -256,6 +256,7 @@ export {
   FormLayout,
   ImportReview,
   RegexRulesEditor,
+  PersonaEditor,
   FormRevisionConflictError,
   FormTransportError,
   NumberField,

@@ -97,3 +97,13 @@
 .tint-regex-options label { display: flex; align-items: center; gap: .4rem; min-width: 0; }
 .tint-regex-rule details > :not(summary) { margin-top: .7rem; }
 .tint-regex-rule input:not([type=checkbox]), .tint-regex-rule textarea, .tint-regex-rule select { width: 100%; min-width: 0; box-sizing: border-box; }
+.tint-persona-editor {
+  border: 1px solid var(--tint-border, #394150);
+  border-radius: 0.75rem;
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+  padding: 1rem;
+}
+.tint-persona-editor legend { padding-inline: 0.35rem; }
+.tint-persona-editor__depth { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: 1rem; }

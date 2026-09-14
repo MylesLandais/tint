@@ -4,6 +4,8 @@ import {
   FormLayout,
   ImportReview,
   RegexRulesEditor,
+  PersonaEditor,
+  type PersonaFields,
   type RegexRuleDocument,
   createMemoryFormTransport,
   defaultValuesForSchema,
@@ -74,6 +76,7 @@ function parseSchema(text: string): { schema: FormSchema | null; error: string |
 }
 
 export function FormDoc() {
+  const [persona, setPersona] = useState<PersonaFields>({name:'Reader',title:'Navigator',description:'An explorer mapping unfamiliar places.',position:0,depth:2,role:0})
   const [rules, setRules] = useState<RegexRuleDocument[]>([{ scriptName: 'Hide annotations', findRegex: '/<note>.*?<\\/note>/g', replaceString: '', placement: [2], markdownOnly: true }])
   const [imported, setImported] = useState(false)
   const [schemaText, setSchemaText] = useState(() => JSON.stringify(DEMO_FORM_SCHEMA, null, 2))
@@ -125,6 +128,17 @@ export function FormDoc() {
   placements: readonly { value: number; label: string }[]
   disabled?: boolean
 }`} />
+        <DocsPreview className="grid gap-6 lg:grid-cols-2">
+          <div><h3>Persona details</h3><p>The host owns profile selection, portraits and persistence. Prompt depth and role remain intact when the placement changes.</p>
+            <PersonaEditor value={persona} onValueChange={setPersona} />
+          </div>
+          <CodeBlock language="tsx" code={`type PersonaEditorProps = {
+  value: { name: string; title: string; description: string;
+    position: number; depth: number | string; role: number }
+  onValueChange: (value: PersonaFields) => void
+  disabled?: boolean
+}`} />
+        </DocsPreview>
         <DocsPreview className="grid gap-6 lg:grid-cols-2">
           <FormLayout
             schema={schema}
