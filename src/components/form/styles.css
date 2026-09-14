@@ -88,3 +88,12 @@
 @media (max-width: 40rem) {
   .tint-form[data-columns='2'] > .tint-form-section > .tint-form-fields { grid-template-columns: 1fr; }
 }
+.tint-regex-rules { display: grid; gap: 1rem; min-width: 0; }
+.tint-regex-rule { display: grid; gap: .8rem; min-width: 0; margin: 0; padding: 1rem; border: 1px solid var(--tint-border, #8886); border-radius: .5rem; }
+.tint-regex-rule legend { max-width: 100%; overflow-wrap: anywhere; }
+.tint-regex-actions, .tint-regex-options { display: flex; flex-wrap: wrap; gap: .65rem; min-width: 0; }
+.tint-regex-actions button, .tint-regex-rules > button { border: 1px solid var(--tint-border, #8886); border-radius: .3rem; padding: .4rem .65rem; }
+.tint-regex-actions button:disabled, .tint-regex-rules > button:disabled { opacity: .5; }
+.tint-regex-options label { display: flex; align-items: center; gap: .4rem; min-width: 0; }
+.tint-regex-rule details > :not(summary) { margin-top: .7rem; }
+.tint-regex-rule input:not([type=checkbox]), .tint-regex-rule textarea, .tint-regex-rule select { width: 100%; min-width: 0; box-sizing: border-box; }

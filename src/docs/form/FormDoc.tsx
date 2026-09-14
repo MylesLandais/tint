@@ -3,6 +3,8 @@ import {
   DEMO_FORM_SCHEMA,
   FormLayout,
   ImportReview,
+  RegexRulesEditor,
+  type RegexRuleDocument,
   createMemoryFormTransport,
   defaultValuesForSchema,
   type FormSchema,
@@ -72,6 +74,7 @@ function parseSchema(text: string): { schema: FormSchema | null; error: string |
 }
 
 export function FormDoc() {
+  const [rules, setRules] = useState<RegexRuleDocument[]>([{ scriptName: 'Hide annotations', findRegex: '/<note>.*?<\\/note>/g', replaceString: '', placement: [2], markdownOnly: true }])
   const [imported, setImported] = useState(false)
   const [schemaText, setSchemaText] = useState(() => JSON.stringify(DEMO_FORM_SCHEMA, null, 2))
   const parsed = useMemo(() => parseSchema(schemaText), [schemaText])
@@ -110,6 +113,18 @@ export function FormDoc() {
         ]} complete={imported} onImport={() => setImported(true)}
           description="Preserve every file while showing which records are usable. The application owns preview and persistence."
           notice="This demonstration changes local state only." />
+        <DocsPreview>
+          <div><h3>Ordered regex rules</h3>
+            <p>The host saves and executes rules. Editing, disabling, adding and reordering preserve fields that this editor does not display.</p>
+            <RegexRulesEditor value={rules} onValueChange={setRules} placements={[{ value: 1, label: 'User' }, { value: 2, label: 'Assistant' }]} />
+          </div>
+        </DocsPreview>
+        <CodeBlock language="tsx" code={`type RegexRulesEditorProps = {
+  value: readonly Record<string, unknown>[]
+  onValueChange: (value: Record<string, unknown>[]) => void
+  placements: readonly { value: number; label: string }[]
+  disabled?: boolean
+}`} />
         <DocsPreview className="grid gap-6 lg:grid-cols-2">
           <FormLayout
             schema={schema}

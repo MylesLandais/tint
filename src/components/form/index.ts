@@ -45,6 +45,8 @@ export type {
 export { FormControl, describedByFor } from './FormControl'
 export type { FormControlProps } from './FormControl'
 export { FormLayout } from './FormLayout'
+export { RegexRulesEditor } from './RegexRulesEditor'
+export type { RegexRulesEditorProps, RegexRuleDocument } from './RegexRulesEditor'
 export { ImportReview } from './ImportReview'
 export type { ImportReviewProps, ImportReviewRow } from './ImportReview'
 export type { FormLayoutProps } from './FormLayout'

@@ -617,3 +617,5 @@ and `routing.test.tsx` covers the route registry itself.
 ## Source and collaboration
 
 See [tint Git history and collaboration](docs/git-history.md) for stable/dev branches, preserved history, cloning, and mirror recovery.
+
+`RegexRulesEditor` from `@nebula/tint/form` edits ordered expression rules while preserving unknown fields. The host supplies placement labels and owns execution and persistence; see the [interactive Form docs](src/docs/form/FormDoc.tsx).

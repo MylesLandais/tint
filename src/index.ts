@@ -255,6 +255,7 @@ export {
   FormError,
   FormLayout,
   ImportReview,
+  RegexRulesEditor,
   FormRevisionConflictError,
   FormTransportError,
   NumberField,
