@@ -1,0 +1,6 @@
+export { default as Icon } from './Icon.svelte'
+export { default as StatusIcon } from './StatusIcon.svelte'
+export { default as Spinner } from './Spinner.svelte'
+export { ICON_PX } from '../../../core/icon/sizes'
+export type { IconSize } from '../../../core/icon/sizes'
+export type { StatusName } from '../../../core/icon/status'

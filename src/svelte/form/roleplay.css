@@ -1,0 +1,54 @@
+.tint-roleplay-editor,
+.tint-regex-rules,
+.tint-import-review {
+  display: grid;
+  gap: var(--tint-space-3, .75rem);
+  min-width: 0;
+  color: var(--tint-ink);
+}
+.tint-roleplay-editor,
+.tint-regex-rule,
+.tint-import-review {
+  border: 1px solid var(--tint-border);
+  border-radius: var(--tint-radius-sm, .25rem);
+  padding: var(--tint-space-4, 1rem);
+  background: var(--tint-panel);
+}
+.tint-roleplay-editor legend,
+.tint-regex-rule legend { font-weight: 600; padding-inline: .35rem; }
+.tint-roleplay-editor__members { min-width: 0; border: 1px solid var(--tint-border); padding: .75rem; }
+.tint-roleplay-editor__members ol { display: grid; gap: .5rem; list-style: none; padding: 0; margin: .5rem 0; }
+.tint-roleplay-editor__members li,
+.tint-roleplay-editor__add { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; }
+.tint-roleplay-editor__member-name { min-width: 9rem; flex: 1; }
+.tint-roleplay-editor__member-name small { display: block; color: var(--tint-warning-ink, var(--tint-muted)); }
+.tint-roleplay-editor__actions,
+.tint-regex-actions,
+.tint-regex-options { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.tint-roleplay-editor__add .tint-svelte-form-control { flex: 1; min-width: 12rem; }
+.tint-roleplay-editor__settings { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
+.tint-roleplay-editor__check { display: inline-flex; align-items: center; gap: .35rem; }
+.tint-roleplay-editor button,
+.tint-regex-rules button,
+.tint-import-review button { border: 1px solid var(--tint-border); border-radius: var(--tint-radius-sm, .25rem); padding: .4rem .7rem; background: var(--tint-field); color: var(--tint-ink); font: inherit; cursor: pointer; }
+.tint-roleplay-editor button:disabled,
+.tint-regex-rules button:disabled,
+.tint-import-review button:disabled { opacity: .5; cursor: not-allowed; }
+.tint-roleplay-editor button:focus-visible,
+.tint-regex-rules button:focus-visible,
+.tint-import-review button:focus-visible,
+.tint-regex-rules input:focus-visible,
+.tint-regex-rules select:focus-visible { outline: var(--tint-focus-width, 2px) solid var(--tint-focus); outline-offset: 2px; }
+.tint-regex-rule { display: grid; gap: .75rem; min-width: 0; }
+.tint-regex-options { align-items: flex-start; }
+.tint-regex-options label { display: inline-flex; align-items: center; gap: .35rem; }
+.tint-regex-rule details { display: grid; gap: .75rem; }
+.tint-regex-rule details[open] { display: grid; }
+.tint-regex-rule details > * { margin-block: .5rem; }
+.tint-import-review { container-type: inline-size; }
+.tint-import-review__table { overflow-x: auto; }
+.tint-import-review table { border-collapse: collapse; width: 100%; text-align: left; }
+.tint-import-review th,
+.tint-import-review td { padding: .5rem .75rem .5rem 0; white-space: nowrap; }
+.tint-import-review tbody tr { border-top: 1px solid var(--tint-border); }
+.tint-import-review [role='alert'] { color: var(--tint-danger-ink); }
