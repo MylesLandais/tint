@@ -1,5 +1,5 @@
-export { CharacterCardEditorForm, cardFromFormValues, toCharacterCardFormValues } from './CharacterCardEditorForm'
-export type { CharacterCardEditorFormProps, CharacterCardFormValues } from './CharacterCardEditorForm'
+export { cardFromFormValues, toCharacterCardFormValues } from '../../core/character-card/form'
+export type { CharacterCardFormValues } from '../../core/character-card/form'
 export {
   emptyLoreEntry,
   emptyTavernCard,

@@ -21,7 +21,6 @@ const noteDefinition: NodeDefinition<{ text: string }> = {
     { id: 'in', key: 'in', direction: 'input', cardinality: 'single' },
   ],
   validate: async () => [],
-  render: () => null,
 }
 
 const registry = createNodeRegistry([noteDefinition as NodeDefinition])

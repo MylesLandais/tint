@@ -1,34 +1,31 @@
 # EventReviewControls
 
-```tsx
-import { EventReviewControls, type EventReviewControlsProps } from '@nebula/tint/media-workspace'
-import '@nebula/tint/styles.css'
+```svelte
+<script lang="ts">
+  import { EventReviewControls } from '@nebula/tint/media-workspace'
+  import '@nebula/tint/styles.css'
+</script>
+
+<EventReviewControls
+  {quickFilters}
+  {selectedQuickFilterId}
+  onQuickFilterChange={(id) => selectedQuickFilterId = id}
+  {candidatePeople}
+  {selectedCandidatePersonIds}
+  onCandidatePersonIdsChange={(ids) => selectedCandidatePersonIds = ids}
+/>
 ```
 
-Also exported from `@nebula/tint`. This is the canonical source package, not the separate legacy `@tint/react` compiled package. Consumers need React 19, Tailwind v4, and a TypeScript-aware bundler as described in the repository README.
+The same component is exported from `@nebula/tint`. Its host owns every selected value and persists changes if needed.
 
 ## Controlled contract
 
-- `quickFilters: readonly { id: string; label: string }[]` — unique, stable host IDs.
-- `selectedQuickFilterId: string | null`; `onQuickFilterChange(id: string)` — single quick-filter intent. Unknown current IDs are allowed; no filter is then pressed.
-- `historyDate?: { dateTime: string; label: string } | null` — display-only HTML time metadata and host-formatted label. The host owns timezone and localization. Never converted to an offset or seek.
-- `mediaTimestampSeconds?: number | null`; `onSeek?: (seconds: number) => void` — finite nonnegative media offset, including zero. Invalid/missing offsets show unavailable. Without a callback the timestamp is display-only. Labels truncate fractional seconds to m:ss; emitted intent preserves full precision.
-- `candidatePeople: readonly { id: string; label: string }[]` — available candidates.
-- `selectedCandidatePersonIds: readonly string[]`; `onCandidatePersonIdsChange(ids: string[])` — multiple selections. Unknown selected IDs are displayed as `Unknown person (ID)`, remain removable, and survive other changes. Input arrays are never mutated.
-- `disabled?: boolean` — disables all intents.
-- `className?: string` — outer section styling.
+- `quickFilters` use unique, stable IDs. `selectedQuickFilterId` can be unknown; no filter is then pressed. `onQuickFilterChange` emits an ID.
+- `historyDate` carries display-only HTML time metadata and a host-formatted label. It is never converted to a media offset.
+- `mediaTimestampSeconds` is a finite nonnegative media offset. An invalid or missing offset shows unavailable. `onSeek` receives the full precision offset, while the label shows `m:ss`.
+- `candidatePeople` lists available people. Unknown selected IDs remain visible and removable through `onCandidatePersonIdsChange`; input arrays are not mutated.
+- `disabled` disables every intent. `class` styles the outer section.
 
-The host must rerender with authoritative values after callbacks. Selection never means confirmed identity, training eligibility, consent, or persistence. The component always displays **Review required · Training not approved** and exposes no approval action. It performs no fetching, storage, player access, or inference.
+The host must pass authoritative values back after callbacks. Selection does not confirm identity, training eligibility, consent, or persistence. The component displays **Review required · Training not approved** and has no approval action.
 
-## Verification
-
-```sh
-npm test -- src/components/media-workspace/EventReviewControls.test.tsx
-npm test
-npm run build
-npm run lint
-# With npm run dev running separately:
-node scripts/verify-event-review.mjs
-```
-
-Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` if a system Chromium is needed. The browser smoke runs an isolated generic consumer at a 390px viewport, exercising pointer filters/candidates and keyboard seeking. It reports the known proxy-only Vite HMR socket warning separately when the canonical reverse proxy is unavailable.
+The live Svelte documentation page and `EventReviewControls.test.ts` cover pointer selection, keyboard seeking, unknown candidate IDs, history dates, and narrow layout.

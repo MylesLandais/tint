@@ -1,5 +1,1 @@
-export {
-  ScatterPlot,
-  type ScatterPlotProps,
-  type ScatterPoint,
-} from "./ScatterPlot";
+export * from '../../core/scatter-plot/model'

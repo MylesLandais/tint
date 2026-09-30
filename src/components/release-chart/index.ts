@@ -1,1 +1,1 @@
-export { ReleaseChart } from "./ReleaseChart";
+export * from '../../core/release-chart/model'
