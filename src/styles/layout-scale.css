@@ -1,0 +1,54 @@
+/*
+ * Tint layout scale.
+ *
+ * Unlike the colour contract these values are not themed: a theme swaps a
+ * palette, not the rhythm of the layout. Declared once on :root, so
+ * themes.test.ts exempts them from per-theme parity.
+ */
+
+:root {
+  /* Spacing, 4px base */
+  --tint-space-1: 0.25rem;
+  --tint-space-2: 0.5rem;
+  --tint-space-3: 0.75rem;
+  --tint-space-4: 1rem;
+  --tint-space-5: 1.5rem;
+  --tint-space-6: 2rem;
+  --tint-space-7: 3rem;
+
+  /* Radius. md matches the existing .tint-button. */
+  --tint-radius-sm: 0.25rem;
+  --tint-radius-md: 0.45rem;
+  --tint-radius-lg: 0.75rem;
+  --tint-radius-full: 9999px;
+
+  /* Control heights. md matches the existing .tint-button. */
+  --tint-control-sm: 1.75rem;
+  --tint-control-md: 2.25rem;
+  --tint-control-lg: 2.75rem;
+
+  /* Type */
+  --tint-font-size-xs: 0.75rem;
+  --tint-font-size-sm: 0.875rem;
+  --tint-font-size-md: 1rem;
+  --tint-font-size-lg: 1.25rem;
+  --tint-font-size-xl: 1.75rem;
+  --tint-leading-tight: 1.25;
+  --tint-leading-normal: 1.5;
+
+  /* Focus ring */
+  --tint-focus-width: 2px;
+  --tint-focus-offset: 2px;
+
+  /* Motion */
+  --tint-motion-fast: 110ms;
+  --tint-motion-base: 180ms;
+  --tint-ease: cubic-bezier(0.2, 0, 0.38, 0.9);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --tint-motion-fast: 0ms;
+    --tint-motion-base: 0ms;
+  }
+}

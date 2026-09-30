@@ -53,6 +53,12 @@
   --tint-border: #ccd0da;
   --tint-border-strong: #bcc0cc;
 
+  /* Inputs sit inset from the panel; focus is the keyboard ring; selection is a
+     selected row, token or option. */
+  --tint-field: #e6e9ef;
+  --tint-focus: #8136e3;
+  --tint-selection: #e5dff4;
+
   /* Accent: mauve, Catppuccin's own brand hue, darkened for contrast. */
   --tint-accent: #8136e3;
   --tint-accent-hover: #6f2ec3;

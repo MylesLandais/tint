@@ -1,0 +1,59 @@
+/*
+ * Carbon compatibility bridge.
+ *
+ * Tint semantics are canonical. These `--cds-*` names are derived from them so
+ * code written against Carbon's vocabulary (or a future Carbon-backed adapter)
+ * follows whichever Tint theme is active. Dependency direction:
+ *
+ *   --tint-*  ->  --cds-*  ->  components
+ *
+ * Mapped by purpose, not by colour similarity. Where Tint has no distinct
+ * concept the Carbon name is derived or omitted; see docs/design/tokens.md.
+ *
+ * Declared on `:root, [data-theme]` so a theme applied to a subtree re-resolves
+ * the bridge there. A var() reference is resolved where it is declared, so a
+ * `:root`-only bridge would freeze to the root theme.
+ */
+
+:root,
+[data-theme] {
+  /* Surfaces. Tint has two depths, panel and surface. */
+  --cds-background: var(--tint-bg);
+  --cds-layer-01: var(--tint-panel);
+  --cds-layer-02: var(--tint-surface);
+  --cds-layer-03: var(--tint-panel);
+  --cds-layer-hover-01: color-mix(in srgb, var(--tint-panel), var(--tint-ink) 6%);
+  --cds-layer-selected-01: var(--tint-selection);
+  --cds-field-01: var(--tint-field);
+  --cds-field-02: var(--tint-field);
+
+  /* Text and icons */
+  --cds-text-primary: var(--tint-ink);
+  --cds-text-secondary: var(--tint-muted);
+  --cds-text-helper: var(--tint-muted);
+  --cds-text-placeholder: var(--tint-muted);
+  --cds-text-on-color: var(--tint-on-accent);
+  --cds-text-error: var(--tint-danger);
+  --cds-icon-primary: var(--tint-ink);
+  --cds-icon-secondary: var(--tint-muted);
+
+  /* Borders */
+  --cds-border-subtle-01: var(--tint-border);
+  --cds-border-subtle-02: var(--tint-border);
+  --cds-border-strong-01: var(--tint-border-strong);
+  --cds-border-interactive: var(--tint-accent);
+
+  /* Interactive and focus. Tint's accent is its primary interactive colour. */
+  --cds-interactive: var(--tint-accent);
+  --cds-focus: var(--tint-focus);
+  --cds-highlight: var(--tint-accent-soft);
+  --cds-button-primary: var(--tint-accent);
+  --cds-button-primary-hover: var(--tint-accent-hover);
+  --cds-button-danger-primary: var(--tint-danger);
+
+  /* Status */
+  --cds-support-error: var(--tint-danger);
+  --cds-support-success: var(--tint-success);
+  --cds-support-warning: var(--tint-warning);
+  --cds-support-info: var(--tint-info);
+}

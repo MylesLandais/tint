@@ -3,6 +3,9 @@
 @import '@xterm/xterm/css/xterm.css';
 @import './styles/contract.css';
 @import './styles/themes/tint.css';
+@import './styles/layout-scale.css';
+@import './styles/carbon-bridge.css';
+@import './styles/effects/shine.css';
 @import './styles/code-highlight.css';
 @import './styles/button.css';
 

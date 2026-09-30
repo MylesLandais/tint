@@ -39,6 +39,9 @@
   --color-tint-muted: var(--tint-muted);
   --color-tint-border: var(--tint-border);
   --color-tint-border-strong: var(--tint-border-strong);
+  --color-tint-field: var(--tint-field);
+  --color-tint-focus: var(--tint-focus);
+  --color-tint-selection: var(--tint-selection);
 
   /* Accent */
   --color-tint-accent: var(--tint-accent);

@@ -32,6 +32,12 @@
   --tint-border: #494d64;
   --tint-border-strong: #5b6078;
 
+  /* Inputs sit inset from the panel; focus is the keyboard ring; selection is a
+     selected row, token or option. */
+  --tint-field: #24273a;
+  --tint-focus: #c6a0f6;
+  --tint-selection: #302c43;
+
   /* Accent: mauve. It is a light pastel here, so on-accent inverts to crust —
      the same inversion gruvbox documents for its bright aqua. */
   --tint-accent: #c6a0f6;

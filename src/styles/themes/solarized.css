@@ -26,6 +26,12 @@
   --tint-border: light-dark(#ddd6c3, #254b55);
   --tint-border-strong: light-dark(#c9c0a8, #37626e);
 
+  /* Inputs sit inset from the panel; focus is the keyboard ring; selection is a
+     selected row, token or option. */
+  --tint-field: light-dark(#eee8d5, #00212b);
+  --tint-focus: light-dark(#2076b3, #4b9fda);
+  --tint-selection: light-dark(#dfe9f2, #0a3348);
+
   /* Accent: blue, nudged per scheme. Canonical #268bd2 predates WCAG contrast
      requirements for UI — at 3.41:1 it fails both as link text on base3 and as a
      filled button. These are the nearest values along the same hue that clear

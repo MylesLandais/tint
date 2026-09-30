@@ -15,6 +15,12 @@
   --tint-border: light-dark(#d8dde8, #34373c);
   --tint-border-strong: light-dark(#b9c1d1, #454a52);
 
+  /* Inputs sit inset from the panel; focus is the keyboard ring; selection is a
+     selected row, token or option. */
+  --tint-field: light-dark(#f2f4f8, #1c1e22);
+  --tint-focus: light-dark(#865711, #e6ad57);
+  --tint-selection: light-dark(#fff3dd, #353026);
+
   /* Accent. The dark accent is amber, so on-accent inverts with it —
      white text over #e6ad57 would be unreadable. */
   --tint-accent: light-dark(#865711, #e6ad57);

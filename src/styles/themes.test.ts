@@ -32,11 +32,27 @@ function sourceFiles(dir: string): string[] {
   return readdirSync(dir).flatMap((entry) => {
     const full = join(dir, entry)
     if (statSync(full).isDirectory()) return sourceFiles(full)
-    return /\.tsx?$/.test(entry) && !entry.includes('.test.') ? [full] : []
+    return /\.(tsx?|svelte)$/.test(entry) && !entry.includes('.test.') ? [full] : []
   })
 }
 
+/**
+ * Layout-scale tokens (spacing, radius, type, motion, control height) are not
+ * themed, so they live in layout-scale.css and are exempt from theme parity.
+ * `--tint-shine-*` are written at runtime by the shine action.
+ */
+function unthemedTokens() {
+  const text = readFileSync(join(STYLES, 'layout-scale.css'), 'utf8')
+  const names = new Set(
+    [...text.matchAll(/^\s*--tint-([a-z0-9-]+)\s*:/gm)].map((m) => m[1]!),
+  )
+  names.add('shine-x')
+  names.add('shine-y')
+  return names
+}
+
 function tokensUsed() {
+  const unthemed = unthemedTokens()
   const used = new Map<string, string[]>()
   for (const file of sourceFiles(SRC)) {
     const text = readFileSync(file, 'utf8')
@@ -44,6 +60,7 @@ function tokensUsed() {
       re.lastIndex = 0
       for (const match of text.matchAll(re)) {
         const token = match[1]!
+        if (unthemed.has(token)) continue
         const where = used.get(token) ?? []
         if (!where.includes(file)) where.push(file)
         used.set(token, where)
@@ -86,6 +103,9 @@ const CONTRAST_PAIRS: readonly TokenPair[] = [
   ['warning-ink', 'warning-soft'],
   ['success-ink', 'success-soft'],
   ['info-ink', 'info-soft'],
+  ['ink', 'field'],
+  ['muted', 'field'],
+  ['ink', 'selection'],
   ['code-ink', 'code'],
   ['code-muted', 'code'],
 ] as const

@@ -25,6 +25,12 @@
   --tint-border: light-dark(#d5c4a1, #484442);
   --tint-border-strong: light-dark(#bdae93, #5c5754);
 
+  /* Inputs sit inset from the panel; focus is the keyboard ring; selection is a
+     selected row, token or option. */
+  --tint-field: light-dark(#ebdbb2, #282828);
+  --tint-focus: light-dark(#417956, #8ec07c);
+  --tint-selection: light-dark(#e8e0bd, #2f3a2c);
+
   /* Accent: aqua — faded #427b58 on light, bright #8ec07c on dark. The bright
      variant is light enough that on-accent has to invert to bg0_h. */
   --tint-accent: light-dark(#417956, #8ec07c);
