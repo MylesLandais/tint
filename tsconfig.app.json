@@ -19,6 +19,7 @@
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
     "noEmit": true,
+    "jsx": "react-jsx",
 
     /* Linting */
     "strict": true,
@@ -28,7 +29,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src/core", "src/svelte", "src/docs", "src/demos", "src/index.ts", "src/auth", "src/client/public.ts", "src/styles", "src/vendor", "src/lib"],
+  "include": ["src/core", "src/svelte", "src/docs", "src/demos", "src/index.ts", "src/auth", "src/client/public.ts", "src/styles", "src/vendor", "src/lib", "src/test"],
   // Typechecked by tsconfig.node.json instead — they need Node's fs, and the app
   // project deliberately has no Node types so browser code cannot reach for them.
   "exclude": [
