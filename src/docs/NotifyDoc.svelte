@@ -17,8 +17,15 @@
 
   const api: ApiRow[] = [
     { prop: 'NotificationBell unreadCount / open / onOpenChange', type: 'number / boolean / callback', description: 'Host-owned unread count and controlled panel or dialog state.' },
+    { prop: 'NotificationBell presentation', type: "'panel' | 'dialog'", description: 'Selects the default anchored panel or a modal dialog for the open notification surface.' },
+    { prop: 'NotificationBell children / label / title', type: 'Snippet / string / string', description: 'Panel content, accessible bell name, and optional visible title.' },
+    { prop: 'NotificationBell class', type: 'string', description: 'Additional class for the bell container.' },
     { prop: 'NotificationList notifications / onSelect', type: 'readonly Notification[] / callback', description: 'Host-owned notification rows and selection intent.' },
+    { prop: 'NotificationList groupBy / groupKey', type: "'time' | 'kind' / callback", description: 'Choose built-in grouping or supply a key derived from each notification.' },
+    { prop: 'NotificationList empty', type: 'string | Snippet', description: 'Content shown when there are no notification rows.' },
     { prop: 'NotificationSettingsPanel settings / onChange', type: 'NotificationSettings / callback', description: 'Controlled delivery channel, source and policy overrides, and quiet hours.' },
+    { prop: 'NotificationSettingsPanel sources / policies', type: 'readonly labeled-option arrays', description: 'Available source and policy choices for per-item delivery overrides.' },
+    { prop: 'NotificationSettingsPanel disabled', type: 'boolean', description: 'Disables the settings controls without changing host-owned settings.' },
     { prop: 'deriveFeedNotifications', type: 'pure TypeScript function', description: 'Projects feed matches and health into notification rows.' },
   ]
   const usage = `import { NotificationBell, NotificationList } from '@nebula/tint/notify'

@@ -19,6 +19,15 @@
   let submitted = $state(false)
   const api: ApiRow[] = [
     { prop: 'TintFluidForm.columns', type: '1 | 2', description: 'Container-aware field columns.' },
+    { prop: 'FormLayout.schema / values', type: 'FormSchema / FormValues', description: 'The schema to render and the current host-owned form values.' },
+    { prop: 'onValuesChange', type: '(values: FormValues) => void', description: 'Emits the next values after a field edit; the host supplies them back.' },
+    { prop: 'issues / error', type: 'readonly FormIssue[] / string', description: 'Server or host validation issues and an optional form-level error banner.' },
+    { prop: 'busy / disabled / readOnly', type: 'boolean', description: 'Lock submission and field editing while work is pending or access is restricted.' },
+    { prop: 'density / className', type: "'compact' | 'comfortable' / string", description: 'Field spacing and an optional class on the form surface.' },
+    { prop: 'submitLabel / submittingLabel / hideSubmit', type: 'string / string / boolean', description: 'Labels for the submit button, or suppression when the host renders its own action.' },
+    { prop: 'transport', type: 'FormTransport<FormValues, unknown>', description: 'Optional remote validation and submission transport; in-flight work is aborted on teardown.' },
+    { prop: 'onSubmit / onSubmitError', type: 'callbacks', description: 'Receives the validated submit envelope or an error from transport/submission.' },
+    { prop: 'onValidation', type: '(issues: readonly FormIssue[]) => void', description: 'Receives each local or remote validation result.' },
     { prop: 'TextField.value', type: 'string', description: 'Current host-owned field value.' },
     { prop: 'onValueChange', type: '(value: string) => void', description: 'Intent emitted when a field changes.' },
     { prop: 'Typeahead.query / open', type: 'string / boolean', description: 'Host-owned picker input and visibility.' },

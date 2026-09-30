@@ -20,6 +20,8 @@
     { prop: 'trace', type: 'TelemetryTrace', description: 'Host-recorded spans; Tint only derives metrics and renders them.' },
     { prop: 'selectedSpanId / onSelectedSpanIdChange', type: 'string | null / callback', description: 'Optional controlled selection in the waterfall and detail panel.' },
     { prop: 'selectedService / onSelectedServiceChange', type: 'string | null / callback', description: 'Optional controlled service node selection.' },
+    { prop: 'span', type: 'TelemetrySpan | null', description: 'The selected span shown by TraceSpanDetail, or null for its empty state.' },
+    { prop: 'class / className', type: 'string', description: 'Optional classes on telemetry view surfaces.' },
     { prop: 'TraceMetrics / TraceWaterfall / TraceSpanDetail', type: 'Svelte components', description: 'Composable metrics, timing, and selected-span surfaces.' },
   ]
   const usage = `import { TraceViewer, TraceServiceMap } from '@nebula/tint/telemetry'

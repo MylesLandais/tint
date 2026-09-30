@@ -17,9 +17,13 @@
   const api: ApiRow[] = [
     { prop: 'NavigationList.items / activeHref', type: 'NavigationItem[] / string?', description: 'Host-supplied links and current destination.' },
     { prop: 'NavigationList.renderLink', type: 'Snippet<[item, content, active]>', description: 'Optional adapter for a host router.' },
+    { prop: 'NavigationList.onNavigate', type: '(item: NavigationItem) => void', description: 'Called when a Tint-rendered navigation link is activated.' },
+    { prop: 'NavigationList / Breadcrumbs label', type: 'string', description: 'Accessible name for each navigation landmark.' },
     { prop: 'Breadcrumbs.items', type: 'BreadcrumbItem[]', description: 'Ordered location trail; the last crumb is current.' },
     { prop: 'NavigationAppShell.sidebarOpen', type: 'boolean', description: 'Controlled mobile drawer state.' },
     { prop: 'onSidebarOpenChange', type: '(open: boolean) => void', description: 'Open or close intent from the toggle, backdrop, or Escape.' },
+    { prop: 'NavigationAppShell children', type: 'Snippet', description: 'Main workspace content rendered beside the sidebar.' },
+    { prop: 'NavigationAppShell sidebarLabel', type: 'string', description: 'Accessible name for the sidebar region and its mobile drawer.' },
     { prop: 'brand / header / search / actions / sidebar / breadcrumbs', type: 'string | Snippet', description: 'App shell regions owned by the host.' },
   ]
   const usage = `import { AppShell as NavigationAppShell, NavigationList, Breadcrumbs } from '@nebula/tint/navigation'

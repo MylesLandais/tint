@@ -35,7 +35,12 @@
     { prop: 'selection / onSelectionChange', type: 'GraphSelection / callback', description: 'Optional controlled node, edge, and group selection.' },
     { prop: 'registry / nodeRenderers / inspectorRenderers', type: 'GraphNodeRegistry / Svelte component maps', description: 'Pure definitions plus optional Svelte node and inspector views keyed by node kind.' },
     { prop: 'readonly / viewport / onViewportChange', type: 'boolean / GraphViewport / callback', description: 'Edit availability and host-directed camera state.' },
+    { prop: 'validationByNodeId / runtimeByNodeId', type: 'NodeValidationMap / ReadonlyMap<string, NodeRuntimeSummary>', description: 'Host-provided validation issues and runtime status used by graph views and inspectors.' },
+    { prop: 'showInspector / showFullscreenControl', type: 'boolean', description: 'Show or hide the interactive graph inspector and fullscreen control.' },
+    { prop: 'onCommand', type: '(command: GraphCommand) => void', description: 'Receives graph edit intents from interactive, force, and timeline views.' },
+    { prop: 'class / className', type: 'string', description: 'Optional class on the graph view surface.' },
     { prop: 'ForceGraphView layout / static', type: 'ForceLayoutOptions / boolean', description: 'Deterministic force projection, settled instantly when motion is reduced or static.' },
+    { prop: 'ForceGraphView height', type: 'number', description: 'Height of the force projection in pixels.' },
     { prop: 'TimelineView spans / variant / onSpanChange', type: 'GraphSpan[] / TimelineVariant / callback', description: 'Host-owned runtime intervals and optional range editing.' },
   ]
   const usage = `import { InteractiveGraphView, ForceGraphView, TimelineView, createNodeRegistry } from '@nebula/tint/graph'

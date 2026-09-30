@@ -13,6 +13,7 @@
   const api: ApiRow[] = [
     { prop: 'identity / name / src / alt', type: 'Identity / string', description: 'Person data and optional image overrides; initials appear if an image fails.' },
     { prop: 'size / presence / decorative', type: 'AvatarSize / Presence / boolean', description: 'Size, availability indicator, and screen-reader decoration.' },
+    { prop: 'badge', type: 'Snippet', description: 'Optional content overlaid at the Avatar corner, such as a count or status marker.' },
     { prop: 'AvatarGroup identities / max', type: 'Identity[] / number', description: 'Visible people and readable overflow count.' },
     { prop: 'AvatarGroup renderLink', type: 'Snippet', description: 'Optional host-owned link wrapper for each avatar.' },
   ]

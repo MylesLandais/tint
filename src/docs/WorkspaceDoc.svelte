@@ -28,6 +28,10 @@
   const api: ApiRow[] = [
     { prop: 'WorkspaceGrid document / onDocumentChange', type: 'WorkspaceDocument / callback', description: 'Host-owned revisioned layouts and move/resize commands.' },
     { prop: 'WorkspaceGrid breakpoints / columns', type: 'Record<string, number>', description: 'Container width thresholds and columns per layout; viewport width is ignored.' },
+    { prop: 'WorkspaceGrid rowHeight / margin', type: 'number / readonly [number, number]', description: 'Grid row height and horizontal/vertical gaps in pixels.' },
+    { prop: 'WorkspaceGrid collisionMode', type: 'WorkspaceCollisionMode', description: 'Chooses compacting or free placement when move and resize commands collide.' },
+    { prop: 'WorkspaceGrid disabled', type: 'boolean', description: 'Prevents pointer and keyboard move or resize intents.' },
+    { prop: 'WorkspaceGrid class', type: 'string', description: 'Additional class on the grid container.' },
     { prop: 'WorkspaceGrid renderItem', type: 'Snippet<[WorkspaceItem, string]>', description: 'Host-rendered widget content for each item and active breakpoint.' },
     { prop: 'MediaWorkspace releases / query / selection', type: 'MediaRelease[] / string / string[]', description: 'Host-owned release rows, search query, and selected IDs.' },
     { prop: 'MediaWorkspace onQueuePreview', type: '(ids: readonly string[]) => void', description: 'Intent to queue the selected release IDs.' },

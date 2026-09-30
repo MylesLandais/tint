@@ -26,6 +26,16 @@
     { prop: 'BoardDetail.card', type: 'BoardCard | null', description: 'Selected card or an empty detail state.' },
     { prop: 'BoardLayoutToggle.value / onChange', type: 'BoardLayoutVariant / (variant) => void', description: 'Controlled layout switch.' },
     { prop: 'applyBoardCommand', type: 'BoardDocument × BoardCommand → BoardDocument', description: 'Pure immutable board command reducer.' },
+    { prop: 'BoardCard selected', type: 'boolean', description: 'Host-owned selected styling and pressed state for a standalone card.' },
+    { prop: 'BoardCard actions', type: 'Snippet', description: 'Optional card controls independent of the selection button.' },
+    { prop: 'BoardCard / BoardDetail children', type: 'Snippet', description: 'Optional card body or selected detail content supplied by the host.' },
+    { prop: 'BoardLayout / BoardDetail empty', type: 'string | Snippet', description: 'Message or content to show when there are no cards or no selected card.' },
+    { prop: 'BoardLayout density', type: "'auto' | 2 | 3 | 4 | 5 | 6", description: 'Masonry column density; auto follows the container width.' },
+    { prop: 'BoardLayout targetWidth', type: 'number', description: 'Target masonry card width in pixels; defaults to 320.' },
+    { prop: 'BoardLayout gap', type: 'number', description: 'Masonry spacing in pixels; defaults to 12.' },
+    { prop: 'BoardLayout label', type: 'string', description: 'Accessible name passed to the masonry layout; defaults to Board.' },
+    { prop: 'BoardLayoutToggle disabled', type: 'boolean', description: 'Disables both layout choice buttons.' },
+    { prop: 'class', type: 'string', description: 'Optional CSS class on a board component root.' },
   ]
   const usage = `import { BoardLayout, BoardLayoutToggle, BoardDetail } from '@nebula/tint/board'
 

@@ -61,6 +61,7 @@
     { prop: 'onReconnect / onClear', type: '() => void', description: 'Optional actions for connection retry and viewport clear.' },
     { prop: 'options', type: 'TintTerminalOptions', description: 'Initial xterm options. A new session identity resets the viewport.' },
     { prop: 'title / label / statusMessage', type: 'string', description: 'Visible title, accessible viewport name, and optional status copy.' },
+    { prop: 'class / bodyClassName / viewportClassName', type: 'string', description: 'Optional classes on the terminal panel, body, and xterm viewport.' },
   ]
   const usage = `import { TerminalConsole, type TerminalSession } from '@nebula/tint/terminal'
 

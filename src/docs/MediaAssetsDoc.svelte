@@ -17,8 +17,12 @@
     { prop: 'MediaLightbox.open / index', type: 'boolean / number', description: 'Controlled preview visibility and selected image.' },
     { prop: 'MediaLightbox.onClose / onIndexChange', type: '() => void / (index) => void', description: 'Dismiss and adjacent-image intent.' },
     { prop: 'UploadDropzone.accept / maxSizeBytes / maxFiles', type: 'string[] / number / number', description: 'File validation constraints before host processing.' },
+    { prop: 'UploadDropzone.disabled / label / description', type: 'boolean / string / string', description: 'Disabled intake state and visible text for the keyboard-operable dropzone.' },
     { prop: 'onFilesAccepted / onFilesRejected', type: '(files) => void / (rejections) => void', description: 'Host receives accepted files and reasons for rejects.' },
     { prop: 'UploadQueue.tasks', type: 'readonly UploadTask[]', description: 'Host-owned queue progress with retry and cancel intent callbacks.' },
+    { prop: 'UploadQueue.onCancel / onRetry', type: '(taskId: string) => void', description: 'Optional host commands; cancel appears for queued or uploading tasks and retry for failed tasks.' },
+    { prop: 'UploadQueue.emptyLabel', type: 'string', description: 'Text shown when there are no upload tasks.' },
+    { prop: 'class', type: 'string', description: 'Optional host class on GalleryGrid, MediaLightbox, UploadDropzone, and UploadQueue.' },
   ]
   const usage = `import { GalleryGrid, MediaLightbox, UploadDropzone } from '@nebula/tint/media-assets'
 

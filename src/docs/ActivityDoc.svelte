@@ -16,6 +16,9 @@
     { prop: 'selectedId / onSelect', type: 'string | null / (id) => void', description: 'Controlled selected activity row.' },
     { prop: 'renderActions / empty', type: 'Snippet / string | Snippet', description: 'Optional row actions and empty state.' },
     { prop: 'now', type: 'number', description: 'Reference time for deterministic hot ranking.' },
+    { prop: 'ActivityFeedRow event', type: 'ActivityEvent', description: 'Host-supplied record rendered by a standalone activity row.' },
+    { prop: 'ActivityFeedRow selected', type: 'boolean', description: 'Host-owned selected styling and pressed state for that row.' },
+    { prop: 'ActivityFeedRow actions', type: 'Snippet', description: 'Optional controls rendered separately from its title link and selection button.' },
   ]
   const usage = `import { ActivityFeed } from '@nebula/tint/activity'
 

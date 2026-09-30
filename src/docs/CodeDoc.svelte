@@ -13,8 +13,10 @@
     { prop: 'lineNumbers / startLine', type: 'boolean / number', description: 'Addressable lines with an optional first line number.' },
     { prop: 'highlightLines / highlightWords', type: 'readonly number[] / readonly string[]', description: 'Emphasize selected lines or literal words.' },
     { prop: 'CodeTabs.tabs', type: 'readonly CodeTab[]', description: 'Code examples with labels, titles, optional Tint icon, and highlighting settings.' },
-    { prop: 'value / onValueChange', type: 'string / (id) => void', description: 'Controlled active tab. defaultValue supports local selection.' },
+    { prop: 'value / defaultValue / onValueChange', type: 'string / string / (id) => void', description: 'Controlled active tab, initial local tab, and selection intent.' },
     { prop: 'accessory', type: 'Snippet<[CodeTab]>', description: 'Optional host content synchronized with the active tab.' },
+    { prop: 'CodeTabs label', type: 'string', description: 'Accessible name for the tablist.' },
+    { prop: 'CodeTabs class', type: 'string', description: 'Additional class on the code tabs container.' },
   ]
   const usage = `import { CodeTabs, HighlightedCode } from '@nebula/tint/code'
 

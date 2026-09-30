@@ -8,6 +8,10 @@
     { prop: 'open', type: 'boolean', description: 'Host-owned visibility.' },
     { prop: 'onOpenChange', type: '(open: boolean) => void', description: 'Open or close intent.' },
     { prop: 'title / description', type: 'string | Snippet', description: 'Visible content and accessible relationships.' },
+    { prop: 'children', type: 'Snippet', description: 'Contextual body content rendered inside the popover panel.' },
+    { prop: 'trigger', type: 'Snippet<[PopoverTriggerProps]>', description: 'Optional custom trigger; render the provided accessibility and click attributes.' },
+    { prop: 'label', type: 'string', description: 'Accessible name for the default trigger and untitled panel.' },
+    { prop: 'class', type: 'string', description: 'Additional class on the floating panel.' },
     { prop: 'side', type: "'top' | 'right' | 'bottom' | 'left'", description: 'Preferred placement, adjusted to the viewport.' },
   ]
   const usage = `import { Popover } from '@nebula/tint/popover'

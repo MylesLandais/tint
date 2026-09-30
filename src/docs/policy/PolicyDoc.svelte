@@ -33,6 +33,8 @@
     { prop: 'PolicyEditor rule / onChange / sources', type: 'PolicyRule / callback / options[]', description: 'Controlled builder or Lua source editing.' },
     { prop: 'PolicyDryRun rule / entries', type: 'PolicyRule / FeedEntry[]', description: 'Fixture-only evaluation; Lua is never executed in the browser.' },
     { prop: 'applyPolicyCommand', type: 'pure TypeScript reducer', description: 'Applies host-approved policy commands and advances the revision.' },
+    { prop: 'PolicyEditor disabled', type: 'boolean', description: 'Disables builder and Lua editing controls while preserving the current rule.' },
+    { prop: 'class', type: 'string', description: 'Optional CSS class on the policy editor, table, or dry-run root.' },
   ]
   const usage = `import { PolicyTable, PolicyEditor, PolicyDryRun, applyPolicyCommand } from '@nebula/tint/policy'
 

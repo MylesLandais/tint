@@ -86,6 +86,7 @@
     { prop: 'busy / error', type: 'boolean / string | Snippet', description: 'Host-controlled submit state and form-level alert.' },
     { prop: 'submitLabel / submittingLabel / hideSubmit', type: 'string / string / boolean', description: 'Save action copy or toolbar-owned save.' },
     { prop: 'transport / onSubmit', type: 'FormTransport / (envelope) => void', description: 'Optional persistence seam and validated submission envelope.' },
+    { prop: 'class', type: 'string', description: 'Optional class on the CharacterCardEditorForm container.' },
     { prop: 'parseTavernCardJson / serializeTavernCard', type: 'string ↔ TavernCardV2', description: 'Framework-neutral JSON import and export.' },
     { prop: 'extractTavernCard / embedTavernCard', type: 'PNG bytes ↔ TavernCardV2', description: 'Framework-neutral PNG metadata round trip.' },
   ]

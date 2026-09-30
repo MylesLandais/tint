@@ -9,9 +9,14 @@
   let retries = $state(0)
   const api: ApiRow[] = [
     { prop: 'Skeleton.lines', type: 'number', description: 'Number of placeholder lines.' },
+    { prop: 'Skeleton.label', type: 'string', description: 'Accessible loading name for the skeleton status.' },
     { prop: 'EmptyState.title', type: 'string', description: 'Visible empty-state heading.' },
+    { prop: 'EmptyState.description / icon / action', type: 'string / Snippet / Snippet', description: 'Optional supporting text, decorative icon, and host-provided action.' },
     { prop: 'ErrorState.onRetry', type: '() => void', description: 'Optional retry intent from the host.' },
+    { prop: 'ErrorState.description / icon / action', type: 'string / Snippet / Snippet', description: 'Optional error detail, decorative icon, and custom action; a custom action replaces the default retry button.' },
+    { prop: 'ErrorState.retryLabel', type: 'string', description: 'Copy for the default retry button when onRetry is supplied.' },
     { prop: 'ConnectionStatus.state', type: 'ConnectionState', description: 'Current connection state from the client.' },
+    { prop: 'ConnectionStatus.labels', type: 'Partial<Record<ConnectionState, string>>', description: 'Optional readable state labels overriding Tint defaults.' },
   ]
   const usage = `import { ErrorState, ConnectionStatus } from '@nebula/tint/status'
 

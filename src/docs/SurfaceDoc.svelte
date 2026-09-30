@@ -10,6 +10,11 @@
     { prop: 'elevation', type: "'none' | 'sm' | 'md' | 'lg'", description: 'Optional depth.' },
     { prop: 'density', type: "'default' | 'compact'", description: 'Card region spacing.' },
     { prop: 'selected', type: 'boolean', description: 'Visible selected state.' },
+    { prop: 'interactive', type: 'boolean', description: 'Adds a visual interactive treatment; the host still supplies a native control or keyboard behavior.' },
+    { prop: 'clip', type: 'boolean', description: 'Clips child content to the Surface rounded border.' },
+    { prop: 'children', type: 'Snippet', description: 'Content rendered inside Surface or the Card body.' },
+    { prop: 'Card.header / actions / footer', type: 'Snippet', description: 'Optional Card regions around the body; actions share the header row.' },
+    { prop: 'Card.bodyClassName', type: 'string', description: 'Optional class on the Card body region.' },
   ]
   const usage = `import { Surface, Card } from '@nebula/tint/surface'
 

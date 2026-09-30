@@ -16,6 +16,8 @@
     { prop: 'onOpenChange', type: '(open: boolean) => void', description: 'Intent to open or close.' },
     { prop: 'items', type: 'MenuItem[]', description: 'Actions and separators with stable IDs.' },
     { prop: 'trigger', type: 'Snippet', description: 'Optional custom trigger with Tint-provided ARIA props.' },
+    { prop: 'label', type: 'string', description: 'Accessible name for the default trigger and menu.' },
+    { prop: 'class', type: 'string', description: 'Additional class on the menu surface.' },
   ]
   const usage = `import { Menu } from '@nebula/tint/menu'
 let open = $state(false)

@@ -9,6 +9,9 @@
     { prop: 'expanded', type: 'boolean', description: 'Current host-owned disclosure state.' },
     { prop: 'onExpandedChange', type: '(expanded: boolean) => void', description: 'Intent emitted when the toggle is activated.' },
     { prop: 'actions / status / footer', type: 'Snippet', description: 'Optional independent regions.' },
+    { prop: 'icon', type: 'Snippet', description: 'Optional leading icon inside the disclosure button.' },
+    { prop: 'children', type: 'Snippet', description: 'Panel body; it remains mounted while the disclosure is collapsed.' },
+    { prop: 'class', type: 'string', description: 'Additional class on the panel surface.' },
   ]
   const usage = `import { Panel } from '@nebula/tint/panel'
 let expanded = $state(true)

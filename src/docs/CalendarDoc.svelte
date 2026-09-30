@@ -22,6 +22,12 @@
     { prop: 'onSelectEvent', type: '(event) => void', description: 'Intent emitted when a single or multi-day event is activated.' },
     { prop: 'renderEvent / renderSpan', type: 'Snippet<[CalendarEvent]> / Snippet<[CalendarSpan]>', description: 'Optional host-rendered event chip or span bar.' },
     { prop: 'CalendarToolbar.onNavigate', type: '({ year, month }) => void', description: 'Controlled previous, next, and today navigation.' },
+    { prop: 'CalendarMonthView weekStart', type: '0 | 1 | 2 | 3 | 4 | 5 | 6', description: 'First weekday in the grid; zero means Sunday and is the default.' },
+    { prop: 'CalendarMonthView maxEventsPerDay', type: 'number', description: 'Maximum single-day event chips shown in a cell before overflow; defaults to 3.' },
+    { prop: 'CalendarMonthView label', type: 'string', description: 'Accessible name for the month grid.' },
+    { prop: 'CalendarMonthView / CalendarToolbar today', type: 'Date', description: 'Reference date for today highlighting and the toolbar Today action.' },
+    { prop: 'CalendarToolbar locale', type: 'string', description: 'Locale used to format the visible month heading.' },
+    { prop: 'class', type: 'string', description: 'Optional CSS class on the month grid or toolbar root.' },
   ]
   const usage = `import { CalendarMonthView, CalendarToolbar } from '@nebula/tint/calendar'
 

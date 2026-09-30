@@ -27,8 +27,15 @@
     { prop: 'waveform / duration', type: 'readonly number[] / number', description: 'Optional normalized waveform and duration hint.' },
     { prop: 'tracks', type: 'MediaTextTrack[]', description: 'Caption, subtitle, or description tracks for video; each supplies a URL, language, and label.' },
     { prop: 'onPlay / onPause / onPrevious / onNext', type: '() => void', description: 'Intent callbacks for playback and queue navigation.' },
+    { prop: 'shadow / size / class', type: 'boolean / MediaSize / string', description: 'Optional offset shadow, constrained player width, and host class. PlaybackQueue and SettingsPopout also accept a host class.' },
+    { prop: 'artist / artwork / artworkAlt', type: 'string', description: 'Audio-only artist text and optional cover image with its alternative text.' },
+    { prop: 'playing / playbackNonce / onEnded', type: 'boolean / number / () => void', description: 'Audio playback override, host restart signal, and end-of-track notification.' },
+    { prop: 'poster / playbackSpeeds / autoHideControls', type: 'string / readonly number[] / boolean', description: 'Video poster, available speed choices, and whether chrome hides when the pointer and focus leave the player.' },
     { prop: 'PlaybackQueue.items / currentItemId / onSelect', type: 'PlaybackQueueItem[] / string / (item, index) => void', description: 'Controlled queue position and activation.' },
+    { prop: 'PlaybackQueue.status / positionSeconds / emptyLabel', type: 'PlaybackQueueStatus / number / string', description: 'Transport state, elapsed seconds for the current item, and the message shown for an empty queue.' },
     { prop: 'SettingsPopout.isOpen / value / onSelect', type: 'boolean / string / (id) => void', description: 'Controlled searchable setting choice.' },
+    { prop: 'SettingsPopout.onOpenChange / onQueryChange', type: '(open) => void / (query) => void', description: 'Open-state intent and optional search-query updates; the host owns whether settings remain open.' },
+    { prop: 'SettingsPopout.placeholder / emptySearchText / footer / trigger', type: 'string / string | Snippet / string | Snippet / Snippet', description: 'Search hint, no-match content, optional footer, and custom trigger using the provided popover trigger props.' },
   ]
   const usage = `import { MediaPlayer, PlaybackQueue } from '@nebula/tint/media'
 

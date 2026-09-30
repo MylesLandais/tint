@@ -19,7 +19,10 @@
     { prop: 'height', type: 'number', description: 'SVG height in pixels; width follows the component container.' },
     { prop: 'xFormatter / valueFormatter', type: 'ChartFormatter', description: 'Optional display formatting for axes, tooltips, and data table values.' },
     { prop: 'showTable / tableCaption / chartLabel', type: 'boolean / string / string', description: 'Accessible exact-value table and chart names.' },
+    { prop: 'empty', type: 'string | Snippet', description: 'Content displayed when a chart has no data to plot.' },
     { prop: 'MetricCard label / value / hint / trend', type: 'string | number | Snippet', description: 'Compact summary values with optional trend text.' },
+    { prop: 'MetricCard icon', type: 'Snippet', description: 'Optional icon rendered with the metric summary.' },
+    { prop: 'MetricCard tone', type: "'default' | 'accent' | 'danger' | 'success'", description: 'Semantic emphasis for the metric card.' },
   ]
   const usage = `import { TimeSeriesChart, BarChart, MetricCard } from '@nebula/tint/charts'
 
