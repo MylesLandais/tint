@@ -14,10 +14,8 @@
  * well.
  */
 
-import type { CalendarEvent } from '../../components/calendar'
+import { expandCalendarEvents, parseICalendar, type CalendarEvent } from '../../core/calendar'
 import type { OperationOptions } from '../../client/types'
-import { parseICalendar } from '../../components/calendar/ical'
-import { expandCalendarEvents } from '../../components/calendar/recurrence'
 import { CalDavError, calDavErrorForStatus } from './errors'
 import type { CalDavRequest, CalDavTransport } from './transport'
 import { encodeXml, find, findAll, parseXml, textOf } from './xml'
