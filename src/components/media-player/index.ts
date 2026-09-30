@@ -1,15 +1,2 @@
-export { MediaPlayer } from './MediaPlayer'
-export type {
-  MediaPlayerAudioProps,
-  MediaPlayerProps,
-  MediaPlayerVideoProps,
-  RemoteMediaController,
-} from './MediaPlayer'
-export { MEDIA_SIZES, MEDIA_SIZE_MD_MAX_REM, MEDIA_SIZE_SM_MAX_REM } from './sizes'
-export type { MediaSize } from './sizes'
-export { PlaybackQueue } from './PlaybackQueue'
-export type {
-  PlaybackQueueItem,
-  PlaybackQueueProps,
-  PlaybackQueueStatus,
-} from './PlaybackQueue'
+export * from '../../core/media/sizes'
+export * from '../../core/media/model'

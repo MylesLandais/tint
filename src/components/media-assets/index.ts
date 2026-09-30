@@ -1,7 +1,1 @@
-export { GalleryGrid, MediaLightbox } from './Gallery'
-export type { GalleryGridProps, MediaLightboxProps } from './Gallery'
-export { UploadDropzone } from './UploadDropzone'
-export type { UploadDropzoneProps } from './UploadDropzone'
-export { UploadQueue } from './UploadQueue'
-export type { UploadQueueProps } from './UploadQueue'
-export type { FileRejection, MediaAsset } from './types'
+export * from '../../core/media/assets'

@@ -1,2 +1,1 @@
-export { TerminalConsole } from './TerminalConsole'
-export type * from './types'
+export * from '../../core/terminal'

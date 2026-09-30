@@ -1,6 +1,1 @@
-export { Editor } from './Editor'
-export { editorDocumentToHTML, editorHTMLToDocument } from './serialize'
-export { defaultSlashCommands } from './extensions'
-export { CodeTabsExtension, DEFAULT_EDITOR_CODE_TABS, codeTabsContent } from './codeTabs'
-export type { EditorCodeTab } from './codeTabs'
-export type * from './types'
+export * from '../../core/editor'

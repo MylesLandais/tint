@@ -1,2 +1,1 @@
-export { CodeEditor } from './CodeEditor'
-export type { CodeEditorProps } from './CodeEditor'
+export * from '../../core/code-editor'

@@ -1,2 +1,1 @@
-export { SettingsPopout, type SettingsPopoutItem, type SettingsPopoutProps } from './SettingsPopout'
-export { default } from './SettingsPopout'
+export * from '../../core/media/settings'

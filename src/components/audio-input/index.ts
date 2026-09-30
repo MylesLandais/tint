@@ -1,7 +1,3 @@
-export { AudioInput } from './AudioInput'
-export type {
-  AudioCaptureMeta,
-  AudioInputProps,
-  AudioTranscriber,
-  TranscriptChunk,
-} from './types'
+export * from '../../core/audio-input/types'
+export * from '../../core/audio-input/model'
+export * from '../../core/audio-input/session'

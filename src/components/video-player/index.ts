@@ -1,2 +1,1 @@
-export { VideoPlayer, type VideoPlayerProps } from './VideoPlayer'
-export { default } from './VideoPlayer'
+export * from '../../core/media/model'

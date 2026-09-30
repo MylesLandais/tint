@@ -131,4 +131,17 @@ describe('WebAudioAuditionBackend', () => {
       lastEngineError: 'Unsupported Web Audio automation lane: outgoing.pitch',
     })
   })
+
+  it('disposes active graphs and rejects a late audition', async () => {
+    const fixture = contextFixture()
+    const backend = new WebAudioAuditionBackend({
+      context: fixture.context as unknown as AudioContext,
+      resolveBuffers: async () => ({ outgoing: { duration: 320 } as AudioBuffer, incoming: { duration: 391 } as AudioBuffer }),
+    })
+    await backend.startAudition(schedule)
+    await backend.dispose()
+    expect(fixture.sources[0]!.disconnect).toHaveBeenCalled()
+    expect(fixture.sources[1]!.disconnect).toHaveBeenCalled()
+    await expect(backend.startAudition(schedule)).rejects.toThrow(/disposed/)
+  })
 })
