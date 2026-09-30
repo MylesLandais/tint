@@ -6,31 +6,16 @@ import { describe, expect, it } from 'vitest'
 /**
  * Each vendored engine is reachable from exactly one directory.
  *
- * The rule is what makes vendoring survivable: `src/vendor/` holds a bundle
- * nobody reads, so the only defence against it leaking through the codebase is
- * that a single seam imports it. That rule was written in comments — at
- * `src/components/table/engine.ts` and `src/components/collab/createCollabSession.ts`
- * — and enforced nowhere, for two of the three vendors.
- *
- * The graph module arrived with a version of this test that had three problems,
- * all of which this fixes:
- *
- * - It globbed `.ts`/`.tsx` only, so `graph.css`'s `@import` of the xyflow
- *   stylesheet — a second seam, outside the adapter — was invisible.
- * - It matched the substring `vendor/xyflow` anywhere in the file, so a comment
- *   naming the path was an offence. This very suite tripped it.
- * - Its escape hatch exempted *any* directory named `adapter/` anywhere under
- *   `src`, not just the graph's.
+ * The two remaining vendored engines are imported through their plain
+ * TypeScript seams. Search real specifiers, including Svelte and CSS imports,
+ * so implementation comments cannot accidentally pass or fail this check.
  */
 const ROOT = path.resolve(import.meta.dirname, '../..')
 
-/** Vendor directory -> the only place allowed to import it. */
+/** Vendor directory -> the transition seams allowed to import it. */
 const SEAMS = {
-  yjs: ['src/components/collab/', 'src/core/collab/'],
-  'tanstack-table-core': ['src/components/table/', 'src/core/table/'],
-  // The React adapter owns the runtime; the stylesheet owns the CSS import,
-  // and is delivered to hosts as `@nebula/tint/graph/styles.css`.
-  xyflow: ['src/components/graph/adapter/', 'src/components/graph/graph.css'],
+  yjs: ['src/core/collab/'],
+  'tanstack-table-core': ['src/core/table/', 'src/components/table/'],
 } as const
 
 /**
@@ -45,7 +30,7 @@ function importedPaths(source: string): string[] {
   return [...source.matchAll(SPECIFIER)].map(([, a, b]) => a ?? b).filter((s) => s != null)
 }
 
-const SOURCES = globSync('src/**/*.{ts,tsx,css}', { cwd: ROOT })
+const SOURCES = globSync('src/**/*.{ts,tsx,js,svelte,css}', { cwd: ROOT })
   .filter((file) => !file.replaceAll('\\', '/').startsWith('src/vendor/'))
   .map((file) => file.replaceAll('\\', '/'))
 
@@ -53,7 +38,7 @@ describe('vendor boundaries', () => {
   it('finds the source files it is meant to be guarding', () => {
     // A glob that silently matched nothing would make every assertion below pass.
     expect(SOURCES.length).toBeGreaterThan(100)
-    expect(SOURCES).toContain('src/components/graph/graph.css')
+    expect(SOURCES).toContain('src/core/table/engine.ts')
   })
 
   it.each(Object.entries(SEAMS))('%s is imported only from its seam', (vendor, allowed) => {
@@ -68,16 +53,12 @@ describe('vendor boundaries', () => {
     expect(offenders).toEqual([])
   })
 
-  /**
-   * The seam is only a seam if the types stop there too: re-exporting an xyflow
-   * type from the adapter would put the vendored engine back in tint's public
-   * API, where an upgrade becomes a breaking change for consumers.
-   */
-  it('keeps vendored types out of the public barrels', () => {
-    const barrels = SOURCES.filter((file) => file.endsWith('/index.ts'))
+  /** Focused package seams may forward stable helpers; the root entries must not. */
+  it('keeps vendor imports out of root UI barrels', () => {
+    const barrels = ['src/index.ts', 'src/svelte/index.ts']
     const leaks = barrels.filter((file) =>
       importedPaths(readFileSync(path.join(ROOT, file), 'utf8')).some((specifier) =>
-        specifier.includes('vendor/xyflow'),
+        Object.keys(SEAMS).some((vendor) => specifier.includes(`vendor/${vendor}`)),
       ),
     )
 

@@ -20,7 +20,6 @@ import { describe, expect, it } from 'vitest'
 const ROOT = path.resolve(import.meta.dirname, '../..')
 
 const VENDORS = [
-  { name: 'xyflow', bundle: 'src/vendor/xyflow/index.js' },
   { name: 'yjs', bundle: 'src/vendor/yjs/index.js' },
   { name: 'tanstack-table-core', bundle: 'src/vendor/tanstack-table-core/index.js' },
 ] as const
