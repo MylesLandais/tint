@@ -47,7 +47,7 @@ const ENTRY_POINTS = Object.entries(packageJson.exports)
 
 /**
  * A host's compiler options, not ours. Deliberately plain: this is the common
- * denominator of a Vite + React app, and notably it does *not* set `paths`,
+ * denominator of a Vite + Svelte app, and notably it does *not* set `paths`,
  * `baseUrl`, or a `types` array that would drag in anything of ours.
  */
 const HOST_OPTIONS: ts.CompilerOptions = {
@@ -55,7 +55,6 @@ const HOST_OPTIONS: ts.CompilerOptions = {
   lib: ['lib.es2023.d.ts', 'lib.dom.d.ts', 'lib.dom.iterable.d.ts'],
   module: ts.ModuleKind.ESNext,
   moduleResolution: ts.ModuleResolutionKind.Bundler,
-  jsx: ts.JsxEmit.ReactJSX,
   strict: true,
   skipLibCheck: true,
   noEmit: true,
