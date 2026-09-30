@@ -11,8 +11,9 @@ export class DJActor {
   constructor(readonly page: Page) {}
 
   async openClient(): Promise<void> {
-    await this.page.goto('/#/components/media-player')
-    await expect(this.page.getByRole('heading', { name: 'Midnight 128 browser demo' })).toBeVisible()
+    await this.page.goto('/#/components/midnight-128')
+    await expect(this.page.getByRole('heading', { name: 'Midnight 128 Workspace' })).toBeVisible()
+    await expect(this.page.getByRole('dialog', { name: 'Import local tracks' })).toBeVisible()
   }
 
   async importSyntheticReferenceTracks(): Promise<void> {

@@ -1,5 +1,4 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { mount } from 'svelte'
 import '../index.css'
 import '../styles/themes/solarized.css'
 import '../styles/themes/gruvbox.css'
@@ -8,10 +7,6 @@ import '../styles/themes/frappe.css'
 import '../styles/themes/macchiato.css'
 import '../styles/themes/mocha.css'
 import './demo.css'
-import { DemoApp } from './DemoApp'
+import DemoApp from './DemoApp.svelte'
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <DemoApp />
-  </StrictMode>,
-)
+mount(DemoApp, { target: document.getElementById('root')! })

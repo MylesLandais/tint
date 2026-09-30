@@ -10,7 +10,7 @@
  * trace would defeat the surface it is meant to demonstrate: the point of the
  * trace view is reading what the agent actually said.
  */
-import type { TelemetrySpan, TelemetrySpanKind, TelemetryTrace } from '../../components/telemetry'
+import type { TelemetrySpan, TelemetrySpanKind, TelemetryTrace } from '../../core/telemetry'
 import { EPOCH_SECONDS, type ModerationEvent, type ModerationEventKind, type SlashInteraction } from './types'
 import type { CorrelatedAuditRow } from './types'
 

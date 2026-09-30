@@ -1,13 +1,11 @@
 {
-  // svelte-check entry: the Svelte layer and everything it reaches. Plain `.ts`
-  // and React sources are still typechecked by tsconfig.app.json (`tsc -b`);
-  // this project exists so `.svelte` files get the same strict options.
+  // Apply the same strict options to Svelte components, docs, and demos.
   "extends": "./tsconfig.app.json",
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.svelte.tsbuildinfo",
     "verbatimModuleSyntax": true,
     "types": ["vite/client", "@testing-library/jest-dom/vitest"]
   },
-  "include": ["src/svelte", "src/core"],
+  "include": ["src/svelte", "src/core", "src/demos/**/*.svelte", "src/docs/**/*.svelte"],
   "exclude": ["src/core/architecture.test.ts"]
 }

@@ -17,7 +17,7 @@
  * coefficient says whether it fails *disproportionately*, which is the
  * question an operator is actually asking.
  */
-import type { TelemetrySpan, TelemetryTrace } from '../../components/telemetry'
+import type { TelemetrySpan, TelemetryTrace } from '../../core/telemetry'
 import type {
   ConversationTurn,
   CorrelatedAuditRow,

@@ -14,7 +14,7 @@
  * simulation advances only when `advance()` is called, which the panel drives
  * from an interval and a test drives by hand.
  */
-import { createMemoryOperationAdapter } from '../../client'
+import { createMemoryOperationAdapter } from '../../client/memoryOperations'
 import type {
   ConnectionSnapshot,
   ConnectionState,
@@ -24,7 +24,7 @@ import type {
   RealtimeSubscription,
   RequestAdapter,
   TintCapability,
-} from '../../client'
+} from '../../client/types'
 import {
   createFixtureState,
   EPOCH_SECONDS,

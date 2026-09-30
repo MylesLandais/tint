@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'node:path'
@@ -19,11 +18,13 @@ const workbenchProxy: import('vite').ProxyOptions = {
 }
 
 export default defineConfig({
-  plugins: [react(), svelte(), tailwindcss()],
+  plugins: [svelte(), tailwindcss()],
   build: {
     rollupOptions: {
       input: {
         docs: path.resolve(import.meta.dirname, 'index.html'),
+        svelteDocs: path.resolve(import.meta.dirname, 'svelte-docs.html'),
+        designLab: path.resolve(import.meta.dirname, 'design-lab.html'),
         demos: path.resolve(import.meta.dirname, 'demos.html'),
         discordBotPanel: path.resolve(import.meta.dirname, 'discord-bot-panel.html'),
         discordModPanel: path.resolve(import.meta.dirname, 'discord-mod-panel.html'),
@@ -48,5 +49,10 @@ export default defineConfig({
       yjs: new URL("./src/vendor/yjs/index.js", import.meta.url).pathname,
       '@': path.resolve(import.meta.dirname, './src'),
     },
+  },
+  // Keep the vendored Yjs module as one browser module. Vite otherwise copies
+  // it into optimized y-protocols/y-indexeddb chunks while Tint loads it from src.
+  optimizeDeps: {
+    exclude: ['yjs'],
   },
 })

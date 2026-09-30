@@ -11,7 +11,7 @@
  * the operation seam, the audit table and the trace store are four lists that
  * happen to be near each other in time; with it they are one story.
  */
-import type { TelemetryTrace } from '../../components/telemetry'
+import type { TelemetryTrace } from '../../core/telemetry'
 
 /** Fixed epoch so every rendered timestamp is stable across runs. */
 export const EPOCH_SECONDS = 1_788_000_000

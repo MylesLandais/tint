@@ -12,7 +12,7 @@ import {
 } from './correlation'
 import { createTraffic, generateTraffic, NEBULA_GUILD_ID, PANEL_GUILDS } from './fixtures'
 import type { CorrelatedAuditRow, ModerationEvent, SlashInteraction } from './types'
-import type { TelemetryTrace } from '../../components/telemetry'
+import type { TelemetryTrace } from '../../core/telemetry'
 
 const nebula = PANEL_GUILDS.find((guild) => guild.id === NEBULA_GUILD_ID)!
 

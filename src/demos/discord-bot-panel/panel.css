@@ -3,7 +3,7 @@
  *
  * Everything here is either layout or a nod to ludis's own dark chrome. No
  * colour is hardcoded that a tint theme should own — the panel picks the
- * `mocha` theme in `main.tsx` and reads `--tint-*` for the rest, so switching
+ * `mocha` theme in `main.ts` and reads `--tint-*` for the rest, so switching
  * themes restyles it without touching this file.
  */
 body {

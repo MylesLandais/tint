@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onDestroy } from 'svelte'
-  import { createCollabSession } from '../components/collab/createCollabSession'
+  import { createCollabSession } from '../core/collab/createCollabSession'
   import CodeEditor from '../svelte/components/code-editor/CodeEditor.svelte'
   import DocPage from './svelte/DocPage.svelte'
   import type { ApiRow } from './svelte/types'
