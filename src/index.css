@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-@import 'react-grid-layout/css/styles.css';
 @import '@xterm/xterm/css/xterm.css';
 @import './styles/contract.css';
 @import './styles/themes/tint.css';
@@ -17,12 +16,12 @@
  * utility classes the components actually use, which renders them nearly
  * unstyled.
  *
- * The path is relative to this file, so it resolves both in this repo and inside
- * a consumer's node_modules. Scoped to `components` rather than the whole `src`
- * directory because that is where every utility-styled file lives; widening it
- * would drag `vendor/` and `docs/` into every consumer's content scan.
+ * These paths are relative to this file, so they resolve here and inside a
+ * consumer's node_modules. Keep the scan on Tint's component source rather
+ * than pulling vendor and docs content into every consumer build.
  */
 @source "./components";
+@source "./svelte";
 
 @theme {
   --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
@@ -281,7 +280,7 @@
    * The 1.5s start delay is the animation delay; removing the animation on
    * hover/focus both pauses and resets the offset to zero so the title stays
    * readable and clickable, and leaving restarts the delay. `40%/60%/90%`
-   * shares are mirrored in FORWARD_SHARE in ScrollingLabel.tsx.
+   * shares are mirrored in the Svelte scrolling-label model.
    */
   @keyframes tint-scrolling-label {
     0% {
@@ -311,7 +310,7 @@
 
   /* No scrolling under reduced motion; the label degrades to a static ellipsis. */
   @media (prefers-reduced-motion: reduce) {
-    [data-scrolling-label] [data-scrolling-label-content] {
+    [data-scrolling-label][data-overflowing] [data-scrolling-label-content] {
       display: block;
       overflow: hidden;
       text-overflow: ellipsis;

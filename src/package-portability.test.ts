@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-const sourceFiles = import.meta.glob('./**/*.{ts,tsx}', {
+const sourceFiles = import.meta.glob('./**/*.{ts,svelte}', {
   query: '?raw',
   import: 'default',
   eager: true,

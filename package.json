@@ -2,7 +2,7 @@
   "name": "@nebula/tint",
   "version": "0.2.0",
   "type": "module",
-  "description": "Tint \u2014 controlled React components for media and rich chat interfaces.",
+  "description": "Tint \u2014 controlled Svelte 5 components and plain TypeScript engines.",
   "license": "UNLICENSED",
   "publishConfig": {
     "registry": "https://git.nebula-1.com/api/packages/nebula/npm/"
@@ -11,15 +11,16 @@
     "src",
     "!src/docs",
     "!src/test",
-    "!src/**/*.test.ts",
-    "!src/**/*.test.tsx"
+    "!src/**/*.test.ts"
   ],
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && npm run check:svelte && vite build",
     "lint": "oxlint",
     "check:svelte": "svelte-check --tsconfig ./tsconfig.svelte.json",
-    "check": "tsc -b && npm run check:svelte && npm run lint && npm test",
+    "check:migration": "node scripts/check-react-migration.mjs",
+    "migration:refresh": "node scripts/check-react-migration.mjs --refresh",
+    "check": "npm run check:migration && tsc -b && npm run check:svelte && npm run lint && npm test",
     "test": "vitest run",
     "test:e2e": "playwright test",
     "preview": "vite preview"
@@ -101,7 +102,6 @@
     "./tabs": "./src/svelte/components/tabs/index.ts"
   },
   "dependencies": {
-    "@base-ui/react": "^1.7.0",
     "@codemirror/commands": "^6.11.0",
     "@codemirror/language": "^6.12.4",
     "@codemirror/legacy-modes": "^6.5.4",
@@ -114,7 +114,6 @@
     "@tiptap/extensions": "^3.29.2",
     "@tiptap/html": "^3.29.2",
     "@tiptap/pm": "^3.29.2",
-    "@tiptap/react": "3.29.2",
     "@tiptap/starter-kit": "^3.29.2",
     "@tiptap/suggestion": "^3.29.2",
     "@xterm/addon-fit": "^0.11.0",
@@ -124,11 +123,6 @@
     "ghostty-web": "^0.4.0",
     "highlight.js": "^11.11.1",
     "lowlight": "^3.3.0",
-    "lucide-react": "^1.28.0",
-    "motion": "^12.43.0",
-    "react-grid-layout": "^2.2.4",
-    "react-markdown": "^10.1.0",
-    "recharts": "^3.10.1",
     "rehype-sanitize": "^6.0.0",
     "rehype-stringify": "^10.0.1",
     "remark-gfm": "^4.0.1",
@@ -141,31 +135,18 @@
     "y-protocols": "^1.0.7"
   },
   "peerDependencies": {
-    "react": ">=19",
-    "react-dom": ">=19",
     "svelte": ">=5"
-  },
-  "peerDependenciesMeta": {
-    "svelte": {
-      "optional": true
-    }
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",
     "@sveltejs/vite-plugin-svelte": "^7.3.1",
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/jest-dom": "^7.0.0",
-    "@testing-library/react": "^16.3.2",
     "@testing-library/svelte": "^5.4.2",
     "@types/node": "^24.13.3",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.4",
     "@webgpu/types": "^0.1.72",
     "jsdom": "^30.0.1",
     "oxlint": "^1.75.0",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
     "svelte": "^5.57.1",
     "svelte-check": "^4.7.6",
     "tailwindcss": "^4.3.3",

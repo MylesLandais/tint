@@ -262,7 +262,7 @@ writeFileSync(
 // Window ${since} to ${until}; ${cards.length} open items from ${document.metadata.sourceNotes.length} notes.
 // Regenerate: node scripts/vault-tasks.mjs
 
-import type { BoardDocument } from '../../components/board'
+import type { BoardDocument } from '../../core/board'
 
 /** What a task card carries back to the note it came from. */
 export type BoardTaskPayload = {

@@ -1,8 +1,6 @@
-import { StrictMode } from 'react'
-import { act, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { createAuthClient, defineAuthOperation, type AuthConfig, type AuthTransport } from '../auth/client'
-import { createBrowserPlaybackAdapter, createFetchRequestAdapter, createMemoryOperationAdapter, createTintClient, TintCapabilityError, TintClientProvider, useCapability, useClientStatus, usePlayback } from './index'
+import { createFetchRequestAdapter, createMemoryOperationAdapter, createTintClient, TintCapabilityError } from './public'
 import type { TintCapability } from './types'
 
 const request = { async send<T>() { return { status: 200, headers: {}, data: undefined as T } } }
@@ -39,20 +37,6 @@ describe('TintClient', () => {
     const client = createTintClient({ request })
     expect(client.getServerSnapshot()).toBe(client.getServerSnapshot())
     expect(client.getServerSnapshot().status).toBe('idle')
-  })
-
-  it('keeps one capability start across a StrictMode effect replay', async () => {
-    const start = vi.fn()
-    const stop = vi.fn()
-    const client = createTintClient({ request, storage: capability(start, stop) as never })
-    function Status() { return <span>{useClientStatus().status}</span> }
-    const view = render(<StrictMode><TintClientProvider client={client}><Status /></TintClientProvider></StrictMode>)
-    await act(async () => { await Promise.resolve() })
-    expect(start).toHaveBeenCalledOnce()
-    expect(screen.getByText('ready')).toBeInTheDocument()
-    view.unmount()
-    await act(async () => { await Promise.resolve() })
-    expect(stop).toHaveBeenCalledOnce()
   })
 
   it('starts capabilities concurrently rather than in series', async () => {
@@ -109,55 +93,8 @@ describe('TintClient', () => {
     expect(client.getSnapshot().status).toBe('error')
   })
 
-  it('registers a host capability beside the built-ins and exposes it through useCapability', async () => {
-    const start = vi.fn()
-    let value = 'idle'
-    const listeners = new Set<() => void>()
-    const player: TintCapability<string> = {
-      start,
-      getSnapshot: () => value,
-      subscribe(listener) {
-        listeners.add(listener)
-        return () => listeners.delete(listener)
-      },
-    }
-    const client = createTintClient({ request, capabilities: { player } })
-
-    function Player() {
-      return <span>{useCapability<string>('player').snapshot}</span>
-    }
-    const view = render(<TintClientProvider client={client}><Player /></TintClientProvider>)
-    await act(async () => { await Promise.resolve() })
-
-    expect(start).toHaveBeenCalledOnce()
-    expect(client.getSnapshot().readyCapabilities).toEqual(['player'])
-    expect(screen.getByText('idle')).toBeInTheDocument()
-
-    await act(async () => {
-      value = 'playing'
-      for (const listener of listeners) listener()
-    })
-    expect(screen.getByText('playing')).toBeInTheDocument()
-    view.unmount()
-  })
-
   it('refuses a host capability that shadows a built-in name', () => {
     expect(() => createTintClient({ request, capabilities: { storage: {} } })).toThrow(/built-in/)
-  })
-
-  it('exposes the browser playback queue through its focused hook', async () => {
-    const playback = createBrowserPlaybackAdapter({ storageKey: 'tint.test.playback' })
-    playback.replaceQueue([{ id: 'one', title: 'Now playing' }], 'one')
-    const client = createTintClient({ request, playback })
-    function Playback() {
-      const { snapshot } = usePlayback()
-      return <span>{snapshot.queue[0]?.title}</span>
-    }
-
-    const view = render(<TintClientProvider client={client}><Playback /></TintClientProvider>)
-    await act(async () => { await Promise.resolve() })
-    expect(screen.getByText('Now playing')).toBeInTheDocument()
-    view.unmount()
   })
 })
 
