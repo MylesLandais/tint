@@ -31,6 +31,7 @@
     "src/vendor/boundary.test.ts",
     "src/foundation-adoption.test.ts",
     "src/consumer-contract.test.ts",
-    "src/docs/componentGraph.test.ts"
+    "src/docs/componentGraph.test.ts",
+    "src/docs/svelte/propsTable.test.ts"
   ]
 }
