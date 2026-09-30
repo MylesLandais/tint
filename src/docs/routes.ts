@@ -212,6 +212,7 @@ const ROUTE_DATA = [
     blurb: 'Root client adapters plus shared identity, navigation, media, chart, and workspace primitives.',
     sections: [
       { id: 'client', label: 'Root client' },
+      { id: 'operations', label: 'Operations' },
       { id: 'foundations', label: 'Foundations' },
       { id: 'navigation', label: 'Navigation' },
       { id: 'media', label: 'Media' },

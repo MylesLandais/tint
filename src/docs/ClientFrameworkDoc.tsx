@@ -1,8 +1,10 @@
 import { useMemo, useState } from 'react'
-import { createBrowserPlaybackAdapter, createTintClient, TintClientProvider, useClientStatus, usePlayback } from '../client'
+import { createBrowserPlaybackAdapter, createMemoryOperationAdapter, createTintClient, TintClientProvider, useClientStatus, useOperations, usePlayback } from '../client'
 import { Avatar, AvatarGroup, type Identity } from '../components/identity'
 import { Card, Surface } from '../components/surface'
 import { ConnectionStatus, EmptyState, Skeleton } from '../components/status'
+import { Badge } from '../components/badge'
+import { Button } from '../components/button'
 import { Breadcrumbs, NavigationList } from '../components/navigation'
 import { Tabs } from '../components/menu'
 import { GalleryGrid, UploadDropzone, type MediaAsset } from '../components/media-assets'
@@ -101,6 +103,11 @@ const frameworkApiRows = [
   { name: 'collisionMode', type: 'WorkspaceCollisionMode', description: 'Compact, prevent, or free placement.' },
   { name: 'renderItem', type: '(item, breakpoint) => ReactNode', required: true, description: 'Application-owned widget renderer.' },
   { name: 'onDocumentChange', type: '(document, command) => void', required: true, description: 'Workspace mutation intent.' },
+  { name: 'capabilities', type: 'Record<string, TintCapability>', description: 'Host-defined capabilities started and stopped with the built-ins.' },
+  { name: 'client.restart', type: '(name) => Promise<CapabilityStatus>', description: 'Retries one failed capability without tearing down the client.' },
+  { name: 'snapshot.capabilities', type: 'Record<string, CapabilityStatus>', description: 'Per-capability state and problem behind the ready/failed lists.' },
+  { name: 'operations.submit', type: '(command) => TintOperationHandle', description: 'Submits an accepted-now/finished-later command; idempotencyKey dedupes.' },
+  { name: 'handle.settled', type: 'Promise<TintOperation>', description: 'Resolves when the operation leaves queued/running. Failure is a state, not a rejection.' },
 ]
 
 const clientCode = `import { createTintClient, TintClientProvider } from '@nebula/tint/client'
@@ -113,6 +120,9 @@ const client = createTintClient({
   uploads,
   storage,
   playback: createBrowserPlaybackAdapter(),
+  operations,
+  // Host capabilities live beside the built-ins and share the lifecycle.
+  capabilities: { guildPlayer },
 })
 
 root.render(
@@ -120,6 +130,63 @@ root.render(
     <App />
   </TintClientProvider>,
 )`
+
+const operationsCode = `import { createMemoryOperationAdapter, useOperations } from '@nebula/tint/client'
+
+// A host whose mutations answer 202 Accepted and finish later.
+const operations = createMemoryOperationAdapter({
+  async run(command, { report, signal }) {
+    report('Waiting to apply your change…')
+    const { data } = await request.send({ method: 'POST', url: '/jobs', body: command.input, signal })
+    return await pollUntilSettled(data.id, signal)
+  },
+})
+
+function PauseButton() {
+  const { client, snapshot } = useOperations()
+  const pending = snapshot.operations.some(
+    (operation) => operation.name === 'player:pause' && operation.state !== 'succeeded',
+  )
+  return (
+    <Button
+      disabled={pending}
+      onClick={() => client.submit({ name: 'player:pause', idempotencyKey: crypto.randomUUID() })}
+    >
+      Pause
+    </Button>
+  )
+}`
+
+const OPERATION_TONES = {
+  queued: 'neutral', running: 'info', succeeded: 'success', failed: 'danger', cancelled: 'warning',
+} as const
+
+function OperationsDemo() {
+  const { client, snapshot } = useOperations()
+  return (
+    <div className="grid gap-3">
+      <div className="flex flex-wrap gap-2">
+        <Button variant="primary" onClick={() => client.submit({ name: 'player:pause' })}>Pause</Button>
+        <Button onClick={() => client.submit({ name: 'plugin:toggle' })}>Toggle plugin</Button>
+        <Button variant="danger" onClick={() => client.submit({ name: 'play:radio' })}>Failing command</Button>
+        <Button variant="ghost" onClick={() => client.clearSettled()}>Clear settled</Button>
+      </div>
+      {snapshot.operations.length === 0 ? (
+        <EmptyState title="No operations yet" description="Submit one to watch it move through the lifecycle." />
+      ) : (
+        <ul className="m-0 grid list-none gap-2 p-0">
+          {snapshot.operations.map((operation) => (
+            <li key={operation.id} className="flex items-center gap-3 rounded border border-tint-border px-3 py-2">
+              <Badge tone={OPERATION_TONES[operation.state]}>{operation.state}</Badge>
+              <code className="text-xs">{operation.name}</code>
+              <span className="text-xs text-tint-muted">{operation.problem?.detail ?? operation.message ?? ''}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  )
+}
 
 function ClientStatusDemo() {
   const snapshot = useClientStatus()
@@ -150,11 +217,38 @@ export function ClientFrameworkDoc() {
     request: { async send() { throw new Error('Docs request adapter is inert.') } },
     playback: createBrowserPlaybackAdapter(),
   }), [])
+  const operationsClient = useMemo(() => createTintClient({
+    request: { async send() { throw new Error('Docs request adapter is inert.') } },
+    operations: createMemoryOperationAdapter({
+      async run(command, context) {
+        context.report('Waiting to apply your change…')
+        await new Promise((resolve) => setTimeout(resolve, 600))
+        if (command.name === 'play:radio') throw new Error('The station did not respond.')
+        return { ok: true }
+      },
+    }),
+  }), [])
 
   return (
     <DocsPage route="components/client-framework" title="Client framework" intro="The shared application boundary introduced in Tint 0.2: one typed client, provider-free visual primitives, and private engine adapters.">
       <DocsSection id="client" title="Root client" description="Construct one client from application-owned adapters. Hooks subscribe only to the capability they use.">
         <DocsDemo code={clientCode}><TintClientProvider client={client}><ClientStatusDemo /></TintClientProvider></DocsDemo>
+      </DocsSection>
+
+      <DocsSection
+        id="operations"
+        title="Accepted now, finished later"
+        description="Hosts that answer a mutation with a job identifier instead of a result. The adapter owns the job loop; the UI reads one snapshot."
+      >
+        <DocsDemo code={operationsCode}><TintClientProvider client={operationsClient}><OperationsDemo /></TintClientProvider></DocsDemo>
+        <DocsCallout variant="note" title="An operation is not a request, and not an upload">
+          <code>request.send</code> settles when the response arrives, and the response is the
+          result. An operation settles when the <em>work</em> finishes, which may be many round
+          trips later — so a button can stay disabled for exactly as long as the job runs.
+          <code>settled</code> resolves rather than rejects on failure, because a failed job is a
+          state the panel renders, not an exception it unwinds through. Uploads look similar and
+          differ: they carry files and report bytes, not commands and progress text.
+        </DocsCallout>
       </DocsSection>
 
       <DocsSection id="foundations" title="Identity, surfaces, and state">

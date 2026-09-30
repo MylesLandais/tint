@@ -1,0 +1,31 @@
+/*
+ * Scoped panel styling.
+ *
+ * Everything here is either layout or a nod to ludis's own dark chrome. No
+ * colour is hardcoded that a tint theme should own — the panel picks the
+ * `mocha` theme in `main.tsx` and reads `--tint-*` for the rest, so switching
+ * themes restyles it without touching this file.
+ */
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--tint-bg);
+  color: var(--tint-ink);
+}
+
+/* ludis's panel put the eyebrow in wide caps above the track; keep the feel. */
+[data-tint-workspace-layout] {
+  min-height: 100dvh;
+}
+
+/* The status bar is fixed to the viewport bottom, so the layout needs room. */
+[data-tint-workspace-body] {
+  padding-bottom: 2.5rem;
+}
+
+[data-tint-status-bar] {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 20;
+}

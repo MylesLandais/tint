@@ -24,6 +24,8 @@ export default defineConfig({
       input: {
         docs: path.resolve(import.meta.dirname, 'index.html'),
         demos: path.resolve(import.meta.dirname, 'demos.html'),
+        discordBotPanel: path.resolve(import.meta.dirname, 'discord-bot-panel.html'),
+        discordModPanel: path.resolve(import.meta.dirname, 'discord-mod-panel.html'),
       },
     },
   },

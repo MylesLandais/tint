@@ -115,6 +115,7 @@ export function DemoApp() {
         <nav aria-label="Related applications" className="demo-links">
           <a href="http://localhost:4000/">Kino Theater</a>
           <a href="http://localhost:4000/watch">Kino Cinema</a>
+          <a href="/discord-bot-panel.html">Ludis bot panel</a>
           <a href="http://tint.localhost/">Tint docs</a>
         </nav>
       </header>
