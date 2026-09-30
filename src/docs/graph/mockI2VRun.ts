@@ -1,5 +1,4 @@
-import type { GraphDocument, GraphNode, NodeRuntimeSummary } from '../../components/graph/contracts'
-import type { ComfyNodeConfiguration } from '../../components/graph/comfy/types'
+import type { GraphDocument, GraphNode, NodeRuntimeSummary, ComfyNodeConfiguration } from '../../core/graph'
 
 export type MockI2VRunStep = {
   nodeId: string

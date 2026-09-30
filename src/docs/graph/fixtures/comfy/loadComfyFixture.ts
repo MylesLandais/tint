@@ -1,12 +1,5 @@
 import workflowJson from './video_ltx2_3_t2v.json'
-import {
-  parseComfyWorkflow,
-  type ComfyWorkflow,
-} from '../../../../components/graph/comfy'
-import type {
-  GraphDocument,
-  NodeValidationMap,
-} from '../../../../components/graph/contracts'
+import { parseComfyWorkflow, type ComfyWorkflow, type GraphDocument, type NodeValidationMap } from '../../../../core/graph'
 import { mockComfyDiagnostics } from '../../mockDiagnostics'
 
 export const comfyLtx23Workflow = workflowJson as unknown as ComfyWorkflow

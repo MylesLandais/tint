@@ -2,8 +2,8 @@ import type {
   GraphDocument,
   NodeValidationMap,
   ValidationIssue,
-} from '../../components/graph/contracts'
-import type { ComfyNodeConfiguration } from '../../components/graph/comfy/types'
+} from '../../core/graph'
+import type { ComfyNodeConfiguration } from '../../core/graph'
 
 /**
  * Mock install inventory for UAT — not a real Comfy node/model scanner.

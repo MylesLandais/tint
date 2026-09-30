@@ -4,15 +4,14 @@
  */
 
 import {
-  createDefaultNodeRegistry,
-  GenericNodeView,
+  createDefaultGraphNodeRegistry,
   type GraphDocument,
   type GraphPort,
-  type NodeDefinition,
-  type NodeRegistry,
-} from '../../components/graph'
-import type { Channel, FeedDocument, Source } from '../../components/feed'
-import { sourcesForChannel } from '../../components/feed'
+  type GraphNodeDefinition,
+  type GraphNodeRegistry,
+} from '../../core/graph'
+import type { Channel, FeedDocument, Source } from '../../core/feed'
+import { sourcesForChannel } from '../../core/feed'
 
 function ports(
   specs: Array<Pick<GraphPort, 'key' | 'direction'> & Partial<GraphPort>>,
@@ -27,7 +26,7 @@ function ports(
   }))
 }
 
-export const channelRoomDefinition: NodeDefinition = {
+export const channelRoomDefinition: GraphNodeDefinition = {
   kind: 'channel.room',
   version: '1',
   displayName: 'Channel',
@@ -35,10 +34,9 @@ export const channelRoomDefinition: NodeDefinition = {
   createDefault: () => ({ role: 'room' }),
   derivePorts: () => ports([{ key: 'out', direction: 'output' }]),
   validate: async () => [],
-  render: GenericNodeView,
 }
 
-export const channelStreamDefinition: NodeDefinition = {
+export const channelStreamDefinition: GraphNodeDefinition = {
   kind: 'channel.stream',
   version: '1',
   displayName: 'Stream',
@@ -50,11 +48,10 @@ export const channelStreamDefinition: NodeDefinition = {
       { key: 'out', direction: 'output' },
     ]),
   validate: async () => [],
-  render: GenericNodeView,
 }
 
-export function createChannelNodeRegistry(): NodeRegistry {
-  const registry = createDefaultNodeRegistry()
+export function createChannelNodeRegistry(): GraphNodeRegistry {
+  const registry = createDefaultGraphNodeRegistry()
   registry.register(channelRoomDefinition)
   registry.register(channelStreamDefinition)
   return registry

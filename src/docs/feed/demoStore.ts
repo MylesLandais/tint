@@ -12,12 +12,12 @@ import {
   type Channel,
   type FeedDocument,
   type Source,
-} from '../../components/feed'
+} from '../../core/feed'
 import {
   applyPolicyCommand,
   type PolicyDocument,
   type PolicyRule,
-} from '../../components/policy'
+} from '../../core/policy'
 
 export type DemoFeedStoreSnapshot = {
   feed: FeedDocument

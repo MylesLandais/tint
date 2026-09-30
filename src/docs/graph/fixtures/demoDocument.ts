@@ -1,4 +1,4 @@
-import type { GraphDocument } from '../../../components/graph/contracts'
+import type { GraphDocument } from '../../../core/graph'
 
 /** Offline fixture used by docs and tests — no network, no SQL/PGQ. */
 export const demoGraphDocument: GraphDocument = {

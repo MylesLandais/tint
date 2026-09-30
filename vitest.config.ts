@@ -31,7 +31,7 @@ export default defineConfig({
         test: {
           ...shared,
           name: 'react',
-          exclude: ['e2e/**', 'node_modules/**', 'src/svelte/**', 'src/docs/svelte/**'],
+          exclude: ['e2e/**', 'node_modules/**', 'src/svelte/**', 'src/docs/svelte/**', 'src/demos/**/*.svelte.test.ts'],
         },
       },
       {
@@ -40,7 +40,7 @@ export default defineConfig({
         test: {
           ...shared,
           name: 'svelte',
-          include: ['src/svelte/**/*.test.ts', 'src/docs/svelte/**/*.test.ts'],
+          include: ['src/svelte/**/*.test.ts', 'src/docs/svelte/**/*.test.ts', 'src/demos/**/*.svelte.test.ts'],
         },
       },
     ],

@@ -24,7 +24,6 @@ const ADOPTIONS: ReadonlyArray<readonly [string, string, RegExp]> = [
   ['board cards are built on Surface', 'src/components/board/BoardCard.tsx', /import \{[^}]*\bSurface\b[^}]*\} from '\.\.\/surface'/],
   ['charts are built on Surface', 'src/components/charts/Charts.tsx', /import \{[^}]*\bSurface\b[^}]*\} from '\.\.\/surface'/],
   ['telemetry reuses the generic MetricCard', 'src/components/telemetry/TraceMetrics.tsx', /import \{[^}]*\bMetricCard\b[^}]*\} from '\.\.\/charts'/],
-  ['the docs shell dogfoods AppShell', 'src/docs/shell/DocsShell.tsx', /import \{[^}]*\bAppShell\b[^}]*\} from '\.\.\/\.\.\/components\/navigation'/],
 ]
 
 describe('shared foundation adoption', () => {

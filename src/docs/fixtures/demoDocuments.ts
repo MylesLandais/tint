@@ -3,10 +3,10 @@
  * URLs may look real; nothing is fetched at runtime.
  */
 
-import type { ActivityDocument } from '../../components/activity/contracts'
-import type { FeedDocument } from '../../components/feed/contracts'
-import type { PolicyDocument } from '../../components/policy/contracts'
-import type { NotificationSettings } from '../../components/notify/contracts'
+import type { ActivityDocument } from '../../core/activity'
+import type { FeedDocument } from '../../core/feed'
+import type { PolicyDocument } from '../../core/policy'
+import type { NotificationSettings } from '../../core/notify'
 
 export const DEMO_FEED: FeedDocument = {
   schemaVersion: '1',

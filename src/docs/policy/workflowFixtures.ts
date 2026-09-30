@@ -1,4 +1,4 @@
-import type { GraphDocument } from '../../components/graph'
+import type { GraphDocument } from '../../core/graph'
 
 function node(
   id: string,

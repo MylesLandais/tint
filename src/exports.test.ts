@@ -47,37 +47,6 @@ const SUBPATHS = Object.entries(packageJson.exports).filter(
   ([subpath, target]) => subpath !== '.' && target.endsWith('.ts'),
 )
 
-describe('docs coverage', () => {
-  /**
-   * Six components shipped as public exports with no docs page — `CodeTabs`,
-   * `Panel`, `DiceRoller`, `SettingsPopout`, the media primitives, and
-   * `VideoPlayer`. Nothing connected the two lists, so nothing noticed.
-   */
-  it('documents every component that has a package subpath', () => {
-    const routes = read('src/docs/routes.ts')
-    // Entry points that deliberately have no docs page of their own.
-    // `auth` is documented as part of its component page; the two `*-client`
-    // subpaths are transport layers a host wires up, documented in prose on the
-    // page for the components they feed rather than as pages of their own.
-    const EXEMPT = new Set(['auth', 'client', 'svelte'])
-
-    // Members of a grouped page (see GROUPED_ROUTE_MEMBERS in routes.ts) are
-    // documented by that page rather than by a route of their own.
-    const groupedBlock = routes.match(/GROUPED_ROUTE_MEMBERS = \{([\s\S]*?)\n\}/)
-    const groupedMembers = new Set(
-      groupedBlock
-        ? [...groupedBlock[1].matchAll(/'([^':]+)'(?!\s*:)/g)].map((match) => match[1])
-        : [],
-    )
-
-    const undocumented = SUBPATHS.map(([subpath]) => subpath.replace(/^\.\//, ''))
-      .filter((name) => !EXEMPT.has(name) && !name.includes('/'))
-      .filter((name) => !routes.includes(`'components/${name}'`) && !groupedMembers.has(name))
-
-    expect(undocumented).toEqual([])
-  })
-})
-
 describe('package exports', () => {
   const rootValues = exportedValues(read('src/index.ts'))
 

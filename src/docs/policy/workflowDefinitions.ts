@@ -1,16 +1,15 @@
 import {
-  createDefaultNodeRegistry,
-  GenericNodeView,
+  createDefaultGraphNodeRegistry,
   type GraphPort,
-  type NodeDefinition,
-  type NodeRegistry,
-} from '../../components/graph'
+  type GraphNodeDefinition,
+  type GraphNodeRegistry,
+} from '../../core/graph'
 
 /**
  * Docs-only workflow node kinds for Policy page composition.
  *
- * Registered onto `createDefaultNodeRegistry()` the same way hosts add
- * `comfyNodeDefinition` — never shipped as a public package.
+ * Registered onto `createDefaultGraphNodeRegistry()` like other host-owned
+ * definitions. This fixture is never shipped as a public package.
  */
 
 function ports(
@@ -39,7 +38,7 @@ const KINDS = [
 
 export type WorkflowNodeKind = (typeof KINDS)[number]
 
-function workflowDefinition(kind: WorkflowNodeKind, displayName: string): NodeDefinition {
+function workflowDefinition(kind: WorkflowNodeKind, displayName: string): GraphNodeDefinition {
   const isStart = kind === 'discovery'
   return {
     kind: `workflow.${kind}`,
@@ -55,11 +54,10 @@ function workflowDefinition(kind: WorkflowNodeKind, displayName: string): NodeDe
             { key: 'out', direction: 'output' },
           ]),
     validate: async () => [],
-    render: GenericNodeView,
   }
 }
 
-export const workflowNodeDefinitions: readonly NodeDefinition[] = [
+export const workflowNodeDefinitions: readonly GraphNodeDefinition[] = [
   workflowDefinition('discovery', 'Discovery'),
   workflowDefinition('policy_eval', 'Policy eval'),
   workflowDefinition('feed_write', 'Feed write'),
@@ -71,8 +69,8 @@ export const workflowNodeDefinitions: readonly NodeDefinition[] = [
 ]
 
 /** Fresh registry with default + workflow definitions (docs Policy page). */
-export function createWorkflowNodeRegistry(): NodeRegistry {
-  const registry = createDefaultNodeRegistry()
+export function createWorkflowNodeRegistry(): GraphNodeRegistry {
+  const registry = createDefaultGraphNodeRegistry()
   for (const definition of workflowNodeDefinitions) {
     registry.register(definition)
   }
