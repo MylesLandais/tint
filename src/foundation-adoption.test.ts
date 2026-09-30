@@ -20,7 +20,7 @@ const ADOPTIONS: ReadonlyArray<readonly [string, string, RegExp]> = [
   ['activity models actors as the shared Identity', 'src/components/activity/contracts.ts', /import type \{[^}]*\bIdentity\b[^}]*\} from '\.\.\/identity'/],
   ['notify renders actors with the shared Avatar', 'src/components/notify/NotificationList.tsx', /import \{[^}]*\bAvatar\b[^}]*\} from '\.\.\/identity'/],
   ['notify models actors as the shared Identity', 'src/components/notify/contracts.ts', /import type \{[^}]*\bIdentity\b[^}]*\} from '\.\.\/identity'/],
-  ['auth references the shared Identity rather than an email-keyed user', 'src/auth/client/types.ts', /import type \{[^}]*\bIdentity\b[^}]*\} from '\.\.\/\.\.\/components\/identity'/],
+  ['auth references the shared Identity rather than an email-keyed user', 'src/auth/client/types.ts', /import type \{[^}]*\bIdentity\b[^}]*\} from '\.\.\/\.\.\/core\/identity'/],
   ['board cards are built on Surface', 'src/components/board/BoardCard.tsx', /import \{[^}]*\bSurface\b[^}]*\} from '\.\.\/surface'/],
   ['charts are built on Surface', 'src/components/charts/Charts.tsx', /import \{[^}]*\bSurface\b[^}]*\} from '\.\.\/surface'/],
   ['telemetry reuses the generic MetricCard', 'src/components/telemetry/TraceMetrics.tsx', /import \{[^}]*\bMetricCard\b[^}]*\} from '\.\.\/charts'/],
