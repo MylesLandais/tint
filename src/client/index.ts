@@ -3,9 +3,11 @@ export type { TintClientOptions } from './client'
 export {
   TintClientProvider,
   useAuth,
+  useCapability,
   useClientStatus,
   useConnection,
   useNavigation,
+  useOperations,
   usePlayback,
   useSession,
   useTintClient,
@@ -14,6 +16,12 @@ export {
 export type { TintClientProviderProps } from './react'
 export { createFetchRequestAdapter } from './request'
 export type { FetchRequestAdapterOptions } from './request'
+export { createMemoryOperationAdapter } from './memoryOperations'
+export type {
+  MemoryOperationAdapterOptions,
+  OperationContext,
+  OperationRunner,
+} from './memoryOperations'
 export { createBrowserPlaybackAdapter, DEFAULT_PLAYBACK_STORAGE_KEY } from './browserPlayback'
 export type { BrowserPlaybackAdapter, BrowserPlaybackAdapterOptions } from './browserPlayback'
 export {

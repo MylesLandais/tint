@@ -1,6 +1,14 @@
 import React, { createContext, useContext, useEffect, useSyncExternalStore, type ReactNode } from 'react'
 import type { AuthSnapshot } from '../auth/client'
-import type { ConnectionSnapshot, NavigationSnapshot, PlaybackSnapshot, UploadSnapshot } from './types'
+import { TintCapabilityError } from './errors'
+import type {
+  ConnectionSnapshot,
+  NavigationSnapshot,
+  OperationSnapshot,
+  PlaybackSnapshot,
+  TintCapability,
+  UploadSnapshot,
+} from './types'
 import type { TintClient } from './client'
 
 void React
@@ -46,12 +54,23 @@ export function useSession() {
   }
 }
 
+/**
+ * The throw sits before `useSyncExternalStore`, which looks like a conditional
+ * hook and is not one: whether an adapter implements the external-store
+ * contract is fixed for the lifetime of a given client, so this branch is
+ * constant across every render of a component subtree. A client swapped for
+ * one with different adapters remounts the subtree anyway.
+ *
+ * It throws `TintCapabilityError` rather than a bare `Error` so that a host
+ * error boundary can catch every capability problem — missing, or present but
+ * incomplete — as one class.
+ */
 function useCapabilitySnapshot<T>(
   capability: { subscribe?: (listener: () => void) => () => void; getSnapshot?: () => T; getServerSnapshot?: () => T },
   name: string,
 ): T {
   if (!capability.subscribe || !capability.getSnapshot) {
-    throw new Error(`The Tint ${name} adapter must implement the external-store contract.`)
+    throw new TintCapabilityError(name)
   }
   return useSyncExternalStore(
     capability.subscribe,
@@ -77,4 +96,24 @@ export function useNavigation(): { client: NonNullable<TintClient['navigation']>
 export function usePlayback(): { client: NonNullable<TintClient['playback']>; snapshot: PlaybackSnapshot } {
   const playback = useTintClient().require('playback')
   return { client: playback, snapshot: useCapabilitySnapshot(playback, 'playback') }
+}
+
+export function useOperations(): { client: NonNullable<TintClient['operations']>; snapshot: OperationSnapshot } {
+  const operations = useTintClient().require('operations')
+  return { client: operations, snapshot: useCapabilitySnapshot(operations, 'operations') }
+}
+
+/**
+ * A host capability registered through `TintClientOptions.capabilities`.
+ *
+ * Untyped by construction — the client cannot know what a host put there — so
+ * the caller supplies the snapshot type. This is the escape hatch that keeps
+ * domain state inside the client lifecycle instead of beside it.
+ */
+export function useCapability<TSnapshot>(name: string): {
+  client: TintCapability<TSnapshot>
+  snapshot: TSnapshot
+} {
+  const capability = useTintClient().require(name) as TintCapability<TSnapshot>
+  return { client: capability, snapshot: useCapabilitySnapshot<TSnapshot>(capability, name) }
 }
