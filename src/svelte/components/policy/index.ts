@@ -1,0 +1,6 @@
+export { default as PolicyEditor } from './PolicyEditor.svelte'
+export { default as PolicyDryRun } from './PolicyDryRun.svelte'
+export { default as PolicyTable } from './PolicyTable.svelte'
+export type { PolicyEditorProps, PolicyDryRunProps, PolicyTableProps } from './types'
+export type { DryRunResult, MatchClause, MatchCriteria, MatchField, MatchOperator, PolicyCommand, PolicyDisposition, PolicyDocument, PolicyId, PolicyRule, WorkflowEdge } from '../../../core/policy'
+export { applyPolicyCommand, countMatches, matchClause, matchEntry, mockDryRun } from '../../../core/policy'

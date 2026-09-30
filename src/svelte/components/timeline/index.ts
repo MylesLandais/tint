@@ -1,0 +1,8 @@
+export { default as WaveformCanvas } from './WaveformCanvas.svelte'
+export { default as BeatGridOverlay } from './BeatGridOverlay.svelte'
+export { default as TransitionRegion } from './TransitionRegion.svelte'
+export { default as AutomationLane } from './AutomationLane.svelte'
+export type { WaveformCanvasProps, BeatGridOverlayProps, TransitionRegionProps, AutomationLaneProps } from './types'
+export type { TimelineViewport, TimelineViewportInput, TimelineBeatRange, AutomationPoint } from '../../../core/timeline/contracts'
+export { beatToPixel, createTimelineViewport, pixelToBeat, timelineVisibleRange, withTimelineScroll, withTimelineZoom } from '../../../core/timeline/viewport'
+export { resolveCanvasColor } from '../../../core/timeline/color'
