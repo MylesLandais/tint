@@ -1,3 +1,2 @@
-export { DiceRoller } from './DiceRoller'
-export { D10, D20 } from './glyphs'
-export type * from './types'
+export { FACE_COUNT, animationFace } from '../../core/dice/model'
+export type { DiceKind } from '../../core/dice/model'
