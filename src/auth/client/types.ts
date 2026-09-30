@@ -1,4 +1,4 @@
-import type { Identity } from '../../components/identity'
+import type { Identity } from '../../core/identity'
 
 export type OAuthProviderId = string
 export type AuthStatus = 'loading' | 'signed_out' | 'pending' | 'signed_in' | 'error'
