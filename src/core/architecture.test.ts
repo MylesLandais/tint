@@ -5,13 +5,20 @@ import { describe, expect, it } from 'vitest'
 /**
  * Migration boundary rules.
  *
- * `src/core` is importable from plain Node: no React, no Svelte, no component
- * files. `src/svelte` is the Svelte binding layer and must not reach into React.
+ * `src/core` is importable from plain Node: no UI framework or component
+ * files. `src/svelte` is the sole presentation layer.
  * Reads source instead of importing it so the check itself boots no framework.
  */
 const ROOT = path.resolve(import.meta.dirname, '../..')
 const IMPORT = /(?:from\s*|import\s*\(?\s*|@import\s+)['"]([^'"]+)['"]/g
 const FRAMEWORK = /^(react|react-dom|svelte)(\/|$)/
+const UI_ROOTS = ['src/components/', 'src/svelte/', 'src/docs/']
+
+function importsUiDirectory(file: string, specifier: string): boolean {
+  if (!specifier.startsWith('.')) return false
+  const target = path.relative(ROOT, path.resolve(ROOT, path.dirname(file), specifier)).replaceAll('\\', '/')
+  return UI_ROOTS.some((prefix) => target.startsWith(prefix))
+}
 
 function importsOf(file: string): string[] {
   const source = readFileSync(path.join(ROOT, file), 'utf8')
@@ -28,7 +35,7 @@ describe('src/core', () => {
   it('imports no framework or component files', () => {
     const offenders = sourcesIn('src/core').flatMap((file) =>
       importsOf(file)
-        .filter((spec) => FRAMEWORK.test(spec) || /\.(tsx|svelte)$/.test(spec))
+        .filter((spec) => FRAMEWORK.test(spec) || /\.(tsx|svelte)$/.test(spec) || importsUiDirectory(file, spec))
         .map((spec) => `${file} -> ${spec}`),
     )
     expect(offenders).toEqual([])
@@ -49,12 +56,4 @@ describe('src/svelte', () => {
     expect(offenders).toEqual([])
   })
 
-  it('does not import the client barrel (it re-exports the React adapter)', () => {
-    const offenders = sourcesIn('src/svelte').flatMap((file) =>
-      importsOf(file)
-        .filter((spec) => /(^|\/)\.\.\/client(\/index|\/react)?$/.test(spec))
-        .map((spec) => `${file} -> ${spec}`),
-    )
-    expect(offenders).toEqual([])
-  })
 })

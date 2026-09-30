@@ -26,8 +26,8 @@ const ROOT = path.resolve(import.meta.dirname, '../..')
 
 /** Vendor directory -> the only place allowed to import it. */
 const SEAMS = {
-  yjs: ['src/components/collab/'],
-  'tanstack-table-core': ['src/components/table/'],
+  yjs: ['src/components/collab/', 'src/core/collab/'],
+  'tanstack-table-core': ['src/components/table/', 'src/core/table/'],
   // The React adapter owns the runtime; the stylesheet owns the CSS import,
   // and is delivered to hosts as `@nebula/tint/graph/styles.css`.
   xyflow: ['src/components/graph/adapter/', 'src/components/graph/graph.css'],

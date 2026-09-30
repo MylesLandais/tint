@@ -1,0 +1,383 @@
+import type { Identity, Presence } from '../identity/types'
+
+/** Opaque application identifier. Stability matters: it keys React reconciliation. */
+export type ChatId = string
+
+/** Any value `new Date()` accepts. Invalid values render without a timestamp. */
+export type ChatTimestamp = string | number | Date
+
+/** Who produced a message. Drives avatar, alignment, and announcement behavior. */
+export type ChatActorKind = 'human' | 'assistant' | 'system' | 'tool'
+
+/** Availability of a human actor. Presentation only; Tint never derives it. */
+export type ChatPresence = Presence
+
+export type ChatActor = Omit<Identity, 'kind' | 'presence'> & {
+  /** Display name. Bidi control characters are stripped before rendering. */
+  name: string
+  kind: ChatActorKind
+  presence?: ChatPresence
+}
+
+/**
+ * Lifecycle of a whole message.
+ *
+ * `sending` and `streaming` mark the message `aria-busy`; `error` and `stopped`
+ * are the two states that offer Retry.
+ */
+export type ChatMessageStatus =
+  | 'queued'
+  | 'sending'
+  | 'streaming'
+  | 'complete'
+  | 'stopped'
+  | 'error'
+
+/** Lifecycle of a single part within a message. */
+export type ChatPartStatus = 'pending' | 'streaming' | 'complete' | 'error'
+
+export type ChatAttachmentData = {
+  id: ChatId
+  /** Bidi control characters are stripped before rendering. */
+  name: string
+  /** MIME type. A leading `image/` selects the image icon. */
+  mediaType: string
+  /** Bytes. Formatted as B/KB/MB. */
+  size?: number
+  url?: string
+  previewUrl?: string
+  /** 0–100, shown while `status` is `uploading`. */
+  uploadProgress?: number
+  /**
+   * `uploading` and `error` attachments are excluded from the composer's submit
+   * payload — they have no resolvable `url` yet.
+   */
+  status?: 'pending' | 'uploading' | 'ready' | 'error'
+  error?: string
+}
+
+export type ChatSourceData = {
+  id: ChatId
+  /** Bidi control characters are stripped before rendering. */
+  title: string
+  /** Only `http:`, `https:`, `mailto:`, and same-document URLs become links. */
+  url?: string
+  description?: string
+  citation?: string
+  iconUrl?: string
+}
+
+/**
+ * Lifecycle of a tool call. An unrecognized value renders as itself rather than
+ * failing — this data usually arrives over a network where the union is not
+ * enforced.
+ */
+export type ChatToolStatus =
+  | 'pending'
+  | 'running'
+  | 'approval-required'
+  | 'succeeded'
+  | 'failed'
+  | 'cancelled'
+
+export type ChatToolData = {
+  id: ChatId
+  /** Machine name, used when `title` is absent. */
+  name: string
+  /** Human-facing name. */
+  title?: string
+  status: ChatToolStatus
+  /** Serialized as JSON in the disclosure. Large payloads are truncated. */
+  input?: unknown
+  /** Serialized as JSON in the disclosure. Large payloads are truncated. */
+  output?: unknown
+  /** One-line description shown in the collapsed header. */
+  summary?: string
+  error?: string
+  startedAt?: ChatTimestamp
+  finishedAt?: ChatTimestamp
+}
+
+export type ChatApprovalData = {
+  id: ChatId
+  /** The tool this decision gates, when there is one. */
+  toolId?: ChatId
+  title: string
+  /** What approving actually does. Worth filling in — this is a consent prompt. */
+  description?: string
+  /** Only `pending` renders the Approve/Deny controls. */
+  status: 'pending' | 'approved' | 'denied'
+  approveLabel?: string
+  denyLabel?: string
+  /** Show an optional free-text note alongside the decision. */
+  allowReason?: boolean
+}
+
+export type ChatPartBase = {
+  /** Stable within its message; keys the part's React element. */
+  id: ChatId
+  status?: ChatPartStatus
+}
+
+export type ChatTextPart = ChatPartBase & {
+  type: 'text'
+  text: string
+  /** `markdown` renders sanitized GFM with raw HTML disabled. Defaults to plain. */
+  format?: 'plain' | 'markdown'
+}
+
+export type ChatCodePart = ChatPartBase & {
+  type: 'code'
+  code: string
+  /**
+   * Selects the syntax highlighter, and shown in the header when `filename` is
+   * absent. An unrecognised value renders as plain text rather than failing.
+   */
+  language?: string
+  filename?: string
+}
+
+export type ChatImagePart = ChatPartBase & {
+  type: 'image'
+  src: string
+  /** Required. Pass `''` only for genuinely decorative images. */
+  alt: string
+  width?: number
+  height?: number
+  /** Optional “view original” target in the lightbox. */
+  href?: string
+}
+
+/** One cell inside an `images` gallery part. */
+export type ChatImageItem = {
+  id: ChatId
+  src: string
+  /** Required. Pass `''` only for genuinely decorative images. */
+  alt: string
+  width?: number
+  height?: number
+  /** Optional “view original” target in the lightbox. */
+  href?: string
+}
+
+/**
+ * App-defined control under an `images` grid (e.g. Upscale / Vary).
+ * Tint renders the label; the host decides what the action does.
+ */
+export type ChatImageAction = {
+  id: ChatId
+  label: string
+  /** When set, the action applies to one cell; omit for shared actions. */
+  imageId?: ChatId
+}
+
+/**
+ * Several images as one cohesive response block (Midjourney-style grid).
+ * Prefer this over adjacent `image` parts when the set is a single unit.
+ */
+export type ChatImagesPart = ChatPartBase & {
+  type: 'images'
+  images: readonly ChatImageItem[]
+  /** Visual treatment for the set. `grid` preserves individual previews; `stack` presents one compact pile that opens in the lightbox. */
+  layout?: 'grid' | 'stack'
+  /** Optional caption above the grid (e.g. the generation prompt). */
+  caption?: string
+  /** Optional action buttons under the grid. */
+  actions?: readonly ChatImageAction[]
+}
+
+export type ChatFilePart = ChatPartBase & {
+  type: 'file'
+  attachment: ChatAttachmentData
+}
+
+export type ChatAudioPart = ChatPartBase & {
+  type: 'audio'
+  src: string
+  /** Optional visible track or recording title. */
+  title?: string
+  /** Optional artist, speaker, or source. */
+  artist?: string
+  /** Optional square artwork URL. */
+  artwork?: string
+  /** Keep empty when the artwork only repeats the track metadata. */
+  artworkAlt?: string
+  /** Seconds. Rendered as `m:ss`. */
+  duration?: number
+  /** Text fallback, shown in a disclosure below the player. */
+  transcript?: string
+  /** Amplitude samples drawn as decorative static bars. Any scale; normalized. */
+  waveform?: readonly number[]
+}
+
+export type ChatSourcesPart = ChatPartBase & {
+  type: 'sources'
+  sources: readonly ChatSourceData[]
+}
+
+export type ChatReasoningPart = ChatPartBase & {
+  type: 'reasoning'
+  text: string
+  /** Defaults to `Thinking` while streaming, `Reasoning` once settled. */
+  title?: string
+  /** Milliseconds, shown as `N.Ns` in the header. */
+  durationMs?: number
+  /** Initial open state only. Streaming never force-opens the disclosure. */
+  defaultExpanded?: boolean
+}
+
+export type ChatToolPart = ChatPartBase & {
+  type: 'tool'
+  tool: ChatToolData
+}
+
+export type ChatApprovalPart = ChatPartBase & {
+  type: 'approval'
+  approval: ChatApprovalData
+}
+
+export type ChatArtifactPart = ChatPartBase & {
+  type: 'artifact'
+  /** Application-defined discriminator, shown under the title. */
+  kind: string
+  title: string
+  /** Serialized as JSON by the built-in renderer; override via `renderPart`. */
+  data: unknown
+  description?: string
+}
+
+export type ChatErrorPart = ChatPartBase & {
+  type: 'error'
+  message: string
+  code?: string
+  /** Renders an inline Retry, which replaces the message-level one. */
+  recoverable?: boolean
+}
+
+/**
+ * Escape hatch for application-specific content. Supply a `renderPart` to draw
+ * it; without one, the payload is shown as JSON.
+ */
+export type ChatCustomPart = ChatPartBase & {
+  type: 'custom'
+  kind: string
+  data: unknown
+}
+
+export type ChatBuiltInMessagePart =
+  | ChatTextPart
+  | ChatCodePart
+  | ChatImagePart
+  | ChatImagesPart
+  | ChatFilePart
+  | ChatAudioPart
+  | ChatSourcesPart
+  | ChatReasoningPart
+  | ChatToolPart
+  | ChatApprovalPart
+  | ChatArtifactPart
+  | ChatErrorPart
+
+/** One selectable column inside a preference comparison shell. */
+export type ChatPreferenceOption = {
+  id: ChatId
+  label: string
+  /** Ordinary built-in parts — the shell does not invent new content types. */
+  parts: readonly ChatBuiltInMessagePart[]
+}
+
+/**
+ * Layout payload for a side-by-side response preference UI.
+ * Typically carried on a `type: "custom"` part with `kind: "preference"`.
+ */
+export type ChatPreferenceData = {
+  title?: string
+  subtitle?: string
+  status: 'pending' | 'selected'
+  selectedOptionId?: ChatId
+  options: readonly [ChatPreferenceOption, ChatPreferenceOption]
+}
+
+export type ChatMessagePart<TCustomPart extends ChatCustomPart = never> =
+  | ChatBuiltInMessagePart
+  | TCustomPart
+
+export type ChatMessageData<TCustomPart extends ChatCustomPart = never> = {
+  id: ChatId
+  actor: ChatActor
+  createdAt: ChatTimestamp
+  /** Optional host-provided display time, such as a narrative timestamp. */
+  timestampLabel?: string
+  /** Rendered in order. Replace only the changed part while streaming. */
+  parts: readonly ChatMessagePart<TCustomPart>[]
+  status: ChatMessageStatus
+  conversationId?: ChatId
+  updatedAt?: ChatTimestamp
+  parentMessageId?: ChatId
+  /** Application data. Tint passes it through untouched. */
+  metadata?: Readonly<Record<string, unknown>>
+  error?: string
+}
+
+/** Position within a run of consecutive messages from the same actor. */
+export type ChatMessageGroupPosition = 'solo' | 'first' | 'middle' | 'last'
+
+/** `end` is the current actor, `center` is a system notice, `start` is everyone else. */
+export type ChatMessageAlignment = 'start' | 'end' | 'center'
+
+export type ChatMessageAction =
+  | 'copy'
+  | 'retry'
+  | 'speak'
+  | 'edit'
+  | 'delete'
+  | 'reply'
+  | 'feedback-up'
+  | 'feedback-down'
+  | 'image-open'
+  | 'image-action'
+  | 'custom'
+
+export type ChatMessageActionPayload = {
+  messageId: ChatId
+  action: ChatMessageAction
+  /** Disambiguates when `action` is `custom` or `image-action`. */
+  actionId?: string
+  /** Part that owned the image / gallery, when relevant. */
+  partId?: ChatId
+  /** Cell id inside an `images` part (or the single `image` part id). */
+  imageId?: ChatId
+  /** Zero-based index within the opened gallery. */
+  imageIndex?: number
+}
+
+export type ChatToolApprovalPayload = {
+  messageId: ChatId
+  partId: ChatId
+  approvalId: ChatId
+  approved: boolean
+  /** Present only when the approval set `allowReason` and the reader typed one. */
+  reason?: string
+}
+
+export type ChatSubmitPayload = {
+  /** Already trimmed. */
+  text: string
+  /** In-flight and failed uploads are excluded. */
+  attachments: readonly ChatAttachmentData[]
+  /** Whatever was passed to the composer's `metadata` prop. */
+  metadata?: Readonly<Record<string, unknown>>
+}
+
+/**
+ * Composer state, owned by the application.
+ *
+ * `submitting` and `disabled` make the input read-only rather than disabled, so
+ * focus stays in the composer across a send.
+ */
+export type ChatComposerState =
+  | 'idle'
+  | 'submitting'
+  | 'streaming'
+  | 'disabled'
+  | 'error'
