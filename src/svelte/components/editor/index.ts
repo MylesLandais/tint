@@ -1,0 +1,5 @@
+export { default as Editor } from './Editor.svelte'
+export type { EditorProps, EditorSlashCommand } from './types'
+export { CodeTabsExtension } from './codeTabsExtension'
+export { editorDocumentToHTML, editorHTMLToDocument, defaultSlashCommands, DEFAULT_EDITOR_CODE_TABS, codeTabsContent } from '../../../core/editor'
+export type { EditorDocument, EditorSerializationOptions, EditorCommandContext, EditorCodeTab } from '../../../core/editor'

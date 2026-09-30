@@ -1,11 +1,18 @@
-import { getContext, setContext } from 'svelte'
+import { getContext, onMount, setContext } from 'svelte'
 import type { TintClient } from '../../client/client'
 
 const KEY = Symbol.for('@nebula/tint/client')
 
-/** Make a client available to descendants. Call during component initialisation. */
+/**
+ * Make a client available to descendants and lease its lifecycle while this
+ * component is mounted. Call during component initialisation.
+ */
 export function provideTintClient(client: TintClient): TintClient {
   setContext(KEY, client)
+  onMount(() => {
+    void client.start()
+    return () => client.stop()
+  })
   return client
 }
 
