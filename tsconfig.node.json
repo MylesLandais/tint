@@ -28,6 +28,7 @@
     "src/components/icon/no-raw-lucide-imports.test.ts",
     "src/components/scrolling-label/contract.test.ts",
     "src/exports.test.ts",
+    "src/core/architecture.test.ts",
     "src/vendor/checksums.test.ts",
     "src/vendor/boundary.test.ts",
     "src/dependency-boundary.test.ts",

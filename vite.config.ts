@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { svelte } from '@sveltejs/vite-plugin-svelte'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'node:path'
 
@@ -18,7 +19,7 @@ const workbenchProxy: import('vite').ProxyOptions = {
 }
 
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), svelte(), tailwindcss()],
   build: {
     rollupOptions: {
       input: {
