@@ -3,9 +3,9 @@
  *
  * Shapes follow the seams we traced upstream:
  * - Sorting: TanStack `SortingState` as `[{ id, desc }]`
- *   (`~/Workspace-git/table/packages/table-core/src/features/row-sorting/`)
+ *   (TanStack Table: `packages/table-core/src/features/row-sorting/`)
  * - Filtering: MUI X `GridFilterModel` items `{ id, field, operator, value }`
- *   (`~/Workspace-git/mui-x/packages/x-data-grid/src/models/gridFilterModel.ts`)
+ *   (MUI X: `packages/x-data-grid/src/models/gridFilterModel.ts`)
  *
  * Hosts own `DataFilterModel` + `DataSortingState`. Adapters below feed
  * `deriveRows` / `useDataTable` without replacing their legacy contracts.

@@ -138,7 +138,7 @@ export function createLudisHost(initialGuildId: string = GUILDS[0]!.id): LudisHo
   function record(action: string): void {
     auditSeq += 1
     const rows = state.audit[guildId]!
-    rows.unshift({ id: `live-${auditSeq}`, time: EPOCH_SECONDS + pollTick, actor: 'maya#4417', action })
+    rows.unshift({ id: `live-${auditSeq}`, time: EPOCH_SECONDS + pollTick, actor: 'avery#4417', action })
     // ludis's panel shows the last 15 rows.
     state.audit[guildId] = rows.slice(0, 15)
   }
@@ -221,7 +221,7 @@ export function createLudisHost(initialGuildId: string = GUILDS[0]!.id): LudisHo
           author: 'Preparing',
           source: 'youtube',
           length: 0,
-          requester: 'maya#4417',
+          requester: 'avery#4417',
           state: 'queued',
         }
         target.queue = [...target.queue, queued]
@@ -240,7 +240,7 @@ export function createLudisHost(initialGuildId: string = GUILDS[0]!.id): LudisHo
           author: station.name,
           source: 'radio',
           length: 0,
-          requester: 'maya#4417',
+          requester: 'avery#4417',
           state: 'ready',
         }
         target.paused = false

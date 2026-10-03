@@ -20,16 +20,16 @@ const trace: TelemetryTrace = {
   spans: [
     span({ spanId: 'root', name: 'conversation', service: 'tint.chat', startMs: 0, endMs: 100 }),
     span({
-      spanId: 'maya',
+      spanId: 'avery',
       parentSpanId: 'root',
-      name: 'agent.maya',
-      service: 'agent.maya',
+      name: 'agent.avery',
+      service: 'agent.avery',
       startMs: 10,
       endMs: 60,
     }),
     span({
       spanId: 'llm',
-      parentSpanId: 'maya',
+      parentSpanId: 'avery',
       name: 'llm.generate',
       service: 'mock.llm',
       startMs: 10,
@@ -53,7 +53,7 @@ describe('layoutTrace', () => {
     expect(layout.durationMs).toBe(100)
     expect(layout.spans.map((entry) => [entry.spanId, entry.depth])).toEqual([
       ['root', 0],
-      ['maya', 1],
+      ['avery', 1],
       ['llm', 2],
       ['jordan', 1],
     ])
@@ -62,8 +62,8 @@ describe('layoutTrace', () => {
   })
 
   it('keeps a stable colour per service', () => {
-    expect(serviceColor('agent.maya')).toBe(serviceColor('agent.maya'))
-    expect(serviceColor('agent.maya')).not.toBe(serviceColor('mock.llm'))
+    expect(serviceColor('agent.avery')).toBe(serviceColor('agent.avery'))
+    expect(serviceColor('agent.avery')).not.toBe(serviceColor('mock.llm'))
   })
 
   it('renders an empty trace without throwing', () => {

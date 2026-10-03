@@ -21,14 +21,14 @@ function interaction(overrides: Partial<SlashInteraction> & Pick<SlashInteractio
     id: `i-${overrides.correlationId}`,
     guildId: NEBULA_GUILD_ID,
     channel: 'general',
-    actor: 'maya#4417',
+    actor: 'avery#4417',
     command: 'ask',
     subcommand: null,
     options: {},
     tick: 0,
     status: 'replied',
     latencyMs: 100,
-    agent: 'maya-agent',
+    agent: 'avery-agent',
     traceId: null,
     operationName: null,
     summary: '',
@@ -47,7 +47,7 @@ describe('buildCorrelationIndex', () => {
       ],
     }
     const audit: CorrelatedAuditRow[] = [
-      { id: 'a-1', correlationId: 'c-1', guildId: NEBULA_GUILD_ID, tick: -5, actor: 'maya#4417', action: 'ask:ok' },
+      { id: 'a-1', correlationId: 'c-1', guildId: NEBULA_GUILD_ID, tick: -5, actor: 'avery#4417', action: 'ask:ok' },
     ]
     const moderation: ModerationEvent[] = [
       { id: 'm-1', correlationId: 'c-1', guildId: NEBULA_GUILD_ID, channel: 'general', kind: 'agent.escalation', actor: 'warden', subject: 'sam#7712', tick: -5, detail: 'escalated', automated: true },

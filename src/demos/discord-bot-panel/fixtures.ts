@@ -79,7 +79,7 @@ export type Station = { key: string; name: string; url: string }
 /** ludis's `limits.lua`. Only the queue cap matters to the panel. */
 export const LIMITS = { queue: 200 } as const
 
-export const SIGNED_IN_USER = 'maya#4417'
+export const SIGNED_IN_USER = 'avery#4417'
 
 /** Fixed epoch so every rendered timestamp is stable across runs. */
 export const EPOCH_SECONDS = 1_788_000_000
@@ -97,7 +97,7 @@ export const GUILDS: readonly Guild[] = PANEL_GUILDS.map((guild) => ({
 }))
 
 export const STATIONS: readonly Station[] = [
-  { key: 'nightride', name: 'Nightride FM', url: 'https://stream.nightride.fm/nightride.m4a' },
+  { key: 'nightride', name: 'Harbor FM', url: 'https://stream.nightride.fm/nightride.m4a' },
   { key: 'somafm-groove', name: 'SomaFM · Groove Salad', url: 'https://ice1.somafm.com/groovesalad-128-mp3' },
   { key: 'nts1', name: 'NTS 1', url: 'https://stream-relay-geo.ntslive.net/stream' },
 ]
@@ -116,10 +116,10 @@ function entry(
 
 const PLAYERS: Record<string, PlayerSnapshot> = {
   '184330891': {
-    current: entry('t-1', 'Midnight Cassette', 'Hiroshi Yoshimura', 'youtube', 6.5, 'maya#4417'),
+    current: entry('t-1', 'Midnight Cassette', 'Kenji Arai', 'youtube', 6.5, 'avery#4417'),
     queue: [
-      entry('t-2', 'Slow Corrosion', 'Loscil', 'youtube', 8.2, 'river#0021'),
-      entry('t-3', 'Blue Hour', 'Julianna Barwick', 'soundcloud', 4.9, 'maya#4417'),
+      entry('t-2', 'Slow Corrosion', 'Tidal Array', 'youtube', 8.2, 'river#0021'),
+      entry('t-3', 'Blue Hour', 'Mira Stone', 'soundcloud', 4.9, 'avery#4417'),
       entry('t-4', 'Untitled Import', 'Preparing', 'youtube_playlist', 0, 'sam#7712', 'reading playlist'),
     ],
     volume: 70,
@@ -133,7 +133,7 @@ const PLAYERS: Record<string, PlayerSnapshot> = {
     queueLimit: LIMITS.queue,
   },
   '990244117': {
-    current: entry('r-1', 'Nightride FM', 'Nightride FM', 'radio', 0, 'river#0021'),
+    current: entry('r-1', 'Harbor FM', 'Harbor FM', 'radio', 0, 'river#0021'),
     queue: [],
     volume: 45,
     paused: true,
@@ -146,7 +146,7 @@ const PLAYERS: Record<string, PlayerSnapshot> = {
     queueLimit: LIMITS.queue,
   },
   [NEBULA_GUILD_ID]: {
-    current: entry('n-1', 'Ops Standup Loop', 'system-nebula', 'radio', 0, 'maya#4417'),
+    current: entry('n-1', 'Ops Standup Loop', 'system-nebula', 'radio', 0, 'avery#4417'),
     queue: [entry('n-2', 'Deploy Window Chime', 'system-nebula', 'soundcloud', 1.2, 'warden')],
     volume: 30,
     paused: false,
@@ -185,7 +185,7 @@ const PLUGINS: Record<string, readonly Plugin[]> = {
   [NEBULA_GUILD_ID]: [
     { name: 'music', description: 'Queue, radio, and transport controls.', commands: 'play playlist radio queue volume pause resume skip stop', enabled: true },
     { name: 'ping', description: 'Liveness check.', commands: 'ping', enabled: true },
-    { name: 'agents', description: 'Routes slash commands to maya, the archivist and the warden.', commands: 'ask summarize', enabled: true },
+    { name: 'agents', description: 'Routes slash commands to avery, the archivist and the warden.', commands: 'ask summarize', enabled: true },
     { name: 'moderation', description: 'Warden policy checks, timeouts and case files.', commands: 'mod', enabled: true },
   ],
   '473019556': [
@@ -196,9 +196,9 @@ const PLUGINS: Record<string, readonly Plugin[]> = {
 
 const AUDIT: Record<string, readonly AuditRow[]> = {
   '184330891': [
-    { id: 'a-1', time: EPOCH_SECONDS - 40, actor: 'maya#4417', action: 'player:resume' },
+    { id: 'a-1', time: EPOCH_SECONDS - 40, actor: 'avery#4417', action: 'player:resume' },
     { id: 'a-2', time: EPOCH_SECONDS - 320, actor: 'river#0021', action: 'play:query' },
-    { id: 'a-3', time: EPOCH_SECONDS - 900, actor: 'maya#4417', action: 'plugin:ping:true' },
+    { id: 'a-3', time: EPOCH_SECONDS - 900, actor: 'avery#4417', action: 'plugin:ping:true' },
   ],
   '990244117': [
     { id: 'a-4', time: EPOCH_SECONDS - 720, actor: 'river#0021', action: 'player:pause' },
@@ -206,7 +206,7 @@ const AUDIT: Record<string, readonly AuditRow[]> = {
   ],
   [NEBULA_GUILD_ID]: [
     { id: 'a-7', time: EPOCH_SECONDS - 120, actor: 'warden', action: 'plugin:moderation:true' },
-    { id: 'a-8', time: EPOCH_SECONDS - 640, actor: 'maya#4417', action: 'plugin:agents:true' },
+    { id: 'a-8', time: EPOCH_SECONDS - 640, actor: 'avery#4417', action: 'plugin:agents:true' },
   ],
   '473019556': [{ id: 'a-6', time: EPOCH_SECONDS - 86_400, actor: 'sam#7712', action: 'plugin:music:false' }],
 }

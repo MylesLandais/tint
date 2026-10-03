@@ -145,8 +145,8 @@ def export(source_zip: Path, cache: Path, output: Path) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--source-zip", type=Path, default=Path("/home/warby/Downloads/pokeforce-source.zip"))
-    parser.add_argument("--cache", type=Path, default=Path("/home/warby/.local/share/PokeForce/assets/client-cache.pfck"))
+    parser.add_argument("--source-zip", type=Path, required=True)
+    parser.add_argument("--cache", type=Path, required=True)
     parser.add_argument("--output", type=Path, default=Path("public/pokeforce/map.json"))
     args = parser.parse_args()
     export(args.source_zip, args.cache, args.output)

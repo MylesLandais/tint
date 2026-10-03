@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="450" viewBox="0 0 300 450">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1f2a44"/>
+      <stop offset="100%" stop-color="#c45c26"/>
+    </linearGradient>
+  </defs>
+  <rect width="300" height="450" fill="url(#g)"/>
+  <circle cx="150" cy="170" r="64" fill="#ffffff22"/>
+  <text x="150" y="340" text-anchor="middle" font-family="system-ui,sans-serif" font-size="30" font-weight="700" fill="#fff">Night Harbor</text>
+  <text x="150" y="372" text-anchor="middle" font-family="system-ui,sans-serif" font-size="16" fill="#ffffffcc">Sample poster</text>
+</svg>

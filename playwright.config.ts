@@ -13,7 +13,7 @@ export default defineConfig({
     video: 'retain-on-failure',
     screenshot: 'only-on-failure',
     launchOptions: {
-      executablePath: '/etc/profiles/per-user/warby/bin/chromium',
+      executablePath: process.env.CHROMIUM_PATH,
       args: ['--autoplay-policy=no-user-gesture-required'],
     },
   },

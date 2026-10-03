@@ -5,7 +5,7 @@ fixture is stable across runs and reviewable as a diff.
 """
 import json, pathlib, re, hashlib
 
-ROOT = pathlib.Path('/home/warby/Workspace-git/tint')
+ROOT = pathlib.Path(__file__).resolve().parent.parent
 fixture = (ROOT / 'src/docs/table/infrasound-fixture.ts').read_text()
 
 # Pull (id, name, track count) triples in document order.
@@ -15,8 +15,8 @@ for m in re.finditer(
     fixture, re.S):
     artists.append((m.group(1), m.group(2), int(m.group(3))))
 
-# Distributions lifted from the Vault's Mixxx crate so the shape of the
-# synthetic data matches the real library it stands in for.
+# Distributions chosen so the shape of the
+# synthetic data resembles a typical DJ library.
 BPM = [92, 98, 100, 108, 128, 132, 140, 142, 150, 155, 160, 174]
 KEYS = ['4A','5A','3B','6A','9A','11A','3A','7B','2A','8A','10A','12A','1A','5B','8B']
 ENERGY = [1,1,1,1,5,5,5,2,3,4,4,5]        # weighted to the observed 1/5 poles
@@ -69,10 +69,10 @@ lines = [
     '/*',
     ' * SYNTHETIC DATA — not a real catalog.',
     ' *',
-    ' * The Infrasound lineup and the Vault\'s Mixxx crate share exactly one artist,',
-    ' * so no real artist-to-track join exists. These tracks are generated',
+    ' * The demo artists are fictional, so no real artist-to-track join exists.',
+    ' * These tracks are generated',
     ' * deterministically from each artist id, with BPM, Camelot key, energy, and',
-    ' * duration drawn from the distributions of the real crate so the table demo',
+    ' * duration drawn from plausible distributions so the table demo',
     ' * sorts and filters against plausible shapes. Track titles are combinatorial',
     ' * and name nothing that exists.',
     ' *',

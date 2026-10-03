@@ -66,7 +66,7 @@
       <span aria-hidden="true">{playing ? 'Ⅱ' : '▶'}</span><span>{playing ? 'Pause' : 'Play'}</span>
     </button>
     <button type="button" aria-label="Skip forward 10 seconds" onclick={() => skip(10)}><span aria-hidden="true">↷</span></button>
-    <label class="speed"><span class="sr-only">Playback speed</span><select aria-label="Playback speed" value={rate} onchange={(event) => { rate = Number(event.currentTarget.value) }}>
+    <label class="speed"><span class="sr-only">Playback speed</span><select class="tint-select" aria-label="Playback speed" value={rate} onchange={(event) => { rate = Number(event.currentTarget.value) }}>
       {#each rates as value (value)}<option value={value}>{value}×</option>{/each}
     </select></label>
   </div>

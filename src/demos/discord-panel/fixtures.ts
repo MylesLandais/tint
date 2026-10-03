@@ -34,10 +34,10 @@ export const PANEL_GUILDS: readonly PanelGuild[] = [
   { id: NEBULA_GUILD_ID, name: 'system-nebula', channel: 'ops-voice', channels: ['general', 'agent-lab', 'mod-log', 'incidents'] },
 ]
 
-export const SIGNED_IN_USER = 'maya#4417'
+export const SIGNED_IN_USER = 'avery#4417'
 
 /** The people that appear in the fixtures. Agents are named by their scripts. */
-const HUMANS = ['maya#4417', 'river#0021', 'sam#7712', 'ilya#3390', 'noor#5501'] as const
+const HUMANS = ['avery#4417', 'river#0021', 'sam#7712', 'ilya#3390', 'noor#5501'] as const
 
 /**
  * `mulberry32` — 32 bits of state, uniform enough for fixture shaping and
@@ -117,7 +117,7 @@ const SCRIPTS: readonly CommandScript[] = [
   {
     command: 'ask',
     subcommand: null,
-    agent: 'maya-agent',
+    agent: 'avery-agent',
     operationName: null,
     weight: 5,
     // The interesting fixture: `/ask` fails far more than anything else, and
@@ -129,11 +129,11 @@ const SCRIPTS: readonly CommandScript[] = [
     optionsFor: (random) => ({ question: pick(random, QUESTIONS) }),
     turns: [
       { role: 'user', name: 'interaction.receive', service: 'discord-gateway', kind: 'server', ms: 9, text: '/ask question:…' },
-      { role: 'agent', name: 'agent.plan', service: 'maya-agent', kind: 'internal', ms: 180, text: 'The answer is probably in the archive rather than in this channel. Searching there first.' },
+      { role: 'agent', name: 'agent.plan', service: 'avery-agent', kind: 'internal', ms: 180, text: 'The answer is probably in the archive rather than in this channel. Searching there first.' },
       { role: 'model', name: 'llm.completion', service: 'llm-gateway', kind: 'client', ms: 640, text: 'Drafted a plan: search the archive, then quote the decision with its message link.' },
       { role: 'tool', name: 'archive.search', service: 'archivist', kind: 'client', ms: 910, text: 'Matched 3 messages in #incidents from the last 14 days.' },
       { role: 'model', name: 'llm.answer', service: 'llm-gateway', kind: 'client', ms: 720, text: 'We raised the resolver timeout to 8s and kept the retry budget at 3.' },
-      { role: 'agent', name: 'interaction.reply', service: 'maya-agent', kind: 'internal', ms: 15, text: 'Posted the answer with a link to the original thread.' },
+      { role: 'agent', name: 'interaction.reply', service: 'avery-agent', kind: 'internal', ms: 15, text: 'Posted the answer with a link to the original thread.' },
     ],
   },
   {

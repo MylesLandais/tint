@@ -2,8 +2,8 @@ import type { MusicLibraryArtist } from './music-types'
 
 export const infrasoundArtists: MusicLibraryArtist[] = [
   {
-    "id": "abstrakt-sonance",
-    "name": "Abstrakt Sonance",
+    "id": "aurora-array",
+    "name": "Aurora Array",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -12,17 +12,17 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 14
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/abstrakt-sonance/503794788",
-      "bandcamp": "https://abstraktsonance.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/abstrakt-sonance/222807",
-      "soundcloud": "https://soundcloud.com/ABSTRAKTSONANCE",
-      "spotify": "https://open.spotify.com/artist/00qKBesewdWy5l0bpMdosp",
-      "youtube": "https://www.youtube.com/@abstraktsonance"
+      "appleMusic": "https://applemusic.example.test/aurora-array",
+      "bandcamp": "https://bandcamp.example.test/aurora-array",
+      "beatport": "https://beatport.example.test/aurora-array",
+      "soundcloud": "https://soundcloud.example.test/aurora-array",
+      "spotify": "https://spotify.example.test/aurora-array",
+      "youtube": "https://youtube.example.test/aurora-array"
     }
   },
   {
-    "id": "air-castles",
-    "name": "Air Castles",
+    "id": "aurora-bloom",
+    "name": "Aurora Bloom",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -31,16 +31,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 3
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/air-castles/1713382480",
-      "bandcamp": "https://aircastlessound.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/air-castles/1181092",
-      "soundcloud": "https://soundcloud.com/air_castles",
-      "spotify": "https://open.spotify.com/artist/0ghDsnXtLk8hkK2naXMtMu"
+      "appleMusic": "https://applemusic.example.test/aurora-bloom",
+      "bandcamp": "https://bandcamp.example.test/aurora-bloom",
+      "beatport": "https://beatport.example.test/aurora-bloom",
+      "soundcloud": "https://soundcloud.example.test/aurora-bloom",
+      "spotify": "https://spotify.example.test/aurora-bloom"
     }
   },
   {
-    "id": "akasha-experience",
-    "name": "Akasha Experience",
+    "id": "aurora-choir",
+    "name": "Aurora Choir",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -49,17 +49,17 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 2
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/akasha-experience/786678425",
-      "bandcamp": "https://akashaexperience.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/akasha-experience/381312",
-      "soundcloud": "https://soundcloud.com/akashaexperience",
-      "spotify": "https://open.spotify.com/artist/0psot1vPI9xd2aYYhNZwRT",
-      "youtube": "https://www.youtube.com/@akashaexperience"
+      "appleMusic": "https://applemusic.example.test/aurora-choir",
+      "bandcamp": "https://bandcamp.example.test/aurora-choir",
+      "beatport": "https://beatport.example.test/aurora-choir",
+      "soundcloud": "https://soundcloud.example.test/aurora-choir",
+      "spotify": "https://spotify.example.test/aurora-choir",
+      "youtube": "https://youtube.example.test/aurora-choir"
     }
   },
   {
-    "id": "allen-mock",
-    "name": "Allen Mock",
+    "id": "aurora-drift",
+    "name": "Aurora Drift",
     "collectionState": "wishlist",
     "confidence": "exact-name",
     "catalog": {
@@ -68,16 +68,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 16
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/allen-mock/1250688439",
-      "bandcamp": "https://allenmock.bandcamp.com/",
-      "beatport": "https://www.beatport.com/artist/allen-mock/626366",
-      "soundcloud": "https://soundcloud.com/allenmock",
-      "spotify": "https://open.spotify.com/artist/1FWowTsaucHkPDgmAGGk4T"
+      "appleMusic": "https://applemusic.example.test/aurora-drift",
+      "bandcamp": "https://bandcamp.example.test/aurora-drift",
+      "beatport": "https://beatport.example.test/aurora-drift",
+      "soundcloud": "https://soundcloud.example.test/aurora-drift",
+      "spotify": "https://spotify.example.test/aurora-drift"
     }
   },
   {
-    "id": "antithesis",
-    "name": "Antithesis",
+    "id": "aurora-engine",
+    "name": "Aurora Engine",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -86,14 +86,14 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 8
     },
     "platforms": {
-      "beatport": "https://www.beatport.com/artist/antithesis/426167",
-      "soundcloud": "https://soundcloud.com/antithesis612",
-      "youtube": "https://www.youtube.com/@antithesis.612"
+      "beatport": "https://beatport.example.test/aurora-engine",
+      "soundcloud": "https://soundcloud.example.test/aurora-engine",
+      "youtube": "https://youtube.example.test/aurora-engine"
     }
   },
   {
-    "id": "audio-goblin",
-    "name": "Audio Goblin",
+    "id": "aurora-field",
+    "name": "Aurora Field",
     "collectionState": "unreviewed",
     "confidence": "unresolved",
     "catalog": {
@@ -102,13 +102,13 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 0
     },
     "platforms": {
-      "soundcloud": "https://soundcloud.com/audiogoblin",
-      "spotify": "https://open.spotify.com/artist/1k0vbn7dINxbK7dgFntbqi"
+      "soundcloud": "https://soundcloud.example.test/aurora-field",
+      "spotify": "https://spotify.example.test/aurora-field"
     }
   },
   {
-    "id": "aznadel",
-    "name": "Aznadel",
+    "id": "aurora-garden",
+    "name": "Aurora Garden",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -117,17 +117,17 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 1
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/aznadel/1510652640",
-      "bandcamp": "https://aznadel.bandcamp.com/",
-      "beatport": "https://www.beatport.com/artist/aznadel/964442",
-      "soundcloud": "https://soundcloud.com/aznadelmusic",
-      "spotify": "https://open.spotify.com/artist/3fiju1KQqlFWc2VSTGsDyA",
-      "youtube": "https://www.youtube.com/channel/UCx6S5z_CjSX010C6wZR4TXA"
+      "appleMusic": "https://applemusic.example.test/aurora-garden",
+      "bandcamp": "https://bandcamp.example.test/aurora-garden",
+      "beatport": "https://beatport.example.test/aurora-garden",
+      "soundcloud": "https://soundcloud.example.test/aurora-garden",
+      "spotify": "https://spotify.example.test/aurora-garden",
+      "youtube": "https://youtube.example.test/aurora-garden"
     }
   },
   {
-    "id": "basura",
-    "name": "Basura",
+    "id": "aurora-harp",
+    "name": "Aurora Harp",
     "collectionState": "unreviewed",
     "confidence": "unresolved",
     "catalog": {
@@ -136,14 +136,14 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 0
     },
     "platforms": {
-      "bandcamp": "https://basurasounds.bandcamp.com",
-      "soundcloud": "https://soundcloud.com/basurasounds",
-      "spotify": "https://open.spotify.com/artist/0AlSU3RfnwHP1vWl3Zb2oS"
+      "bandcamp": "https://bandcamp.example.test/aurora-harp",
+      "soundcloud": "https://soundcloud.example.test/aurora-harp",
+      "spotify": "https://spotify.example.test/aurora-harp"
     }
   },
   {
-    "id": "bwompster",
-    "name": "Bwompster",
+    "id": "aurora-index",
+    "name": "Aurora Index",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -152,12 +152,12 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 5
     },
     "platforms": {
-      "beatport": "https://www.beatport.com/artist/bwompster/1250963"
+      "beatport": "https://beatport.example.test/aurora-index"
     }
   },
   {
-    "id": "blurrd-vzn",
-    "name": "Blurrd Vzn",
+    "id": "aurora-joint",
+    "name": "Aurora Joint",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -166,15 +166,15 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 15
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/blurrd-vzn/1494320034",
-      "beatport": "https://www.beatport.com/artist/blurrd-vzn/837124",
-      "soundcloud": "https://soundcloud.com/blurrd_vzn",
-      "spotify": "https://open.spotify.com/artist/1Un7dSWqDulk2W0L0QD8vI"
+      "appleMusic": "https://applemusic.example.test/aurora-joint",
+      "beatport": "https://beatport.example.test/aurora-joint",
+      "soundcloud": "https://soundcloud.example.test/aurora-joint",
+      "spotify": "https://spotify.example.test/aurora-joint"
     }
   },
   {
-    "id": "bommer",
-    "name": "Bommer",
+    "id": "basalt-array",
+    "name": "Basalt Array",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -183,16 +183,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 19
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/bommer/149258505",
-      "bandcamp": "https://bommerdubstep.bandcamp.com/",
-      "beatport": "https://www.beatport.com/artist/bommer/154624",
-      "soundcloud": "https://soundcloud.com/bommer_dubstep",
-      "spotify": "https://open.spotify.com/artist/1SmcVs1Kj8P4OT2D8uIiMx"
+      "appleMusic": "https://applemusic.example.test/basalt-array",
+      "bandcamp": "https://bandcamp.example.test/basalt-array",
+      "beatport": "https://beatport.example.test/basalt-array",
+      "soundcloud": "https://soundcloud.example.test/basalt-array",
+      "spotify": "https://spotify.example.test/basalt-array"
     }
   },
   {
-    "id": "bt",
-    "name": "BT",
+    "id": "basalt-bloom",
+    "name": "Basalt Bloom",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -201,17 +201,17 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 13
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/bt/187026",
-      "bandcamp": "https://songsofbt.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/bt/1786",
-      "soundcloud": "https://soundcloud.com/bt",
-      "spotify": "https://open.spotify.com/artist/64MoFdq8ORI3V98AR5SPWL",
-      "youtube": "https://www.youtube.com/channel/UCGZD2HPiSnqOvhPvxGP5MQQ"
+      "appleMusic": "https://applemusic.example.test/basalt-bloom",
+      "bandcamp": "https://bandcamp.example.test/basalt-bloom",
+      "beatport": "https://beatport.example.test/basalt-bloom",
+      "soundcloud": "https://soundcloud.example.test/basalt-bloom",
+      "spotify": "https://spotify.example.test/basalt-bloom",
+      "youtube": "https://youtube.example.test/basalt-bloom"
     }
   },
   {
-    "id": "budge",
-    "name": "Budge",
+    "id": "basalt-choir",
+    "name": "Basalt Choir",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -220,16 +220,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 3
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/budge/1710018879",
-      "bandcamp": "https://budgeaudio.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/budge/80951",
-      "soundcloud": "https://soundcloud.com/budgeaudio",
-      "spotify": "https://open.spotify.com/artist/7Aik07fJOjrGu1djJiIelq"
+      "appleMusic": "https://applemusic.example.test/basalt-choir",
+      "bandcamp": "https://bandcamp.example.test/basalt-choir",
+      "beatport": "https://beatport.example.test/basalt-choir",
+      "soundcloud": "https://soundcloud.example.test/basalt-choir",
+      "spotify": "https://spotify.example.test/basalt-choir"
     }
   },
   {
-    "id": "buunshin",
-    "name": "Buunshin",
+    "id": "basalt-drift",
+    "name": "Basalt Drift",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -238,16 +238,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 13
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/buunshin/1456315911",
-      "beatport": "https://www.beatport.com/artist/buunshin/743621",
-      "soundcloud": "https://soundcloud.com/buunshin",
-      "spotify": "https://open.spotify.com/artist/5ucX3eT8wlEQGRVwUyeqBj",
-      "youtube": "https://www.youtube.com/channel/UCAZbY63CumSmgJowgdL7lcg"
+      "appleMusic": "https://applemusic.example.test/basalt-drift",
+      "beatport": "https://beatport.example.test/basalt-drift",
+      "soundcloud": "https://soundcloud.example.test/basalt-drift",
+      "spotify": "https://spotify.example.test/basalt-drift",
+      "youtube": "https://youtube.example.test/basalt-drift"
     }
   },
   {
-    "id": "casey-club",
-    "name": "Casey Club",
+    "id": "basalt-engine",
+    "name": "Basalt Engine",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -256,16 +256,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 13
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/casey-club/1732526802",
-      "bandcamp": "https://caseyclub.bandcamp.com/",
-      "beatport": "https://www.beatport.com/artist/casey-club/1189100",
-      "soundcloud": "https://soundcloud.com/caseyclubofficial",
-      "spotify": "https://open.spotify.com/artist/2bmnpyZiHHOCrU988FwaJj"
+      "appleMusic": "https://applemusic.example.test/basalt-engine",
+      "bandcamp": "https://bandcamp.example.test/basalt-engine",
+      "beatport": "https://beatport.example.test/basalt-engine",
+      "soundcloud": "https://soundcloud.example.test/basalt-engine",
+      "spotify": "https://spotify.example.test/basalt-engine"
     }
   },
   {
-    "id": "centauri",
-    "name": "Centauri",
+    "id": "basalt-field",
+    "name": "Basalt Field",
     "collectionState": "wishlist",
     "confidence": "catalog-validated",
     "catalog": {
@@ -274,15 +274,15 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 0
     },
     "platforms": {
-      "bandcamp": "https://centauridubstep.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/centauri/635591",
-      "soundcloud": "https://soundcloud.com/centauridub",
-      "spotify": "https://open.spotify.com/artist/405uSsIO5R0UFHBP0wJ3Gs"
+      "bandcamp": "https://bandcamp.example.test/basalt-field",
+      "beatport": "https://beatport.example.test/basalt-field",
+      "soundcloud": "https://soundcloud.example.test/basalt-field",
+      "spotify": "https://spotify.example.test/basalt-field"
     }
   },
   {
-    "id": "chef-boyarbeatz",
-    "name": "Chef Boyarbeatz",
+    "id": "basalt-garden",
+    "name": "Basalt Garden",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -291,14 +291,14 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 12
     },
     "platforms": {
-      "beatport": "https://www.beatport.com/artist/chef-boyarbeatz/737037",
-      "soundcloud": "https://soundcloud.com/chef_boyarbeatz",
-      "spotify": "https://open.spotify.com/artist/7nSk3iFPogRCOokrMliejt"
+      "beatport": "https://beatport.example.test/basalt-garden",
+      "soundcloud": "https://soundcloud.example.test/basalt-garden",
+      "spotify": "https://spotify.example.test/basalt-garden"
     }
   },
   {
-    "id": "chez",
-    "name": "Chez",
+    "id": "basalt-harp",
+    "name": "Basalt Harp",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -307,16 +307,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 23
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/chez/1096993880",
-      "bandcamp": "https://chez4prez.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/chez/130457",
-      "soundcloud": "https://soundcloud.com/chez_muzik",
-      "spotify": "https://open.spotify.com/artist/78I7UhuidMjjb7X0XsRtic"
+      "appleMusic": "https://applemusic.example.test/basalt-harp",
+      "bandcamp": "https://bandcamp.example.test/basalt-harp",
+      "beatport": "https://beatport.example.test/basalt-harp",
+      "soundcloud": "https://soundcloud.example.test/basalt-harp",
+      "spotify": "https://spotify.example.test/basalt-harp"
     }
   },
   {
-    "id": "comisar",
-    "name": "Comisar",
+    "id": "basalt-index",
+    "name": "Basalt Index",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -325,16 +325,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 7
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/comisar/1335280244",
-      "bandcamp": "https://comisar.bandcamp.com/",
-      "beatport": "https://www.beatport.com/artist/comisar/670998",
-      "soundcloud": "https://soundcloud.com/comisar",
-      "spotify": "https://open.spotify.com/artist/1K9PCWYQ7Xh5MCzHoZuv7y"
+      "appleMusic": "https://applemusic.example.test/basalt-index",
+      "bandcamp": "https://bandcamp.example.test/basalt-index",
+      "beatport": "https://beatport.example.test/basalt-index",
+      "soundcloud": "https://soundcloud.example.test/basalt-index",
+      "spotify": "https://spotify.example.test/basalt-index"
     }
   },
   {
-    "id": "crawdad-sniper",
-    "name": "Crawdad Sniper",
+    "id": "basalt-joint",
+    "name": "Basalt Joint",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -343,16 +343,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 8
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/crawdad-sniper/1555501570",
-      "bandcamp": "https://crawdadsniper.bandcamp.com/",
-      "beatport": "https://www.beatport.com/artist/crawdad-sniper/1001620",
-      "soundcloud": "https://soundcloud.com/crawdadsniper",
-      "spotify": "https://open.spotify.com/artist/4BRvJIbFx14bFQETd29QO2"
+      "appleMusic": "https://applemusic.example.test/basalt-joint",
+      "bandcamp": "https://bandcamp.example.test/basalt-joint",
+      "beatport": "https://beatport.example.test/basalt-joint",
+      "soundcloud": "https://soundcloud.example.test/basalt-joint",
+      "spotify": "https://spotify.example.test/basalt-joint"
     }
   },
   {
-    "id": "daggz",
-    "name": "Daggz",
+    "id": "cinder-array",
+    "name": "Cinder Array",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -361,16 +361,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 10
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/daggz/1404737668",
-      "bandcamp": "https://daggz.bandcamp.com/",
-      "beatport": "https://www.beatport.com/artist/daggz/826864",
-      "soundcloud": "https://soundcloud.com/daggz",
-      "spotify": "https://open.spotify.com/artist/3S5aXjH9pDeyD7BDMkLbiF"
+      "appleMusic": "https://applemusic.example.test/cinder-array",
+      "bandcamp": "https://bandcamp.example.test/cinder-array",
+      "beatport": "https://beatport.example.test/cinder-array",
+      "soundcloud": "https://soundcloud.example.test/cinder-array",
+      "spotify": "https://spotify.example.test/cinder-array"
     }
   },
   {
-    "id": "darklord-gob",
-    "name": "Darklord Gob",
+    "id": "cinder-bloom",
+    "name": "Cinder Bloom",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -379,17 +379,17 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 3
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/darklord-gob/1170630690",
-      "bandcamp": "https://darklordgob.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/darklord-gob/583303",
-      "soundcloud": "https://soundcloud.com/dark-lord-gob",
-      "spotify": "https://open.spotify.com/artist/5DN3HBwvuYdPnDyXgeaFoN",
-      "youtube": "https://www.youtube.com/@darklordgob2029"
+      "appleMusic": "https://applemusic.example.test/cinder-bloom",
+      "bandcamp": "https://bandcamp.example.test/cinder-bloom",
+      "beatport": "https://beatport.example.test/cinder-bloom",
+      "soundcloud": "https://soundcloud.example.test/cinder-bloom",
+      "spotify": "https://spotify.example.test/cinder-bloom",
+      "youtube": "https://youtube.example.test/cinder-bloom"
     }
   },
   {
-    "id": "dela-moon",
-    "name": "Dela Moon",
+    "id": "cinder-choir",
+    "name": "Cinder Choir",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -398,16 +398,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 17
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/dela-moon/1451705464",
-      "beatport": "https://www.beatport.com/artist/dela-moon/748195",
-      "soundcloud": "https://soundcloud.com/delamoonmusic",
-      "spotify": "https://open.spotify.com/artist/4kqDBfCR1fR9XiBg7kuGWp",
-      "youtube": "https://www.youtube.com/delamoonmusic"
+      "appleMusic": "https://applemusic.example.test/cinder-choir",
+      "beatport": "https://beatport.example.test/cinder-choir",
+      "soundcloud": "https://soundcloud.example.test/cinder-choir",
+      "spotify": "https://spotify.example.test/cinder-choir",
+      "youtube": "https://youtube.example.test/cinder-choir"
     }
   },
   {
-    "id": "detox-unit",
-    "name": "Detox Unit",
+    "id": "cinder-drift",
+    "name": "Cinder Drift",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -416,16 +416,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 3
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/detox-unit/1135189359",
-      "bandcamp": "https://detoxunit.bandcamp.com/",
-      "beatport": "https://www.beatport.com/artist/detox-unit/565088",
-      "soundcloud": "https://soundcloud.com/detoxunit",
-      "spotify": "https://open.spotify.com/artist/1avvbQAURNF8oTtXn40NHI"
+      "appleMusic": "https://applemusic.example.test/cinder-drift",
+      "bandcamp": "https://bandcamp.example.test/cinder-drift",
+      "beatport": "https://beatport.example.test/cinder-drift",
+      "soundcloud": "https://soundcloud.example.test/cinder-drift",
+      "spotify": "https://spotify.example.test/cinder-drift"
     }
   },
   {
-    "id": "detre",
-    "name": "Dêtre",
+    "id": "cinder-engine",
+    "name": "Cinder Engine",
     "collectionState": "unreviewed",
     "confidence": "unresolved",
     "catalog": {
@@ -434,15 +434,15 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 0
     },
     "platforms": {
-      "bandcamp": "https://detrebeats.bandcamp.com",
-      "soundcloud": "https://soundcloud.com/detrebeats",
-      "spotify": "https://open.spotify.com/artist/22H63n9LhxdWcljuWiNNGT",
-      "youtube": "https://www.youtube.com/channel/UCJuPhMxln3c2LBcMWKSUxHg"
+      "bandcamp": "https://bandcamp.example.test/cinder-engine",
+      "soundcloud": "https://soundcloud.example.test/cinder-engine",
+      "spotify": "https://spotify.example.test/cinder-engine",
+      "youtube": "https://youtube.example.test/cinder-engine"
     }
   },
   {
-    "id": "distinct-motive",
-    "name": "Distinct Motive",
+    "id": "cinder-field",
+    "name": "Cinder Field",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -451,17 +451,17 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 13
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/distinct-motive/898692444",
-      "bandcamp": "https://distinctmotive.bandcamp.com/",
-      "beatport": "https://www.beatport.com/artist/distinct-motive/421989",
-      "soundcloud": "https://soundcloud.com/distinctmotive",
-      "spotify": "https://open.spotify.com/artist/5KfqHG8bhfI18ZuTzZSdSM",
-      "youtube": "https://www.youtube.com/@DISTINCTMOTIVE"
+      "appleMusic": "https://applemusic.example.test/cinder-field",
+      "bandcamp": "https://bandcamp.example.test/cinder-field",
+      "beatport": "https://beatport.example.test/cinder-field",
+      "soundcloud": "https://soundcloud.example.test/cinder-field",
+      "spotify": "https://spotify.example.test/cinder-field",
+      "youtube": "https://youtube.example.test/cinder-field"
     }
   },
   {
-    "id": "dreamfaerie",
-    "name": "Dreamfaerie",
+    "id": "cinder-garden",
+    "name": "Cinder Garden",
     "collectionState": "unreviewed",
     "confidence": "unresolved",
     "catalog": {
@@ -470,12 +470,12 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 0
     },
     "platforms": {
-      "soundcloud": "https://soundcloud.com/dreamfaerie"
+      "soundcloud": "https://soundcloud.example.test/cinder-garden"
     }
   },
   {
-    "id": "easyjack",
-    "name": "Easyjack",
+    "id": "cinder-harp",
+    "name": "Cinder Harp",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -484,15 +484,15 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 3
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/easyjack/1235755049",
-      "beatport": "https://www.beatport.com/artist/easyjack/709188",
-      "soundcloud": "https://soundcloud.com/easyjackofficial",
-      "spotify": "https://open.spotify.com/artist/2UP0s0SrbczroPPjqGfStn"
+      "appleMusic": "https://applemusic.example.test/cinder-harp",
+      "beatport": "https://beatport.example.test/cinder-harp",
+      "soundcloud": "https://soundcloud.example.test/cinder-harp",
+      "spotify": "https://spotify.example.test/cinder-harp"
     }
   },
   {
-    "id": "probe1",
-    "name": "Probe1",
+    "id": "cinder-index",
+    "name": "Cinder Index",
     "collectionState": "unreviewed",
     "confidence": "unresolved",
     "catalog": {
@@ -503,8 +503,8 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
     "platforms": {}
   },
   {
-    "id": "fake-two-piece",
-    "name": "Fake Two Piece",
+    "id": "cinder-joint",
+    "name": "Cinder Joint",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -513,16 +513,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 14
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/fake-two-piece/1667377835",
-      "bandcamp": "https://faketwopiece.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/fake-two-piece/1105930",
-      "soundcloud": "https://soundcloud.com/faketwopiece",
-      "spotify": "https://open.spotify.com/artist/27IFgyXx2g8s6PP7a6LDya"
+      "appleMusic": "https://applemusic.example.test/cinder-joint",
+      "bandcamp": "https://bandcamp.example.test/cinder-joint",
+      "beatport": "https://beatport.example.test/cinder-joint",
+      "soundcloud": "https://soundcloud.example.test/cinder-joint",
+      "spotify": "https://spotify.example.test/cinder-joint"
     }
   },
   {
-    "id": "flowdan",
-    "name": "Flowdan",
+    "id": "dovetail-array",
+    "name": "Dovetail Array",
     "collectionState": "wishlist",
     "confidence": "exact-name",
     "catalog": {
@@ -531,16 +531,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 17
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/flowdan/218083766",
-      "bandcamp": "https://flowdanuk.bandcamp.com/album/welcome-to-london-j-sparrow-remix",
-      "beatport": "https://www.beatport.com/artist/flowdan/188703",
-      "soundcloud": "https://soundcloud.com/bigflowdan",
-      "spotify": "https://open.spotify.com/artist/07CimrZi5vs9iEao47TNQ4"
+      "appleMusic": "https://applemusic.example.test/dovetail-array",
+      "bandcamp": "https://bandcamp.example.test/dovetail-array",
+      "beatport": "https://beatport.example.test/dovetail-array",
+      "soundcloud": "https://soundcloud.example.test/dovetail-array",
+      "spotify": "https://spotify.example.test/dovetail-array"
     }
   },
   {
-    "id": "freddy-todd",
-    "name": "Freddy Todd",
+    "id": "dovetail-bloom",
+    "name": "Dovetail Bloom",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -549,17 +549,17 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 9
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/freddy-todd/338273901",
-      "bandcamp": "https://freddytodd.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/freddy-todd/173450",
-      "soundcloud": "https://soundcloud.com/freddytodd",
-      "spotify": "https://open.spotify.com/artist/4BwM43tn51Mq0Dn8NMB5zk",
-      "youtube": "https://www.youtube.com/@freddytoddmusic"
+      "appleMusic": "https://applemusic.example.test/dovetail-bloom",
+      "bandcamp": "https://bandcamp.example.test/dovetail-bloom",
+      "beatport": "https://beatport.example.test/dovetail-bloom",
+      "soundcloud": "https://soundcloud.example.test/dovetail-bloom",
+      "spotify": "https://spotify.example.test/dovetail-bloom",
+      "youtube": "https://youtube.example.test/dovetail-bloom"
     }
   },
   {
-    "id": "globular",
-    "name": "Globular",
+    "id": "dovetail-choir",
+    "name": "Dovetail Choir",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -568,17 +568,17 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 14
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/globular/587848759",
-      "bandcamp": "https://globular.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/globular/306417",
-      "soundcloud": "https://soundcloud.com/globular",
-      "spotify": "https://open.spotify.com/artist/6RVS3niyrqu7427m9moJ75",
-      "youtube": "https://www.youtube.com/channel/UC-2MMAf4Qa5t7azTrhMxh9w"
+      "appleMusic": "https://applemusic.example.test/dovetail-choir",
+      "bandcamp": "https://bandcamp.example.test/dovetail-choir",
+      "beatport": "https://beatport.example.test/dovetail-choir",
+      "soundcloud": "https://soundcloud.example.test/dovetail-choir",
+      "spotify": "https://spotify.example.test/dovetail-choir",
+      "youtube": "https://youtube.example.test/dovetail-choir"
     }
   },
   {
-    "id": "greenwolve",
-    "name": "Greenwolve",
+    "id": "dovetail-drift",
+    "name": "Dovetail Drift",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -587,16 +587,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 12
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/greenwolve/880017334",
-      "beatport": "https://www.beatport.com/artist/greenwolve/410651",
-      "soundcloud": "https://soundcloud.com/greenwolve",
-      "spotify": "https://open.spotify.com/artist/4ulc2OL493K5H9HcalHOtB",
-      "youtube": "https://www.youtube.com/channel/UCwYmw4UAN6W78NULfXImW4A"
+      "appleMusic": "https://applemusic.example.test/dovetail-drift",
+      "beatport": "https://beatport.example.test/dovetail-drift",
+      "soundcloud": "https://soundcloud.example.test/dovetail-drift",
+      "spotify": "https://spotify.example.test/dovetail-drift",
+      "youtube": "https://youtube.example.test/dovetail-drift"
     }
   },
   {
-    "id": "haywyre",
-    "name": "Haywyre",
+    "id": "dovetail-engine",
+    "name": "Dovetail Engine",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -605,17 +605,17 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 11
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/haywyre/338401950",
-      "bandcamp": "https://haywyre.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/haywyre/231618",
-      "soundcloud": "https://soundcloud.com/haywyre",
-      "spotify": "https://open.spotify.com/artist/7aUSp5cOZlwEtd5zPC795k",
-      "youtube": "https://www.youtube.com/channel/UCxGKfJ-Xf8lgdX9PC00YMrA"
+      "appleMusic": "https://applemusic.example.test/dovetail-engine",
+      "bandcamp": "https://bandcamp.example.test/dovetail-engine",
+      "beatport": "https://beatport.example.test/dovetail-engine",
+      "soundcloud": "https://soundcloud.example.test/dovetail-engine",
+      "spotify": "https://spotify.example.test/dovetail-engine",
+      "youtube": "https://youtube.example.test/dovetail-engine"
     }
   },
   {
-    "id": "herbalistek",
-    "name": "Herbalistek",
+    "id": "dovetail-field",
+    "name": "Dovetail Field",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -624,16 +624,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 12
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/herbalistek/1359309108",
-      "bandcamp": "https://herbalistekmusic.bandcamp.com/",
-      "beatport": "https://www.beatport.com/artist/herbalistek/742585",
-      "soundcloud": "https://soundcloud.com/herbalistekmusic",
-      "spotify": "https://open.spotify.com/artist/4z127TOoCMB8oNtULhoYRd"
+      "appleMusic": "https://applemusic.example.test/dovetail-field",
+      "bandcamp": "https://bandcamp.example.test/dovetail-field",
+      "beatport": "https://beatport.example.test/dovetail-field",
+      "soundcloud": "https://soundcloud.example.test/dovetail-field",
+      "spotify": "https://spotify.example.test/dovetail-field"
     }
   },
   {
-    "id": "hurtbox",
-    "name": "Hurtbox",
+    "id": "dovetail-garden",
+    "name": "Dovetail Garden",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -642,15 +642,15 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 4
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/hurtbox/1539992724",
-      "beatport": "https://www.beatport.com/artist/hurtbox/936853",
-      "soundcloud": "https://soundcloud.com/hurtbox",
-      "spotify": "https://open.spotify.com/artist/7rGhKsxlC6oLrCZmvh9rX6"
+      "appleMusic": "https://applemusic.example.test/dovetail-garden",
+      "beatport": "https://beatport.example.test/dovetail-garden",
+      "soundcloud": "https://soundcloud.example.test/dovetail-garden",
+      "spotify": "https://spotify.example.test/dovetail-garden"
     }
   },
   {
-    "id": "imanu",
-    "name": "Imanu",
+    "id": "dovetail-harp",
+    "name": "Dovetail Harp",
     "collectionState": "wishlist",
     "confidence": "exact-name",
     "catalog": {
@@ -659,16 +659,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 12
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/imanu/1479218584",
-      "beatport": "https://www.beatport.com/artist/imanu/805561",
-      "soundcloud": "https://soundcloud.com/imanumusic",
-      "spotify": "https://open.spotify.com/artist/5Y7rFm0tiJTVDzGLMzz0W1",
-      "youtube": "https://www.youtube.com/channel/UCGCYRSJbcQhcD5cUMiM5F_A"
+      "appleMusic": "https://applemusic.example.test/dovetail-harp",
+      "beatport": "https://beatport.example.test/dovetail-harp",
+      "soundcloud": "https://soundcloud.example.test/dovetail-harp",
+      "spotify": "https://spotify.example.test/dovetail-harp",
+      "youtube": "https://youtube.example.test/dovetail-harp"
     }
   },
   {
-    "id": "innervines",
-    "name": "Innervines",
+    "id": "dovetail-index",
+    "name": "Dovetail Index",
     "collectionState": "unreviewed",
     "confidence": "unresolved",
     "catalog": {
@@ -677,15 +677,15 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 0
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/innervines/1584479723",
-      "bandcamp": "https://innervines.bandcamp.com",
-      "soundcloud": "https://soundcloud.com/innervinesmusic",
-      "spotify": "https://open.spotify.com/artist/1XufytnEojq4j97Q8EIQtX"
+      "appleMusic": "https://applemusic.example.test/dovetail-index",
+      "bandcamp": "https://bandcamp.example.test/dovetail-index",
+      "soundcloud": "https://soundcloud.example.test/dovetail-index",
+      "spotify": "https://spotify.example.test/dovetail-index"
     }
   },
   {
-    "id": "jiqui",
-    "name": "Jiqui",
+    "id": "dovetail-joint",
+    "name": "Dovetail Joint",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -694,16 +694,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 14
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/jiqui/721077565",
-      "beatport": "https://www.beatport.com/artist/jiqui/364832",
-      "soundcloud": "https://soundcloud.com/jiquidubstep",
-      "spotify": "https://open.spotify.com/artist/4Kf9ZowsOBySwBkaUNh2ut",
-      "youtube": "https://www.youtube.com/channel/UCR5ywx8YEx5_Eta1zn9GqrA"
+      "appleMusic": "https://applemusic.example.test/dovetail-joint",
+      "beatport": "https://beatport.example.test/dovetail-joint",
+      "soundcloud": "https://soundcloud.example.test/dovetail-joint",
+      "spotify": "https://spotify.example.test/dovetail-joint",
+      "youtube": "https://youtube.example.test/dovetail-joint"
     }
   },
   {
-    "id": "jon1st",
-    "name": "Jon1st",
+    "id": "echo-array",
+    "name": "Echo Array",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -712,17 +712,17 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 8
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/jon1st/1071219902",
-      "bandcamp": "https://jon1st.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/jon1st/529546",
-      "soundcloud": "https://soundcloud.com/jon1st",
-      "spotify": "https://open.spotify.com/artist/4rkqsUdw0a2YaadfuNM7zF",
-      "youtube": "https://www.youtube.com/@Jon1st"
+      "appleMusic": "https://applemusic.example.test/echo-array",
+      "bandcamp": "https://bandcamp.example.test/echo-array",
+      "beatport": "https://beatport.example.test/echo-array",
+      "soundcloud": "https://soundcloud.example.test/echo-array",
+      "spotify": "https://spotify.example.test/echo-array",
+      "youtube": "https://youtube.example.test/echo-array"
     }
   },
   {
-    "id": "k-l-o",
-    "name": "K.L.O",
+    "id": "echo-bloom",
+    "name": "Echo Bloom",
     "collectionState": "wishlist",
     "confidence": "exact-name",
     "catalog": {
@@ -731,15 +731,15 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 2
     },
     "platforms": {
-      "bandcamp": "https://klonoise.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/klo/531606",
-      "soundcloud": "https://soundcloud.com/kloofficial",
-      "spotify": "https://open.spotify.com/artist/2IyxcJWCoegO89AAVoBzWb"
+      "bandcamp": "https://bandcamp.example.test/echo-bloom",
+      "beatport": "https://beatport.example.test/echo-bloom",
+      "soundcloud": "https://soundcloud.example.test/echo-bloom",
+      "spotify": "https://spotify.example.test/echo-bloom"
     }
   },
   {
-    "id": "kromminga",
-    "name": "Kromminga",
+    "id": "echo-choir",
+    "name": "Echo Choir",
     "collectionState": "unreviewed",
     "confidence": "unresolved",
     "catalog": {
@@ -748,15 +748,15 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 0
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/kromminga/1869087993",
-      "soundcloud": "https://soundcloud.com/kromminga",
-      "spotify": "https://open.spotify.com/artist/3irLHRrjaIH0VNokNbECwx",
-      "youtube": "https://www.youtube.com/@Kromminga"
+      "appleMusic": "https://applemusic.example.test/echo-choir",
+      "soundcloud": "https://soundcloud.example.test/echo-choir",
+      "spotify": "https://spotify.example.test/echo-choir",
+      "youtube": "https://youtube.example.test/echo-choir"
     }
   },
   {
-    "id": "kumarion",
-    "name": "Kumarion",
+    "id": "echo-drift",
+    "name": "Echo Drift",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -765,14 +765,14 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 15
     },
     "platforms": {
-      "beatport": "https://www.beatport.com/artist/kumarion/766685",
-      "soundcloud": "https://soundcloud.com/kumarionmusic",
-      "spotify": "https://open.spotify.com/artist/1mlAkvaCrzWSxS2ATBZh27"
+      "beatport": "https://beatport.example.test/echo-drift",
+      "soundcloud": "https://soundcloud.example.test/echo-drift",
+      "spotify": "https://spotify.example.test/echo-drift"
     }
   },
   {
-    "id": "land-switcher",
-    "name": "Land Switcher",
+    "id": "echo-engine",
+    "name": "Echo Engine",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -781,17 +781,17 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 5
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/land-switcher/593662891",
-      "bandcamp": "https://landswitcher.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/land-switcher/309943",
-      "soundcloud": "https://soundcloud.com/landswitcher",
-      "spotify": "https://open.spotify.com/artist/4H5HNj0xyR2yz5iWAuqNkT",
-      "youtube": "https://www.youtube.com/user/landswitcher"
+      "appleMusic": "https://applemusic.example.test/echo-engine",
+      "bandcamp": "https://bandcamp.example.test/echo-engine",
+      "beatport": "https://beatport.example.test/echo-engine",
+      "soundcloud": "https://soundcloud.example.test/echo-engine",
+      "spotify": "https://spotify.example.test/echo-engine",
+      "youtube": "https://youtube.example.test/echo-engine"
     }
   },
   {
-    "id": "lb-khariszma",
-    "name": "LB & Khariszma",
+    "id": "echo-field",
+    "name": "Echo Field",
     "collectionState": "unreviewed",
     "confidence": "unresolved",
     "catalog": {
@@ -800,12 +800,12 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 0
     },
     "platforms": {
-      "soundcloud": "https://soundcloud.com/lb-heavytrafficrecordings"
+      "soundcloud": "https://soundcloud.example.test/echo-field"
     }
   },
   {
-    "id": "living-light",
-    "name": "Living Light",
+    "id": "echo-garden",
+    "name": "Echo Garden",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -814,17 +814,17 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 13
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/living-light/740294636",
-      "bandcamp": "https://livinglightmusic.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/living-light/372802",
-      "soundcloud": "https://soundcloud.com/livinglight",
-      "spotify": "https://open.spotify.com/artist/1HeOm5DDuSVXPs1BqeqiKX",
-      "youtube": "https://www.youtube.com/channel/UCrtWr8wBKhSpdbRsClSfY4g"
+      "appleMusic": "https://applemusic.example.test/echo-garden",
+      "bandcamp": "https://bandcamp.example.test/echo-garden",
+      "beatport": "https://beatport.example.test/echo-garden",
+      "soundcloud": "https://soundcloud.example.test/echo-garden",
+      "spotify": "https://spotify.example.test/echo-garden",
+      "youtube": "https://youtube.example.test/echo-garden"
     }
   },
   {
-    "id": "lumasi",
-    "name": "Lumasi",
+    "id": "echo-harp",
+    "name": "Echo Harp",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -833,17 +833,17 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 9
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/lumasi/1273259258",
-      "bandcamp": "https://lumasi.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/lumasi/1004785",
-      "soundcloud": "https://soundcloud.com/lumasi",
-      "spotify": "https://open.spotify.com/artist/0y5sfSvE19x3r3nVUKYbIN",
-      "youtube": "https://www.youtube.com/@LumasiMusic"
+      "appleMusic": "https://applemusic.example.test/echo-harp",
+      "bandcamp": "https://bandcamp.example.test/echo-harp",
+      "beatport": "https://beatport.example.test/echo-harp",
+      "soundcloud": "https://soundcloud.example.test/echo-harp",
+      "spotify": "https://spotify.example.test/echo-harp",
+      "youtube": "https://youtube.example.test/echo-harp"
     }
   },
   {
-    "id": "mala",
-    "name": "Mala",
+    "id": "echo-index",
+    "name": "Echo Index",
     "collectionState": "library",
     "confidence": "exact-name",
     "catalog": {
@@ -852,16 +852,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 22
     },
     "platforms": {
-      "bandcamp": "https://mala-music.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/mala/78954",
-      "soundcloud": "https://soundcloud.com/maladmz",
-      "spotify": "https://open.spotify.com/artist/0QTEYauMG3DrAVPXCYMseu",
-      "youtube": "https://www.youtube.com/user/maladmz"
+      "bandcamp": "https://bandcamp.example.test/echo-index",
+      "beatport": "https://beatport.example.test/echo-index",
+      "soundcloud": "https://soundcloud.example.test/echo-index",
+      "spotify": "https://spotify.example.test/echo-index",
+      "youtube": "https://youtube.example.test/echo-index"
     }
   },
   {
-    "id": "marzanna",
-    "name": "Marzanna",
+    "id": "echo-joint",
+    "name": "Echo Joint",
     "collectionState": "unreviewed",
     "confidence": "unresolved",
     "catalog": {
@@ -870,16 +870,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 0
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/marzanna/1896077986",
-      "bandcamp": "https://marzanna.bandcamp.com",
-      "soundcloud": "https://soundcloud.com/marzannamusic",
-      "spotify": "https://open.spotify.com/artist/3RVvG50NLPlO1nn6OSY53V",
-      "youtube": "https://www.youtube.com/@marzannamusic"
+      "appleMusic": "https://applemusic.example.test/echo-joint",
+      "bandcamp": "https://bandcamp.example.test/echo-joint",
+      "soundcloud": "https://soundcloud.example.test/echo-joint",
+      "spotify": "https://spotify.example.test/echo-joint",
+      "youtube": "https://youtube.example.test/echo-joint"
     }
   },
   {
-    "id": "maxfield",
-    "name": "Maxfield",
+    "id": "fennel-array",
+    "name": "Fennel Array",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -888,16 +888,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 9
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/maxfield/3641527",
-      "bandcamp": "https://maxfield.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/maxfield/70221",
-      "soundcloud": "https://soundcloud.com/jake-maxfield",
-      "spotify": "https://open.spotify.com/artist/6ktUm1QmOT26pUl3DfWBmG"
+      "appleMusic": "https://applemusic.example.test/fennel-array",
+      "bandcamp": "https://bandcamp.example.test/fennel-array",
+      "beatport": "https://beatport.example.test/fennel-array",
+      "soundcloud": "https://soundcloud.example.test/fennel-array",
+      "spotify": "https://spotify.example.test/fennel-array"
     }
   },
   {
-    "id": "medicine-place",
-    "name": "Medicine Place",
+    "id": "fennel-bloom",
+    "name": "Fennel Bloom",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -906,16 +906,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 8
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/medicine-place/1600334026",
-      "bandcamp": "https://medicineplace.bandcamp.com/",
-      "beatport": "https://www.beatport.com/artist/medicine-place/811390",
-      "soundcloud": "https://soundcloud.com/medicineplacedub",
-      "spotify": "https://open.spotify.com/artist/5zKQqXKkTQAe5C9LqEQvNm"
+      "appleMusic": "https://applemusic.example.test/fennel-bloom",
+      "bandcamp": "https://bandcamp.example.test/fennel-bloom",
+      "beatport": "https://beatport.example.test/fennel-bloom",
+      "soundcloud": "https://soundcloud.example.test/fennel-bloom",
+      "spotify": "https://spotify.example.test/fennel-bloom"
     }
   },
   {
-    "id": "mindset",
-    "name": "Mindset",
+    "id": "fennel-choir",
+    "name": "Fennel Choir",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -924,16 +924,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 20
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/mindset/1455264878",
-      "bandcamp": "https://mindsetbass.bandcamp.com/",
-      "beatport": "https://www.beatport.com/artist/mindset/195849",
-      "soundcloud": "https://soundcloud.com/mindsetbass",
-      "spotify": "https://open.spotify.com/artist/4P03jzcBS0JcBVx5cl9YhC"
+      "appleMusic": "https://applemusic.example.test/fennel-choir",
+      "bandcamp": "https://bandcamp.example.test/fennel-choir",
+      "beatport": "https://beatport.example.test/fennel-choir",
+      "soundcloud": "https://soundcloud.example.test/fennel-choir",
+      "spotify": "https://spotify.example.test/fennel-choir"
     }
   },
   {
-    "id": "mr-wobbles",
-    "name": "Mr. Wobbles",
+    "id": "fennel-drift",
+    "name": "Fennel Drift",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -942,17 +942,17 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 6
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/mr-wobbles/323144904",
-      "bandcamp": "https://mrwobbles.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/mr-wobbles/89565",
-      "soundcloud": "https://soundcloud.com/misterwobbles",
-      "spotify": "https://open.spotify.com/artist/1vG1KY8zUxiuoxqol1jufs",
-      "youtube": "https://www.youtube.com/channel/UCQLOEmIHO97_C_QjK4zfS3Q"
+      "appleMusic": "https://applemusic.example.test/fennel-drift",
+      "bandcamp": "https://bandcamp.example.test/fennel-drift",
+      "beatport": "https://beatport.example.test/fennel-drift",
+      "soundcloud": "https://soundcloud.example.test/fennel-drift",
+      "spotify": "https://spotify.example.test/fennel-drift",
+      "youtube": "https://youtube.example.test/fennel-drift"
     }
   },
   {
-    "id": "mystic-state",
-    "name": "Mystic State",
+    "id": "fennel-engine",
+    "name": "Fennel Engine",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -961,15 +961,15 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 14
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/mystic-state/710627963",
-      "beatport": "https://www.beatport.com/artist/mystic-state/359610",
-      "soundcloud": "https://soundcloud.com/MYSTICSTATE",
-      "spotify": "https://open.spotify.com/artist/052KAntc3fhUFwUgewa3Q4"
+      "appleMusic": "https://applemusic.example.test/fennel-engine",
+      "beatport": "https://beatport.example.test/fennel-engine",
+      "soundcloud": "https://soundcloud.example.test/fennel-engine",
+      "spotify": "https://spotify.example.test/fennel-engine"
     }
   },
   {
-    "id": "neumonic",
-    "name": "Neumonic",
+    "id": "fennel-field",
+    "name": "Fennel Field",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -978,17 +978,17 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 12
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/neumonic/1583578959",
-      "bandcamp": "https://neumonic.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/neumonic/1042235",
-      "soundcloud": "https://soundcloud.com/nickneumonic",
-      "spotify": "https://open.spotify.com/artist/2vmS0sFSxIZccEf510Xb52",
-      "youtube": "https://www.youtube.com/@NeumonicMusic"
+      "appleMusic": "https://applemusic.example.test/fennel-field",
+      "bandcamp": "https://bandcamp.example.test/fennel-field",
+      "beatport": "https://beatport.example.test/fennel-field",
+      "soundcloud": "https://soundcloud.example.test/fennel-field",
+      "spotify": "https://spotify.example.test/fennel-field",
+      "youtube": "https://youtube.example.test/fennel-field"
     }
   },
   {
-    "id": "snuffy",
-    "name": "Snuffy",
+    "id": "fennel-garden",
+    "name": "Fennel Garden",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -997,14 +997,14 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 16
     },
     "platforms": {
-      "beatport": "https://www.beatport.com/artist/snuffy/636331",
-      "soundcloud": "https://soundcloud.com/snuffysounds",
-      "spotify": "https://open.spotify.com/artist/08yNyQvMaC3dLtOthzhPaZ"
+      "beatport": "https://beatport.example.test/fennel-garden",
+      "soundcloud": "https://soundcloud.example.test/fennel-garden",
+      "spotify": "https://spotify.example.test/fennel-garden"
     }
   },
   {
-    "id": "nominus",
-    "name": "Nominus",
+    "id": "fennel-harp",
+    "name": "Fennel Harp",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1013,17 +1013,17 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 1
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/nominus/447007907",
-      "bandcamp": "https://nominus1.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/nominus/203412",
-      "soundcloud": "https://soundcloud.com/nominus",
-      "spotify": "https://open.spotify.com/artist/7eFxWYHHwHiKtLNtM8B9Na",
-      "youtube": "https://www.youtube.com/@Nominus_Music"
+      "appleMusic": "https://applemusic.example.test/fennel-harp",
+      "bandcamp": "https://bandcamp.example.test/fennel-harp",
+      "beatport": "https://beatport.example.test/fennel-harp",
+      "soundcloud": "https://soundcloud.example.test/fennel-harp",
+      "spotify": "https://spotify.example.test/fennel-harp",
+      "youtube": "https://youtube.example.test/fennel-harp"
     }
   },
   {
-    "id": "nonkalonk",
-    "name": "Nonkalonk",
+    "id": "fennel-index",
+    "name": "Fennel Index",
     "collectionState": "unreviewed",
     "confidence": "unresolved",
     "catalog": {
@@ -1032,15 +1032,15 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 0
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/nonkalonk/1541802074",
-      "bandcamp": "https://nonkalonk.bandcamp.com",
-      "soundcloud": "https://soundcloud.com/nonkalonk",
-      "spotify": "https://open.spotify.com/artist/3hSpeSCh10YpsYTPym34ua"
+      "appleMusic": "https://applemusic.example.test/fennel-index",
+      "bandcamp": "https://bandcamp.example.test/fennel-index",
+      "soundcloud": "https://soundcloud.example.test/fennel-index",
+      "spotify": "https://spotify.example.test/fennel-index"
     }
   },
   {
-    "id": "notixx",
-    "name": "Notixx",
+    "id": "fennel-joint",
+    "name": "Fennel Joint",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1049,17 +1049,17 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 18
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/notixx/457520410",
-      "bandcamp": "https://notixx.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/notixx/204417",
-      "soundcloud": "https://soundcloud.com/notixx",
-      "spotify": "https://open.spotify.com/artist/7v3klaxOWbKij4kNWrCZcm",
-      "youtube": "https://www.youtube.com/@NotixxOfficial"
+      "appleMusic": "https://applemusic.example.test/fennel-joint",
+      "bandcamp": "https://bandcamp.example.test/fennel-joint",
+      "beatport": "https://beatport.example.test/fennel-joint",
+      "soundcloud": "https://soundcloud.example.test/fennel-joint",
+      "spotify": "https://spotify.example.test/fennel-joint",
+      "youtube": "https://youtube.example.test/fennel-joint"
     }
   },
   {
-    "id": "odd-rhythm",
-    "name": "Odd Rhythm",
+    "id": "garnet-array",
+    "name": "Garnet Array",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1068,16 +1068,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 1
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/odd-rhythm/1896606099",
-      "beatport": "https://www.beatport.com/artist/odd-rhythm/2375508",
-      "soundcloud": "https://soundcloud.com/oddrhythm",
-      "spotify": "https://open.spotify.com/artist/2gI7649YxQKgolK5nmro3t",
-      "youtube": "https://www.youtube.com/@Oddrhythm"
+      "appleMusic": "https://applemusic.example.test/garnet-array",
+      "beatport": "https://beatport.example.test/garnet-array",
+      "soundcloud": "https://soundcloud.example.test/garnet-array",
+      "spotify": "https://spotify.example.test/garnet-array",
+      "youtube": "https://youtube.example.test/garnet-array"
     }
   },
   {
-    "id": "ovoid",
-    "name": "Ovoid",
+    "id": "garnet-bloom",
+    "name": "Garnet Bloom",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1086,16 +1086,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 7
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/ovoid/1190653790",
-      "bandcamp": "https://ovoidmusic.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/ovoid/605185",
-      "soundcloud": "https://soundcloud.com/ovoid",
-      "spotify": "https://open.spotify.com/artist/3xeTCWQC0fl0wkLcBcor3S"
+      "appleMusic": "https://applemusic.example.test/garnet-bloom",
+      "bandcamp": "https://bandcamp.example.test/garnet-bloom",
+      "beatport": "https://beatport.example.test/garnet-bloom",
+      "soundcloud": "https://soundcloud.example.test/garnet-bloom",
+      "spotify": "https://spotify.example.test/garnet-bloom"
     }
   },
   {
-    "id": "ozi",
-    "name": "Ozi",
+    "id": "garnet-choir",
+    "name": "Garnet Choir",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1104,15 +1104,15 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 20
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/ozi/1539308550",
-      "beatport": "https://www.beatport.com/artist/ozi/122439",
-      "soundcloud": "https://soundcloud.com/ozi_trill",
-      "spotify": "https://open.spotify.com/artist/0bXZs5lZce2A3Kq40rWY7b"
+      "appleMusic": "https://applemusic.example.test/garnet-choir",
+      "beatport": "https://beatport.example.test/garnet-choir",
+      "soundcloud": "https://soundcloud.example.test/garnet-choir",
+      "spotify": "https://spotify.example.test/garnet-choir"
     }
   },
   {
-    "id": "petals",
-    "name": "Petals",
+    "id": "garnet-drift",
+    "name": "Garnet Drift",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1121,14 +1121,14 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 4
     },
     "platforms": {
-      "bandcamp": "https://petalssound.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/petals/582822",
-      "soundcloud": "https://soundcloud.com/petalssound"
+      "bandcamp": "https://bandcamp.example.test/garnet-drift",
+      "beatport": "https://beatport.example.test/garnet-drift",
+      "soundcloud": "https://soundcloud.example.test/garnet-drift"
     }
   },
   {
-    "id": "phace",
-    "name": "Phace",
+    "id": "garnet-engine",
+    "name": "Garnet Engine",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1137,17 +1137,17 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 14
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/phace/151200888",
-      "bandcamp": "https://phace.bandcamp.com/",
-      "beatport": "https://www.beatport.com/artist/phace/10584",
-      "soundcloud": "https://soundcloud.com/phace",
-      "spotify": "https://open.spotify.com/artist/3o46xaXZd75wUeb2Zfc4o5",
-      "youtube": "https://www.youtube.com/channel/UCZWgTsfA01pdSA1EsHB8xzQ"
+      "appleMusic": "https://applemusic.example.test/garnet-engine",
+      "bandcamp": "https://bandcamp.example.test/garnet-engine",
+      "beatport": "https://beatport.example.test/garnet-engine",
+      "soundcloud": "https://soundcloud.example.test/garnet-engine",
+      "spotify": "https://spotify.example.test/garnet-engine",
+      "youtube": "https://youtube.example.test/garnet-engine"
     }
   },
   {
-    "id": "quanta",
-    "name": "Quanta",
+    "id": "garnet-field",
+    "name": "Garnet Field",
     "collectionState": "wishlist",
     "confidence": "exact-name",
     "catalog": {
@@ -1156,16 +1156,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 5
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/quanta/1445436222",
-      "bandcamp": "https://quanta-dub.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/quanta/280730",
-      "soundcloud": "https://soundcloud.com/quanta-uk",
-      "spotify": "https://open.spotify.com/artist/7AquKeSFztV1PahxFKVwJh"
+      "appleMusic": "https://applemusic.example.test/garnet-field",
+      "bandcamp": "https://bandcamp.example.test/garnet-field",
+      "beatport": "https://beatport.example.test/garnet-field",
+      "soundcloud": "https://soundcloud.example.test/garnet-field",
+      "spotify": "https://spotify.example.test/garnet-field"
     }
   },
   {
-    "id": "rsun",
-    "name": "Rsun",
+    "id": "garnet-garden",
+    "name": "Garnet Garden",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1174,16 +1174,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 15
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/rsun/1437328848",
-      "bandcamp": "https://rsunmusic.bandcamp.com/",
-      "beatport": "https://www.beatport.com/artist/rsun/936312",
-      "soundcloud": "https://soundcloud.com/rsun_music",
-      "spotify": "https://open.spotify.com/artist/6Xeaz1BUIz3AHiT87zNAIo"
+      "appleMusic": "https://applemusic.example.test/garnet-garden",
+      "bandcamp": "https://bandcamp.example.test/garnet-garden",
+      "beatport": "https://beatport.example.test/garnet-garden",
+      "soundcloud": "https://soundcloud.example.test/garnet-garden",
+      "spotify": "https://spotify.example.test/garnet-garden"
     }
   },
   {
-    "id": "russ-liquid",
-    "name": "Russ Liquid",
+    "id": "garnet-harp",
+    "name": "Garnet Harp",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1192,17 +1192,17 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 13
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/russ-liquid/492565999",
-      "bandcamp": "https://russliquid.bandcamp.com/track/get-ur-freak-on-rmx",
-      "beatport": "https://www.beatport.com/artist/russ-liquid/239032",
-      "soundcloud": "https://soundcloud.com/russliquid",
-      "spotify": "https://open.spotify.com/artist/70zLeNeu4AAUaQ14AC4P8J",
-      "youtube": "https://www.youtube.com/channel/UC2whMMQsdtmfWgSM8pS4QLg"
+      "appleMusic": "https://applemusic.example.test/garnet-harp",
+      "bandcamp": "https://bandcamp.example.test/garnet-harp",
+      "beatport": "https://beatport.example.test/garnet-harp",
+      "soundcloud": "https://soundcloud.example.test/garnet-harp",
+      "spotify": "https://spotify.example.test/garnet-harp",
+      "youtube": "https://youtube.example.test/garnet-harp"
     }
   },
   {
-    "id": "sammy-legs",
-    "name": "Sammy Legs",
+    "id": "garnet-index",
+    "name": "Garnet Index",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1211,15 +1211,15 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 15
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/sammy-legs/1348126855",
-      "beatport": "https://www.beatport.com/artist/sammy-legs/670951",
-      "soundcloud": "https://soundcloud.com/sammylegs",
-      "spotify": "https://open.spotify.com/artist/6t2Dat6onFMWgVdW05EAVA"
+      "appleMusic": "https://applemusic.example.test/garnet-index",
+      "beatport": "https://beatport.example.test/garnet-index",
+      "soundcloud": "https://soundcloud.example.test/garnet-index",
+      "spotify": "https://spotify.example.test/garnet-index"
     }
   },
   {
-    "id": "saturna",
-    "name": "Saturna",
+    "id": "garnet-joint",
+    "name": "Garnet Joint",
     "collectionState": "wishlist",
     "confidence": "exact-name",
     "catalog": {
@@ -1228,15 +1228,15 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 9
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/saturna/164283870",
-      "beatport": "https://www.beatport.com/artist/saturna/150818",
-      "soundcloud": "https://soundcloud.com/saturnamusic",
-      "spotify": "https://open.spotify.com/artist/6Y3GYermT3jkAuq3A5vLXn"
+      "appleMusic": "https://applemusic.example.test/garnet-joint",
+      "beatport": "https://beatport.example.test/garnet-joint",
+      "soundcloud": "https://soundcloud.example.test/garnet-joint",
+      "spotify": "https://spotify.example.test/garnet-joint"
     }
   },
   {
-    "id": "seeded-vision",
-    "name": "Seeded Vision",
+    "id": "harbor-array",
+    "name": "Harbor Array",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1245,17 +1245,17 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 1
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/seeded-vision/1563412172",
-      "bandcamp": "https://seededvision.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/seeded-vision/1003907",
-      "soundcloud": "https://soundcloud.com/seeded-vision",
-      "spotify": "https://open.spotify.com/artist/14e65RWZd4MbjV2ZyxAJWv",
-      "youtube": "https://www.youtube.com/@seededvision"
+      "appleMusic": "https://applemusic.example.test/harbor-array",
+      "bandcamp": "https://bandcamp.example.test/harbor-array",
+      "beatport": "https://beatport.example.test/harbor-array",
+      "soundcloud": "https://soundcloud.example.test/harbor-array",
+      "spotify": "https://spotify.example.test/harbor-array",
+      "youtube": "https://youtube.example.test/harbor-array"
     }
   },
   {
-    "id": "shlump",
-    "name": "Shlump",
+    "id": "harbor-bloom",
+    "name": "Harbor Bloom",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1264,17 +1264,17 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 9
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/shlump/588185989",
-      "bandcamp": "https://shlump.bandcamp.com/",
-      "beatport": "https://www.beatport.com/artist/shlump/306039",
-      "soundcloud": "https://soundcloud.com/shlumpbass",
-      "spotify": "https://open.spotify.com/artist/2vdEGASQQlLcmOqlQhYWlN",
-      "youtube": "https://www.youtube.com/@shlumpbass"
+      "appleMusic": "https://applemusic.example.test/harbor-bloom",
+      "bandcamp": "https://bandcamp.example.test/harbor-bloom",
+      "beatport": "https://beatport.example.test/harbor-bloom",
+      "soundcloud": "https://soundcloud.example.test/harbor-bloom",
+      "spotify": "https://spotify.example.test/harbor-bloom",
+      "youtube": "https://youtube.example.test/harbor-bloom"
     }
   },
   {
-    "id": "shwamp",
-    "name": "Shwamp",
+    "id": "harbor-choir",
+    "name": "Harbor Choir",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1283,16 +1283,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 3
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/shwamp/1293927216",
-      "bandcamp": "https://shwamp.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/shwamp/645681",
-      "soundcloud": "https://soundcloud.com/shwampmusic",
-      "spotify": "https://open.spotify.com/artist/3THH3P5beSW2ckKmjsy8F9"
+      "appleMusic": "https://applemusic.example.test/harbor-choir",
+      "bandcamp": "https://bandcamp.example.test/harbor-choir",
+      "beatport": "https://beatport.example.test/harbor-choir",
+      "soundcloud": "https://soundcloud.example.test/harbor-choir",
+      "spotify": "https://spotify.example.test/harbor-choir"
     }
   },
   {
-    "id": "skavi",
-    "name": "Skavi",
+    "id": "harbor-drift",
+    "name": "Harbor Drift",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1301,15 +1301,15 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 1
     },
     "platforms": {
-      "bandcamp": "https://skavi.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/skavi/1188823",
-      "soundcloud": "https://soundcloud.com/skavi-mn",
-      "spotify": "https://open.spotify.com/artist/6zru2wOPr5sEOeaXSS9H5W"
+      "bandcamp": "https://bandcamp.example.test/harbor-drift",
+      "beatport": "https://beatport.example.test/harbor-drift",
+      "soundcloud": "https://soundcloud.example.test/harbor-drift",
+      "spotify": "https://spotify.example.test/harbor-drift"
     }
   },
   {
-    "id": "skysia",
-    "name": "Skysia",
+    "id": "harbor-engine",
+    "name": "Harbor Engine",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1318,16 +1318,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 8
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/skysia/1479211698",
-      "bandcamp": "https://skysiamusic.bandcamp.com/",
-      "beatport": "https://www.beatport.com/artist/skysia/804103",
-      "soundcloud": "https://soundcloud.com/skysia",
-      "spotify": "https://open.spotify.com/artist/5YIxufplJpHkE3S1MXQr63"
+      "appleMusic": "https://applemusic.example.test/harbor-engine",
+      "bandcamp": "https://bandcamp.example.test/harbor-engine",
+      "beatport": "https://beatport.example.test/harbor-engine",
+      "soundcloud": "https://soundcloud.example.test/harbor-engine",
+      "spotify": "https://spotify.example.test/harbor-engine"
     }
   },
   {
-    "id": "slaythoven",
-    "name": "Slaythoven",
+    "id": "harbor-field",
+    "name": "Harbor Field",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1336,15 +1336,15 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 2
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/slaythoven/1539265024",
-      "beatport": "https://www.beatport.com/artist/slaythoven/1232409",
-      "soundcloud": "https://soundcloud.com/slaythovenbeats",
-      "spotify": "https://open.spotify.com/artist/26i4ajsiq8rscWFj412hOx"
+      "appleMusic": "https://applemusic.example.test/harbor-field",
+      "beatport": "https://beatport.example.test/harbor-field",
+      "soundcloud": "https://soundcloud.example.test/harbor-field",
+      "spotify": "https://spotify.example.test/harbor-field"
     }
   },
   {
-    "id": "smokestax",
-    "name": "Smokestax",
+    "id": "harbor-garden",
+    "name": "Harbor Garden",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1353,16 +1353,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 18
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/smokestax/1122175240",
-      "bandcamp": "https://smokestax.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/smokestax/565909",
-      "soundcloud": "https://soundcloud.com/smokestaxmusic",
-      "spotify": "https://open.spotify.com/artist/44Vo9C3lSYkjiU2c3gMbGJ"
+      "appleMusic": "https://applemusic.example.test/harbor-garden",
+      "bandcamp": "https://bandcamp.example.test/harbor-garden",
+      "beatport": "https://beatport.example.test/harbor-garden",
+      "soundcloud": "https://soundcloud.example.test/harbor-garden",
+      "spotify": "https://spotify.example.test/harbor-garden"
     }
   },
   {
-    "id": "snuggles",
-    "name": "Snuggles",
+    "id": "harbor-harp",
+    "name": "Harbor Harp",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1371,15 +1371,15 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 2
     },
     "platforms": {
-      "bandcamp": "https://imsnuggles.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/snuggles/635865",
-      "soundcloud": "https://soundcloud.com/imsnuggles",
-      "spotify": "https://open.spotify.com/artist/61p7D5r16DTIJk1n7MN26B"
+      "bandcamp": "https://bandcamp.example.test/harbor-harp",
+      "beatport": "https://beatport.example.test/harbor-harp",
+      "soundcloud": "https://soundcloud.example.test/harbor-harp",
+      "spotify": "https://spotify.example.test/harbor-harp"
     }
   },
   {
-    "id": "s-p-y",
-    "name": "S.P.Y",
+    "id": "harbor-index",
+    "name": "Harbor Index",
     "collectionState": "library",
     "confidence": "catalog-validated",
     "catalog": {
@@ -1388,17 +1388,17 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 0
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/s-p-y/158365636",
-      "bandcamp": "https://spydnb.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/spy/183646",
-      "soundcloud": "https://soundcloud.com/spydnb",
-      "spotify": "https://open.spotify.com/artist/6aJAd8zM1s3Slw64KfsmaF",
-      "youtube": "https://www.youtube.com/@s.p.y8010"
+      "appleMusic": "https://applemusic.example.test/harbor-index",
+      "bandcamp": "https://bandcamp.example.test/harbor-index",
+      "beatport": "https://beatport.example.test/harbor-index",
+      "soundcloud": "https://soundcloud.example.test/harbor-index",
+      "spotify": "https://spotify.example.test/harbor-index",
+      "youtube": "https://youtube.example.test/harbor-index"
     }
   },
   {
-    "id": "stanton-warriors",
-    "name": "Stanton Warriors",
+    "id": "harbor-joint",
+    "name": "Harbor Joint",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1407,17 +1407,17 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 13
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/artist/stanton-warriors/72559818",
-      "bandcamp": "https://stantonwarriors.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/stanton-warriors/2181",
-      "soundcloud": "https://soundcloud.com/stantonwarriors",
-      "spotify": "https://open.spotify.com/artist/7GeAzBsalYANXTi1ReOm1R",
-      "youtube": "https://www.youtube.com/@stantontube"
+      "appleMusic": "https://applemusic.example.test/harbor-joint",
+      "bandcamp": "https://bandcamp.example.test/harbor-joint",
+      "beatport": "https://beatport.example.test/harbor-joint",
+      "soundcloud": "https://soundcloud.example.test/harbor-joint",
+      "spotify": "https://spotify.example.test/harbor-joint",
+      "youtube": "https://youtube.example.test/harbor-joint"
     }
   },
   {
-    "id": "starfox",
-    "name": "Starfox",
+    "id": "indigo-array",
+    "name": "Indigo Array",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1426,14 +1426,14 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 11
     },
     "platforms": {
-      "beatport": "https://www.beatport.com/artist/starfox/507326",
-      "soundcloud": "https://soundcloud.com/starfoxbass",
-      "spotify": "https://open.spotify.com/artist/5OsuArWT529PPB7Y6NdiCO"
+      "beatport": "https://beatport.example.test/indigo-array",
+      "soundcloud": "https://soundcloud.example.test/indigo-array",
+      "spotify": "https://spotify.example.test/indigo-array"
     }
   },
   {
-    "id": "swomp",
-    "name": "Swomp",
+    "id": "indigo-bloom",
+    "name": "Indigo Bloom",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1442,16 +1442,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 7
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/lt/artist/swomp/1770785128",
-      "bandcamp": "https://swompbass.bandcamp.com/",
-      "beatport": "https://www.beatport.com/artist/swomp/1060932",
-      "soundcloud": "https://soundcloud.com/swomp_bass",
-      "spotify": "https://open.spotify.com/artist/50HvETAN9Z3ykpndGLDHuL"
+      "appleMusic": "https://applemusic.example.test/indigo-bloom",
+      "bandcamp": "https://bandcamp.example.test/indigo-bloom",
+      "beatport": "https://beatport.example.test/indigo-bloom",
+      "soundcloud": "https://soundcloud.example.test/indigo-bloom",
+      "spotify": "https://spotify.example.test/indigo-bloom"
     }
   },
   {
-    "id": "sylph",
-    "name": "Sylph",
+    "id": "indigo-choir",
+    "name": "Indigo Choir",
     "collectionState": "unreviewed",
     "confidence": "catalog-validated",
     "catalog": {
@@ -1460,16 +1460,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 0
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/sylph/299091437",
-      "bandcamp": "https://sylph.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/sylph/1010228",
-      "soundcloud": "https://soundcloud.com/sylphsounds",
-      "spotify": "https://open.spotify.com/artist/6dSa6DrMcX4ZcfD3Mr3YyV"
+      "appleMusic": "https://applemusic.example.test/indigo-choir",
+      "bandcamp": "https://bandcamp.example.test/indigo-choir",
+      "beatport": "https://beatport.example.test/indigo-choir",
+      "soundcloud": "https://soundcloud.example.test/indigo-choir",
+      "spotify": "https://spotify.example.test/indigo-choir"
     }
   },
   {
-    "id": "t-sugah",
-    "name": "T & Sugah",
+    "id": "indigo-drift",
+    "name": "Indigo Drift",
     "collectionState": "library",
     "confidence": "catalog-validated",
     "catalog": {
@@ -1478,16 +1478,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 0
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/t-sugah/595934095",
-      "beatport": "https://www.beatport.com/artist/t-sugah/307216",
-      "soundcloud": "https://soundcloud.com/t-and-sugah",
-      "spotify": "https://open.spotify.com/artist/6jsS2mOTAxVrlSUWiPLXpH",
-      "youtube": "https://www.youtube.com/@TAndSugah"
+      "appleMusic": "https://applemusic.example.test/indigo-drift",
+      "beatport": "https://beatport.example.test/indigo-drift",
+      "soundcloud": "https://soundcloud.example.test/indigo-drift",
+      "spotify": "https://spotify.example.test/indigo-drift",
+      "youtube": "https://youtube.example.test/indigo-drift"
     }
   },
   {
-    "id": "the-infinity-project",
-    "name": "The Infinity Project",
+    "id": "indigo-engine",
+    "name": "Indigo Engine",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1496,14 +1496,14 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 8
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/the-infinity-project/110909583",
-      "beatport": "https://www.beatport.com/artist/the-infinity-project/10510",
-      "spotify": "https://open.spotify.com/artist/3MSq3HlSCnY9LNSlkDaEMx"
+      "appleMusic": "https://applemusic.example.test/indigo-engine",
+      "beatport": "https://beatport.example.test/indigo-engine",
+      "spotify": "https://spotify.example.test/indigo-engine"
     }
   },
   {
-    "id": "the-widdler",
-    "name": "The Widdler",
+    "id": "indigo-field",
+    "name": "Indigo Field",
     "collectionState": "library",
     "confidence": "exact-name",
     "catalog": {
@@ -1512,16 +1512,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 12
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/the-widdler/259241281",
-      "bandcamp": "https://thewiddler.bandcamp.com/",
-      "beatport": "https://www.beatport.com/artist/the-widdler/97891",
-      "soundcloud": "https://soundcloud.com/the_widdler",
-      "spotify": "https://open.spotify.com/artist/3SCAEdZEfpatrvdFeDLD2p"
+      "appleMusic": "https://applemusic.example.test/indigo-field",
+      "bandcamp": "https://bandcamp.example.test/indigo-field",
+      "beatport": "https://beatport.example.test/indigo-field",
+      "soundcloud": "https://soundcloud.example.test/indigo-field",
+      "spotify": "https://spotify.example.test/indigo-field"
     }
   },
   {
-    "id": "thought-process",
-    "name": "Thought Process",
+    "id": "indigo-garden",
+    "name": "Indigo Garden",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1530,16 +1530,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 15
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/thought-process/1457291510",
-      "bandcamp": "https://thoughtprocessmusic.bandcamp.com/",
-      "beatport": "https://www.beatport.com/artist/thought-process/688221",
-      "soundcloud": "https://soundcloud.com/thought_process_music",
-      "spotify": "https://open.spotify.com/artist/3proICVogPsl2OeB7S2ZUC"
+      "appleMusic": "https://applemusic.example.test/indigo-garden",
+      "bandcamp": "https://bandcamp.example.test/indigo-garden",
+      "beatport": "https://beatport.example.test/indigo-garden",
+      "soundcloud": "https://soundcloud.example.test/indigo-garden",
+      "spotify": "https://spotify.example.test/indigo-garden"
     }
   },
   {
-    "id": "togeki",
-    "name": "Togeki",
+    "id": "indigo-harp",
+    "name": "Indigo Harp",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1548,16 +1548,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 10
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/togeki/1591595674",
-      "bandcamp": "https://togeki.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/togeki/1124227",
-      "soundcloud": "https://soundcloud.com/togekidub",
-      "spotify": "https://open.spotify.com/artist/5EUGrKIBf5IG2J3dcFP5Pi"
+      "appleMusic": "https://applemusic.example.test/indigo-harp",
+      "bandcamp": "https://bandcamp.example.test/indigo-harp",
+      "beatport": "https://beatport.example.test/indigo-harp",
+      "soundcloud": "https://soundcloud.example.test/indigo-harp",
+      "spotify": "https://spotify.example.test/indigo-harp"
     }
   },
   {
-    "id": "two-guys",
-    "name": "Two Guys",
+    "id": "indigo-index",
+    "name": "Indigo Index",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1566,16 +1566,16 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 2
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/two-guys/1815898468",
-      "beatport": "https://www.beatport.com/artist/two-guys/470758",
-      "soundcloud": "https://soundcloud.com/two-guys-music",
-      "spotify": "https://open.spotify.com/artist/5qjWoVhjSgavkl2yruBwsA",
-      "youtube": "https://www.youtube.com/@TwoGuys-music"
+      "appleMusic": "https://applemusic.example.test/indigo-index",
+      "beatport": "https://beatport.example.test/indigo-index",
+      "soundcloud": "https://soundcloud.example.test/indigo-index",
+      "spotify": "https://spotify.example.test/indigo-index",
+      "youtube": "https://youtube.example.test/indigo-index"
     }
   },
   {
-    "id": "urboin8",
-    "name": "Urboin8",
+    "id": "indigo-joint",
+    "name": "Indigo Joint",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1584,15 +1584,15 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 4
     },
     "platforms": {
-      "bandcamp": "https://urboin8.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/urboin8/1181282",
-      "soundcloud": "https://soundcloud.com/urboin8",
-      "spotify": "https://open.spotify.com/artist/5LINbdcrbnFgUuJP5g8N9k"
+      "bandcamp": "https://bandcamp.example.test/indigo-joint",
+      "beatport": "https://beatport.example.test/indigo-joint",
+      "soundcloud": "https://soundcloud.example.test/indigo-joint",
+      "spotify": "https://spotify.example.test/indigo-joint"
     }
   },
   {
-    "id": "willyb",
-    "name": "WillyB",
+    "id": "juniper-array",
+    "name": "Juniper Array",
     "collectionState": "unreviewed",
     "confidence": "unresolved",
     "catalog": {
@@ -1601,15 +1601,15 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 0
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/willyb/1796629481",
-      "bandcamp": "https://willybmusic.bandcamp.com",
-      "soundcloud": "https://soundcloud.com/willybream",
-      "spotify": "https://open.spotify.com/artist/6pqgqkcuJa0toVk3AF7ePp"
+      "appleMusic": "https://applemusic.example.test/juniper-array",
+      "bandcamp": "https://bandcamp.example.test/juniper-array",
+      "soundcloud": "https://soundcloud.example.test/juniper-array",
+      "spotify": "https://spotify.example.test/juniper-array"
     }
   },
   {
-    "id": "yoko",
-    "name": "Yoko",
+    "id": "juniper-bloom",
+    "name": "Juniper Bloom",
     "collectionState": "unreviewed",
     "confidence": "exact-name",
     "catalog": {
@@ -1618,14 +1618,14 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 14
     },
     "platforms": {
-      "beatport": "https://www.beatport.com/artist/yoko/75254",
-      "soundcloud": "https://soundcloud.com/itsyokomusic",
-      "spotify": "https://open.spotify.com/artist/732GEmoSVBIB8D5eOaMWxD"
+      "beatport": "https://beatport.example.test/juniper-bloom",
+      "soundcloud": "https://soundcloud.example.test/juniper-bloom",
+      "spotify": "https://spotify.example.test/juniper-bloom"
     }
   },
   {
-    "id": "zion-train",
-    "name": "Zion Train",
+    "id": "juniper-choir",
+    "name": "Juniper Choir",
     "collectionState": "library",
     "confidence": "exact-name",
     "catalog": {
@@ -1634,12 +1634,12 @@ export const infrasoundArtists: MusicLibraryArtist[] = [
       "labels": 17
     },
     "platforms": {
-      "appleMusic": "https://music.apple.com/us/artist/zion-train/17037618",
-      "bandcamp": "https://ziontrain.bandcamp.com",
-      "beatport": "https://www.beatport.com/artist/zion-train/32439",
-      "soundcloud": "https://soundcloud.com/zion-train",
-      "spotify": "https://open.spotify.com/artist/6sDKfmMPaTI7MYeFoNFrg7",
-      "youtube": "https://www.youtube.com/channel/UCK8GS0yAZis_6s_ymijesbA"
+      "appleMusic": "https://applemusic.example.test/juniper-choir",
+      "bandcamp": "https://bandcamp.example.test/juniper-choir",
+      "beatport": "https://beatport.example.test/juniper-choir",
+      "soundcloud": "https://soundcloud.example.test/juniper-choir",
+      "spotify": "https://spotify.example.test/juniper-choir",
+      "youtube": "https://youtube.example.test/juniper-choir"
     }
   }
 ]

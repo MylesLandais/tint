@@ -49,7 +49,7 @@ describe('mockDryRun', () => {
   })
 
   it('counts builder matches over a fixture list', () => {
-    // release tag on MissKatie lookbook + k2s token drop
+    // release tag on Nova lookbook + k2s token drop
     expect(countMatches(DEMO_FEED.entries, builderRule)).toBe(2)
   })
 })

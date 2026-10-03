@@ -11,7 +11,7 @@ import {
 } from './contracts'
 
 const channels: Channel[] = [
-  { id: 'ch-a', slug: 'misskatie', name: 'MissKatie' },
+  { id: 'ch-a', slug: 'nova', name: 'Nova' },
   { id: 'ch-b', slug: 'gaming', name: 'Gaming' },
 ]
 
@@ -19,8 +19,8 @@ const sources: Source[] = [
   {
     id: 's-yt',
     channelId: 'ch-a',
-    handle: '@misskatie',
-    url: 'https://youtube.com/@misskatie',
+    handle: '@nova',
+    url: 'https://youtube.com/@nova',
     platform: 'youtube',
     workflowName: 'youtube-poll',
     health: 'healthy',
@@ -29,8 +29,8 @@ const sources: Source[] = [
   {
     id: 's-tt',
     channelId: 'ch-a',
-    handle: '@misskatie',
-    url: 'https://tiktok.com/@misskatie',
+    handle: '@nova',
+    url: 'https://tiktok.com/@nova',
     platform: 'tiktok',
     workflowName: 'tiktok-poll',
     health: 'healthy',
@@ -79,7 +79,7 @@ const document = {
 
 describe('channel helpers', () => {
   it('builds channel paths', () => {
-    expect(channelPath(channels[0]!)).toBe('channel/misskatie')
+    expect(channelPath(channels[0]!)).toBe('channel/nova')
   })
 
   it('lists sources and entries for a channel', () => {
@@ -91,7 +91,7 @@ describe('channel helpers', () => {
   })
 
   it('resolves channel from source and attribution', () => {
-    expect(channelForSource(document, 's-yt')?.slug).toBe('misskatie')
-    expect(resolveAttribution(document, 's-yt')).toBe('MissKatie · youtube')
+    expect(channelForSource(document, 's-yt')?.slug).toBe('nova')
+    expect(resolveAttribution(document, 's-yt')).toBe('Nova · youtube')
   })
 })

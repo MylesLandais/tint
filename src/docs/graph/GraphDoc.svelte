@@ -66,7 +66,7 @@ let selection = $state(emptySelection())
     <p aria-live="polite">Selected nodes: {selection.nodeIds.size} · Last command: {lastCommand}</p>
     <div class="projections">
       <section><h3>Force network</h3><ForceGraphView {document} {selection} static={true} height={280} onSelectionChange={(next) => selection = next} onCommand={command} /></section>
-      <section><h3>Timeline</h3><label>Layout <select bind:value={variant}><option value="gantt">Gantt</option><option value="trace">Trace</option><option value="range">Range</option></select></label><TimelineView {document} {spans} {variant} {selection} onSpanChange={changeSpan} onSelectionChange={(next) => selection = next} onCommand={command} /></section>
+      <section><h3>Timeline</h3><label>Layout <select class="tint-select" bind:value={variant}><option value="gantt">Gantt</option><option value="trace">Trace</option><option value="range">Range</option></select></label><TimelineView {document} {spans} {variant} {selection} onSpanChange={changeSpan} onSelectionChange={(next) => selection = next} onCommand={command} /></section>
     </div>
   </div>
 </DocPage>

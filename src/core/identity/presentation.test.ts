@@ -4,7 +4,7 @@ import type { Identity } from './types'
 
 describe('identity presentation', () => {
   it('uses first and last initials with a deterministic empty fallback', () => {
-    expect(identityInitials('  Maya   Chen ')).toBe('MC')
+    expect(identityInitials('  Avery   Chen ')).toBe('MC')
     expect(identityInitials('Ada')).toBe('AD')
     expect(identityInitials('  ')).toBe('?')
   })

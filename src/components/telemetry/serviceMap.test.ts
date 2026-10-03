@@ -20,16 +20,16 @@ const trace: TelemetryTrace = {
   spans: [
     span({ spanId: 'conv', name: 'conversation', service: 'tint.chat', startMs: 0, endMs: 80 }),
     span({
-      spanId: 'maya',
+      spanId: 'avery',
       parentSpanId: 'conv',
-      name: 'agent.maya',
-      service: 'agent.maya',
+      name: 'agent.avery',
+      service: 'agent.avery',
       startMs: 10,
       endMs: 40,
     }),
     span({
       spanId: 'llm',
-      parentSpanId: 'maya',
+      parentSpanId: 'avery',
       name: 'llm.generate',
       service: 'mock.llm',
       startMs: 10,
@@ -61,17 +61,17 @@ describe('graphDocumentFromTrace', () => {
 
     expect(document.nodes.map((node) => node.id).sort()).toEqual([
       'agent.jordan',
-      'agent.maya',
+      'agent.avery',
       'mock.llm',
       'tint.chat',
     ])
     expect(document.nodes.find((node) => node.id === 'tint.chat')?.kind).toBe('trigger')
     expect(document.edges).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ id: 'tint.chat->agent.maya' }),
+        expect.objectContaining({ id: 'tint.chat->agent.avery' }),
         expect.objectContaining({ id: 'tint.chat->agent.jordan' }),
         expect.objectContaining({
-          id: 'agent.maya->mock.llm',
+          id: 'agent.avery->mock.llm',
           metadata: { count: 1 },
         }),
         expect.objectContaining({
@@ -81,6 +81,6 @@ describe('graphDocumentFromTrace', () => {
       ]),
     )
     expect(runtimeByService(trace).get('agent.jordan')?.status).toBe('failed')
-    expect(runtimeByService(trace).get('agent.maya')?.status).toBe('succeeded')
+    expect(runtimeByService(trace).get('agent.avery')?.status).toBe('succeeded')
   })
 })

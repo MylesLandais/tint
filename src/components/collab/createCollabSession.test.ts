@@ -41,9 +41,9 @@ describe('createCollabSession', () => {
   it('keeps awareness off the document snapshot', () => {
     const a = createCollabSession({ room: 'test-awareness', network: { kind: 'none' } })
     sessions.push(a)
-    a.awareness?.setLocal({ name: 'warby', color: '#6c2454' })
+    a.awareness?.setLocal({ name: 'alex', color: '#6c2454' })
 
-    expect(a.awareness?.local).toEqual({ name: 'warby', color: '#6c2454' })
+    expect(a.awareness?.local).toEqual({ name: 'alex', color: '#6c2454' })
     expect(a.fragment.toString()).toBe('')
   })
 

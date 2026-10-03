@@ -14,7 +14,7 @@ const trace: TelemetryTrace = {
     { traceId: 'trc-view', spanId: 'llm', parentSpanId: 'conv', name: 'llm.generate',
       service: 'mock.llm', kind: 'client', status: 'error', startMs: 10, endMs: 40,
       attributes: { 'gen_ai.request.model': 'mock-qwen-chat' },
-      input: { prompt: 'hello' }, output: { text: 'Maya here' } },
+      input: { prompt: 'hello' }, output: { text: 'Avery here' } },
   ],
 }
 
@@ -48,7 +48,7 @@ describe('Svelte telemetry', () => {
     expect(screen.getByRole('option', { name: /conversation/ })).toHaveAttribute('aria-selected', 'true')
     await fireEvent.click(screen.getByRole('option', { name: /llm\.generate/ }))
     expect(screen.getByText('Input')).toBeInTheDocument()
-    expect(screen.getByText(/Maya here/)).toBeInTheDocument()
+    expect(screen.getByText(/Avery here/)).toBeInTheDocument()
     expect(screen.getByText('gen_ai.request.model')).toBeInTheDocument()
   })
 
@@ -59,7 +59,7 @@ describe('Svelte telemetry', () => {
     expect(onSelectedSpanIdChange).toHaveBeenCalledWith('llm')
     expect(screen.getByText(/Select a span in the waterfall/)).toBeInTheDocument()
     await view.rerender({ trace, selectedSpanId: 'llm', onSelectedSpanIdChange })
-    expect(screen.getByText(/Maya here/)).toBeInTheDocument()
+    expect(screen.getByText(/Avery here/)).toBeInTheDocument()
   })
 
   it('renders accessible service nodes, calls, selection, and a summary', async () => {

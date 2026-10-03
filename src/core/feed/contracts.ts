@@ -32,7 +32,7 @@ export type SourceHealth = 'healthy' | 'unreachable' | 'inactive' | 'dormant'
  */
 export type Channel = {
   id: string
-  /** URL segment: misskatie | LTT | gaming | nsfw */
+  /** URL segment: nova | ACME | gaming | nsfw */
   slug: string
   /** Display title in nav / header. */
   name: string
@@ -142,7 +142,7 @@ export function entriesForChannel(
   return document.entries.filter((entry) => sourceIds.has(entry.sourceId))
 }
 
-/** Attribution line: `MissKatie · youtube`. */
+/** Attribution line: `Nova · youtube`. */
 export function resolveAttribution(
   document: Pick<FeedDocument, 'channels' | 'sources'>,
   sourceId: string,

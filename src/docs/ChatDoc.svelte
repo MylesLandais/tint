@@ -20,7 +20,7 @@
     { id: 'tool', actor: assistant, createdAt: '2026-08-02T15:00:10Z', status: 'complete', parts: [
       { id: 'tool-run', type: 'tool', tool: { id: 'lookup', name: 'lookup', title: 'Look up sample data', status: 'succeeded', input: { query: 'Tint' }, output: { matches: 1 } } },
       { id: 'approval', type: 'approval', approval: { id: 'run-demo', title: 'Run the sample action?', description: 'This only updates local demo state.', status: 'pending', allowReason: true } },
-      { id: 'voice', type: 'audio', src: '/audio/maya.wav', title: 'Cached sample clip', transcript: 'Welcome to the Tint chat demo.' },
+      { id: 'voice', type: 'audio', src: '/audio/avery.wav', title: 'Cached sample clip', transcript: 'Welcome to the Tint chat demo.' },
     ] },
   ]
   const preferenceOptions: ChatPreferenceOption[] = [

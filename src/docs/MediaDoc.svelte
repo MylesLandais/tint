@@ -7,7 +7,7 @@
   import type { ApiRow } from './svelte/types'
 
   const queue: PlaybackQueueItem[] = [
-    { id: 'maya', title: 'Maya', subtitle: 'Demo audio', durationSeconds: 23 },
+    { id: 'avery', title: 'Avery', subtitle: 'Demo audio', durationSeconds: 23 },
     { id: 'night', title: 'Night Drive', subtitle: 'Demo audio', durationSeconds: 23 },
   ]
   const settings: SettingsPopoutItem[] = [
@@ -16,8 +16,8 @@
   ]
   const waveform = [0.12, 0.4, 0.25, 0.7, 0.45, 0.8, 0.32, 0.56, 0.94, 0.63, 0.4, 0.72, 0.25, 0.51, 0.82, 0.35]
   let kind = $state<'audio' | 'video'>('audio')
-  let currentId = $state('maya')
-  let playerTitle = $derived(queue.find((item) => item.id === currentId)?.title ?? 'Maya')
+  let currentId = $state('avery')
+  let playerTitle = $derived(queue.find((item) => item.id === currentId)?.title ?? 'Avery')
   let settingsOpen = $state(false)
   let speed = $state('normal')
   const api: ApiRow[] = [
@@ -57,7 +57,7 @@ let currentId = $state('track-1')
       <button type="button" aria-pressed={kind === 'video'} onclick={() => kind = 'video'}>Video</button>
     </div>
     {#if kind === 'audio'}
-      <MediaPlayer kind="audio" src="/audio/maya.wav" label={playerTitle} title={playerTitle} artist="Tint demo" duration={23} {waveform} />
+      <MediaPlayer kind="audio" src="/audio/avery.wav" label={playerTitle} title={playerTitle} artist="Tint demo" duration={23} {waveform} />
     {:else}
       <MediaPlayer kind="video" src="/videos/big-buck-bunny.mp4" label="Demo video" title="Big Buck Bunny" autoHideControls={false} />
     {/if}

@@ -11,7 +11,7 @@ import ChatPart from './ChatPart.svelte'
 import ChatPreference from './ChatPreference.svelte'
 
 const assistant = { id: 'assistant', name: 'Assistant', kind: 'assistant' } as const
-const human = { id: 'me', name: 'Myles', kind: 'human' } as const
+const human = { id: 'me', name: 'Alex', kind: 'human' } as const
 function message(id: string, overrides: Partial<ChatMessageData> = {}): ChatMessageData {
   return { id, actor: assistant, createdAt: '2026-08-02T15:00:00Z', status: 'complete',
     parts: [{ id: `${id}-text`, type: 'text', text: id }], ...overrides }

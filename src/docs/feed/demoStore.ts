@@ -1,5 +1,5 @@
 /**
- * Docs-only in-memory store shared by the Maya subscriptions chat scenario and
+ * Docs-only in-memory store shared by the Avery subscriptions chat scenario and
  * the Policy / Feed workbenches.
  *
  * Lives under `src/docs` on purpose — component packages stay presentational and
@@ -114,7 +114,7 @@ export function dispatchPolicyCommand(
   emit()
 }
 
-/** Maya confirmation write: channel room + inbound stream + rule. */
+/** Avery confirmation write: channel room + inbound stream + rule. */
 export function commitSubscription(channel: Channel, source: Source, rule: PolicyRule) {
   upsertChannel(channel)
   upsertSource(source)

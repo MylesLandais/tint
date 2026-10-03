@@ -111,9 +111,9 @@ describe('typed auth operations', () => {
     const recovery = defineAuthOperation<{ username: string }, { recoveryKey: string }>('recovery-key')
     const auth = createAuthClient({ transport, broadcastChannel: false })
     await auth.initialize()
-    const result = await auth.execute(recovery, { username: 'maya' })
+    const result = await auth.execute(recovery, { username: 'avery' })
 
-    expect(result.recoveryKey).toBe('MAYA')
+    expect(result.recoveryKey).toBe('AVERY')
     expect(JSON.stringify(auth.getSnapshot())).not.toContain('recoveryKey')
   })
 })
@@ -121,12 +121,12 @@ describe('typed auth operations', () => {
 describe('fetch request adapter', () => {
   it('serializes JSON and parses the requested response shape', async () => {
     const fetchImpl = vi.fn(async (_url: string | URL | Request, init?: RequestInit) => {
-      expect(init?.body).toBe('{"name":"maya"}')
+      expect(init?.body).toBe('{"name":"avery"}')
       expect(new Headers(init?.headers).get('content-type')).toBe('application/json')
       return new Response('{"ok":true}', { status: 201, headers: { 'content-type': 'application/json', 'x-request-id': 'server-1' } })
     })
     const adapter = createFetchRequestAdapter({ fetch: fetchImpl as typeof fetch })
-    const result = await adapter.send<{ ok: boolean }>({ method: 'POST', url: '/people', body: { name: 'maya' }, responseType: 'json' })
+    const result = await adapter.send<{ ok: boolean }>({ method: 'POST', url: '/people', body: { name: 'avery' }, responseType: 'json' })
     expect(result).toMatchObject({ status: 201, data: { ok: true }, requestId: 'server-1' })
   })
 })
