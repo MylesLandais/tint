@@ -23,7 +23,7 @@ export const docsGraphNodes: readonly DocsGraphNode[] = [
   { id: "audio-engine", imports: [], position: {"x": 0, "y": -1350} },
   { id: "audio-input", imports: ["icon"], position: {"x": 340, "y": -1275} },
   { id: "audio-workspace", imports: ["audio-engine", "dj"], position: {"x": 680, "y": -600} },
-  { id: "auth", imports: ["button", "form"], position: {"x": 680, "y": -450} },
+  { id: "auth", imports: ["badge", "button", "form"], position: {"x": 680, "y": -450} },
   { id: "badge", imports: [], position: {"x": 0, "y": -1200} },
   { id: "board", imports: ["badge", "table"], position: {"x": 680, "y": -300} },
   { id: "button", imports: ["icon"], position: {"x": 340, "y": -1125} },

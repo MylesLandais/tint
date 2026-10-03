@@ -10,8 +10,8 @@ Rows reflect source files and local migration gates; behavior parity and consume
 - Imports from react-dom: **0**
 - React-specific direct dependency entries: **0**
 - React findings: **0**
-- Svelte files (excluding the retired smoke fixture): **307**
-- Packages with extracted core modules: **40**
+- Svelte files (excluding the retired smoke fixture): **324**
+- Packages with extracted core modules: **41**
 - Carbon imports outside approved Tint implementation paths: **0**
 - Public component packages still React-backed: **0**
 - Public UI packages with local gates met: **50/50 (100%)**
@@ -23,7 +23,7 @@ Rows reflect source files and local migration gates; behavior parity and consume
 | audio-engine | Yes | Yes | Yes | Yes | Reviewed | Yes | Local gates met |
 | audio-input | Yes | Yes | Yes | Yes | Reviewed | Yes | Local gates met |
 | audio-workspace | — | Yes | Yes | Yes | Reviewed | Yes | Local gates met |
-| auth | — | Yes | Yes | Yes | Reviewed | Yes | Local gates met |
+| auth | Yes | Yes | Yes | Yes | Reviewed | Yes | Local gates met |
 | auth/client | — | — | — | — | — | Yes | Plain TS |
 | badge | — | Yes | Yes | Yes | Reviewed | Yes | Local gates met |
 | board | Yes | Yes | Yes | Yes | Reviewed | Yes | Local gates met |
