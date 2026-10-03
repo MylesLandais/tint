@@ -1,4 +1,5 @@
 import type { OperationOptions } from '../../client/types'
+import { createLastUsedStore, methodFromSession, resolveLastUsed, type LastUsedStore } from '../../core/auth'
 import { normalizeAuthError } from './errors'
 import { requireOperation, safeReturnTo, type AuthTransport } from './transport'
 import type {
@@ -17,10 +18,15 @@ import type {
   TotpVerifyInput,
 } from './types'
 
-export type AuthClientOptions = { transport: AuthTransport; broadcastChannel?: string | false }
+export type AuthClientOptions = {
+  transport: AuthTransport
+  broadcastChannel?: string | false
+  /** Where the last sign-in method is remembered. Defaults to `localStorage`; `false` disables it. */
+  lastUsed?: LastUsedStore | false
+}
 
 const SERVER_AUTH_SNAPSHOT: AuthSnapshot = Object.freeze({
-  status: 'loading', busy: false, config: null, session: null, task: null, error: null,
+  status: 'loading', busy: false, config: null, session: null, task: null, error: null, lastUsedMethod: null,
 })
 
 export class AuthClient {
@@ -28,12 +34,14 @@ export class AuthClient {
   private readonly listeners = new Set<() => void>()
   private readonly eventListeners = new Set<(event: AuthEvent) => void>()
   private readonly channel: BroadcastChannel | null
+  private readonly lastUsed: LastUsedStore | null
   private revision = 0
   private initialized: Promise<void> | null = null
   private snapshot: AuthSnapshot = SERVER_AUTH_SNAPSHOT
 
   constructor(options: AuthClientOptions) {
     this.transport = options.transport
+    this.lastUsed = options.lastUsed === false ? null : options.lastUsed ?? createLastUsedStore()
     const channelName = options.broadcastChannel ?? 'tint-auth'
     this.channel = channelName !== false && typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel(channelName) : null
     if (this.channel) this.channel.onmessage = () => void this.refresh(false)
@@ -158,7 +166,10 @@ export class AuthClient {
     try {
       const [config, session] = await Promise.all([this.transport.getConfig(), this.transport.getSession()])
       if (revision !== this.revision) return
-      this.patch({ config, session, status: session ? 'signed_in' : 'signed_out', busy: false, error: null })
+      this.patch({
+        config, session, status: session ? 'signed_in' : 'signed_out', busy: false, error: null,
+        lastUsedMethod: resolveLastUsed(config.lastUsedMethod, this.lastUsed?.read() ?? null),
+      })
       this.emit('INITIAL_SESSION', false)
     } catch (cause) {
       if (revision !== this.revision) return
@@ -200,6 +211,12 @@ export class AuthClient {
   }
 
   private patch(update: Partial<AuthSnapshot>): void {
+    // A fresh session is the most current answer to "how did this person sign in".
+    const method = methodFromSession(update.session)
+    if (method) {
+      this.lastUsed?.remember(method)
+      update = { ...update, lastUsedMethod: method }
+    }
     this.snapshot = { ...this.snapshot, ...update }
     for (const listener of this.listeners) listener()
   }

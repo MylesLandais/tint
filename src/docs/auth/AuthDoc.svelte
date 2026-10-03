@@ -41,7 +41,7 @@
     { prop: 'AuthClient', type: 'AuthTransport → AuthSnapshot', description: 'Framework-neutral auth state machine and transport contract.' },
     { prop: 'useAuth / useSession', type: 'Svelte reactive snapshot helpers', description: 'Read the shared TintClient auth capability from Svelte context.' },
   ]
-  const usage = `import { IdentifierSignInForm } from '@nebula/tint/auth'
+  const usage = `import { IdentifierSignInForm } from '@nebula/tint/svelte'
 import { useAuth, useSession } from '@nebula/tint/client/svelte'
 
 const auth = useAuth()
@@ -60,7 +60,7 @@ let password = $state('')
 {/if}`
 </script>
 
-<DocPage title="Auth" description="Transport-neutral authentication with controlled Svelte forms and reactive snapshots. The live transport stays in this page's memory." importPath="@nebula/tint/auth" {usage} {api} accessibility="Each field has an associated label. Validation errors use a live alert, busy states disable submission, OAuth choices are links inside a named navigation landmark, and the six-digit challenge uses a labelled input.">
+<DocPage title="Auth" description="Transport-neutral authentication with controlled Svelte forms and reactive snapshots. The live transport stays in this page's memory." importPath="@nebula/tint/svelte" {usage} {api} accessibility="Each field has an associated label. Validation errors use a live alert, busy states disable submission, OAuth choices are links inside a named navigation landmark, and the six-digit challenge uses a labelled input.">
   <div class="auth-demo">
     <div class="auth-panel">
       {#if snapshot.status === 'loading'}
@@ -94,6 +94,7 @@ let password = $state('')
       <CredentialRecoveryForm identifier={recoveryIdentifier} label="Account email" onIdentifierChange={(next) => recoveryIdentifier = next} onSubmit={() => { recoveryMessage = 'Recovery is disabled in this demo transport.' }} />
       {#if recoveryMessage}<p role="status">{recoveryMessage}</p>{/if}
       <p>The demo transport intentionally has no recovery operation. Production hosts provide the operations they support.</p>
+      <p>Full login and registration layouts with Discord, GitHub and Google live on <a href="#/components/auth-forms">Sign-in &amp; Registration</a>.</p>
     </div>
   </div>
 </DocPage>

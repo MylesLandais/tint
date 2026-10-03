@@ -50,8 +50,16 @@ export type {
 } from './form'
 export type { ChoiceOption, FieldShared } from './form'
 export * from './form'
-export { IdentifierSignInForm, CredentialRecoveryForm, PasswordCredentialInput, OAuthButtons } from './components/auth'
-export type { IdentifierSignInFormLabels, OAuthOption } from './components/auth'
+export {
+  IdentifierSignInForm, CredentialRecoveryForm, PasswordCredentialInput, OAuthButtons,
+  ProviderMark, AuthDivider, AuthLayout, LoginForm, RegistrationForm,
+  AUTH_PROVIDERS, createLastUsedStore, isKnownProvider, providerName, validateRegistration,
+} from './components/auth'
+export type {
+  IdentifierSignInFormLabels, LoginFormLabels, OAuthOption, RegistrationFormLabels,
+  AuthMethodId, KnownAuthProviderId, LastUsedStore, RegistrationErrorCode, RegistrationErrors,
+  RegistrationInput, RegistrationPolicy,
+} from './components/auth'
 export { CharacterCardEditorForm, CharacterDocumentEditor, CharacterLibrary } from './components/character-card'
 export type { CharacterCardFormValues, CharacterDocument, CharacterLibraryItem } from './components/character-card'
 export { HighlightedCode, CodeTabs } from './components/code'

@@ -21,6 +21,7 @@ import RoleplayFormsDoc from '../form/RoleplayFormsDoc.svelte'
 import TreeDoc from '../TreeDoc.svelte'
 import TableDoc from '../TableDoc.svelte'
 import AuthDoc from '../auth/AuthDoc.svelte'
+import AuthFormsDoc from '../auth/AuthFormsDoc.svelte'
 import CharacterCardDoc from '../character-card/CharacterCardDoc.svelte'
 import CharacterDocumentsDoc from '../character-card/CharacterDocumentsDoc.svelte'
 import CodeDoc from '../CodeDoc.svelte'
@@ -102,6 +103,7 @@ export const SVELTE_DOC_PAGES: ReadonlyArray<SvelteDocRoute & { component: Compo
   { path: 'components/form-fields', label: 'Form Fields', group: 'Forms', description: 'Controlled text, number, password, select, toggle, slider, file, and tags.', component: FormFieldsDoc },
   { path: 'components/roleplay-forms', label: 'Roleplay Forms', group: 'Forms', description: 'Controlled group, persona, regex, and import review editors.', component: RoleplayFormsDoc },
   { path: 'components/auth', label: 'Auth', group: 'Forms', description: 'Transport-neutral sign-in and recovery forms.', component: AuthDoc },
+  { path: 'components/auth-forms', label: 'Sign-in & Registration', group: 'Forms', description: 'Login and registration layouts with Discord, GitHub and Google providers and a last-used marker.', component: AuthFormsDoc },
   { path: 'components/character-card', label: 'Character Card', group: 'Forms', description: 'Controlled Character Card V2 editing with JSON and PNG round trips.', component: CharacterCardDoc },
   { path: 'components/character-documents', label: 'Character Documents', group: 'Forms', description: 'Controlled original V2/V3 documents and character library.', component: CharacterDocumentsDoc },
   { path: 'components/theme', label: 'Theme', group: 'Foundation', description: 'Semantic tokens, palettes, and color scheme.', component: ThemeDoc },

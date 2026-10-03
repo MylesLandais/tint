@@ -20,6 +20,8 @@ export type AuthConfig = {
   password: AuthMethodConfig
   providers: readonly OAuthProviderDescriptor[]
   inviteRequired: boolean
+  /** The account's last sign-in method as the server remembers it (for example a last-login-method cookie). Wins over this device's memory. */
+  lastUsedMethod?: string | null
 }
 
 export type AuthUser = Identity & {
@@ -64,6 +66,8 @@ export type AuthSnapshot = {
   session: AuthSession | null
   task: AuthTask | null
   error: import('./errors').AuthError | null
+  /** The sign-in method to mark as "Last used": the current session's method, else the server hint, else this device's memory. */
+  lastUsedMethod: string | null
 }
 
 export type AuthEventType = 'INITIAL_SESSION' | 'SIGNED_IN' | 'SIGNED_OUT' | 'SESSION_UPDATED' | 'TASK_REQUIRED'

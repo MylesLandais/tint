@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
+import { createLastUsedStore } from '../../core/auth'
 import { AuthError, createAuthClient, safeReturnTo } from './index'
 import type {
   AuthConfig,
@@ -119,7 +120,43 @@ describe('AuthClient', () => {
     }
     const client = createAuthClient({ transport, broadcastChannel: false })
     await client.initialize()
-    await client.signIn.password({ identifier: 'maya', password: 'secret' }, { signal: controller.signal })
+    await client.signIn.password({ identifier: 'avery', password: 'secret' }, { signal: controller.signal })
     expect(seen).toHaveBeenCalledWith(controller.signal)
+  })
+
+  it('remembers the method of each new session as the last-used method', async () => {
+    const lastUsed = createLastUsedStore({ storage: null })
+    const remember = vi.spyOn(lastUsed, 'remember')
+    const transport = new TestTransport()
+    const client = createAuthClient({ transport, broadcastChannel: false, lastUsed })
+    await client.initialize()
+    expect(client.getSnapshot().lastUsedMethod).toBeNull()
+
+    await client.signIn.password({ identifier: 'user@example.test', password: 'secret' })
+    expect(remember).toHaveBeenCalledWith('password')
+    expect(client.getSnapshot().lastUsedMethod).toBe('password')
+
+    await client.signOut()
+    expect(client.getSnapshot().lastUsedMethod).toBe('password')
+  })
+
+  it('prefers the server hint over this device when no session exists', async () => {
+    const storage = new Map([['tint-auth-last-method', 'github']])
+    const lastUsed = createLastUsedStore({
+      storage: { getItem: (key) => storage.get(key) ?? null, setItem: () => {}, removeItem: () => {} },
+    })
+    const withHint: AuthTransport = {
+      getConfig: async () => ({ ...config, lastUsedMethod: 'google' }),
+      getSession: async () => null,
+      signOut: async () => {},
+      oauthStartUrl: () => '/',
+    }
+    const hinted = createAuthClient({ transport: withHint, broadcastChannel: false, lastUsed })
+    await hinted.initialize()
+    expect(hinted.getSnapshot().lastUsedMethod).toBe('google')
+
+    const local = createAuthClient({ transport: new TestTransport(), broadcastChannel: false, lastUsed })
+    await local.initialize()
+    expect(local.getSnapshot().lastUsedMethod).toBe('github')
   })
 })
