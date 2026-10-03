@@ -10,9 +10,11 @@
     api: readonly ApiRow[]
     accessibility: string
     children?: Snippet
+    /** Extra sections rendered between Usage and API. Each should be a `<section id>` with an h2. */
+    extra?: Snippet
   }
 
-  let { title, description, importPath, usage, api, accessibility, children }: Props = $props()
+  let { title, description, importPath, usage, api, accessibility, children, extra }: Props = $props()
 </script>
 
 <article class="doc-page">
@@ -32,6 +34,8 @@
     <h2 id="usage-title" tabindex="-1">Usage</h2>
     <pre><code>{usage}</code></pre>
   </section>
+
+  {@render extra?.()}
 
   <section id="api" aria-labelledby="api-title">
     <h2 id="api-title" tabindex="-1">API</h2>

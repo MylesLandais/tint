@@ -68,7 +68,7 @@ export const SVELTE_DOC_PAGES: ReadonlyArray<SvelteDocRoute & { component: Compo
   { path: 'components/status', label: 'Status', group: 'Feedback', description: 'Loading, empty, error, and connection states.', component: StatusDoc },
   { path: 'components/toast', label: 'Toast', group: 'Feedback', description: 'Transient notifications from a scoped provider.', component: ToastDoc },
   { path: 'components/tree', label: 'Tree', group: 'Interaction', description: 'Controlled hierarchical navigation and selection.', component: TreeDoc },
-  { path: 'components/table', label: 'Table and Workbench', group: 'Data', description: 'Controlled rows, filters, selection, and inspector panes.', component: TableDoc },
+  { path: 'components/table', label: 'Dataset Editor', group: 'Data', description: 'Typed fields, saved views, record pages, and spreadsheet keyboard editing over large datasets.', component: TableDoc },
   { path: 'components/code', label: 'Code', group: 'Data', description: 'Safe syntax highlighting and accessible code tabs.', component: CodeDoc },
   { path: 'components/calendar', label: 'Calendar', group: 'Data', description: 'Controlled month grid over plain TypeScript event models.', component: CalendarDoc },
   { path: 'components/board', label: 'Board', group: 'Data', description: 'Controlled masonry and kanban board with a selected detail.', component: BoardDoc },

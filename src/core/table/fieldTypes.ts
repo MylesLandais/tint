@@ -13,6 +13,10 @@ export type TableFieldType =
   | 'select'
   | 'rating'
   | 'date'
+  | 'checkbox'
+  | 'multi-select'
+  | 'url'
+  | 'long-text'
   | 'linked-record'
   | 'computed'
 
@@ -52,13 +56,22 @@ export const TABLE_FIELD_TYPES: Record<TableFieldType, TableFieldDefinition> = {
       return '●'.repeat(filled) + '○'.repeat(5 - filled)
     },
   },
-  'linked-record': {
-    id: 'linked-record',
+  'long-text': { id: 'long-text', align: 'start', mono: false, format: asText },
+  url: { id: 'url', align: 'start', mono: false, format: asText },
+  checkbox: {
+    id: 'checkbox',
     align: 'start',
     mono: false,
-    reserved: true,
-    format: () => EMPTY,
+    format: (value) => (value === true ? 'Yes' : value === false ? 'No' : EMPTY),
   },
+  'multi-select': {
+    id: 'multi-select',
+    align: 'start',
+    mono: false,
+    format: (value) => (Array.isArray(value) && value.length ? value.join(', ') : EMPTY),
+  },
+  /** Stores the target record id; the cell resolves the label from its options. */
+  'linked-record': { id: 'linked-record', align: 'start', mono: false, format: asText },
   computed: {
     id: 'computed',
     align: 'start',
