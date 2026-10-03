@@ -86,9 +86,13 @@ The inventory records source coverage; manual accessibility reviews are tracked 
 
 The source portability and consumer contract tests check that published TypeScript entry points work outside Tint's own TypeScript program. `src/docs/componentGraph.test.ts` checks generated graph data, and `src/docs/svelte/routing.test.ts` checks docs routes and aliases.
 
+## Sign-in and registration
+
+`@nebula/tint` exports `AuthLayout` (`plain`, `card`, `split`), `LoginForm` (password or email-first), `RegistrationForm`, `OAuthButtons`, `AuthDivider` and `ProviderMark`. Discord, GitHub and Google get brand marks automatically. Provider sign-in goes through the same `AuthTransport`: the host lists providers in `getConfig`, builds the redirect in `oauthStartUrl`, and reports the provider as the session's first `authenticationMethods` entry after its callback. `AuthSnapshot.lastUsedMethod` drives the "Last used" badge; it is remembered on the device, and a server can override it with `AuthConfig.lastUsedMethod`. Tint ships no OAuth server. See `#/components/auth-forms` in the docs.
+
 ## Source layout
 
-- `src/core/`: framework-neutral contracts, state machines, parsers, and engines.
+- `src/core/`: framework-neutral contracts, state machines, parsers, and engines (including `core/auth` provider registry, last-used memory and registration validation).
 - `src/svelte/`: public Svelte components and bindings. `src/svelte/index.ts` is the root API.
 - `src/docs/`: Svelte docs pages, fixtures, route registry, and generated graph data. Docs are not published.
 - `src/styles/` and `src/index.css`: semantic tokens, palettes, and component styles.

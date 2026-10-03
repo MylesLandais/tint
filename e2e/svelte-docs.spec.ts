@@ -32,8 +32,8 @@ test('Svelte docs render live component pages and route search', async ({ page }
 test('old docs entry and retired hash routes open the Svelte docs', async ({ page }) => {
   await page.goto('/svelte-docs.html#/components/music-library')
   await expect(page).toHaveURL(/\/#\/components\/music-library$/)
-  await expect(page.getByRole('heading', { name: 'Table and Workbench' })).toBeVisible()
-  await expect(page.getByRole('navigation', { name: 'Component documentation' }).getByRole('link', { name: 'Table and Workbench' })).toHaveAttribute('aria-current', 'page')
+  await expect(page.getByRole('heading', { name: 'Dataset Editor' })).toBeVisible()
+  await expect(page.getByRole('navigation', { name: 'Component documentation' }).getByRole('link', { name: 'Dataset Editor' })).toHaveAttribute('aria-current', 'page')
 })
 
 test('Character Documents docs exercise library search and original document editing', async ({ page }) => {
@@ -56,7 +56,7 @@ test('Table docs exercise controlled event review filters, candidates, and media
   const review = page.getByRole('region', { name: 'Event review controls' })
   await review.getByRole('button', { name: 'Flagged' }).click()
   await expect(review.getByRole('button', { name: 'Flagged' })).toHaveAttribute('aria-pressed', 'true')
-  await review.getByRole('checkbox', { name: 'Maya' }).check()
+  await review.getByRole('checkbox', { name: 'Avery' }).check()
   await review.getByRole('button', { name: 'Seek to 1:33' }).click()
   await expect(page.getByRole('status').filter({ hasText: 'Filter: flagged; candidates: 1; Seeked to 93s' })).toBeVisible()
   await expect(review.getByText('Training not approved.')).toBeVisible()
@@ -137,6 +137,91 @@ test('Dice settles on the host result without animation under reduced motion', a
   await expect(page.getByRole('status')).toHaveAttribute('aria-label', /^Rolled \d+$/)
 })
 
+test('Dataset editor docs edit typed cells, undo, and open the record panel over the large dataset', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (error) => errors.push(error.message))
+  await page.goto('/svelte-docs.html#/components/table')
+  const grid = page.getByRole('grid', { name: 'Books' })
+  await expect(grid).toBeVisible()
+  await expect(page.getByText(/books from/)).toContainText('17,244')
+  // Virtualized: far fewer rendered rows than records.
+  expect(await grid.locator('[role=row]').count()).toBeLessThan(80)
+
+  const title = grid.getByRole('gridcell').first()
+  const original = (await title.innerText()).trim()
+  await title.click()
+  await page.keyboard.type('Renamed')
+  await page.keyboard.press('Enter')
+  await expect(title).toHaveText('Renamed')
+  await page.keyboard.press('Control+z')
+  await expect(title).toHaveText(original)
+
+  // Invalid typed input blocks the commit and names the problem.
+  await grid.getByRole('gridcell').nth(6).click()
+  await page.keyboard.type('abc')
+  await page.keyboard.press('Enter')
+  await expect(grid.getByRole('alert')).toHaveText('Enter a number')
+  await page.keyboard.press('Escape')
+
+  await title.click()
+  await page.keyboard.press('Shift+Space')
+  await expect(page.getByRole('complementary', { name: /^Record:/ })).toBeVisible()
+  await page.keyboard.press('Escape')
+
+  await page.getByRole('tab', { name: 'By status' }).click()
+  await expect(grid.getByRole('row').filter({ hasText: 'Abandoned' }).first()).toBeVisible()
+  expect(errors).toEqual([])
+})
+
+test('Dataset editor behaves like Notion and Airtable under real mouse clicks', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (error) => errors.push(error.message))
+  await page.goto('/svelte-docs.html#/components/table')
+  const grid = page.getByRole('grid', { name: 'Books' })
+  await expect(grid).toBeVisible()
+  const cell = (r: number, c: number) => grid.locator(`[id$="-r${r}c${c}"]`)
+
+  // First click selects; clicking the active cell again edits.
+  await cell(2, 0).click()
+  await expect(grid.getByRole('textbox')).toHaveCount(0)
+  await cell(2, 0).click()
+  const editor = grid.getByRole('textbox', { name: /^Title for/ })
+  await expect(editor).toBeFocused()
+  await editor.click() // clicking inside the editor must not close it
+  await expect(editor).toBeVisible()
+  await page.keyboard.press('Escape')
+
+  // A select cell opens a chip menu; choosing commits, undo reverts.
+  const status = cell(1, 2)
+  const before = (await status.innerText()).trim()
+  await status.click()
+  await status.click()
+  const menu = page.getByRole('listbox')
+  await expect(menu).toBeVisible()
+  await menu.getByRole('option', { name: 'Abandoned' }).click()
+  await expect(status).toContainText('Abandoned')
+  await expect(page.getByRole('grid', { name: 'Books' })).toBeFocused()
+  await page.keyboard.press('Control+z')
+  await expect(status).toContainText(before)
+
+  // Stars: click sets, click again clears.
+  const stars = cell(0, 3).locator('[data-star]')
+  await stars.nth(3).click()
+  await expect(cell(0, 3).getByRole('img')).toHaveAttribute('aria-label', '4 of 5')
+  await stars.nth(3).click()
+  await expect(cell(0, 3).getByRole('img')).toHaveAttribute('aria-label', 'No rating')
+
+  // Right-click menu: duplicate, then undo.
+  const count = page.locator('.foot span').first()
+  const total = await count.innerText()
+  await cell(3, 0).click({ button: 'right' })
+  await page.getByRole('menuitem', { name: 'Duplicate record' }).click()
+  await expect(count).not.toHaveText(total)
+  await page.keyboard.press('Control+z')
+  await expect(count).toHaveText(total)
+  expect(errors).toEqual([])
+})
+
 test('Table docs keep sorting, selection, and inspector state controlled', async ({ page }) => {
   await page.goto('/#/components/table')
   const table = page.getByRole('table', { name: 'Demo tracks' })
@@ -167,6 +252,48 @@ test('Auth docs exercise the pure client through Svelte forms', async ({ page })
   await page.getByLabel(/Six-digit code/).fill('123456')
   await page.getByRole('button', { name: 'Verify code' }).click()
   await expect(page.getByText('Signed in as mfa')).toBeVisible()
+  expect(errors).toEqual([])
+})
+
+test('Sign-in docs mark the last-used provider across layouts', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (error) => errors.push(error.message))
+  await page.goto('/svelte-docs.html#/components/auth-forms')
+  await expect(page.getByRole('heading', { name: 'Sign-in & registration', exact: true })).toBeVisible()
+  const providers = page.getByRole('navigation', { name: 'Sign in with a provider' })
+  await expect(providers.getByRole('link', { name: 'Continue with GitHub', exact: true })).toBeVisible()
+
+  await providers.getByRole('link', { name: 'Continue with GitHub' }).click()
+  await expect(page.getByText('Signed in as github-user')).toBeVisible()
+  await expect(page.getByText('with GitHub', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Sign out' }).click()
+  await expect(providers.getByRole('link', { name: 'Continue with GitHub Last used' })).toHaveAttribute('data-last-used', 'true')
+
+  await page.getByRole('radio', { name: 'Card' }).check()
+  await expect(page.getByRole('link', { name: 'GitHub Last used' })).toBeVisible()
+  expect(errors).toEqual([])
+})
+
+test('Sign-in docs walk the email-first step and registration', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (error) => errors.push(error.message))
+  await page.goto('/svelte-docs.html#/components/auth-forms')
+  await page.getByRole('button', { name: 'Continue', exact: true }).click()
+  await expect(page.getByLabel(/^Password/)).toBeFocused()
+  await page.getByLabel(/^Password/).fill('tint-demo')
+  await page.getByRole('button', { name: 'Sign in', exact: true }).click()
+  await expect(page.getByText('Signed in as operator')).toBeVisible()
+  await expect(page.getByText('with password', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Sign out' }).click()
+
+  await page.getByRole('radio', { name: 'Registration' }).check()
+  await page.getByRole('button', { name: 'Create account' }).click()
+  await expect(page.getByRole('textbox', { name: /^Email/ })).toBeFocused()
+  await page.getByRole('textbox', { name: 'Name' }).fill('Avery')
+  await page.getByRole('textbox', { name: /^Email/ }).fill('avery@example.test')
+  await page.getByLabel(/^Password/).fill('long-enough')
+  await page.getByRole('button', { name: 'Create account' }).click()
+  await expect(page.getByText('Signed in as Avery')).toBeVisible()
   expect(errors).toEqual([])
 })
 
