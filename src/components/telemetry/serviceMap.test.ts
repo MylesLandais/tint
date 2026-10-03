@@ -60,8 +60,8 @@ describe('graphDocumentFromTrace', () => {
     const document = graphDocumentFromTrace(trace)
 
     expect(document.nodes.map((node) => node.id).sort()).toEqual([
-      'agent.jordan',
       'agent.avery',
+      'agent.jordan',
       'mock.llm',
       'tint.chat',
     ])

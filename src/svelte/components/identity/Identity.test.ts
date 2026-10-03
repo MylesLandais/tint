@@ -8,7 +8,7 @@ describe('Svelte identity', () => {
   it('falls back to initials after an image failure and keeps the presence cue', async () => {
     const view = render(Avatar, { identity: { id: '1', name: 'Avery Chen', avatarUrl: '/missing.png', presence: 'online' } })
     await fireEvent.error(screen.getByRole('img', { name: 'Avery Chen, online' }).querySelector('img')!)
-    expect(screen.getByRole('img', { name: 'Avery Chen, online' })).toHaveTextContent('MC')
+    expect(screen.getByRole('img', { name: 'Avery Chen, online' })).toHaveTextContent('AC')
     expect(view.container.querySelector('[data-avatar-presence][data-presence="online"]')).toBeInTheDocument()
   })
 
