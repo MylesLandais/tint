@@ -31,7 +31,7 @@
     <span class="divider" aria-hidden="true"></span>
   {/if}
   {#if names.has('paragraph') || names.has('heading')}
-    <select aria-label="Block style" value={state.block} onchange={(event) => changeBlock(event.currentTarget.value)}>
+    <select class="tint-select" aria-label="Block style" value={state.block} onchange={(event) => changeBlock(event.currentTarget.value)}>
       {#if names.has('paragraph')}<option value="paragraph">Text</option>{/if}
       {#if names.has('heading')}<option value="heading-1">Heading 1</option><option value="heading-2">Heading 2</option><option value="heading-3">Heading 3</option>{/if}
     </select>
@@ -44,7 +44,7 @@
   {#if names.has('codeTabs')}<ToolbarAction label="Tabbed code" icon={EDITOR_GLYPHS.codeTabs} onPress={() => editor.chain().focus().insertContent(codeTabsContent()).run()} />{/if}
   {#if names.has('codeBlock') && state.codeBlock}
     <span class="divider" aria-hidden="true"></span>
-    <select aria-label="Code language" value={state.codeLanguage} onchange={(event) => changeLanguage(event.currentTarget.value)}>{#each CODE_LANGUAGES as language (language.value)}<option value={language.value}>{language.label}</option>{/each}</select>
+    <select class="tint-select" aria-label="Code language" value={state.codeLanguage} onchange={(event) => changeLanguage(event.currentTarget.value)}>{#each CODE_LANGUAGES as language (language.value)}<option value={language.value}>{language.label}</option>{/each}</select>
   {/if}
   {#if end}<div class="end">{@render end(editor)}</div>{/if}
 </div>

@@ -87,7 +87,7 @@
     <section class="controls" aria-label="Preview controls">
       <div class="control">
         <label for="lab-theme">Theme</label>
-        <select id="lab-theme" bind:value={theme}>
+        <select class="tint-select" id="lab-theme" bind:value={theme}>
           {#each themes as item}
             <option value={item}>{item === 'tint' ? 'Tint default' : item}</option>
           {/each}
@@ -95,7 +95,7 @@
       </div>
       <div class="control">
         <label for="lab-scheme">Color scheme</label>
-        <select id="lab-scheme" bind:value={scheme}>
+        <select class="tint-select" id="lab-scheme" bind:value={scheme}>
           <option value="auto">System</option>
           <option value="light">Light</option>
           <option value="dark">Dark</option>

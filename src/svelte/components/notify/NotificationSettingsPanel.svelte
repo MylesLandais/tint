@@ -48,18 +48,18 @@
 </script>
 
 <div {...rest} data-tint-notification-settings="" class={['notification-settings', className].filter(Boolean).join(' ')}>
-  <label class="channel-row"><span>Default</span><select aria-label="Default" value={settings.defaultChannel} {disabled} onchange={defaultChanged}>{#each NOTIFY_CHANNELS as option (option)}<option value={option}>{option}</option>{/each}</select></label>
+  <label class="channel-row"><span>Default</span><select class="tint-select" aria-label="Default" value={settings.defaultChannel} {disabled} onchange={defaultChanged}>{#each NOTIFY_CHANNELS as option (option)}<option value={option}>{option}</option>{/each}</select></label>
   {#if sources.length > 0}
     <fieldset><legend>By source</legend>
       {#each sources as source (source.id)}
-        <label class="channel-row"><span>{source.label}</span><select aria-label={`Source ${source.label}`} value={settings.bySource[source.id] ?? settings.defaultChannel} {disabled} onchange={(event) => sourceChanged(event, source.id)}>{#each NOTIFY_CHANNELS as option (option)}<option value={option}>{option}</option>{/each}</select></label>
+        <label class="channel-row"><span>{source.label}</span><select class="tint-select" aria-label={`Source ${source.label}`} value={settings.bySource[source.id] ?? settings.defaultChannel} {disabled} onchange={(event) => sourceChanged(event, source.id)}>{#each NOTIFY_CHANNELS as option (option)}<option value={option}>{option}</option>{/each}</select></label>
       {/each}
     </fieldset>
   {/if}
   {#if policies.length > 0}
     <fieldset><legend>By policy</legend>
       {#each policies as policy (policy.id)}
-        <label class="channel-row"><span>{policy.label}</span><select aria-label={`Policy ${policy.label}`} value={settings.byPolicy[policy.id] ?? settings.defaultChannel} {disabled} onchange={(event) => policyChanged(event, policy.id)}>{#each NOTIFY_CHANNELS as option (option)}<option value={option}>{option}</option>{/each}</select></label>
+        <label class="channel-row"><span>{policy.label}</span><select class="tint-select" aria-label={`Policy ${policy.label}`} value={settings.byPolicy[policy.id] ?? settings.defaultChannel} {disabled} onchange={(event) => policyChanged(event, policy.id)}>{#each NOTIFY_CHANNELS as option (option)}<option value={option}>{option}</option>{/each}</select></label>
       {/each}
     </fieldset>
   {/if}

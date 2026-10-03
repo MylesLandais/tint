@@ -45,7 +45,7 @@
         <button type="button" aria-label="Add tab" onclick={add}>+</button>
       </div>
       <div class="fields">
-        <label>Language<select value={current.language ?? 'plaintext'} onchange={(event) => update({ language: event.currentTarget.value })}>{#each CODE_LANGUAGES as language (language.value)}<option value={language.value}>{language.label}</option>{/each}</select></label>
+        <label>Language<select class="tint-select" value={current.language ?? 'plaintext'} onchange={(event) => update({ language: event.currentTarget.value })}>{#each CODE_LANGUAGES as language (language.value)}<option value={language.value}>{language.label}</option>{/each}</select></label>
         <label>Label<input value={current.label ?? ''} oninput={(event) => update({ label: event.currentTarget.value })} /></label>
         <label>Install command<input value={current.installCommand ?? ''} oninput={(event) => update({ installCommand: event.currentTarget.value })} /></label>
         <label>Code<textarea rows="5" value={current.code} oninput={(event) => update({ code: event.currentTarget.value })}></textarea></label>

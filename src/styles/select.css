@@ -1,0 +1,117 @@
+/*
+ * Native select menus.
+ *
+ * The closed control is styled by each component, but the open list is drawn
+ * by the browser from the <option> elements, which fall back to the UA
+ * palette unless they are themed too. That mismatch is what made menus read
+ * as light-on-light (or dark-on-dark) against the active theme. These rules
+ * make every <select> in the app resolve its list from the same tokens, with
+ * no per-component work.
+ *
+ * `.tint-select` / `.tint-field-input` additionally opt in to the shared
+ * field chrome: token fill, inset focus ring, and a chevron drawn in
+ * currentColor so it tracks the theme.
+ */
+
+@layer components {
+  select {
+    /* Inherit the active scheme so the native popup chrome (scrollbar,
+       focus, fallback fill) matches the theme rather than the OS. */
+    color-scheme: inherit;
+  }
+
+  select option,
+  select optgroup {
+    background-color: var(--tint-panel);
+    color: var(--tint-ink);
+  }
+
+  select option:checked {
+    background-color: var(--tint-selection);
+    color: var(--tint-ink);
+    /* Firefox ignores background-color on the checked row; an inset shadow
+       paints it there too. */
+    box-shadow: 0 0 0 100vmax var(--tint-selection) inset;
+  }
+
+  select option:disabled,
+  select optgroup:disabled {
+    color: var(--tint-muted);
+  }
+}
+
+/* Doubled class beats a component's own `select.svelte-x` rule without !important. */
+select.tint-select.tint-select,
+select.tint-field-input.tint-field-input {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-inline-end: 2rem;
+  /* WCAG 1.4.11: the control boundary needs 3:1. --tint-border-strong is 1.5-2.5:1
+     on the field in every theme; --tint-muted is held >= 4.5:1 by the theme tests. */
+  border: 1px solid var(--tint-muted);
+  background-color: var(--tint-field);
+  background-image:
+    linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position:
+    calc(100% - 1.125rem) 50%,
+    calc(100% - 0.8125rem) 50%;
+  background-size: 0.3125rem 0.3125rem;
+  background-repeat: no-repeat;
+  color: var(--tint-ink);
+  cursor: pointer;
+  text-overflow: ellipsis;
+}
+
+select.tint-select.tint-select:dir(rtl),
+select.tint-field-input.tint-field-input:dir(rtl) {
+  padding-inline-start: 2rem;
+  padding-inline-end: 0.75rem;
+  background-position:
+    0.8125rem 50%,
+    1.125rem 50%;
+}
+
+select.tint-select.tint-select:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--tint-field), var(--tint-ink) 6%);
+}
+
+select.tint-select.tint-select:focus-visible,
+select.tint-field-input.tint-field-input:focus-visible {
+  outline: var(--tint-focus-width, 2px) solid var(--tint-focus);
+  outline-offset: calc(-1 * var(--tint-focus-width, 2px));
+}
+
+select.tint-select.tint-select[aria-invalid='true'],
+select.tint-select.tint-select[data-invalid] {
+  border-color: var(--tint-danger);
+}
+
+select.tint-select.tint-select:disabled,
+select.tint-field-input.tint-field-input:disabled {
+  color: var(--tint-muted);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+select.tint-select[data-size='sm'] {
+  min-height: 2rem;
+  padding-block: 0.25rem;
+  font-size: var(--tint-font-size-sm, 0.875rem);
+}
+
+/* Windows high contrast and similar: hand colours back to the system. */
+@media (forced-colors: active) {
+  select.tint-select.tint-select,
+  select.tint-field-input.tint-field-input {
+    appearance: auto;
+    background-image: none;
+    border-color: ButtonText;
+  }
+
+  select option,
+  select optgroup {
+    background-color: Canvas;
+    color: CanvasText;
+  }
+}

@@ -177,6 +177,37 @@ describe('theme contract', () => {
     }
   })
 
+  it.each(THEME_FILES)('%s keeps form-control boundaries and focus rings at 3:1 (WCAG 1.4.11)', (file) => {
+    const tokens = themeTokens(file)
+    // Select menus draw their boundary with --tint-muted (see styles/select.css),
+    // and the open list paints --tint-ink on --tint-panel / --tint-selection.
+    const UI_PAIRS: readonly TokenPair[] = [
+      ['muted', 'field'],
+      ['muted', 'panel'],
+      ['focus', 'field'],
+      ['focus', 'panel'],
+    ]
+    for (const scheme of ['light', 'dark'] as const) {
+      for (const [foregroundToken, backgroundToken] of UI_PAIRS) {
+        const foreground = parseHexColor(resolveColor(tokens.get(foregroundToken)!, scheme))
+        const background = parseHexColor(resolveColor(tokens.get(backgroundToken)!, scheme))
+        validateColorTokenPair(
+          `${file}/${scheme}: --tint-${foregroundToken} on --tint-${backgroundToken}`,
+          foreground,
+          background,
+          true,
+        )
+      }
+    }
+  })
+
+  it('themes the open select list from tokens', () => {
+    const css = readFileSync(join(STYLES, 'select.css'), 'utf8')
+    expect(css).toMatch(/select option[\s\S]*background-color:\s*var\(--tint-panel\)/)
+    expect(css).toMatch(/select option[\s\S]*color:\s*var\(--tint-ink\)/)
+    expect(css).toMatch(/forced-colors:\s*active/)
+  })
+
   it('bridges every contract token into a Tailwind utility', () => {
     const declared = tokensDeclaredIn('tint.css')
     const bridged = tokensBridged()

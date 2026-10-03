@@ -1,6 +1,7 @@
 <script lang="ts">
   import { formDescribedBy } from '../../core/form/render'
   import FormControl from './FormControl.svelte'
+  import Select from './Select.svelte'
   import type { ChoiceOption, FieldShared } from './types'
   import './styles.css'
 
@@ -17,18 +18,15 @@
 </script>
 
 <FormControl {id} {label} {description} {error} {required} {disabled}>
-  <select
+  <Select
     {id}
     class="tint-field-input"
     {value}
     {required}
     {disabled}
-    aria-invalid={error ? 'true' : undefined}
+    {options}
+    invalid={Boolean(error)}
     aria-describedby={formDescribedBy(id, description, error)}
-    onchange={(event) => onValueChange(event.currentTarget.value)}
-  >
-    {#each options as option (option.value)}
-      <option value={option.value} disabled={option.disabled}>{option.label}</option>
-    {/each}
-  </select>
+    onValueChange={onValueChange}
+  />
 </FormControl>

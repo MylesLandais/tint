@@ -17,7 +17,7 @@
 
 <div data-tint-policy-dry-run="" class={['dry-run', className].filter(Boolean).join(' ')}>
   <div class="controls">
-    <label><span>Fixture entry</span><select value={entry?.id ?? ''} onchange={(event) => entryId = event.currentTarget.value}>
+    <label><span>Fixture entry</span><select class="tint-select" value={entry?.id ?? ''} onchange={(event) => entryId = event.currentTarget.value}>
       {#each entries as item (item.id)}<option value={item.id}>{item.title}</option>{/each}
     </select></label>
     <button type="button" class="run" disabled={!entry} onclick={run}>Run dry-run</button>

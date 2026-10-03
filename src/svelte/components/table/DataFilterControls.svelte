@@ -75,18 +75,18 @@
       {#if adding}
         <div id={`${id}-form`} class="add-form">
           <label for={`${id}-field`}>Property
-            <select id={`${id}-field`} aria-label="Filter property" value={field?.id ?? ''} onchange={(event) => chooseField(event.currentTarget.value)}>
+            <select class="tint-select" id={`${id}-field`} aria-label="Filter property" value={field?.id ?? ''} onchange={(event) => chooseField(event.currentTarget.value)}>
               {#each fields as candidate (candidate.id)}<option value={candidate.id}>{candidate.label}</option>{/each}
             </select>
           </label>
           <label for={`${id}-operator`}>Operator
-            <select id={`${id}-operator`} aria-label="Filter operator" value={operator} onchange={(event) => operator = event.currentTarget.value as DataFilterOperator}>
+            <select class="tint-select" id={`${id}-operator`} aria-label="Filter operator" value={operator} onchange={(event) => operator = event.currentTarget.value as DataFilterOperator}>
               {#each operators as candidate (candidate)}<option value={candidate}>{FILTER_OPERATOR_LABELS[candidate]}</option>{/each}
             </select>
           </label>
           <label for={`${id}-value`}>Value
             {#if field?.type === 'select'}
-              <select id={`${id}-value`} aria-label="Filter value" value={value} onchange={(event) => value = event.currentTarget.value}>
+              <select class="tint-select" id={`${id}-value`} aria-label="Filter value" value={value} onchange={(event) => value = event.currentTarget.value}>
                 <option value="">Choose…</option>
                 {#each field.options ?? [] as option (String(option.value))}<option value={String(option.value)}>{option.label}</option>{/each}
               </select>
@@ -102,7 +102,7 @@
 
   {#if onSortingChange && sortableFields.length}
     <div class="sort-controls">
-      <select aria-label={sortLabel} value={activeSort?.id ?? ''} onchange={(event) => onSortingChange?.(event.currentTarget.value ? [{ id: event.currentTarget.value, desc: false }] : [])}>
+      <select class="tint-select" aria-label={sortLabel} value={activeSort?.id ?? ''} onchange={(event) => onSortingChange?.(event.currentTarget.value ? [{ id: event.currentTarget.value, desc: false }] : [])}>
         <option value="">Default order</option>
         {#each sortableFields as candidate (candidate.id)}<option value={candidate.id}>{candidate.label}</option>{/each}
       </select>

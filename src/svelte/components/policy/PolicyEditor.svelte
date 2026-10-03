@@ -70,9 +70,9 @@
 <div data-tint-policy-editor="" class={['policy-editor', className].filter(Boolean).join(' ')}>
   <div class="basics">
     <label><span>Name</span><input aria-label="Name" value={rule.name} {disabled} oninput={changeName} /></label>
-    <label><span>Source</span><select value={rule.sourceId} {disabled} onchange={changeSource}>{#each sources as source (source.id)}<option value={source.id}>{source.label}</option>{/each}</select></label>
-    <label><span>Disposition</span><select value={rule.disposition} {disabled} onchange={changeDisposition}>{#each POLICY_DISPOSITIONS as value (value)}<option value={value}>{value}</option>{/each}</select></label>
-    <label><span>Workflow edge</span><select value={rule.workflowEdge} {disabled} onchange={changeEdge}>{#each POLICY_EDGES as value (value)}<option value={value}>{value}</option>{/each}</select></label>
+    <label><span>Source</span><select class="tint-select" value={rule.sourceId} {disabled} onchange={changeSource}>{#each sources as source (source.id)}<option value={source.id}>{source.label}</option>{/each}</select></label>
+    <label><span>Disposition</span><select class="tint-select" value={rule.disposition} {disabled} onchange={changeDisposition}>{#each POLICY_DISPOSITIONS as value (value)}<option value={value}>{value}</option>{/each}</select></label>
+    <label><span>Workflow edge</span><select class="tint-select" value={rule.workflowEdge} {disabled} onchange={changeEdge}>{#each POLICY_EDGES as value (value)}<option value={value}>{value}</option>{/each}</select></label>
   </div>
 
   <div class="mode" role="group" aria-label="Criteria mode">
@@ -84,8 +84,8 @@
     <div class="clauses">
       {#each criteria.clauses as clause, index (clause.id)}
         <div class="clause">
-          <select aria-label={`Clause ${index + 1} field`} value={clause.field} {disabled} onchange={(event) => changeClauseField(event, clause.id)}>{#each POLICY_FIELDS as field (field)}<option value={field}>{field}</option>{/each}</select>
-          <select aria-label={`Clause ${index + 1} operator`} value={clause.operator} {disabled} onchange={(event) => changeClauseOperator(event, clause.id)}>{#each POLICY_OPERATORS as operator (operator)}<option value={operator}>{operator}</option>{/each}</select>
+          <select class="tint-select" aria-label={`Clause ${index + 1} field`} value={clause.field} {disabled} onchange={(event) => changeClauseField(event, clause.id)}>{#each POLICY_FIELDS as field (field)}<option value={field}>{field}</option>{/each}</select>
+          <select class="tint-select" aria-label={`Clause ${index + 1} operator`} value={clause.operator} {disabled} onchange={(event) => changeClauseOperator(event, clause.id)}>{#each POLICY_OPERATORS as operator (operator)}<option value={operator}>{operator}</option>{/each}</select>
           <input aria-label={`Clause ${index + 1} value`} value={clause.value} {disabled} oninput={(event) => changeClauseValue(event, clause.id)} />
           <button type="button" class="remove" disabled={disabled || criteria.clauses.length <= 1} onclick={() => removeClause(clause.id)}>Remove</button>
         </div>

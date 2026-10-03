@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/svelte'
+import { fireEvent, render, screen, within } from '@testing-library/svelte'
 import { describe, expect, it, vi } from 'vitest'
 import FileField from './FileField.svelte'
 import NumberField from './NumberField.svelte'
@@ -79,5 +79,20 @@ describe('Svelte form fields', () => {
     })
     expect(screen.getByText('portrait.png')).toBeInTheDocument()
     expect(screen.queryByRole('img')).not.toBeInTheDocument()
+  })
+})
+
+describe('Select', () => {
+  it('is a native, labelled select that reports invalid state and changes', async () => {
+    const onChange = vi.fn()
+    render(SelectField, { id: 'plan', label: 'Plan', value: 'a', onValueChange: onChange, error: 'Pick one', options: [{ value: 'a', label: 'Alpha' }, { value: 'b', label: 'Beta', disabled: true }, { value: 'c', label: 'Gamma' }] })
+    const select = screen.getByLabelText('Plan') as HTMLSelectElement
+    expect(select.tagName).toBe('SELECT')
+    expect(select).toHaveClass('tint-select')
+    expect(select).toHaveAttribute('aria-invalid', 'true')
+    expect(select).toHaveAttribute('aria-describedby', expect.stringContaining('plan'))
+    expect(within(select).getByRole('option', { name: 'Beta' })).toBeDisabled()
+    await fireEvent.change(select, { target: { value: 'c' } })
+    expect(onChange).toHaveBeenCalledWith('c')
   })
 })

@@ -26,7 +26,8 @@
     { prop: 'TextAreaField', type: 'value / onValueChange / rows', description: 'Controlled multiline text.' },
     { prop: 'NumberField', type: 'value / onValueChange / min / max / step', description: 'Controlled numeric input; empty emits an empty string.' },
     { prop: 'PasswordField', type: 'value / onValueChange / visible / onVisibleChange', description: 'Credential input with an accessible visibility toggle.' },
-    { prop: 'SelectField', type: 'value / onValueChange / options', description: 'Native single selection.' },
+    { prop: 'SelectField', type: 'value / onValueChange / options', description: 'Native single selection with a themed menu: the closed control and the open list both resolve from the active theme.' },
+    { prop: 'Select', type: "value / onValueChange / options | children / size: 'md' | 'sm' / invalid", description: 'The bare native select used by SelectField, for toolbars and compact menus. Any <select class="tint-select"> gets the same chrome.' },
     { prop: 'ToggleField', type: 'checked / onCheckedChange', description: 'Native controlled checkbox.' },
     { prop: 'SliderField', type: 'value / onValueChange / min / max / step', description: 'Native controlled range with a visible value.' },
     { prop: 'FileField', type: 'FormFileValue | null / onValueChange', description: 'File selection and optional image preview.' },
@@ -46,12 +47,14 @@ let enabled = $state(false)
   onCheckedChange={(next) => enabled = next} />`
 </script>
 
-<DocPage title="Form Fields" description="Controlled fields that share Tint's label, help, error, disabled, and required semantics." importPath="@nebula/tint/form" {usage} {api} accessibility="Labels connect to their controls. Descriptions and error messages use aria-describedby, invalid fields use aria-invalid, and disabled controls are native disabled inputs. The password visibility toggle is a separate named button.">
+<DocPage title="Form Fields" description="Controlled fields that share Tint's label, help, error, disabled, and required semantics." importPath="@nebula/tint/form" {usage} {api} accessibility="Select menus keep native semantics, keyboard (arrows, Home, End, type-ahead) and screen-reader behavior. The control boundary, chevron and focus ring meet 3:1 and the option text 4.5:1 in every theme and scheme, which the theme tests enforce; the open list is painted from the same tokens, and forced-colors mode falls back to system colors. Labels connect to their controls. Descriptions and error messages use aria-describedby, invalid fields use aria-invalid, and disabled controls are native disabled inputs. The password visibility toggle is a separate named button.">
   <div class="fields">
     <TextAreaField id="gallery-note" label="Note" value={note} onValueChange={(next) => note = next} rows={3} />
     <NumberField id="gallery-count" label="Count" value={count} onValueChange={(next) => count = next} min={0} max={20} />
     <PasswordField id="gallery-password" label="Password" value={password} onValueChange={(next) => password = next} autocomplete="new-password" />
     <SelectField id="gallery-genre" label="Genre" value={genre} onValueChange={(next) => genre = next} options={genres} />
+    <SelectField id="gallery-genre-error" label="Genre (invalid)" value="" onValueChange={() => {}} options={[{ value: '', label: 'Choose a genre' }, ...genres]} error="Choose a genre" required />
+    <SelectField id="gallery-genre-disabled" label="Genre (disabled)" value={genre} onValueChange={() => {}} options={genres} disabled />
     <ToggleField id="gallery-published" label="Published" checked={published} onCheckedChange={(next) => published = next} />
     <SliderField id="gallery-gain" label="Gain" value={gain} onValueChange={(next) => gain = next} />
     <FileField id="gallery-file" label="Cover artwork" value={file} onValueChange={(next) => file = next} accept="image/*" />
