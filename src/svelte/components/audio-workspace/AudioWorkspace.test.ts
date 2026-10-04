@@ -7,10 +7,16 @@ import type { CompiledTransition } from '../../../core/dj/contracts'
 import Midnight128Workspace from './Midnight128Workspace.svelte'
 import TrackImportController from './TrackImportController.svelte'
 
+function audioFile(content: string, name: string): File {
+  const file = new File([content], name, { type: 'audio/wav' })
+  Object.defineProperty(file, 'arrayBuffer', { value: async () => new TextEncoder().encode(content).buffer })
+  return file
+}
+
 const files = [
-  new File(['one'], '01-here-we-go.wav', { type: 'audio/wav' }),
-  new File(['two'], '02-apapacho.wav', { type: 'audio/wav' }),
-  new File(['three'], '03-trajadao.wav', { type: 'audio/wav' }),
+  audioFile('one', '01-here-we-go.wav'),
+  audioFile('two', '02-apapacho.wav'),
+  audioFile('three', '03-trajadao.wav'),
 ]
 
 function setup() {
