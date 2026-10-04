@@ -84,6 +84,7 @@
     "./layout-scale.css": "./src/styles/layout-scale.css",
     "./effects/shine.css": "./src/styles/effects/shine.css",
     "./themes/solarized.css": "./src/styles/themes/solarized.css",
+    "./themes/carbon.css": "./src/styles/themes/carbon.css",
     "./themes/gruvbox.css": "./src/styles/themes/gruvbox.css",
     "./themes/latte.css": "./src/styles/themes/latte.css",
     "./themes/frappe.css": "./src/styles/themes/frappe.css",

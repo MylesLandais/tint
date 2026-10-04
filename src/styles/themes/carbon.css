@@ -1,0 +1,49 @@
+/* Gray 10 / Gray 100 surfaces with Carbon blue accents. */
+[data-theme='carbon'] {
+  --tint-bg: light-dark(#f4f4f4, #101010);
+  --tint-surface: light-dark(#f4f4f4, #161616);
+  --tint-panel: light-dark(#ffffff, #262626);
+  --tint-field: light-dark(#ffffff, #262626);
+  --tint-ink: light-dark(#161616, #f4f4f4);
+  --tint-muted: light-dark(#525252, #c6c6c6);
+  --tint-border: light-dark(#e0e0e0, #393939);
+  --tint-border-strong: light-dark(#a8a8a8, #6f6f6f);
+
+  --tint-accent: light-dark(#0f62fe, #4589ff);
+  --tint-accent-hover: light-dark(#0353e9, #78a9ff);
+  --tint-accent-soft: light-dark(#edf5ff, #1b3157);
+  --tint-on-accent: light-dark(#ffffff, #161616);
+  --accent-strong: #0f62fe;
+  --on-accent-strong: #ffffff;
+  --tint-focus: light-dark(#0f62fe, #ffffff);
+  --tint-selection: light-dark(#d0e2ff, #1b3157);
+
+  --tint-warning: light-dark(#b28600, #f1c21b);
+  --tint-warning-soft: light-dark(#fff1c7, #332900);
+  --tint-warning-ink: light-dark(#684e00, #f1c21b);
+  --tint-success: light-dark(#198038, #42be65);
+  --tint-success-soft: light-dark(#defbe6, #10391e);
+  --tint-success-ink: light-dark(#0e6027, #6fdc8c);
+  --tint-danger: light-dark(#da1e28, #fa4d56);
+  --tint-danger-soft: light-dark(#fff1f1, #3c1418);
+  --tint-danger-ink: light-dark(#a2191f, #ffb3b8);
+  --tint-info: light-dark(#0f62fe, #4589ff);
+  --tint-info-soft: light-dark(#edf5ff, #1b3157);
+  --tint-info-ink: light-dark(#0043ce, #78a9ff);
+
+  --tint-code: light-dark(#262626, #161616);
+  --tint-code-ink: #f4f4f4;
+  --tint-code-muted: #a8a8a8;
+  --tint-code-border: light-dark(#393939, #525252);
+  --tint-code-keyword: #be95ff;
+  --tint-code-string: #a7f0ba;
+  --tint-code-number: #ffb784;
+  --tint-code-comment: #a8a8a8;
+  --tint-code-function: #78a9ff;
+  --tint-code-punctuation: #c6c6c6;
+
+  --tint-chrome: #161616cc;
+  --tint-chrome-ink: #ffffff;
+  --tint-chrome-border: #ffffff1a;
+  --tint-shadow-color: light-dark(rgb(22 22 22 / 0.12), rgb(0 0 0 / 0.5));
+}

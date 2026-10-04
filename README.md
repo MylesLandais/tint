@@ -50,6 +50,8 @@ The default stylesheet supplies the Tint palette and the token contract. To use 
 ```
 
 Other palette subpaths are listed in [package.json](package.json). Light and dark colors follow the host's color scheme unless the host sets one explicitly. See [the token contract](src/styles/contract.css) for semantic color and spacing tokens.
+The `carbon.css` palette provides Gray 10 / Gray 100 surfaces with Carbon blue
+accents; import `@nebula/tint/themes/carbon.css` and set `data-theme="carbon"`.
 
 ## Develop
 
