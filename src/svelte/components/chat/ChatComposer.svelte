@@ -8,7 +8,8 @@
   let {
     value, attachments = [], state: composerState = 'idle', error,
     placeholder = 'Write a message…', inputLabel = placeholder,
-    submitLabel = 'Send message', stopLabel = 'Stop response', maxLength,
+    submitLabel = 'Send message', submitDisabled = false, submitDisabledReason,
+    stopLabel = 'Stop response', maxLength,
     submitOnEnter = true, accept, multiple = true, metadata, actions, inputRef,
     onValueChange, onSubmit, onStop, onAttachmentAdd, onAttachmentRemove,
     class: className, className: legacyClassName, ...rest
@@ -21,7 +22,7 @@
   let readonly = $derived(composerState === 'disabled' || composerState === 'submitting')
   let streaming = $derived(composerState === 'streaming')
   let sendable = $derived(attachments.filter(isSendableAttachment))
-  let canSubmit = $derived(Boolean(value.trim() || sendable.length) && !readonly && !streaming)
+  let canSubmit = $derived(Boolean(value.trim() || sendable.length) && !readonly && !streaming && !submitDisabled)
 
   $effect(() => {
     if (composerState === 'submitting') { wasSubmitting = true; return }
@@ -99,7 +100,7 @@
       {#if streaming && onStop}
         <ChatActionButton label={stopLabel} onclick={onStop} class="bg-tint-ink text-tint-bg hover:bg-tint-muted"><Square size={16} fill="currentColor" /></ChatActionButton>
       {:else}
-        <ChatActionButton type="submit" label={submitLabel} disabled={!canSubmit} pending={composerState === 'submitting'} class="bg-tint-accent text-tint-on-accent hover:bg-tint-accent-hover"><ArrowUp size={18} /></ChatActionButton>
+        <ChatActionButton type="submit" label={submitLabel} title={submitDisabled ? submitDisabledReason : submitLabel} disabled={!canSubmit} pending={composerState === 'submitting'} class="bg-tint-accent text-tint-on-accent hover:bg-tint-accent-hover"><ArrowUp size={18} /></ChatActionButton>
       {/if}
     </div>
   </div>

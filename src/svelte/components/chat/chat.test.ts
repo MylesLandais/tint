@@ -48,6 +48,19 @@ describe('Svelte chat composer', () => {
     expect(input).toHaveAttribute('readonly')
     expect(input).toHaveAttribute('aria-disabled', 'true')
   })
+
+  it('can hold submission while leaving the draft editable', async () => {
+    const onSubmit = vi.fn()
+    render(ChatComposer, { value: 'Keep this draft', onValueChange: vi.fn(), onSubmit,
+      submitDisabled: true, submitDisabledReason: 'Model is preparing' })
+    const input = screen.getByRole('textbox')
+    const send = screen.getByRole('button', { name: 'Send message' })
+    expect(input).not.toHaveAttribute('readonly')
+    expect(send).toBeDisabled()
+    expect(send).toHaveAttribute('title', 'Model is preparing')
+    await fireEvent.keyDown(input, { key: 'Enter' })
+    expect(onSubmit).not.toHaveBeenCalled()
+  })
 })
 
 describe('Svelte chat parts and message', () => {

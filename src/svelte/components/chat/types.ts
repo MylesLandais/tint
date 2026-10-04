@@ -100,6 +100,8 @@ export type ChatComposerProps = Omit<HTMLFormAttributes, 'children' | 'onsubmit'
   placeholder?: string
   inputLabel?: string
   submitLabel?: string
+  submitDisabled?: boolean
+  submitDisabledReason?: string
   stopLabel?: string
   maxLength?: number
   submitOnEnter?: boolean
