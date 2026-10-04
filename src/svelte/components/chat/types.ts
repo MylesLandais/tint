@@ -110,6 +110,9 @@ export type ChatComposerProps = Omit<HTMLFormAttributes, 'children' | 'onsubmit'
   metadata?: Readonly<Record<string, unknown>>
   actions?: Snippet
   inputRef?: (node: HTMLTextAreaElement | null) => void
+  onInputKeydown?: (event: KeyboardEvent) => void
+  inputListboxId?: string
+  inputActiveOptionId?: string
   onValueChange: (value: string) => void
   onSubmit: (payload: ChatSubmitPayload) => void
   onStop?: () => void
@@ -123,6 +126,7 @@ export type ChatComposerInputProps = Omit<HTMLTextareaAttributes, 'value' | 'oni
   onValueChange: (value: string) => void
   submitOnEnter?: boolean
   inputRef?: (node: HTMLTextAreaElement | null) => void
+  onInputKeydown?: (event: KeyboardEvent) => void
 }
 
 export type ChatActionButtonProps = HTMLButtonAttributes & {

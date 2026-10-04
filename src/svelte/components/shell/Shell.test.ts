@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/svelte'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import CommandPalette from './CommandPalette.svelte'
+import CommandMenu from './CommandMenu.svelte'
 import LoadingState from './LoadingState.svelte'
 import NavRail from './NavRail.svelte'
 import ResponsiveNavRail from './ResponsiveNavRail.svelte'
@@ -10,6 +11,26 @@ import TopNav from './TopNav.svelte'
 afterEach(() => vi.unstubAllGlobals())
 
 describe('Svelte shell', () => {
+  it('groups anchored commands and keeps disabled options inert', async () => {
+    const onSelect = vi.fn()
+    const onActiveChange = vi.fn()
+    render(CommandMenu, {
+      id: 'test-commands', query: '', activeId: 'open', onSelect, onActiveChange,
+      items: [
+        { id: 'open', label: '/open', group: 'Apps' },
+        { id: 'play', label: '/play', group: 'Media' },
+        { id: 'private', label: '/private', group: 'Session', disabled: true },
+      ],
+    })
+    expect(screen.getByRole('listbox', { name: 'Commands' })).toBeInTheDocument()
+    expect(screen.getByRole('option', { name: '/open' })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByRole('option', { name: '/private' })).toBeDisabled()
+    await fireEvent.mouseEnter(screen.getByRole('option', { name: '/play' }))
+    expect(onActiveChange).toHaveBeenCalledWith('play')
+    await fireEvent.click(screen.getByRole('option', { name: '/play' }))
+    expect(onSelect).toHaveBeenCalledWith('play')
+  })
+
   it('keeps pane sizes and tab selection controlled while keyboard focus follows tabs', async () => {
     const onSizeChange = vi.fn()
     const onTabChange = vi.fn()

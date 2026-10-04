@@ -2,7 +2,7 @@
   import type { ChatComposerInputProps } from './types'
 
   const MAX_HEIGHT = 160
-  let { value, onValueChange, submitOnEnter = true, inputRef,
+  let { value, onValueChange, submitOnEnter = true, inputRef, onInputKeydown,
     class: className, ...rest }: ChatComposerInputProps = $props()
   let textarea: HTMLTextAreaElement | null = null
 
@@ -24,6 +24,8 @@
   }
 
   function keydown(event: KeyboardEvent) {
+    onInputKeydown?.(event)
+    if (event.defaultPrevented) return
     if (!submitOnEnter || event.key !== 'Enter' || event.shiftKey || event.isComposing || event.keyCode === 229) return
     event.preventDefault()
     ;(event.currentTarget as HTMLTextAreaElement).form?.requestSubmit()

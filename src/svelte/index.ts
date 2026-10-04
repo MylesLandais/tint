@@ -150,7 +150,7 @@ export * from './components/audio-engine'
 export * from './components/audio-workspace'
 export {
   AppShell, NavRail, ResponsiveNavRail, TopNav, WorkspaceHeader,
-  CommandPalette, StatusBar, ErrorBanner, EmptyState as ShellEmptyState,
+  CommandPalette, CommandMenu, StatusBar, ErrorBanner, EmptyState as ShellEmptyState,
   LoadingState, WorkspaceLayout, WorkspaceSplit, WorkspaceTabs,
   MetadataPanel, DetailSheet, FilterBar,
 } from './components/shell'

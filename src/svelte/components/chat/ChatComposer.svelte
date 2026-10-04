@@ -11,6 +11,7 @@
     submitLabel = 'Send message', submitDisabled = false, submitDisabledReason,
     stopLabel = 'Stop response', maxLength,
     submitOnEnter = true, accept, multiple = true, metadata, actions, inputRef,
+    onInputKeydown, inputListboxId, inputActiveOptionId,
     onValueChange, onSubmit, onStop, onAttachmentAdd, onAttachmentRemove,
     class: className, className: legacyClassName, ...rest
   }: ChatComposerProps = $props()
@@ -85,7 +86,9 @@
       </div>
     {/if}
     <div class="px-2 pt-1">
-      <ChatComposerInput {value} {onValueChange} submitOnEnter={submitOnEnter && !readonly} inputRef={(node) => { textarea = node; inputRef?.(node) }}
+      <ChatComposerInput {value} {onValueChange} {onInputKeydown} submitOnEnter={submitOnEnter && !readonly} inputRef={(node) => { textarea = node; inputRef?.(node) }}
+        role={inputListboxId ? 'combobox' : undefined} aria-autocomplete={inputListboxId ? 'list' : undefined}
+        aria-expanded={inputListboxId ? true : undefined} aria-controls={inputListboxId} aria-activedescendant={inputActiveOptionId}
         aria-label={inputLabel} {placeholder} maxlength={maxLength} {readonly} aria-disabled={readonly || undefined} aria-describedby={error ? errorId : undefined} />
     </div>
     <div data-chat-composer-footer="" class="mt-1 flex items-center justify-between gap-3">

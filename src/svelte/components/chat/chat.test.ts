@@ -61,6 +61,19 @@ describe('Svelte chat composer', () => {
     await fireEvent.keyDown(input, { key: 'Enter' })
     expect(onSubmit).not.toHaveBeenCalled()
   })
+
+  it('lets an anchored suggestion menu intercept Enter while exposing its active option', async () => {
+    const onSubmit = vi.fn()
+    const onInputKeydown = vi.fn((event: KeyboardEvent) => event.preventDefault())
+    render(ChatComposer, { value: '/open', onValueChange: vi.fn(), onSubmit,
+      onInputKeydown, inputListboxId: 'commands', inputActiveOptionId: 'commands-open' })
+    const input = screen.getByRole('combobox')
+    expect(input).toHaveAttribute('aria-controls', 'commands')
+    expect(input).toHaveAttribute('aria-activedescendant', 'commands-open')
+    await fireEvent.keyDown(input, { key: 'Enter' })
+    expect(onInputKeydown).toHaveBeenCalled()
+    expect(onSubmit).not.toHaveBeenCalled()
+  })
 })
 
 describe('Svelte chat parts and message', () => {
