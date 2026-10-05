@@ -2,6 +2,8 @@
   import { notificationBadgeCount } from '../../../core/notify'
   import Dialog from '../dialog/Dialog.svelte'
   import Panel from '../panel/Panel.svelte'
+  import Popover from '../popover/Popover.svelte'
+  import type { PopoverTriggerProps } from '../popover/types'
   import type { NotificationBellProps } from './types'
 
   let {
@@ -12,20 +14,37 @@
   let badge = $derived(notificationBadgeCount(unreadCount))
 </script>
 
-<div data-tint-notification-bell="" class={['notification-bell', className].filter(Boolean).join(' ')}>
+{#snippet glyph()}
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg>
+{/snippet}
+
+{#snippet popoverTrigger(props: PopoverTriggerProps)}
+  <span class="trigger-wrap">
+    <button {...props} type="button" class="trigger" aria-label={unreadCount > 0 ? `${label}, ${unreadCount} unread` : label}>{@render glyph()}</button>
+    {#if badge}<span class="count">{badge}</span>{/if}
+  </span>
+{/snippet}
+
+<div data-tint-notification-bell="" data-presentation={presentation} class={['notification-bell', className].filter(Boolean).join(' ')}>
+  {#if presentation === 'popover'}
+    <Popover {open} {onOpenChange} trigger={popoverTrigger} {title} label={title} side="bottom" class="tint-notification-popover">
+      <div class="popover-body">{@render children()}</div>
+    </Popover>
+  {:else}
   <div class="trigger-wrap">
     <button
       type="button" class="trigger" aria-label={unreadCount > 0 ? `${label}, ${unreadCount} unread` : label} aria-expanded={open}
       aria-controls={presentation === 'panel' ? panelId : undefined}
       onclick={() => onOpenChange(!open)}
     >
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg>
+      {@render glyph()}
     </button>
     {#if badge}<span class="count">{badge}</span>{/if}
   </div>
+  {/if}
   {#if presentation === 'dialog'}
     <Dialog {open} {onOpenChange} {title}>{@render children()}</Dialog>
-  {:else}
+  {:else if presentation === 'panel'}
     <div id={panelId} class="panel-wrap">
       <Panel {title} expanded={open} onExpandedChange={onOpenChange}>
         <div class="panel-body">{@render children()}</div>
@@ -43,4 +62,5 @@
   .count { position: absolute; top: -0.25rem; right: -0.25rem; display: inline-flex; min-width: 1rem; height: 1rem; align-items: center; justify-content: center; border-radius: 999px; background: var(--tint-accent); padding: 0 0.25rem; color: var(--tint-on-accent); font-size: 0.625rem; font-weight: 700; pointer-events: none; }
   .panel-wrap { width: 18rem; max-width: 100%; }
   .panel-body { padding: var(--tint-space-2); }
+  .popover-body { width: min(22rem, calc(100vw - 2rem)); max-height: min(32rem, calc(100vh - 6rem)); overflow: auto; }
 </style>

@@ -7,7 +7,8 @@ export type NotificationBellProps = {
   unreadCount: number
   open: boolean
   onOpenChange: (open: boolean) => void
-  presentation?: 'panel' | 'dialog'
+  /** `panel` expands inline, `popover` anchors a non-modal surface to the bell, `dialog` is modal. */
+  presentation?: 'panel' | 'popover' | 'dialog'
   title?: string
   children: Snippet
   class?: string

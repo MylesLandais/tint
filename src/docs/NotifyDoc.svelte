@@ -17,7 +17,7 @@
 
   const api: ApiRow[] = [
     { prop: 'NotificationBell unreadCount / open / onOpenChange', type: 'number / boolean / callback', description: 'Host-owned unread count and controlled panel or dialog state.' },
-    { prop: 'NotificationBell presentation', type: "'panel' | 'dialog'", description: 'Selects the default anchored panel or a modal dialog for the open notification surface.' },
+    { prop: 'NotificationBell presentation', type: "'panel' | 'popover' | 'dialog'", description: 'Selects the default inline panel, a non-modal popover anchored to the bell (for app headers), or a modal dialog for the open notification surface.' },
     { prop: 'NotificationBell children / label / title', type: 'Snippet / string / string', description: 'Panel content, accessible bell name, and optional visible title.' },
     { prop: 'NotificationBell class', type: 'string', description: 'Additional class for the bell container.' },
     { prop: 'NotificationList notifications / onSelect', type: 'readonly Notification[] / callback', description: 'Host-owned notification rows and selection intent.' },

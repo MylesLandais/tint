@@ -48,7 +48,7 @@ export const docsGraphNodes: readonly DocsGraphNode[] = [
   { id: "media-assets", imports: ["dialog", "icon", "progress"], position: {"x": 340, "y": 525} },
   { id: "menu", imports: [], position: {"x": 0, "y": -150} },
   { id: "navigation", imports: [], position: {"x": 0, "y": 0} },
-  { id: "notify", imports: ["badge", "dialog", "identity", "panel"], position: {"x": 680, "y": 150} },
+  { id: "notify", imports: ["badge", "dialog", "identity", "panel", "popover"], position: {"x": 680, "y": 150} },
   { id: "panel", imports: ["icon", "surface"], position: {"x": 340, "y": 675} },
   { id: "policy", imports: ["badge", "code", "table"], position: {"x": 680, "y": 300} },
   { id: "popover", imports: [], position: {"x": 0, "y": 150} },

@@ -44,6 +44,23 @@ describe('Svelte notification surfaces', () => {
     view.unmount()
   })
 
+  it('anchors a popover to the bell trigger and closes it with Escape', async () => {
+    const onOpenChange = vi.fn()
+    const view = render(NotificationBellFixture, { unreadCount: 2, open: false, onOpenChange, presentation: 'popover' })
+    const trigger = screen.getByRole('button', { name: 'Notifications, 2 unread' })
+    expect(trigger).toHaveAttribute('aria-haspopup', 'dialog')
+    expect(trigger).toHaveAttribute('aria-expanded', 'false')
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    await fireEvent.click(trigger)
+    expect(onOpenChange).toHaveBeenCalledWith(true)
+    await view.rerender({ unreadCount: 2, open: true, onOpenChange, presentation: 'popover' })
+    expect(trigger).toHaveAttribute('aria-expanded', 'true')
+    expect(screen.getByRole('dialog', { name: 'Notifications' })).toHaveTextContent('Notification body')
+    await fireEvent.keyDown(document, { key: 'Escape' })
+    expect(onOpenChange).toHaveBeenLastCalledWith(false)
+    view.unmount()
+  })
+
   it('groups notifications in first-seen order and keeps actions separate from row selection', async () => {
     const onSelect = vi.fn()
     const view = render(NotificationList, { notifications, groupBy: 'kind', onSelect })
