@@ -92,13 +92,13 @@
         aria-label={inputLabel} {placeholder} maxlength={maxLength} {readonly} aria-disabled={readonly || undefined} aria-describedby={error ? errorId : undefined} />
     </div>
     <div data-chat-composer-footer="" class="mt-1 flex items-center justify-between gap-3">
-      <div class="flex items-center gap-1">
+      <div class="flex min-w-0 flex-1 items-center gap-1">
         {#if onAttachmentAdd}
           <input use:registerFileInput type="file" {accept} {multiple} onchange={attachFromPicker} class="sr-only" tabindex="-1" />
           <ChatActionButton label="Attach files" onclick={() => fileInput?.click()} disabled={readonly || streaming} class="text-tint-muted hover:bg-tint-surface hover:text-tint-ink"><Paperclip size={18} /></ChatActionButton>
         {/if}
         {@render actions?.()}
-        <span class="hidden text-[0.6875rem] text-tint-muted sm:inline">{dragging ? 'Drop files to attach' : 'Shift + Enter for a new line'}</span>
+        <span class="hidden min-w-0 truncate text-[0.6875rem] text-tint-muted sm:inline">{dragging ? 'Drop files to attach' : 'Shift + Enter for a new line'}</span>
       </div>
       {#if streaming && onStop}
         <ChatActionButton label={stopLabel} onclick={onStop} class="bg-tint-ink text-tint-bg hover:bg-tint-muted"><Square size={16} fill="currentColor" /></ChatActionButton>
