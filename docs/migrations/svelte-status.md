@@ -10,7 +10,7 @@ Rows reflect source files and local migration gates; behavior parity and consume
 - Imports from react-dom: **0**
 - React-specific direct dependency entries: **0**
 - React findings: **0**
-- Svelte files (excluding the retired smoke fixture): **325**
+- Svelte files (excluding the retired smoke fixture): **326**
 - Packages with extracted core modules: **41**
 - Carbon imports outside approved Tint implementation paths: **0**
 - Public component packages still React-backed: **0**

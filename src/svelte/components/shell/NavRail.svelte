@@ -11,11 +11,16 @@
     onNavigate?: (id: string, href: string) => void
     onLinkClick?: (event: MouseEvent, item: NavRailItem) => void
     header?: Snippet
+    /**
+     * A contextual view (for example a page's thread list) shown in place of
+     * the groups while present. The host supplies its own way back.
+     */
+    context?: Snippet
     footer?: Snippet
   }
   let {
     groups, activeId, collapsed = false, onCollapsedChange, onNavigate, onLinkClick,
-    header, footer, class: className, 'aria-label': ariaLabel = 'Primary navigation', ...rest
+    header, context, footer, class: className, 'aria-label': ariaLabel = 'Primary navigation', ...rest
   }: Props = $props()
 
   function clickItem(event: MouseEvent, item: NavRailItem) {
@@ -28,6 +33,9 @@
 <nav {...rest} aria-label={ariaLabel} data-tint-nav-rail data-collapsed={collapsed || undefined}
   class={['flex h-full w-full flex-col border-r border-tint-border bg-tint-panel p-2 @3xl/app-shell:w-64', collapsed && '@3xl/app-shell:w-16', className]}>
   {@render header?.()}
+  {#if context && !collapsed}
+  <div data-tint-nav-rail-context class="flex min-h-0 flex-1 flex-col overflow-hidden">{@render context()}</div>
+  {:else}
   <div data-tint-nav-rail-groups class="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto">
     {#each groups as group (group.id)}
       <section role="group" aria-label={group.label} data-tint-nav-group>
@@ -49,6 +57,7 @@
       </section>
     {/each}
   </div>
+  {/if}
   {@render footer?.()}
   {#if onCollapsedChange}
     <button type="button" aria-label={collapsed ? 'Expand navigation' : 'Collapse navigation'} aria-expanded={!collapsed}

@@ -4,6 +4,7 @@ import CommandPalette from './CommandPalette.svelte'
 import CommandMenu from './CommandMenu.svelte'
 import LoadingState from './LoadingState.svelte'
 import NavRail from './NavRail.svelte'
+import NavRailContextFixture from './NavRailContextFixture.svelte'
 import ResponsiveNavRail from './ResponsiveNavRail.svelte'
 import ShellFixture from './ShellFixture.svelte'
 import TopNav from './TopNav.svelte'
@@ -78,6 +79,16 @@ describe('Svelte shell', () => {
     expect(onNavigate).toHaveBeenCalledWith('home', '#home')
     await fireEvent.click(screen.getByRole('button', { name: 'Expand navigation' }))
     expect(onCollapsedChange).toHaveBeenCalledWith(false)
+  })
+
+  it('shows a contextual view in place of the groups while expanded', () => {
+    const view = render(NavRailContextFixture, { collapsed: false })
+    expect(screen.getByText('Thread list')).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Home' })).not.toBeInTheDocument()
+    view.unmount()
+    render(NavRailContextFixture, { collapsed: true })
+    expect(screen.queryByText('Thread list')).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument()
   })
 
   it('keeps palette query and open state controlled and skips disabled commands', async () => {

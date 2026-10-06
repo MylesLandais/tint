@@ -22,6 +22,7 @@
   const api: ApiRow[] = [
     { prop: 'AppShell', type: 'nav / header / aside / status / children', description: 'Container-aware application frame with rail or top navigation.' },
     { prop: 'NavRail / ResponsiveNavRail / TopNav', type: 'groups / activeId / callbacks', description: 'Host-supplied navigation with compact and drawer presentations.' },
+    { prop: 'NavRail context', type: 'Snippet', description: 'A contextual view, such as a page thread list, shown in place of the groups while the rail is expanded; also rendered in the ResponsiveNavRail drawer. The host supplies its own way back.' },
     { prop: 'WorkspaceHeader', type: 'title / subtitle / breadcrumbs / actions', description: 'Workspace heading and action slot.' },
     { prop: 'WorkspaceTabs', type: 'tabs / value / onChange / label', description: 'Controlled tab navigation with arrow, Home, and End keys.' },
     { prop: 'WorkspaceSplit', type: 'size / onSizeChange / first / second', description: 'Host-owned pane size with keyboard and pointer resizing.' },
