@@ -53,7 +53,7 @@
   data-group-position={groupPosition} data-speaking={isSpeaking ? '' : undefined}
   class={['chat-message group/message flex min-w-0 gap-3 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-tint-accent focus-visible:ring-offset-4', alignment === 'end' && 'flex-row-reverse', alignment === 'center' && 'justify-center', className, legacyClassName]}>
   {#if alignment !== 'center'}
-    {#if showAvatar}<span class={['mt-0.5 grid size-8 shrink-0 place-items-center overflow-hidden rounded-xl', alignment === 'end' ? 'bg-tint-accent text-tint-on-accent' : 'border border-tint-border bg-tint-panel text-tint-accent']} aria-hidden="true"><Avatar identity={message.actor} size="sm" decorative class="size-8" /></span>
+    {#if showAvatar}<span class={['mt-0.5 grid size-8 shrink-0 place-items-center overflow-hidden rounded-xl', alignment === 'end' ? 'border border-tint-border bg-tint-panel text-tint-ink' : 'border border-tint-border bg-tint-panel text-tint-accent']} aria-hidden="true"><Avatar identity={message.actor} size="sm" decorative class="size-8" /></span>
     {:else}<span class="size-8 shrink-0" aria-hidden="true"></span>{/if}
   {/if}
   <div class={['min-w-0', alignment === 'end' ? 'max-w-[min(82%,42rem)]' : 'max-w-[min(92%,48rem)] flex-1', alignment === 'center' && 'max-w-xl text-center']}>
@@ -69,7 +69,7 @@
         <Reply size={12} class="shrink-0" /><span class="shrink-0 font-medium">{stripBidi(replyToMessage.actor.name)}</span><span class="truncate">{replySnippet(replyToMessage)}</span>
       </div>
     {/if}
-    <div class={alignment === 'end' ? 'rounded-2xl rounded-tr-md bg-tint-accent px-4 py-3 text-tint-on-accent' : alignment === 'center' ? 'rounded-xl border border-tint-border bg-tint-panel px-4 py-3' : 'py-1'}>
+    <div class={alignment === 'end' ? 'rounded border border-tint-border bg-tint-panel px-4 py-3 text-tint-ink' : alignment === 'center' ? 'rounded-xl border border-tint-border bg-tint-panel px-4 py-3' : 'py-1'}>
       <div data-chat-message-content="" class="min-w-0 space-y-3">
         {#each message.parts as part (part.id)}
           <ChatPart {part} {message} {renderPart} {onAction} {onToolApproval} onRetry={() => emit('retry')}

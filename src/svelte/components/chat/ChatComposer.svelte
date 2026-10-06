@@ -68,7 +68,7 @@
   ondragover={(event) => { if (onAttachmentAdd) { event.preventDefault(); dragging = true } }}
   ondragleave={leave} ondrop={drop}
   class={['relative border-t border-tint-border bg-tint-panel/95 px-3 py-3 backdrop-blur sm:px-5 sm:py-4', className, legacyClassName]}>
-  <div class={['mx-auto max-w-3xl rounded-2xl border border-tint-border bg-tint-panel p-2 shadow-sm transition-[border-color,box-shadow] focus-within:border-tint-accent focus-within:shadow-[0_0_0_3px_var(--tint-accent-soft)]', dragging && 'border-tint-accent bg-tint-accent-soft', composerState === 'error' && 'border-tint-danger/60']}>
+  <div class={['mx-auto max-w-[var(--tint-chat-measure,48rem)] rounded border border-[color-mix(in_srgb,var(--tint-muted)_70%,var(--tint-panel))] bg-tint-panel p-2 shadow-sm transition-[border-color,box-shadow] focus-within:border-tint-accent focus-within:shadow-[0_0_0_3px_var(--tint-accent-soft)]', dragging && 'border-tint-accent bg-tint-accent-soft', composerState === 'error' && 'border-tint-danger/60']}>
     {#if attachments.length}
       <div data-chat-composer-attachments="" class="mb-2 flex flex-wrap gap-2">
         {#each attachments as attachment (attachment.id)}
@@ -107,5 +107,5 @@
       {/if}
     </div>
   </div>
-  {#if error}<p id={errorId} role="alert" class="mx-auto mt-2 max-w-3xl px-2 text-xs text-tint-danger-ink">{error}</p>{/if}
+  {#if error}<p id={errorId} role="alert" class="mx-auto mt-2 max-w-[var(--tint-chat-measure,48rem)] px-2 text-xs text-tint-danger-ink">{error}</p>{/if}
 </form>

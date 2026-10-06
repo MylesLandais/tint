@@ -153,7 +153,7 @@
     {#if messages.length === 0}
       {#if emptyState}{@render emptyState()}{:else}<section data-chat-empty-state="" class="m-auto max-w-sm px-6 py-12 text-center text-sm text-tint-muted">Start a conversation</section>{/if}
     {:else}
-      <div use:registerContent class="mx-auto flex w-full max-w-3xl flex-col gap-5">
+      <div use:registerContent class="mx-auto flex w-full max-w-[var(--tint-chat-measure,48rem)] flex-col gap-5">
         {#each messages as message, index (message.id)}
           {@const position = positions[index] ?? 'solo'}
           {@const startsGroup = position === 'solo' || position === 'first'}
