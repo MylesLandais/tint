@@ -40,6 +40,7 @@ import FramebufferDoc from '../FramebufferDoc.svelte'
 import ChartsDoc from '../ChartsDoc.svelte'
 import TelemetryDoc from '../TelemetryDoc.svelte'
 import FeedDoc from '../FeedDoc.svelte'
+import FeedAutomationDoc from '../feed/FeedAutomationDoc.svelte'
 import ActivityDoc from '../ActivityDoc.svelte'
 import NotifyDoc from '../NotifyDoc.svelte'
 import TileMapDoc from '../TileMapDoc.svelte'
@@ -78,6 +79,7 @@ export const SVELTE_DOC_PAGES: ReadonlyArray<SvelteDocRoute & { component: Compo
   { path: 'components/charts', label: 'Time Series and Bars', group: 'Data', description: 'Responsive native SVG charts with exact-value data tables.', component: ChartsDoc },
   { path: 'components/telemetry', label: 'Telemetry', group: 'Data', description: 'Trace waterfall, metrics, span detail, and service map.', component: TelemetryDoc },
   { path: 'components/feed', label: 'Feed and Reader', group: 'Data', description: 'Controlled entry layouts and article reading surface.', component: FeedDoc },
+  { path: 'components/feed-automation', label: 'Feed Automation & Queue', group: 'Data', description: 'Article unlock trigger, depth link discovery, queue status, and verified download progress.', component: FeedAutomationDoc },
   { path: 'components/activity', label: 'Activity', group: 'Data', description: 'Ranked activity with controlled sort and selection.', component: ActivityDoc },
   { path: 'components/notify', label: 'Notifications', group: 'Feedback', description: 'Controlled bell, notification rows, and delivery settings.', component: NotifyDoc },
   { path: 'components/tile-map', label: 'Tile Map', group: 'Data', description: 'Keyboard-controlled map over a host-owned exploration client.', component: TileMapDoc },

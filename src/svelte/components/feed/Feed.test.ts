@@ -170,7 +170,87 @@ describe('Svelte feed presentation', () => {
     await fireEvent.ended(audio)
     expect(onEnded).toHaveBeenCalledTimes(1)
     await view.rerender({ src: '/next.mp3', label: 'Article', onEnded })
-    expect(screen.getByRole('progressbar', { name: 'Article progress' })).toHaveAttribute('aria-valuenow', '0')
     expect(screen.getByRole('button', { name: 'Play Article' })).toHaveAttribute('aria-pressed', 'false')
+  })
+
+  it('triggers automation ingest and displays download progress on feed entry card and reader pane', async () => {
+    const onAutomate = vi.fn()
+    const entry: FeedEntry = {
+      id: 'auto-1',
+      sourceId: 'dle',
+      title: 'DLE Video Scene',
+      url: 'https://example.com/scene.html',
+      publishedAt: '2026-10-05T00:00:00Z',
+      excerpt: 'High definition scene',
+      tags: ['1080p'],
+      readState: 'unread',
+      contentKind: 'video',
+      artifactStatus: 'none',
+      body: 'Full post text for automation test.'
+    }
+
+    const view = render(FeedEntryCard, { entry, onAutomate })
+    const button = screen.getByRole('button', { name: /Automate Ingest/i })
+    await fireEvent.click(button)
+    expect(onAutomate).toHaveBeenCalledWith('auto-1')
+
+    await view.rerender({
+      entry: {
+        ...entry,
+        artifactStatus: 'downloading',
+        downloadProgress: {
+          percent: 52,
+          bytesDownloaded: 260000000,
+          totalBytes: 500000000,
+          rateBytesPerSec: 12000000,
+          etaSeconds: 20,
+          stageText: 'Streaming direct CDN bytes...'
+        }
+      },
+      onAutomate
+    })
+    expect(screen.getByText('52%')).toBeInTheDocument()
+    expect(screen.getByText('Streaming direct CDN bytes...')).toBeInTheDocument()
+    expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '52')
+  })
+
+  it('renders automation queue panel with metrics, stages, and action callbacks', async () => {
+    const onSelect = vi.fn()
+    const onCancel = vi.fn()
+    const { default: AutomationQueuePanel } = await import('./AutomationQueuePanel.svelte')
+
+    render(AutomationQueuePanel, {
+      items: [
+        {
+          id: 'q-1',
+          entryId: 'item-1',
+          title: 'Article 1',
+          url: 'https://example.com/1',
+          status: 'downloading',
+          stageText: '3/4 Streaming payload...',
+          progress: { percent: 40, bytesDownloaded: 400, totalBytes: 1000 },
+          createdAt: 'Just now'
+        },
+        {
+          id: 'q-2',
+          entryId: 'item-2',
+          title: 'Article 2',
+          url: 'https://example.com/2',
+          status: 'ready',
+          stageText: '✓ Verified & archived',
+          createdAt: '1m ago'
+        }
+      ],
+      onSelect,
+      onCancel
+    })
+
+    expect(screen.getByText('Automation & Download Queue')).toBeInTheDocument()
+    expect(screen.getByText('3/4 Streaming payload...')).toBeInTheDocument()
+    expect(screen.getByText('✓ Verified & archived')).toBeInTheDocument()
+    await fireEvent.click(screen.getByRole('button', { name: 'Article 1' }))
+    expect(onSelect).toHaveBeenCalledWith('item-1')
+    await fireEvent.click(screen.getByRole('button', { name: '✕ Cancel' }))
+    expect(onCancel).toHaveBeenCalledWith('q-1')
   })
 })

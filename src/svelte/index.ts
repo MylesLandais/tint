@@ -106,18 +106,20 @@ export type { FrameEncoding, FrameMode } from './components/framebuffer'
 export * from './components/charts'
 export * from './components/telemetry'
 export {
+  AutomationQueuePanel,
   FeedEntryCard, FeedEntryRow, FeedLayout, HighlightLayer,
   NarrationTransport, ReaderPane, SelectionToolbar, SourceHealthBadge,
   SplitPane, ViewModeToggle,
 } from './components/feed'
 export type {
+  AutomationQueueItem, AutomationQueuePanelProps,
   FeedEntryCardProps, FeedEntryRowProps, FeedLayoutProps, HighlightLayerProps,
   NarrationTransportProps, ReaderPaneProps, SelectionToolbarAction,
   SelectionToolbarProps, SourceHealthBadgeProps, SplitPaneProps,
-  ViewModeToggleProps, ArtifactStatus, Channel, ContentKind, FeedDocument,
-  FeedEntry, FeedId, FeedLayoutVariant, PolicyDisposition, PolicyMatch,
-  ReadState, RevisionToken as FeedRevisionToken, Source, SourceHealth,
-  SourcePlatform, TextHighlight,
+  ViewModeToggleProps, ArtifactStatus, AutomationStep, Channel, ContentKind,
+  DownloadProgress, FeedDocument, FeedEntry, FeedId, FeedLayoutVariant,
+  PolicyDisposition, PolicyMatch, ReadState, RevisionToken as FeedRevisionToken,
+  Source, SourceHealth, SourcePlatform, TextHighlight,
 } from './components/feed'
 export { ActivityFeed, ActivityFeedRow } from './components/activity'
 export type {

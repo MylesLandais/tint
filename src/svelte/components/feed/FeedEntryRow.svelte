@@ -3,7 +3,7 @@
   import Badge from '../badge/Badge.svelte'
   import type { FeedEntryRowProps } from './types'
 
-  let { entry, sourceLabel, selected = false, onSelect, actions, class: className, ...rest }: FeedEntryRowProps = $props()
+  let { entry, sourceLabel, selected = false, onSelect, onAutomate, actions, class: className, ...rest }: FeedEntryRowProps = $props()
   let artifact = $derived(artifactBadge(entry.artifactStatus))
 
   function selectClick(event: MouseEvent) {
@@ -30,9 +30,43 @@
 >
   <span class="unread-dot" aria-hidden="true"></span>
   <div class="content">
-    <div class="title-row"><h3>{#if onSelect}<button type="button" class="select" aria-pressed={selected} onclick={() => onSelect?.(entry.id)}>{entry.title}</button>{:else}{entry.title}{/if}</h3>{#if entry.readState === 'unread'}<span class="read-label">Unread</span>{/if}{#if artifact}<Badge tone={artifact.tone}>{artifact.label}</Badge>{/if}</div>
+    <div class="title-row">
+      <h3>{#if onSelect}<button type="button" class="select" aria-pressed={selected} onclick={() => onSelect?.(entry.id)}>{entry.title}</button>{:else}{entry.title}{/if}</h3>
+      <div class="badges-wrap">
+        {#if entry.readState === 'unread'}<span class="read-label">Unread</span>{/if}
+        {#if artifact}<Badge tone={artifact.tone}>{artifact.label}</Badge>{/if}
+      </div>
+    </div>
     <p class="meta">{#if sourceLabel}{sourceLabel}<span aria-hidden="true"> · </span>{/if}<time datetime={entry.publishedAt}>{new Date(entry.publishedAt).toLocaleString()}</time><span aria-hidden="true"> · </span>{entry.excerpt}</p>
+
+    {#if entry.downloadProgress && (entry.artifactStatus === 'downloading' || entry.artifactStatus === 'validating')}
+      <div class="row-progress">
+        <div class="row-progress-track">
+          <div class="row-progress-fill" style:width="{entry.downloadProgress.percent}%"></div>
+        </div>
+        <span class="row-progress-text">{Math.round(entry.downloadProgress.percent)}% ({entry.downloadProgress.stageText ?? 'Downloading...'})</span>
+      </div>
+    {/if}
   </div>
+
+  {#if onAutomate}
+    <div class="automation-action">
+      {#if !entry.artifactStatus || entry.artifactStatus === 'none'}
+        <button type="button" class="row-action-btn" onclick={(e) => { e.stopPropagation(); onAutomate?.(entry.id); }}>
+          ⚡ Automate
+        </button>
+      {:else if entry.artifactStatus === 'queued' || entry.artifactStatus === 'unlocking' || entry.artifactStatus === 'discovering'}
+        <span class="row-status-pill">{entry.artifactStatus}</span>
+      {:else if entry.artifactStatus === 'ready'}
+        <span class="row-status-pill success">✓ Ready</span>
+      {:else if entry.artifactStatus === 'failed'}
+        <button type="button" class="row-action-btn retry" onclick={(e) => { e.stopPropagation(); onAutomate?.(entry.id); }}>
+          ↻ Retry
+        </button>
+      {/if}
+    </div>
+  {/if}
+
   {#if actions}<div class="actions">{@render actions()}</div>{/if}
 </article>
 
@@ -48,9 +82,21 @@
   .unread-dot { width: 0.375rem; height: 0.375rem; flex: none; margin-top: 0.375rem; border-radius: 50%; }
   .feed-row[data-unread] .unread-dot { background: var(--tint-accent); }
   .content { min-width: 0; flex: 1; }
-  .title-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--tint-space-2); }
+  .title-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--tint-space-2); }
+  .badges-wrap { display: flex; align-items: center; gap: var(--tint-space-1); }
   h3 { min-width: 0; margin: 0; overflow: hidden; color: var(--tint-ink); font-size: var(--tint-font-size-sm); font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
   .read-label { color: var(--tint-accent); font-size: var(--tint-font-size-xs); font-weight: 600; }
   .meta { margin: 0.125rem 0 0; overflow: hidden; color: var(--tint-muted); font-size: var(--tint-font-size-xs); text-overflow: ellipsis; white-space: nowrap; }
   .actions { display: flex; flex: none; align-items: center; gap: var(--tint-space-1); }
+  
+  .row-progress { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem; font-size: 0.6875rem; color: var(--tint-muted); }
+  .row-progress-track { width: 6rem; height: 0.25rem; background: var(--tint-border); border-radius: 9999px; overflow: hidden; }
+  .row-progress-fill { height: 100%; background: var(--tint-accent); }
+  .row-progress-text { font-variant-numeric: tabular-nums; }
+
+  .automation-action { display: flex; align-items: center; }
+  .row-action-btn { font-size: var(--tint-font-size-xs); padding: 0.15rem 0.4rem; border-radius: var(--tint-radius-sm); border: 1px solid var(--tint-accent); background: var(--tint-accent-soft); color: var(--tint-ink); cursor: pointer; white-space: nowrap; }
+  .row-action-btn.retry { border-color: var(--tint-warning); background: var(--tint-warning-soft); }
+  .row-status-pill { font-size: var(--tint-font-size-xs); color: var(--tint-muted); font-weight: 500; white-space: nowrap; }
+  .row-status-pill.success { color: var(--tint-success-ink); }
 </style>

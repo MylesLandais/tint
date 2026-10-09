@@ -68,7 +68,32 @@ export type ReadState = 'unread' | 'read' | 'archived'
 
 export type ContentKind = 'article' | 'video' | 'release' | 'thread' | 'other'
 
-export type ArtifactStatus = 'none' | 'queued' | 'downloading' | 'ready'
+export type ArtifactStatus =
+  | 'none'
+  | 'queued'
+  | 'unlocking'
+  | 'discovering'
+  | 'downloading'
+  | 'validating'
+  | 'ready'
+  | 'failed'
+
+export type DownloadProgress = {
+  bytesDownloaded: number
+  totalBytes?: number
+  percent: number
+  rateBytesPerSec?: number
+  etaSeconds?: number
+  stageText?: string
+  error?: string
+}
+
+export type AutomationStep = {
+  name: string
+  label: string
+  status: 'pending' | 'active' | 'completed' | 'failed'
+  detail?: string
+}
 
 export type FeedEntry = {
   id: string
@@ -82,6 +107,8 @@ export type FeedEntry = {
   readState: ReadState
   contentKind: ContentKind
   artifactStatus?: ArtifactStatus
+  downloadProgress?: DownloadProgress
+  automationSteps?: readonly AutomationStep[]
   /** Optional long-form body for the reader pane (HTML-safe plain text in demos). */
   body?: string
 }

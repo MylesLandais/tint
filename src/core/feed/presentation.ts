@@ -14,9 +14,24 @@ export function feedLayoutLabel(variant: FeedLayoutVariant): string {
   return VARIANT_LABEL[variant]
 }
 
-export function artifactBadge(status?: ArtifactStatus): { label: string; tone: 'success' | 'info' } | null {
+export function artifactBadge(status?: ArtifactStatus): { label: string; tone: 'success' | 'info' | 'warning' | 'danger' | 'neutral' | 'accent' } | null {
   if (!status || status === 'none') return null
-  return { label: status, tone: status === 'ready' ? 'success' : 'info' }
+  switch (status) {
+    case 'ready':
+      return { label: 'ready', tone: 'success' }
+    case 'downloading':
+    case 'validating':
+      return { label: status, tone: 'info' }
+    case 'unlocking':
+    case 'discovering':
+      return { label: status, tone: 'warning' }
+    case 'queued':
+      return { label: 'queued', tone: 'neutral' }
+    case 'failed':
+      return { label: 'failed', tone: 'danger' }
+    default:
+      return { label: status, tone: 'info' }
+  }
 }
 
 const HEALTH_TONE: Record<SourceHealth, 'success' | 'neutral' | 'warning' | 'danger'> = {

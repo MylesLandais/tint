@@ -23,6 +23,8 @@
     { prop: 'FeedEntryCard / FeedEntryRow actions', type: 'Snippet', description: 'Optional controls rendered independently of entry selection.' },
     { prop: 'FeedLayout empty', type: 'string | Snippet', description: 'Custom message or content when no entries are supplied.' },
     { prop: 'ReaderPane highlightLayer', type: 'Snippet', description: 'Optional overlay for host-provided text highlights.' },
+    { prop: 'onAutomate', type: '(entryId) => void', description: 'Optional request to queue an entry for automation; cards, rows and the reader pane show the action only when it is set.' },
+    { prop: 'ReaderPane automationBar', type: 'Snippet', description: 'Optional host-rendered strip above the article, such as an automation queue status.' },
     { prop: 'SelectionToolbar position', type: '{ x: number; y: number } | null', description: 'Viewport coordinates for the floating toolbar; null hides it.' },
     { prop: 'SelectionToolbar open', type: 'boolean', description: 'Host-controlled visibility; a position is also required.' },
     { prop: 'SelectionToolbar actions', type: 'readonly SelectionToolbarAction[]', description: 'Ordered actions with labels, optional icons, disabled state, and danger styling.' },

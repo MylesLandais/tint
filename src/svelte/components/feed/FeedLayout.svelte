@@ -4,7 +4,7 @@
   import type { FeedLayoutProps } from './types'
 
   let {
-    entries, variant = 'feed', sourceLabels, selectedId = null, onSelect,
+    entries, variant = 'feed', sourceLabels, selectedId = null, onSelect, onAutomate,
     renderActions, empty, class: className, ...rest
   }: FeedLayoutProps = $props()
 
@@ -20,19 +20,19 @@
     <div class="feed-items" data-mode={variant}>
       {#if variant === 'list' || variant === 'ticker'}
         {#each entries as entry (entry.id)}
-          <FeedEntryView {entry} kind="row" sourceLabel={sourceLabel(entry)} selected={selectedId === entry.id} {onSelect} {renderActions} />
+          <FeedEntryView {entry} kind="row" sourceLabel={sourceLabel(entry)} selected={selectedId === entry.id} {onSelect} {onAutomate} {renderActions} />
         {/each}
       {:else if variant === 'magazine'}
         {@const hero = entries[0]}
-        {#if hero}<div class="hero"><FeedEntryView entry={hero} kind="card" sourceLabel={sourceLabel(hero)} selected={selectedId === hero.id} {onSelect} {renderActions} /></div>{/if}
+        {#if hero}<div class="hero"><FeedEntryView entry={hero} kind="card" sourceLabel={sourceLabel(hero)} selected={selectedId === hero.id} {onSelect} {onAutomate} {renderActions} /></div>{/if}
         <div class="magazine-rest">
           {#each entries.slice(1) as entry (entry.id)}
-            <FeedEntryView {entry} kind="row" sourceLabel={sourceLabel(entry)} selected={selectedId === entry.id} {onSelect} {renderActions} />
+            <FeedEntryView {entry} kind="row" sourceLabel={sourceLabel(entry)} selected={selectedId === entry.id} {onSelect} {onAutomate} {renderActions} />
           {/each}
         </div>
       {:else}
         {#each entries as entry (entry.id)}
-          <FeedEntryView {entry} kind="card" sourceLabel={sourceLabel(entry)} selected={selectedId === entry.id} {onSelect} {renderActions} />
+          <FeedEntryView {entry} kind="card" sourceLabel={sourceLabel(entry)} selected={selectedId === entry.id} {onSelect} {onAutomate} {renderActions} />
         {/each}
       {/if}
     </div>
