@@ -20,6 +20,9 @@ const workbenchProxy: import('vite').ProxyOptions = {
 export default defineConfig({
   plugins: [svelte(), tailwindcss()],
   build: {
+    // Supported floor: Chromium family 120+ (WebGL2 required, WebGPU enhanced).
+    // See docs/browser-support.md in the Workspace.
+    target: ['chrome120'],
     rollupOptions: {
       input: {
         docs: path.resolve(import.meta.dirname, 'index.html'),
