@@ -30,6 +30,14 @@ export type ForceLayoutOptions = {
   timeStep?: number
   /** Steps run by `forceLayout`. */
   iterations?: number
+  /**
+   * Repulsion is computed as if two nodes were never closer than this. The
+   * 1/r² term is unbounded: two nodes a spring pulls together near a hub would
+   * otherwise get a force large enough to throw one of them thousands of units.
+   */
+  minDistance?: number
+  /** Largest distance a node may move in one step, for the same reason. */
+  maxStep?: number
 }
 
 type ResolvedOptions = Required<ForceLayoutOptions>
@@ -44,6 +52,8 @@ const DEFAULTS: ResolvedOptions = {
   damping: 0.82,
   timeStep: 0.6,
   iterations: 300,
+  minDistance: 12,
+  maxStep: 40,
 }
 
 export type ForceLayoutState = {
@@ -161,7 +171,7 @@ export function stepForceLayout(
         distanceSq = dx * dx + dy * dy
       }
       const distance = Math.sqrt(distanceSq)
-      const magnitude = o.repulsion / distanceSq
+      const magnitude = o.repulsion / Math.max(distanceSq, o.minDistance * o.minDistance)
       const fx = (dx / distance) * magnitude
       const fy = (dy / distance) * magnitude
       const fa = forces.get(a) as Point
@@ -204,8 +214,13 @@ export function stepForceLayout(
     force.x += (cx - position.x) * o.centerStrength
     force.y += (cy - position.y) * o.centerStrength
 
-    const vx = (velocity.x + force.x * o.timeStep) * o.damping
-    const vy = (velocity.y + force.y * o.timeStep) * o.damping
+    let vx = (velocity.x + force.x * o.timeStep) * o.damping
+    let vy = (velocity.y + force.y * o.timeStep) * o.damping
+    const step = Math.hypot(vx, vy) * o.timeStep
+    if (step > o.maxStep) {
+      vx *= o.maxStep / step
+      vy *= o.maxStep / step
+    }
     velocities.set(nodeId, { x: vx, y: vy })
     positions.set(nodeId, { x: position.x + vx * o.timeStep, y: position.y + vy * o.timeStep })
     energy += vx * vx + vy * vy

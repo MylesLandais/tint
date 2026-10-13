@@ -132,4 +132,24 @@ describe('forceLayout', () => {
   it('handles an empty document', () => {
     expect(forceLayout(documentOf([], [])).size).toBe(0)
   })
+
+  it('does not fling two nearly touching nodes apart', () => {
+    // Springs pull leaves together near a shared hub. With an unbounded 1/r²
+    // repulsion, two nodes 0.2 apart were thrown thousands of units in one step.
+    const seeded = createForceLayout(documentOf([node('a'), node('b')], []))
+    const state = { ...seeded, positions: new Map([['a', { x: 400, y: 300 }], ['b', { x: 400.2, y: 300 }]]) }
+    let next = stepForceLayout(state)
+    for (let i = 0; i < 20; i += 1) next = stepForceLayout(next)
+    expect(distance(next.positions, 'a', 'b')).toBeLessThan(1000)
+  })
+
+  it('moves no node further than maxStep in one step', () => {
+    const state = createForceLayout(documentOf([node('a'), node('b')], []), { width: 10, height: 10 })
+    const next = stepForceLayout(state, { width: 10, height: 10, repulsion: 1e9, maxStep: 5 })
+    for (const id of ['a', 'b']) {
+      const before = state.positions.get(id)!
+      const after = next.positions.get(id)!
+      expect(Math.hypot(after.x - before.x, after.y - before.y)).toBeLessThanOrEqual(5 + 1e-9)
+    }
+  })
 })
