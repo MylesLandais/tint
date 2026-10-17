@@ -2,6 +2,19 @@ export type WorkspaceSplitMode = 'container' | 'always'
 export type WorkspaceSplitDirection = 'horizontal' | 'vertical'
 export type WorkspaceSplitPrimary = 'first' | 'second'
 
+export type WorkspaceDockMode = 'closed' | 'overlay' | 'column'
+
+/** A media dock must leave a usable fitted stage, including for non-16:9 sources. */
+export function workspaceDockMode({ open, pinned, width, height, panelWidth, minimumWidth, aspect = 0, minimumHeightFraction = 0 }: {
+  open: boolean; pinned: boolean; width: number; height: number; panelWidth: number;
+  minimumWidth: number; aspect?: number; minimumHeightFraction?: number;
+}): WorkspaceDockMode {
+  if (!open) return 'closed'
+  const remaining = width - panelWidth
+  const fittedHeight = aspect > 0 ? Math.min(height, remaining / aspect) : height
+  return pinned && remaining >= minimumWidth && fittedHeight >= height * minimumHeightFraction ? 'column' : 'overlay'
+}
+
 /** Static class strings let Tailwind see each container-aware layout variant. */
 export function workspaceBodyColumns({ navigation, inspector, split }: {
   navigation: boolean

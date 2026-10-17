@@ -41,8 +41,8 @@ Derived, no token of their own: `layer-hover-01` is `color-mix(panel, ink 6%)`.
 | Group | Tokens |
 |---|---|
 | Spacing (4px base) | `space-1` to `space-7` |
-| Radius | `radius-sm`, `radius-md` (0.45rem, matches `.tint-button`), `radius-lg`, `radius-full` |
-| Control height | `control-sm`, `control-md` (2.25rem, matches `.tint-button`), `control-lg` |
+| Radius | `radius-sm`, `radius-md` (0.25rem, shared control radius), `radius-lg`, `radius-full` |
+| Control height | `control-sm` (32px), `control-md` (44px), `control-lg` (48px) |
 | Type | `font-size-xs` to `font-size-xl`, `leading-tight`, `leading-normal` |
 | Focus ring | `focus-width`, `focus-offset` |
 | Motion | `motion-fast`, `motion-base`, `ease` (durations go to 0 under `prefers-reduced-motion`) |

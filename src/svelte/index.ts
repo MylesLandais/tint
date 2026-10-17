@@ -153,13 +153,13 @@ export * from './components/audio-workspace'
 export {
   AppShell, NavRail, ResponsiveNavRail, TopNav, WorkspaceHeader,
   CommandPalette, CommandMenu, StatusBar, ErrorBanner, EmptyState as ShellEmptyState,
-  LoadingState, WorkspaceLayout, WorkspaceSplit, WorkspaceTabs,
+  LoadingState, WorkspaceLayout, WorkspaceSplit, WorkspaceTabs, WorkspaceResizeHandle, workspaceDockMode,
   MetadataPanel, DetailSheet, FilterBar,
 } from './components/shell'
 export type {
   NavRailItem, NavGroup, CommandPaletteItem, WorkspaceBreadcrumb,
   StatusItem, ConnectionStateValue, ConnectionState, WorkspaceTab,
-  WorkspaceSplitMode, WorkspaceSplitDirection, WorkspaceSplitPrimary,
+  WorkspaceSplitMode, WorkspaceSplitDirection, WorkspaceSplitPrimary, WorkspaceDockMode,
 } from './components/shell'
 export { AppShell as NavigationAppShell, Breadcrumbs, NavigationList } from './components/navigation'
 export type {

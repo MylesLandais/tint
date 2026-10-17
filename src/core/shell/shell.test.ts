@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { filterCommands, flattenNavGroups, nextCommandIndex, nextWorkspaceTabId } from './navigation'
-import { keyboardSplitSize, mobileNavigationForWidth, pointerSplitSize, workspaceBodyColumns } from './layout'
+import { keyboardSplitSize, mobileNavigationForWidth, pointerSplitSize, workspaceBodyColumns, workspaceDockMode } from './layout'
 
 describe('shell navigation model', () => {
   it('keeps group order and marks only the first item of following groups as a divider', () => {
@@ -31,6 +31,15 @@ describe('shell navigation model', () => {
 })
 
 describe('shell layout model', () => {
+  it('uses measured remaining space and actual media aspect for a requested dock', () => {
+    const dock = { open: true, pinned: true, width: 1800, height: 800, panelWidth: 360, minimumWidth: 1080, aspect: 16 / 9, minimumHeightFraction: .8 }
+    expect(workspaceDockMode(dock)).toBe('column')
+    expect(workspaceDockMode({ ...dock, width: 1290 })).toBe('overlay')
+    expect(workspaceDockMode({ ...dock, aspect: 3 })).toBe('overlay')
+    expect(workspaceDockMode({ ...dock, panelWidth: 800 })).toBe('overlay')
+    expect(workspaceDockMode({ ...dock, pinned: false })).toBe('overlay')
+    expect(workspaceDockMode({ ...dock, open: false })).toBe('closed')
+  })
   it('uses the workspace container for columns unless the host explicitly requests a split', () => {
     expect(workspaceBodyColumns({ navigation: true, inspector: true, split: 'container' })).toContain('@4xl/workspace:')
     expect(workspaceBodyColumns({ navigation: true, inspector: true, split: 'always' })).not.toContain('@4xl/workspace:')

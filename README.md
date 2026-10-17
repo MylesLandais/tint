@@ -113,3 +113,5 @@ The source portability and consumer contract tests check that published TypeScri
 The Workspace gateway consumes Tint as a pinned git submodule at `third_party/tint`; published consumers move by package version. Make library changes in this checkout, land them on `main`, then advance the gateway's submodule pin and run its `npm run check`. The consumer contract test here checks package entry points under a host TypeScript program before a pin or release moves.
 
 To publish, update `version` in `package.json` on `dev`, commit, and push a matching `v<version>` tag to Forgejo. The [release workflow](.forgejo/workflows/release.yml) runs checks and publishes with `FORGEJO_NPM_TOKEN`. `publishConfig` fixes the target registry to Forgejo. More repository history and mirror details are in [docs/git-history.md](docs/git-history.md).
+
+[Automation workspace foundations and controlled docking](docs/design/automation-workspaces.md)

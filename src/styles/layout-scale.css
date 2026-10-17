@@ -16,16 +16,16 @@
   --tint-space-6: 2rem;
   --tint-space-7: 3rem;
 
-  /* Radius. md matches the existing .tint-button. */
+  /* Shared compact control geometry. */
   --tint-radius-sm: 0.25rem;
-  --tint-radius-md: 0.45rem;
+  --tint-radius-md: 0.25rem;
   --tint-radius-lg: 0.75rem;
   --tint-radius-full: 9999px;
 
-  /* Control heights. md matches the existing .tint-button. */
-  --tint-control-sm: 1.75rem;
-  --tint-control-md: 2.25rem;
-  --tint-control-lg: 2.75rem;
+  /* Compact, standard, and large controls. */
+  --tint-control-sm: 2rem;
+  --tint-control-md: 2.75rem;
+  --tint-control-lg: 3rem;
 
   /* Type */
   --tint-font-size-xs: 0.75rem;

@@ -13,7 +13,7 @@
   --tint-ink: light-dark(#12141a, #dfe2e7);
   --tint-muted: light-dark(#5c6578, #9da3ad);
   --tint-border: light-dark(#d8dde8, #34373c);
-  --tint-border-strong: light-dark(#b9c1d1, #454a52);
+  --tint-border-strong: light-dark(#79869e, #7a8292);
 
   /* Inputs sit inset from the panel; focus is the keyboard ring; selection is a
      selected row, token or option. */
@@ -54,7 +54,7 @@
   --tint-code-keyword: light-dark(#c792ea, #cba6f7);
   --tint-code-string: light-dark(#7ee787, #a6e3a1);
   --tint-code-number: light-dark(#f78c6c, #fab387);
-  --tint-code-comment: light-dark(#7d8799, #6c7689);
+  --tint-code-comment: light-dark(#8b95a7, #8994a7);
   --tint-code-function: light-dark(#82aaff, #89b4fa);
   --tint-code-punctuation: light-dark(#a6accd, #9aa2bd);
 
