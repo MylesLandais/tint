@@ -49,3 +49,18 @@ Validation: `npm run check`, `npm run build`, and browser checks in the consumin
 application. The shell unit tests cover controlled resize/focus and aspect-aware
 docking. Consumers must verify 320px reflow, 200% zoom, light/dark themes, retained
 resources and captured-target operations with their real adapters.
+
+Source and terminal presentation default to 14px monospace. CodeEditor consumes
+`--tint-code-font-size`; terminal options accept a user-selected font size.
+`resolveTerminalTheme` and `observeTerminalTheme` are public bridges for an
+existing emulator adapter, so adopting Tint colors need not replace its transport
+or emulator.
+
+`Framebuffer` accepts selected/preview/hidden/frozen/historical demand. Demand
+changes retain its socket and presenter. Preview presentation and PNG producer
+acknowledgements are capped at five per second; hidden/frozen/historical viewers
+send the existing paused setting and skip decoding/drawing. RGBA peers without
+that settings contract still receive frames, which the client discards before
+presentation. Data attributes report received and presented counts separately.
+This is viewer policy, not game execution or input ownership. Capture evidence
+against an explicit source frame before freezing or annotating it.

@@ -28,7 +28,7 @@ export class TerminalController {
       cursorBlink: true,
       cursorStyle: 'bar',
       fontFamily: '"IBM Plex Mono", ui-monospace, monospace',
-      fontSize: 13,
+      fontSize: 14,
       lineHeight: 1.25,
       minimumContrastRatio: 4.5,
       scrollback: 5000,

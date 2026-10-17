@@ -27,8 +27,8 @@ export function createCodeEditorState({ session, presence, readOnly = false, lab
       EditorState.readOnly.of(readOnly),
       EditorView.contentAttributes.of({ 'aria-label': label, spellcheck: 'false' }),
       EditorView.theme({
-        '&': { height: '100%', fontSize: '12px', color: 'var(--tint-code-ink)', backgroundColor: 'var(--tint-code)' },
-        '.cm-scroller': { overflow: 'auto', fontFamily: 'ui-monospace, monospace' },
+        '&': { height: '100%', fontSize: 'var(--tint-code-font-size, 14px)', color: 'var(--tint-code-ink)', backgroundColor: 'var(--tint-code)' },
+        '.cm-scroller': { overflow: 'auto', fontFamily: 'var(--font-mono, ui-monospace, monospace)' },
         '.cm-gutters': { backgroundColor: 'var(--tint-code)', color: 'var(--tint-code-muted)', border: 'none' },
         '.cm-content': { padding: '12px 0', caretColor: 'var(--tint-accent)' },
         '&.cm-focused .cm-cursor': { borderLeftColor: 'var(--tint-accent)' },

@@ -1,7 +1,10 @@
 import { parseFrameEnvelope, type FrameEncoding, type FrameMode } from './protocol'
 import { rgbaPresenter, type Presenter } from './rgbaPresenter'
 
+export type FrameDemand = 'selected' | 'preview' | 'hidden' | 'frozen' | 'historical'
+
 export type FramebufferStreamOptions = {
+  demand?: FrameDemand
   url: string
   accountId: string
   encoding: FrameEncoding
@@ -19,6 +22,12 @@ export class FramebufferStream {
   private presenter: Presenter | null = null
   private reconnectTimer: ReturnType<typeof setTimeout> | undefined
   private watchdog: ReturnType<typeof setInterval> | undefined
+  private demand: FrameDemand
+  private demandGeneration = 0
+  private lastPresented = 0
+  private received = 0
+  private presented = 0
+  private ackTimer: ReturnType<typeof setTimeout> | undefined
   private status = ''
   private lastFrame = Date.now()
   private sessionId = ''
@@ -33,7 +42,20 @@ export class FramebufferStream {
     this.canvas = canvas
     this.options = options
     this.onStatus = onStatus
+    this.demand = options.demand ?? "selected"
+    this.canvas.dataset.demand = this.demand
   }
+
+  /** Changing viewer demand preserves the socket, process and presentation backend. */
+  setDemand(demand: FrameDemand): void {
+    if (this.demand === demand || this.disposed) return
+    this.demand = demand; this.demandGeneration += 1
+    this.canvas.dataset.demand = demand
+    this.settings()
+    if (this.paused()) this.publish(demand === 'frozen' || demand === 'historical' ? 'Preview frozen' : 'Preview hidden')
+  }
+
+  private paused(): boolean { return document.hidden || !['selected', 'preview'].includes(this.demand) }
 
   start(): void {
     if (this.started || this.disposed) return
@@ -65,7 +87,7 @@ export class FramebufferStream {
   private readonly settings = () => {
     this.lastFrame = Date.now()
     if (this.options.encoding === 'png' && this.socket?.readyState === WebSocket.OPEN) {
-      this.socket.send(JSON.stringify({ kind: this.options.mode, width: 1280, height: 720, paused: document.hidden }))
+      this.socket.send(JSON.stringify({ kind: this.options.mode, width: 1280, height: 720, paused: this.paused() }))
     }
   }
 
@@ -79,6 +101,8 @@ export class FramebufferStream {
   }
 
   private closeConnection(): void {
+    if (this.ackTimer) clearTimeout(this.ackTimer)
+    this.ackTimer = undefined
     if (this.watchdog) clearInterval(this.watchdog)
     this.watchdog = undefined
     if (this.socket) {
@@ -125,7 +149,7 @@ export class FramebufferStream {
       socket.onmessage = (event) => { void this.receive(event.data, version) }
       socket.onclose = () => this.scheduleReconnect()
       this.watchdog = setInterval(() => {
-        if (!document.hidden && socket.readyState === WebSocket.OPEN && Date.now() - this.lastFrame > 5000) {
+        if (!this.paused() && socket.readyState === WebSocket.OPEN && Date.now() - this.lastFrame > 5000) {
           this.publish('Frames are stale')
           socket.close()
         }
@@ -139,10 +163,14 @@ export class FramebufferStream {
   private async receive(data: unknown, version: number): Promise<void> {
     if (this.disposed || version !== this.version || !this.presenter) return
     let bitmap: ImageBitmap | undefined
+    const demandGeneration = this.demandGeneration
     try {
       if (!(data instanceof ArrayBuffer)) throw new Error('Invalid frame payload')
       const frame = parseFrameEnvelope(data, this.options.accountId, this.sessionId, this.options.encoding)
       this.sessionId = frame.sessionId
+      this.lastFrame = Date.now()
+      this.canvas.dataset.framesReceived = String(++this.received)
+      if (this.paused() || (this.demand === 'preview' && Date.now() - this.lastPresented < 200)) return
       let pixels: Uint8ClampedArray
       if (this.options.encoding === 'png') {
         bitmap = await createImageBitmap(new Blob([data.slice(frame.payloadOffset)], { type: 'image/png' }))
@@ -164,8 +192,10 @@ export class FramebufferStream {
         pixels = new Uint8ClampedArray(data, frame.payloadOffset)
       }
       this.lastFrame = Date.now()
-      if (!document.hidden) {
+      if (!this.paused() && demandGeneration === this.demandGeneration) {
         this.presenter.draw(pixels, frame.width, frame.height)
+        this.lastPresented = Date.now()
+        this.canvas.dataset.framesPresented = String(++this.presented)
         this.canvas.dataset.frameId = frame.frameId
         this.canvas.dataset.sessionId = frame.sessionId
         this.canvas.dataset.backend = this.presenter.backend
@@ -179,7 +209,14 @@ export class FramebufferStream {
     } finally {
       bitmap?.close()
       if (!this.disposed && version === this.version && this.options.encoding === 'png' && this.socket?.readyState === WebSocket.OPEN) {
-        this.socket.send(JSON.stringify({ type: 'ack' }))
+        // The PNG gateway sends one frame per acknowledgement. Preview demand
+        // therefore also bounds production, rather than only discarding pixels.
+        if (this.demand === 'preview') {
+          if (!this.ackTimer) this.ackTimer = setTimeout(() => {
+            this.ackTimer = undefined
+            if (!this.disposed && version === this.version && this.socket?.readyState === WebSocket.OPEN) this.socket.send(JSON.stringify({ type: 'ack' }))
+          }, 200)
+        } else this.socket.send(JSON.stringify({ type: 'ack' }))
       }
     }
   }

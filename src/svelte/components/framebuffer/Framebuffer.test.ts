@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import Framebuffer from './Framebuffer.svelte'
 import { FramebufferStream } from '../../../core/framebuffer/stream'
 
-const stream = vi.hoisted(() => ({ start: vi.fn(), dispose: vi.fn(), status: undefined as ((status: string) => void) | undefined }))
+const stream = vi.hoisted(() => ({ start: vi.fn(), dispose: vi.fn(), setDemand: vi.fn(), status: undefined as ((status: string) => void) | undefined }))
 vi.mock('../../../core/framebuffer/stream', () => ({
   FramebufferStream: vi.fn().mockImplementation(function (_canvas, _options, onStatus) {
     stream.status = onStatus
@@ -25,6 +25,10 @@ describe('Svelte Framebuffer', () => {
     stream.status?.('Live')
     await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('one · Live'))
     expect(onStatus).toHaveBeenCalledWith('Live')
+    await view.rerender({ url: 'ws://example.test/frames', accountId: 'one', onStatus, demand: 'preview' })
+    expect(stream.setDemand).toHaveBeenLastCalledWith('preview')
+    expect(stream.start).toHaveBeenCalledOnce()
+    expect(stream.dispose).not.toHaveBeenCalled()
     view.unmount()
     expect(stream.dispose).toHaveBeenCalledOnce()
   })

@@ -94,3 +94,48 @@ describe('FramebufferStream', () => {
     stream.dispose()
   })
 })
+
+
+describe('viewer demand', () => {
+  it('keeps the transport and presenter while bounding preview draws and freezing hidden views', async () => {
+    vi.stubGlobal('WebSocket', SocketStub)
+    const canvas = document.createElement('canvas')
+    const stream = new FramebufferStream(canvas, { url: 'ws://example.test/frames', accountId: 'one', encoding: 'rgba', mode: 'frame', onContextLost: vi.fn() }, vi.fn())
+    stream.start()
+    await vi.waitFor(() => expect(SocketStub.instances).toHaveLength(1))
+    vi.useFakeTimers(); vi.setSystemTime(10000)
+    const socket = SocketStub.instances[0]
+    stream.setDemand('preview')
+    socket.onmessage?.({ data: frame() }); socket.onmessage?.({ data: frame() })
+    expect(presenter.draw).toHaveBeenCalledTimes(1)
+    await vi.advanceTimersByTimeAsync(200)
+    socket.onmessage?.({ data: frame() })
+    expect(presenter.draw).toHaveBeenCalledTimes(2)
+    stream.setDemand('hidden')
+    socket.onmessage?.({ data: frame() })
+    await vi.advanceTimersByTimeAsync(10000)
+    expect(presenter.draw).toHaveBeenCalledTimes(2)
+    expect(SocketStub.instances).toHaveLength(1)
+    stream.setDemand('selected')
+    socket.onmessage?.({ data: frame() })
+    expect(presenter.draw).toHaveBeenCalledTimes(3)
+    expect(canvas.dataset.framesReceived).toBe('5')
+    expect(canvas.dataset.framesPresented).toBe('3')
+    expect(vi.mocked(rgbaPresenter)).toHaveBeenCalledTimes(1)
+    stream.dispose()
+  })
+
+  it('uses the existing PNG pause contract for frozen and historical viewers', async () => {
+    vi.stubGlobal('WebSocket', SocketStub)
+    const stream = new FramebufferStream(document.createElement('canvas'), { url: 'ws://example.test/frames', accountId: 'one', encoding: 'png', mode: 'frame', onContextLost: vi.fn() }, vi.fn())
+    stream.start()
+    await vi.waitFor(() => expect(SocketStub.instances).toHaveLength(1))
+    const socket = SocketStub.instances[0]
+    socket.onopen?.()
+    stream.setDemand('frozen'); expect(JSON.parse(socket.sent.at(-1)!)).toMatchObject({ paused: true })
+    stream.setDemand('historical'); expect(JSON.parse(socket.sent.at(-1)!)).toMatchObject({ paused: true })
+    stream.setDemand('selected'); expect(JSON.parse(socket.sent.at(-1)!)).toMatchObject({ paused: false })
+    expect(SocketStub.instances).toHaveLength(1)
+    stream.dispose()
+  })
+})

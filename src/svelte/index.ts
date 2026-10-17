@@ -84,7 +84,7 @@ export type {
 } from './components/media'
 export { GalleryGrid, MediaLightbox, UploadDropzone, UploadQueue } from './components/media-assets'
 export type { MediaAsset, FileRejection } from './components/media-assets'
-export { TerminalConsole } from './components/terminal'
+export { TerminalConsole, resolveTerminalTheme, observeTerminalTheme } from './components/terminal'
 export type {
   TerminalConsoleProps, TerminalOutput, TerminalSession,
   TerminalSize, TerminalStatus, TintTerminalOptions,
@@ -102,7 +102,7 @@ export type { ReleaseScore } from './components/release-chart'
 export { ScatterPlot } from './components/scatter-plot'
 export type { ScatterPoint } from './components/scatter-plot'
 export { Framebuffer } from './components/framebuffer'
-export type { FrameEncoding, FrameMode } from './components/framebuffer'
+export type { FrameEncoding, FrameMode, FrameDemand } from './components/framebuffer'
 export * from './components/charts'
 export * from './components/telemetry'
 export {

@@ -1,38 +1,44 @@
 <script lang="ts">
+  import { untrack } from 'svelte'
   import type { HTMLCanvasAttributes } from 'svelte/elements'
-  import { FramebufferStream, type FrameEncoding, type FrameMode } from '../../../core/framebuffer'
+  import { FramebufferStream, type FrameEncoding, type FrameMode, type FrameDemand } from '../../../core/framebuffer'
 
   type Props = {
     url: string
     accountId: string
     encoding?: FrameEncoding
     mode?: FrameMode
+    demand?: FrameDemand
     onStatus?: (status: string) => void
     showStatus?: boolean
     canvasProps?: HTMLCanvasAttributes
     class?: string
   }
   let {
-    url, accountId, encoding = 'rgba', mode = 'frame', onStatus,
+    url, accountId, encoding = 'rgba', mode = 'frame', demand = 'selected', onStatus,
     showStatus = true, canvasProps, class: className,
   }: Props = $props()
+  let active = $state.raw<FramebufferStream | null>(null)
   let canvas = $state<HTMLCanvasElement | null>(null)
   let canvasGeneration = $state(0)
   let status = $state('Connecting')
+  const connectionKey = $derived(JSON.stringify({ url, accountId, encoding, mode, forceWebGL: canvasGeneration > 0 }))
 
   $effect(() => {
     if (!canvas) return
+    const options = JSON.parse(connectionKey)
     const stream = new FramebufferStream(canvas, {
-      url, accountId, encoding, mode,
-      forceWebGL: canvasGeneration > 0,
+      ...options, demand: untrack(() => demand),
       onContextLost: () => { canvasGeneration += 1 },
     }, (next) => {
       status = next
-      onStatus?.(next)
+      untrack(() => onStatus?.(next))
     })
+    active = stream
     stream.start()
-    return () => stream.dispose()
+    return () => { stream.dispose(); if (active === stream) active = null }
   })
+  $effect(() => { active?.setDemand(demand) })
 </script>
 
 <div data-tint-framebuffer="" class={['tint-framebuffer', className].filter(Boolean).join(' ')}>

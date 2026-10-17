@@ -27,7 +27,8 @@
   --tint-control-md: 2.75rem;
   --tint-control-lg: 3rem;
 
-  /* Type */
+  /* Type; hosts may adjust the source editor size without replacing its theme. */
+  --tint-code-font-size: 0.875rem;
   --tint-font-size-xs: 0.75rem;
   --tint-font-size-sm: 0.875rem;
   --tint-font-size-md: 1rem;
