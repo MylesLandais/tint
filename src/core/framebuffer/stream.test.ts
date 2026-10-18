@@ -108,7 +108,7 @@ describe('FramebufferStream', () => {
     await vi.waitFor(() => expect(SocketStub.instances).toHaveLength(1))
     const socket = SocketStub.instances[0]
     socket.onopen?.()
-    expect(JSON.parse(socket.sent[0])).toEqual({ kind: 'frame', width: 640, height: 360, fps: 60, paused: false })
+    expect(JSON.parse(socket.sent[0])).toEqual({ kind: 'frame', width: 640, height: 360, fps: 60, window: 2, paused: false })
     socket.onmessage?.({ data: frame() })
     await vi.waitFor(() => expect(presenter.drawBitmap).toHaveBeenCalledWith(bitmap))
     expect(decode.mock.calls[0][1]).toEqual({ premultiplyAlpha: 'none', colorSpaceConversion: 'none', imageOrientation: 'none' })
@@ -133,6 +133,52 @@ describe('FramebufferStream', () => {
     await vi.waitFor(() => expect(socket.sent.at(-1)).toBe(JSON.stringify({ type: 'ack' })))
     expect(decode).not.toHaveBeenCalled()
     hidden.mockRestore()
+    stream.dispose()
+  })
+
+  it('never draws an older frame over a newer one when decodes finish out of order', async () => {
+    vi.stubGlobal('WebSocket', SocketStub)
+    const slow = { width: 1, height: 1, close: vi.fn() }, fast = { width: 1, height: 1, close: vi.fn() }
+    let release!: (bitmap: typeof slow) => void
+    vi.stubGlobal('createImageBitmap', vi.fn()
+      .mockImplementationOnce(() => new Promise(resolve => { release = resolve }))
+      .mockResolvedValueOnce(fast))
+    presenter.drawBitmap = vi.fn()
+    const stream = new FramebufferStream(document.createElement('canvas'), {
+      url: 'ws://example.test/frames', accountId: 'one', encoding: 'png', mode: 'frame', onContextLost: vi.fn(),
+    }, vi.fn())
+    stream.start()
+    await vi.waitFor(() => expect(SocketStub.instances).toHaveLength(1))
+    const socket = SocketStub.instances[0]
+    socket.onmessage?.({ data: frame() })
+    socket.onmessage?.({ data: frame() })
+    await vi.waitFor(() => expect(presenter.drawBitmap).toHaveBeenCalledWith(fast))
+    release(slow)
+    await vi.waitFor(() => expect(slow.close).toHaveBeenCalledOnce())
+    expect(presenter.drawBitmap).toHaveBeenCalledTimes(1)
+    expect(socket.sent.filter(message => message.includes('ack'))).toHaveLength(2)
+    stream.dispose()
+  })
+
+  it('drops to one frame in flight while decoding cannot keep up, and asks for two again when it can', async () => {
+    vi.stubGlobal('WebSocket', SocketStub)
+    let decodeMs = 80, now = 0
+    vi.spyOn(performance, 'now').mockImplementation(() => now)
+    vi.stubGlobal('createImageBitmap', vi.fn(async () => { now += decodeMs; return { width: 1, height: 1, close: vi.fn() } }))
+    presenter.drawBitmap = vi.fn()
+    const stream = new FramebufferStream(document.createElement('canvas'), {
+      url: 'ws://example.test/frames', accountId: 'one', encoding: 'png', mode: 'frame', fps: 60, onContextLost: vi.fn(),
+    }, vi.fn())
+    stream.start()
+    await vi.waitFor(() => expect(SocketStub.instances).toHaveLength(1))
+    const socket = SocketStub.instances[0]
+    const windows = () => socket.sent.filter(m => m.includes('window')).map(m => JSON.parse(m).window)
+    socket.onopen?.()
+    socket.onmessage?.({ data: frame() })
+    await vi.waitFor(() => expect(windows().at(-1)).toBe(1))
+    decodeMs = 2
+    for (let i = 0; i < 40; i++) { socket.onmessage?.({ data: frame() }); await vi.waitFor(() => expect(presenter.drawBitmap).toHaveBeenCalledTimes(i + 2)) }
+    expect(windows().at(-1)).toBe(2)
     stream.dispose()
   })
 })

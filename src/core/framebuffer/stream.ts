@@ -31,6 +31,16 @@ export class FramebufferStream {
   private version = 0
   private started = false
   private disposed = false
+  /** Arrival order of frames, so a decode that finishes after a newer frame was drawn is dropped. */
+  private arrivals = 0
+  private drawnArrival = 0
+  /**
+   * Frames the server may keep in flight. Two overlaps decoding with delivery (measured
+   * 54 vs 46 fps on an idle host); a CPU-starved browser decodes slower with two, so the
+   * stream drops to one while its average decode is far beyond the frame period.
+   */
+  private window = 2
+  private decodeAverage = 0
   private scratch: OffscreenCanvas | HTMLCanvasElement | null = null
   private context: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D | null = null
 
@@ -71,7 +81,7 @@ export class FramebufferStream {
     this.lastFrame = Date.now()
     if (this.options.encoding === 'png' && this.socket?.readyState === WebSocket.OPEN) {
       const { fps = 30, maxWidth = 1280, maxHeight = 720 } = this.options
-      this.socket.send(JSON.stringify({ kind: this.options.mode, width: maxWidth, height: maxHeight, fps, paused: document.hidden }))
+      this.socket.send(JSON.stringify({ kind: this.options.mode, width: maxWidth, height: maxHeight, fps, window: this.window, paused: document.hidden }))
     }
   }
 
@@ -142,8 +152,21 @@ export class FramebufferStream {
     }
   }
 
+  /** Hold two frames in flight while decoding keeps up with the frame period; otherwise one. */
+  private adaptWindow(decodeMs: number): void {
+    this.decodeAverage = this.decodeAverage ? this.decodeAverage * 0.9 + decodeMs * 0.1 : decodeMs
+    const period = 1000 / (this.options.fps ?? 30)
+    // Overlapping decodes each take longer, so starvation is a decode far beyond the period
+    // (59 ms at 60 fps on a saturated host), not one slightly above it (about 18 ms when idle).
+    const next = this.decodeAverage > period * 2.5 ? 1 : this.decodeAverage < period ? 2 : this.window
+    if (next === this.window) return
+    this.window = next
+    this.settings()
+  }
+
   private async receive(data: unknown, version: number): Promise<void> {
     if (this.disposed || version !== this.version || !this.presenter) return
+    const arrival = ++this.arrivals
     let bitmap: ImageBitmap | undefined
     try {
       if (!(data instanceof ArrayBuffer)) throw new Error('Invalid frame payload')
@@ -153,8 +176,10 @@ export class FramebufferStream {
       if (this.options.encoding === 'png') {
         // A hidden page acknowledges without decoding; it is paused and repaints when shown.
         if (document.hidden) { this.lastFrame = Date.now(); return }
+        const decodeStarted = performance.now()
         bitmap = await createImageBitmap(new Blob([data.slice(frame.payloadOffset)], { type: 'image/png' }),
           { premultiplyAlpha: 'none', colorSpaceConversion: 'none', imageOrientation: 'none' })
+        this.adaptWindow(performance.now() - decodeStarted)
         if (this.disposed || version !== this.version || !this.presenter) return
         if (bitmap.width !== frame.width || bitmap.height !== frame.height) throw new Error('Frame image dimensions mismatch')
         if (!this.presenter.drawBitmap) {
@@ -176,6 +201,8 @@ export class FramebufferStream {
         pixels = new Uint8ClampedArray(data, frame.payloadOffset)
       }
       this.lastFrame = Date.now()
+      if (arrival < this.drawnArrival) return
+      this.drawnArrival = arrival
       if (!document.hidden) {
         if (pixels) this.presenter.draw(pixels, frame.width, frame.height)
         else this.presenter.drawBitmap!(bitmap!)
