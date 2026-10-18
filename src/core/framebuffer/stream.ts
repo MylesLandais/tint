@@ -7,6 +7,11 @@ export type FramebufferStreamOptions = {
   encoding: FrameEncoding
   mode: FrameMode
   forceWebGL?: boolean
+  /** Frames per second this view wants; the server paces delivery to it. */
+  fps?: number
+  /** Largest image this view can show; the server sizes previews down before encoding. */
+  maxWidth?: number
+  maxHeight?: number
   onContextLost: () => void
 }
 
@@ -65,7 +70,8 @@ export class FramebufferStream {
   private readonly settings = () => {
     this.lastFrame = Date.now()
     if (this.options.encoding === 'png' && this.socket?.readyState === WebSocket.OPEN) {
-      this.socket.send(JSON.stringify({ kind: this.options.mode, width: 1280, height: 720, paused: document.hidden }))
+      const { fps = 30, maxWidth = 1280, maxHeight = 720 } = this.options
+      this.socket.send(JSON.stringify({ kind: this.options.mode, width: maxWidth, height: maxHeight, fps, paused: document.hidden }))
     }
   }
 
@@ -143,29 +149,36 @@ export class FramebufferStream {
       if (!(data instanceof ArrayBuffer)) throw new Error('Invalid frame payload')
       const frame = parseFrameEnvelope(data, this.options.accountId, this.sessionId, this.options.encoding)
       this.sessionId = frame.sessionId
-      let pixels: Uint8ClampedArray
+      let pixels: Uint8ClampedArray | undefined
       if (this.options.encoding === 'png') {
-        bitmap = await createImageBitmap(new Blob([data.slice(frame.payloadOffset)], { type: 'image/png' }))
-        if (this.disposed || version !== this.version) return
+        // A hidden page acknowledges without decoding; it is paused and repaints when shown.
+        if (document.hidden) { this.lastFrame = Date.now(); return }
+        bitmap = await createImageBitmap(new Blob([data.slice(frame.payloadOffset)], { type: 'image/png' }),
+          { premultiplyAlpha: 'none', colorSpaceConversion: 'none', imageOrientation: 'none' })
+        if (this.disposed || version !== this.version || !this.presenter) return
         if (bitmap.width !== frame.width || bitmap.height !== frame.height) throw new Error('Frame image dimensions mismatch')
-        if (!this.scratch) {
-          this.scratch = typeof OffscreenCanvas !== 'undefined' ? new OffscreenCanvas(frame.width, frame.height) : document.createElement('canvas')
-          this.context = this.scratch.getContext('2d') as OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D | null
+        if (!this.presenter.drawBitmap) {
+          // Custom presenters without bitmap upload still receive RGBA bytes.
+          if (!this.scratch) {
+            this.scratch = typeof OffscreenCanvas !== 'undefined' ? new OffscreenCanvas(frame.width, frame.height) : document.createElement('canvas')
+            this.context = this.scratch.getContext('2d') as OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D | null
+          }
+          if (!this.context) throw new Error('Canvas 2D is unavailable')
+          if (this.scratch.width !== frame.width || this.scratch.height !== frame.height) {
+            this.scratch.width = frame.width
+            this.scratch.height = frame.height
+          }
+          this.context.clearRect(0, 0, frame.width, frame.height)
+          this.context.drawImage(bitmap, 0, 0)
+          pixels = this.context.getImageData(0, 0, frame.width, frame.height).data
         }
-        if (!this.context) throw new Error('Canvas 2D is unavailable')
-        if (this.scratch.width !== frame.width || this.scratch.height !== frame.height) {
-          this.scratch.width = frame.width
-          this.scratch.height = frame.height
-        }
-        this.context.clearRect(0, 0, frame.width, frame.height)
-        this.context.drawImage(bitmap, 0, 0)
-        pixels = this.context.getImageData(0, 0, frame.width, frame.height).data
       } else {
         pixels = new Uint8ClampedArray(data, frame.payloadOffset)
       }
       this.lastFrame = Date.now()
       if (!document.hidden) {
-        this.presenter.draw(pixels, frame.width, frame.height)
+        if (pixels) this.presenter.draw(pixels, frame.width, frame.height)
+        else this.presenter.drawBitmap!(bitmap!)
         this.canvas.dataset.frameId = frame.frameId
         this.canvas.dataset.sessionId = frame.sessionId
         this.canvas.dataset.backend = this.presenter.backend

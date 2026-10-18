@@ -1,5 +1,6 @@
 /// <reference types="@webgpu/types" />
-export type Presenter = {draw:(pixels:Uint8ClampedArray,width:number,height:number)=>void;destroy:()=>void;backend:string}
+/** `drawBitmap` uploads a decoded straight-alpha image directly, skipping a CPU pixel readback. */
+export type Presenter = {draw:(pixels:Uint8ClampedArray,width:number,height:number)=>void;drawBitmap?:(bitmap:ImageBitmap)=>void;destroy:()=>void;backend:string}
 async function gpuRequest<T>(request:Promise<T>,onLate?:(value:T)=>void):Promise<T> {
   let expired=false,timer:ReturnType<typeof setTimeout>|undefined
   const timeout=new Promise<never>((_,reject)=>{timer=setTimeout(()=>{expired=true;reject(new Error('GPU initialization timed out'))},2000)})
@@ -38,12 +39,28 @@ export async function rgbaPresenter(canvas:HTMLCanvasElement,forceWebGL=false):P
       const pipeline=gpu.createRenderPipeline({layout:'auto',vertex:{module:shader,entryPoint:'vertex'},fragment:{module:shader,entryPoint:'fragment',targets:[{format}]}})
       let texture:GPUTexture|undefined,binding:GPUBindGroup,width=0,height=0,lost=false,uploaded:Uint8ClampedArray|undefined
       void gpu.lost.then(()=>{lost=true;canvas.dispatchEvent(new Event('framecontextlost'))})
-      return {backend:'WebGPU',draw(pixels,w,h){
+      // External image copies need RENDER_ATTACHMENT on the destination texture.
+      const allocate=(w:number,h:number)=>{
         if(lost)throw new Error('WebGPU device lost')
-        if(w!==width||h!==height){texture?.destroy();width=w;height=h;canvas.width=w;canvas.height=h;texture=gpu.createTexture({size:[w,h],format:'rgba8unorm',usage:GPUTextureUsage.TEXTURE_BINDING|GPUTextureUsage.COPY_DST});binding=gpu.createBindGroup({layout:pipeline.getBindGroupLayout(0),entries:[{binding:0,resource:texture.createView()}]})}
-        if(uploaded!==pixels){gpu.queue.writeTexture({texture:texture!},pixels as Uint8ClampedArray<ArrayBuffer>,{bytesPerRow:w*4},[w,h]);uploaded=pixels}
+        if(w===width&&h===height)return
+        texture?.destroy();width=w;height=h;canvas.width=w;canvas.height=h;uploaded=undefined
+        texture=gpu.createTexture({size:[w,h],format:'rgba8unorm',usage:GPUTextureUsage.TEXTURE_BINDING|GPUTextureUsage.COPY_DST|GPUTextureUsage.RENDER_ATTACHMENT})
+        binding=gpu.createBindGroup({layout:pipeline.getBindGroupLayout(0),entries:[{binding:0,resource:texture.createView()}]})
+      }
+      const render=()=>{
         const command=gpu.createCommandEncoder(),pass=command.beginRenderPass({colorAttachments:[{view:context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store',clearValue:[0,0,0,0]}]})
         pass.setPipeline(pipeline);pass.setBindGroup(0,binding!);pass.draw(3);pass.end();gpu.queue.submit([command.finish()])
+      }
+      return {backend:'WebGPU',draw(pixels,w,h){
+        allocate(w,h)
+        if(uploaded!==pixels){gpu.queue.writeTexture({texture:texture!},pixels as Uint8ClampedArray<ArrayBuffer>,{bytesPerRow:w*4},[w,h]);uploaded=pixels}
+        render()
+      },drawBitmap(bitmap){
+        allocate(bitmap.width,bitmap.height)
+        // The shader premultiplies once, so the copy keeps straight alpha and source row order.
+        gpu.queue.copyExternalImageToTexture({source:bitmap,flipY:false},{texture:texture!,premultipliedAlpha:false},[bitmap.width,bitmap.height])
+        uploaded=undefined
+        render()
       },destroy(){texture?.destroy();context.unconfigure();gpu.destroy()}}
     }
   }
@@ -57,12 +74,25 @@ export async function rgbaPresenter(canvas:HTMLCanvasElement,forceWebGL=false):P
   const texture=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,texture);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST)
   const heightUniform=gl.getUniformLocation(program,'height')
   let width=0,height=0,uploaded:Uint8ClampedArray|undefined
-  return {backend:'WebGL2',draw(pixels,w,h){
+  const prepare=(w:number,h:number)=>{
     if(gl.isContextLost())throw new Error('WebGL2 context lost')
     if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h}
-    gl.viewport(0,0,w,h);gl.useProgram(program);gl.bindTexture(gl.TEXTURE_2D,texture);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,false)
+    gl.viewport(0,0,w,h);gl.useProgram(program);gl.bindTexture(gl.TEXTURE_2D,texture)
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,false);gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);gl.pixelStorei(gl.UNPACK_COLORSPACE_CONVERSION_WEBGL,gl.NONE)
+  }
+  const render=(h:number)=>{gl.uniform1i(heightUniform,h);gl.drawArrays(gl.TRIANGLES,0,3)}
+  return {backend:'WebGL2',draw(pixels,w,h){
+    prepare(w,h)
     if(width!==w||height!==h){gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA8,w,h,0,gl.RGBA,gl.UNSIGNED_BYTE,pixels);width=w;height=h;uploaded=pixels}
     else if(uploaded!==pixels){gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,pixels);uploaded=pixels}
-    gl.uniform1i(heightUniform,h);gl.drawArrays(gl.TRIANGLES,0,3)
+    render(h)
+  },drawBitmap(bitmap){
+    const w=bitmap.width,h=bitmap.height
+    prepare(w,h)
+    // Storage is reallocated only when the size changes; later frames update it in place.
+    if(width!==w||height!==h){gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA8,w,h,0,gl.RGBA,gl.UNSIGNED_BYTE,bitmap);width=w;height=h}
+    else gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,bitmap)
+    uploaded=undefined
+    render(h)
   },destroy(){gl.deleteTexture(texture);gl.deleteProgram(program);gl.deleteShader(vertex);gl.deleteShader(fragment)}}
 }

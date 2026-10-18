@@ -7,13 +7,18 @@
     accountId: string
     encoding?: FrameEncoding
     mode?: FrameMode
+    /** Delivery rate this view wants; the server paces frames to it (1–60). */
+    fps?: number
+    /** Largest image this view shows; previews ask for less so the server encodes less. */
+    maxWidth?: number
+    maxHeight?: number
     onStatus?: (status: string) => void
     showStatus?: boolean
     canvasProps?: HTMLCanvasAttributes
     class?: string
   }
   let {
-    url, accountId, encoding = 'rgba', mode = 'frame', onStatus,
+    url, accountId, encoding = 'rgba', mode = 'frame', fps, maxWidth, maxHeight, onStatus,
     showStatus = true, canvasProps, class: className,
   }: Props = $props()
   let canvas = $state<HTMLCanvasElement | null>(null)
@@ -23,7 +28,7 @@
   $effect(() => {
     if (!canvas) return
     const stream = new FramebufferStream(canvas, {
-      url, accountId, encoding, mode,
+      url, accountId, encoding, mode, fps, maxWidth, maxHeight,
       forceWebGL: canvasGeneration > 0,
       onContextLost: () => { canvasGeneration += 1 },
     }, (next) => {

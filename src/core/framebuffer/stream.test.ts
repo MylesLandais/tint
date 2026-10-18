@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { FramebufferStream } from './stream'
 import { rgbaPresenter } from './rgbaPresenter'
 
-const presenter = vi.hoisted(() => ({ draw: vi.fn(), destroy: vi.fn(), backend: 'test' }))
+const presenter = vi.hoisted(() => ({ draw: vi.fn(), drawBitmap: undefined as undefined | ((bitmap: ImageBitmap) => void), destroy: vi.fn(), backend: 'test' }))
 vi.mock('./rgbaPresenter', () => ({ rgbaPresenter: vi.fn().mockResolvedValue(presenter) }))
 
 class SocketStub {
@@ -35,6 +35,7 @@ afterEach(() => {
   SocketStub.instances = []
   presenter.draw.mockClear()
   presenter.destroy.mockClear()
+  presenter.drawBitmap = undefined
   vi.unstubAllGlobals()
   vi.useRealTimers()
   vi.mocked(rgbaPresenter).mockClear()
@@ -91,6 +92,47 @@ describe('FramebufferStream', () => {
     expect(SocketStub.instances[0].readyState).toBe(3)
     canvas.dispatchEvent(new Event('framecontextlost'))
     expect(onContextLost).toHaveBeenCalledOnce()
+    stream.dispose()
+  })
+
+  it('asks for its rate and size, uploads decoded PNGs directly, and acknowledges each frame', async () => {
+    vi.stubGlobal('WebSocket', SocketStub)
+    const bitmap = { width: 1, height: 1, close: vi.fn() }
+    const decode = vi.fn().mockResolvedValue(bitmap)
+    vi.stubGlobal('createImageBitmap', decode)
+    presenter.drawBitmap = vi.fn()
+    const stream = new FramebufferStream(document.createElement('canvas'), {
+      url: 'ws://example.test/frames', accountId: 'one', encoding: 'png', mode: 'frame', fps: 60, maxWidth: 640, maxHeight: 360, onContextLost: vi.fn(),
+    }, vi.fn())
+    stream.start()
+    await vi.waitFor(() => expect(SocketStub.instances).toHaveLength(1))
+    const socket = SocketStub.instances[0]
+    socket.onopen?.()
+    expect(JSON.parse(socket.sent[0])).toEqual({ kind: 'frame', width: 640, height: 360, fps: 60, paused: false })
+    socket.onmessage?.({ data: frame() })
+    await vi.waitFor(() => expect(presenter.drawBitmap).toHaveBeenCalledWith(bitmap))
+    expect(decode.mock.calls[0][1]).toEqual({ premultiplyAlpha: 'none', colorSpaceConversion: 'none', imageOrientation: 'none' })
+    expect(presenter.draw).not.toHaveBeenCalled()
+    expect(bitmap.close).toHaveBeenCalledOnce()
+    expect(socket.sent.at(-1)).toBe(JSON.stringify({ type: 'ack' }))
+    stream.dispose()
+  })
+
+  it('acknowledges without decoding while the page is hidden', async () => {
+    vi.stubGlobal('WebSocket', SocketStub)
+    const decode = vi.fn()
+    vi.stubGlobal('createImageBitmap', decode)
+    const hidden = vi.spyOn(document, 'hidden', 'get').mockReturnValue(true)
+    const stream = new FramebufferStream(document.createElement('canvas'), {
+      url: 'ws://example.test/frames', accountId: 'one', encoding: 'png', mode: 'frame', onContextLost: vi.fn(),
+    }, vi.fn())
+    stream.start()
+    await vi.waitFor(() => expect(SocketStub.instances).toHaveLength(1))
+    const socket = SocketStub.instances[0]
+    socket.onmessage?.({ data: frame() })
+    await vi.waitFor(() => expect(socket.sent.at(-1)).toBe(JSON.stringify({ type: 'ack' })))
+    expect(decode).not.toHaveBeenCalled()
+    hidden.mockRestore()
     stream.dispose()
   })
 })
