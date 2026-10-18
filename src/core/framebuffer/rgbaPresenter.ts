@@ -1,6 +1,9 @@
 /// <reference types="@webgpu/types" />
+/** A decoded image the GPU can copy directly: a PNG `ImageBitmap` or a WebCodecs `VideoFrame`. */
+export type DecodedImage = ImageBitmap | VideoFrame
+const imageSize = (image: DecodedImage) => 'displayWidth' in image ? [image.displayWidth, image.displayHeight] as const : [image.width, image.height] as const
 /** `drawBitmap` uploads a decoded straight-alpha image directly, skipping a CPU pixel readback. */
-export type Presenter = {draw:(pixels:Uint8ClampedArray,width:number,height:number)=>void;drawBitmap?:(bitmap:ImageBitmap)=>void;destroy:()=>void;backend:string}
+export type Presenter = {draw:(pixels:Uint8ClampedArray,width:number,height:number)=>void;drawBitmap?:(bitmap:DecodedImage)=>void;destroy:()=>void;backend:string}
 async function gpuRequest<T>(request:Promise<T>,onLate?:(value:T)=>void):Promise<T> {
   let expired=false,timer:ReturnType<typeof setTimeout>|undefined
   const timeout=new Promise<never>((_,reject)=>{timer=setTimeout(()=>{expired=true;reject(new Error('GPU initialization timed out'))},2000)})
@@ -56,9 +59,10 @@ export async function rgbaPresenter(canvas:HTMLCanvasElement,forceWebGL=false):P
         if(uploaded!==pixels){gpu.queue.writeTexture({texture:texture!},pixels as Uint8ClampedArray<ArrayBuffer>,{bytesPerRow:w*4},[w,h]);uploaded=pixels}
         render()
       },drawBitmap(bitmap){
-        allocate(bitmap.width,bitmap.height)
+        const [w,h]=imageSize(bitmap)
+        allocate(w,h)
         // The shader premultiplies once, so the copy keeps straight alpha and source row order.
-        gpu.queue.copyExternalImageToTexture({source:bitmap,flipY:false},{texture:texture!,premultipliedAlpha:false},[bitmap.width,bitmap.height])
+        gpu.queue.copyExternalImageToTexture({source:bitmap,flipY:false},{texture:texture!,premultipliedAlpha:false},[w,h])
         uploaded=undefined
         render()
       },destroy(){texture?.destroy();context.unconfigure();gpu.destroy()}}
@@ -87,7 +91,7 @@ export async function rgbaPresenter(canvas:HTMLCanvasElement,forceWebGL=false):P
     else if(uploaded!==pixels){gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,pixels);uploaded=pixels}
     render(h)
   },drawBitmap(bitmap){
-    const w=bitmap.width,h=bitmap.height
+    const [w,h]=imageSize(bitmap)
     prepare(w,h)
     // Storage is reallocated only when the size changes; later frames update it in place.
     if(width!==w||height!==h){gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA8,w,h,0,gl.RGBA,gl.UNSIGNED_BYTE,bitmap);width=w;height=h}

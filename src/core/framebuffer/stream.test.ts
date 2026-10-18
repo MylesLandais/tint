@@ -181,4 +181,45 @@ describe('FramebufferStream', () => {
     expect(windows().at(-1)).toBe(2)
     stream.dispose()
   })
+
+  it('decodes H.264 access units in order and acknowledges each decoded frame', async () => {
+    vi.stubGlobal('WebSocket', SocketStub)
+    const configured: unknown[] = [], chunks: { type: string }[] = []
+    let output: ((frame: { displayWidth: number; displayHeight: number; close: () => void }) => void) | undefined
+    class DecoderStub {
+      state = 'unconfigured'
+      constructor(init: { output: typeof output }) { output = init.output }
+      configure(config: unknown) { configured.push(config); this.state = 'configured' }
+      decode(chunk: { type: string }) { chunks.push(chunk); output?.({ displayWidth: 1, displayHeight: 1, close: vi.fn() }) }
+      close() { this.state = 'closed' }
+    }
+    vi.stubGlobal('VideoDecoder', DecoderStub)
+    vi.stubGlobal('EncodedVideoChunk', class { type: string; constructor(init: { type: string }) { this.type = init.type } })
+    presenter.drawBitmap = vi.fn()
+    const unit = (id: number, keyframe: boolean) => {
+      const header = new TextEncoder().encode(JSON.stringify({ account_id: 'one', session_id: 'session', frame_id: id, width: 1, height: 1, keyframe, codec: 'avc1.640028' }))
+      const bytes = new Uint8Array(header.length + 8)
+      new DataView(bytes.buffer).setUint32(0, header.length)
+      bytes.set(header, 4)
+      return bytes.buffer
+    }
+    const stream = new FramebufferStream(document.createElement('canvas'), {
+      url: 'ws://example.test/frames', accountId: 'one', encoding: 'h264', mode: 'frame', onContextLost: vi.fn(),
+    }, vi.fn())
+    stream.start()
+    await vi.waitFor(() => expect(SocketStub.instances).toHaveLength(1))
+    const socket = SocketStub.instances[0]
+    socket.onopen?.()
+    expect(JSON.parse(socket.sent[0])).toMatchObject({ encoding: 'h264', window: 4 })
+    socket.onmessage?.({ data: unit(1, false) })
+    await vi.waitFor(() => expect(socket.sent.filter(m => m.includes('ack'))).toHaveLength(1))
+    expect(chunks).toHaveLength(0)
+    socket.onmessage?.({ data: unit(2, true) })
+    socket.onmessage?.({ data: unit(3, false) })
+    await vi.waitFor(() => expect(presenter.drawBitmap).toHaveBeenCalledTimes(2))
+    expect(configured).toEqual([{ codec: 'avc1.640028', optimizeForLatency: true, hardwareAcceleration: 'prefer-hardware' }])
+    expect(chunks.map(chunk => chunk.type)).toEqual(['key', 'delta'])
+    expect(socket.sent.filter(m => m.includes('ack'))).toHaveLength(3)
+    stream.dispose()
+  })
 })

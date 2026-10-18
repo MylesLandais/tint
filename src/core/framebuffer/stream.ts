@@ -41,6 +41,10 @@ export class FramebufferStream {
    */
   private window = 2
   private decodeAverage = 0
+  /** H.264: the hardware decoder, its codec, and the frames submitted but not yet presented. */
+  private decoder: VideoDecoder | null = null
+  private decoderCodec = ''
+  private decoding: { frameId: string; sessionId: string; version: number }[] = []
   private scratch: OffscreenCanvas | HTMLCanvasElement | null = null
   private context: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D | null = null
 
@@ -82,6 +86,11 @@ export class FramebufferStream {
     if (this.options.encoding === 'png' && this.socket?.readyState === WebSocket.OPEN) {
       const { fps = 30, maxWidth = 1280, maxHeight = 720 } = this.options
       this.socket.send(JSON.stringify({ kind: this.options.mode, width: maxWidth, height: maxHeight, fps, window: this.window, paused: document.hidden }))
+    } else if (this.options.encoding === 'h264' && this.socket?.readyState === WebSocket.OPEN) {
+      // Every access unit is needed to decode the next, so video is never paused and keeps a
+      // few units in flight; the decoder works in hardware and in order.
+      const { fps = 60, maxWidth = 1280, maxHeight = 720 } = this.options
+      this.socket.send(JSON.stringify({ kind: this.options.mode, width: maxWidth, height: maxHeight, fps, window: 4, encoding: 'h264', paused: false }))
     }
   }
 
@@ -95,6 +104,7 @@ export class FramebufferStream {
   }
 
   private closeConnection(): void {
+    this.resetDecoder()
     if (this.watchdog) clearInterval(this.watchdog)
     this.watchdog = undefined
     if (this.socket) {
@@ -164,8 +174,64 @@ export class FramebufferStream {
     this.settings()
   }
 
+  private ack(version: number): void {
+    if (!this.disposed && version === this.version && this.socket?.readyState === WebSocket.OPEN) this.socket.send(JSON.stringify({ type: 'ack' }))
+  }
+
+  /** Close the decoder; the next keyframe starts a new one. Pending units are acknowledged. */
+  private resetDecoder(): void {
+    if (this.decoder && this.decoder.state !== 'closed') this.decoder.close()
+    this.decoder = null
+    this.decoderCodec = ''
+    for (const pending of this.decoding.splice(0)) this.ack(pending.version)
+  }
+
+  /** H.264: decode in order with WebCodecs; present and acknowledge each decoded frame. */
+  private receiveVideo(data: ArrayBuffer, version: number): void {
+    const frame = parseFrameEnvelope(data, this.options.accountId, this.sessionId, this.options.encoding)
+    this.sessionId = frame.sessionId
+    this.lastFrame = Date.now()
+    if (frame.keyframe && frame.codec && frame.codec !== this.decoderCodec) {
+      this.resetDecoder()
+      const decoder = new VideoDecoder({
+        output: (image) => {
+          const pending = this.decoding.shift()
+          try {
+            if (pending && pending.version === this.version && !document.hidden && this.presenter?.drawBitmap) {
+              this.presenter.drawBitmap(image)
+              this.canvas.dataset.frameId = pending.frameId
+              this.canvas.dataset.sessionId = pending.sessionId
+              this.canvas.dataset.backend = this.presenter.backend
+              this.publish('Live')
+            }
+          } finally {
+            image.close()
+            if (pending) this.ack(pending.version)
+          }
+        },
+        error: (cause) => { this.publish(String(cause)); this.resetDecoder() },
+      })
+      decoder.configure({ codec: frame.codec, optimizeForLatency: true, hardwareAcceleration: 'prefer-hardware' })
+      this.decoder = decoder
+      this.decoderCodec = frame.codec
+    }
+    // Deltas are useless until a keyframe has started the decoder.
+    if (!this.decoder || this.decoder.state !== 'configured') { this.ack(version); return }
+    this.decoding.push({ frameId: frame.frameId, sessionId: frame.sessionId, version })
+    this.decoder.decode(new EncodedVideoChunk({ type: frame.keyframe ? 'key' : 'delta', timestamp: Number(frame.frameId) * 16_667, data: new Uint8Array(data, frame.payloadOffset) }))
+  }
+
   private async receive(data: unknown, version: number): Promise<void> {
     if (this.disposed || version !== this.version || !this.presenter) return
+    if (this.options.encoding === 'h264') {
+      try {
+        if (!(data instanceof ArrayBuffer)) throw new Error('Invalid frame payload')
+        this.receiveVideo(data, version)
+      } catch (cause) {
+        if (!this.disposed && version === this.version) { this.publish(String(cause)); this.socket?.close() }
+      }
+      return
+    }
     const arrival = ++this.arrivals
     let bitmap: ImageBitmap | undefined
     try {
