@@ -211,7 +211,9 @@ export class FramebufferStream {
         },
         error: (cause) => { this.publish(String(cause)); this.resetDecoder() },
       })
-      decoder.configure({ codec: frame.codec, optimizeForLatency: true, hardwareAcceleration: 'prefer-hardware' })
+      // Chromium treats prefer-hardware as hardware-only and rejects the stream where no hardware
+      // decoder exists (NVIDIA without VA-API); no-preference still uses hardware when present.
+      decoder.configure({ codec: frame.codec, optimizeForLatency: true, hardwareAcceleration: 'no-preference' })
       this.decoder = decoder
       this.decoderCodec = frame.codec
     }

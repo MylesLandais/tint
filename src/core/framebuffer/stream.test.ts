@@ -217,7 +217,7 @@ describe('FramebufferStream', () => {
     socket.onmessage?.({ data: unit(2, true) })
     socket.onmessage?.({ data: unit(3, false) })
     await vi.waitFor(() => expect(presenter.drawBitmap).toHaveBeenCalledTimes(2))
-    expect(configured).toEqual([{ codec: 'avc1.640028', optimizeForLatency: true, hardwareAcceleration: 'prefer-hardware' }])
+    expect(configured).toEqual([{ codec: 'avc1.640028', optimizeForLatency: true, hardwareAcceleration: 'no-preference' }])
     expect(chunks.map(chunk => chunk.type)).toEqual(['key', 'delta'])
     expect(socket.sent.filter(m => m.includes('ack'))).toHaveLength(3)
     stream.dispose()
