@@ -23,7 +23,7 @@
   ]
   const api: ApiRow[] = [
     { prop: 'FieldShared', type: 'id, label, description?, error?, required?, disabled?', description: 'Common label, help, validation, and state props.' },
-    { prop: 'TextAreaField', type: 'value / onValueChange / rows', description: 'Controlled multiline text.' },
+    { prop: 'TextAreaField', type: 'value / onValueChange / rows / spellcheck', description: 'Controlled multiline text. Native spellcheck is optional; omit it to inherit the browser setting or set false for source and structured data.' },
     { prop: 'NumberField', type: 'value / onValueChange / min / max / step', description: 'Controlled numeric input; empty emits an empty string.' },
     { prop: 'PasswordField', type: 'value / onValueChange / visible / onVisibleChange', description: 'Credential input with an accessible visibility toggle.' },
     { prop: 'SelectField', type: 'value / onValueChange / options', description: 'Native single selection with a themed menu: the closed control and the open list both resolve from the active theme.' },
