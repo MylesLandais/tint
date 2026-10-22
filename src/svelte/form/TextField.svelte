@@ -22,6 +22,8 @@
     autocomplete?: HTMLInputAttributes['autocomplete']
     inputmode?: HTMLInputAttributes['inputmode']
     spellcheck?: HTMLInputAttributes['spellcheck']
+    /** Native input event; the host may prevent its default form action. */
+    onkeydown?: (event: KeyboardEvent) => void
   }
 
   let {
@@ -42,6 +44,7 @@
     autocomplete,
     inputmode,
     spellcheck,
+    onkeydown,
   }: Props = $props()
 
   let describedBy = $derived(
@@ -66,6 +69,7 @@
     invalid={Boolean(error)}
     invalidText={error ?? ''}
     aria-describedby={describedBy}
+    on:keydown={(event) => onkeydown?.(event)}
     on:input={(event) => onValueChange(String(event.detail ?? ''))}
   />
   {#if description}<p id={`${id}-description`} class="tint-field-description">{description}</p>{/if}

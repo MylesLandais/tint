@@ -113,3 +113,7 @@ session lists built from data. A tab's own `content` snippet takes precedence.
 The controlled `value` and `onChange` API still owns selection and keyboard navigation.
 
 See [Workspace names and mixed-version compatibility](docs/migrations/workspace-names.md) for the current APIs, deprecated aliases and preview runtime configuration.
+
+`TextField` from `@nebula/tint/form` forwards optional `onkeydown` to the native
+input. Hosts can prevent implicit Enter submission for an auxiliary form field
+without global key listeners or private DOM selectors. Value changes remain controlled.
