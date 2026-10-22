@@ -1,5 +1,6 @@
 <script lang="ts">
   import { TextArea } from 'carbon-components-svelte'
+  import type { HTMLTextareaAttributes } from 'svelte/elements'
   import type { FieldShared } from './types'
   import './styles.css'
 
@@ -10,11 +11,12 @@
     rows?: number
     maxLength?: number
     readOnly?: boolean
+    spellcheck?: HTMLTextareaAttributes['spellcheck']
   }
 
   let {
     id, label, value, onValueChange, description, error,
-    disabled = false, required = false, placeholder, rows = 4, maxLength, readOnly = false,
+    disabled = false, required = false, placeholder, rows = 4, maxLength, readOnly = false, spellcheck,
   }: Props = $props()
 
   let describedBy = $derived(
@@ -32,6 +34,7 @@
     {disabled}
     {required}
     readonly={readOnly}
+    {spellcheck}
     labelText={label}
     invalid={Boolean(error)}
     invalidText={error ?? ''}

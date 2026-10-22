@@ -41,9 +41,16 @@ describe('Svelte form fields', () => {
     expect(onCheckedChange).toHaveBeenCalledWith(true)
     expect(toggle).not.toBeChecked()
   })
-  it('preserves textarea length bounds through the public field API', () => {
-    render(TextAreaField, { id: 'message', label: 'Message', value: '', onValueChange: vi.fn(), maxLength: 4000 })
-    expect(screen.getByRole('textbox', { name: 'Message' })).toHaveAttribute('maxlength', '4000')
+  it('preserves textarea bounds and native spelling choices through the public field API', async () => {
+    const props = { id: 'message', label: 'Message', value: '', onValueChange: vi.fn(), maxLength: 4000 }
+    const view = render(TextAreaField, props)
+    const input = screen.getByRole('textbox', { name: 'Message' })
+    expect(input).toHaveAttribute('maxlength', '4000')
+    expect(input).not.toHaveAttribute('spellcheck')
+    await view.rerender({ ...props, spellcheck: false })
+    expect(input).toHaveAttribute('spellcheck', 'false')
+    await view.rerender({ ...props, spellcheck: true })
+    expect(input).toHaveAttribute('spellcheck', 'true')
   })
   it('keeps compact row selection named when its label is visually hidden', async () => {
     const onCheckedChange = vi.fn()
