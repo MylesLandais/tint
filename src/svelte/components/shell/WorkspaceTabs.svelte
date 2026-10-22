@@ -1,15 +1,18 @@
 <script lang="ts">
+  import type { Snippet } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
   import { nextWorkspaceTabId } from '../../../core/shell/navigation'
   import type { WorkspaceTab } from './types'
 
   type Props = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
     tabs: readonly WorkspaceTab[]
+    /** Shared renderer for data-driven tabs; a tab's own snippet takes precedence. */
+    content?: Snippet<[WorkspaceTab]>
     value: string
     onChange: (id: string) => void
     label: string
   }
-  let { tabs, value, onChange, label, class: className, ...rest }: Props = $props()
+  let { tabs, value, onChange, label, content, class: className, ...rest }: Props = $props()
   const id = $props.id()
   const refs = new Map<string, HTMLButtonElement>()
   function keydown(event: KeyboardEvent, tab: WorkspaceTab) {
@@ -35,6 +38,6 @@
   </div>
   {#each tabs as tab (tab.id)}
     <div role="tabpanel" id={`${id}-${tab.id}-panel`} aria-labelledby={`${id}-${tab.id}`}
-      hidden={value !== tab.id} tabindex="0" class="pt-4">{@render tab.content?.()}</div>
+      hidden={value !== tab.id} tabindex="0" class="pt-4">{#if tab.content}{@render tab.content()}{:else if content}{@render content(tab)}{/if}</div>
   {/each}
 </div>
