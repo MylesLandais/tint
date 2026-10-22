@@ -115,6 +115,7 @@ test('Svelte interaction docs exercise controlled menu, tabs, dialog, and contex
   await expect(page.getByRole('dialog', { name: 'Create view' })).toBeVisible()
   await page.keyboard.press('Escape')
   await expect(page.getByRole('dialog', { name: 'Create view' })).not.toBeVisible()
+  await expect(page.getByRole('button', { name: 'Open dialog' })).toBeFocused()
 
   await page.goto('/#/components/context-menu')
   await page.getByRole('button', { name: 'Open actions with keyboard or touch' }).click()

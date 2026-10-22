@@ -21,7 +21,8 @@
     onOpenChange(false)
   }
 
-  $effect(() => {
+  // Capture the opener before Carbon's render/mount focus handling runs.
+  $effect.pre(() => {
     if (!open) return
     const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null
     const unlock = lockDialogScroll()

@@ -190,6 +190,24 @@ describe('Tabs', () => {
 })
 
 describe('Dialog', () => {
+  it('restores the opener after a controlled async close re-enables it', async () => {
+    const opener = document.createElement('button')
+    opener.textContent = 'Open pending dialog'
+    document.body.append(opener)
+    opener.focus()
+    const modal = render(Dialog, { open: false, title: 'Pending operation', onOpenChange: vi.fn() })
+    await modal.rerender({ open: true, title: 'Pending operation', onOpenChange: vi.fn() })
+    await tick()
+    screen.getByRole('button', { name: 'Close' }).focus()
+    opener.disabled = true
+    opener.disabled = false
+    await modal.rerender({ open: false, title: 'Pending operation', onOpenChange: vi.fn() })
+    await tick()
+    expect(opener).toHaveFocus()
+    modal.unmount()
+    opener.remove()
+  })
+
   it('uses Carbon focus handling while keeping close controlled', async () => {
     const onOpenChange = vi.fn()
     render(Harness, { kind: 'dialog', open: true, onOpenChange, placement: 'right' })
