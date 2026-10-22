@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { tick } from 'svelte'
   import { ComposedModal, ModalBody, ModalHeader, Portal } from 'carbon-components-svelte'
   import { lockDialogScroll } from './scrollLock'
   import type { DialogProps } from './types'
@@ -27,7 +28,7 @@
     const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null
     const unlock = lockDialogScroll()
     return () => {
-      if (unlock()) queueMicrotask(() => previous?.focus())
+      if (unlock()) void tick().then(() => previous?.focus())
     }
   })
 

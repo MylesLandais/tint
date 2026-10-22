@@ -1,20 +1,27 @@
 <script lang="ts">
+  import Button from '../button/Button.svelte'
   import Menu from '../menu/Menu.svelte'
   import Popover from '../popover/Popover.svelte'
   import Dialog from '../dialog/Dialog.svelte'
 
   let {
-    kind, open, onOpenChange, onSelect, placement = 'center',
+    kind, open, onOpenChange, onSelect, placement = 'center', busy = false,
   }: {
-    kind: 'menu' | 'popover' | 'dialog'
+    kind: 'menu' | 'popover' | 'dialog' | 'async-dialog'
     open: boolean
     onOpenChange: (open: boolean) => void
     onSelect?: () => void
     placement?: 'center' | 'right'
+    busy?: boolean
   } = $props()
 </script>
 
-{#if kind === 'menu'}
+{#if kind === 'async-dialog'}
+  <Button disabled={busy} onclick={() => onOpenChange(true)}>Open pending dialog</Button>
+  <Dialog {open} {onOpenChange} title="Pending operation">
+    <p>Host-owned pending operation.</p>
+  </Dialog>
+{:else if kind === 'menu'}
   <Menu {open} {onOpenChange} label="Actions menu" items={[
     { id: 'archive', label: 'Archive', onSelect },
     { id: 'separator', type: 'separator' },
