@@ -31,7 +31,7 @@ const session = createCollabSession({ room: 'workspace:1:note:1' })
 <CodeEditor value={source} onValueChange={(next) => source = next} />`
 </script>
 
-<DocPage title="Code Editor" description="A CodeMirror Lua editor for a controlled file buffer or host-owned Yjs session. The document, transport, persistence, and presence lifecycle stay outside the Svelte component." importPath="@nebula/tint/code-editor" {usage} {api} accessibility="The CodeMirror content has a host-supplied accessible label. Read-only mode prevents edits, and the editor follows Tint code colors through semantic tokens.">
+<DocPage title="Code Editor" description="A CodeMirror Lua editor for a controlled file buffer or host-owned Yjs session. The document, transport, persistence, and presence lifecycle stay outside the Svelte component." importPath="@nebula/tint/code-editor" {usage} {api} accessibility="The CodeMirror content has a host-supplied accessible label. Read-only mode prevents edits, and the editor and its Lua tokens follow Tint semantic code colors for the active theme.">
   <div class="editor-demo">
     <label><input type="checkbox" checked={readOnly} onchange={(event) => readOnly = event.currentTarget.checked} /> Read only</label>
     <div class="editor"><CodeEditor {session} {readOnly} label="Demo shared Lua source" /></div>

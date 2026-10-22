@@ -1,6 +1,7 @@
 import { defaultKeymap, indentWithTab, history, historyKeymap } from '@codemirror/commands'
-import { StreamLanguage, syntaxHighlighting, defaultHighlightStyle } from '@codemirror/language'
+import { StreamLanguage, syntaxHighlighting, HighlightStyle } from '@codemirror/language'
 import { lua } from '@codemirror/legacy-modes/mode/lua'
+import { tags } from '@lezer/highlight'
 import { Annotation, EditorState, Transaction } from '@codemirror/state'
 import { EditorView, keymap, lineNumbers, highlightActiveLine, drawSelection } from '@codemirror/view'
 import { yCollab, yUndoManagerKeymap } from 'y-codemirror.next'
@@ -19,6 +20,14 @@ export type CodeEditorOptions = EditorOptions & (
 export type CodeEditorView = EditorView
 const externalValue = Annotation.define<boolean>()
 
+const tintHighlightStyle = HighlightStyle.define([
+  { tag: tags.keyword, color: 'var(--tint-code-keyword)' },
+  { tag: tags.string, color: 'var(--tint-code-string)' },
+  { tag: [tags.number, tags.bool, tags.null], color: 'var(--tint-code-number)' },
+  { tag: tags.comment, color: 'var(--tint-code-comment)' },
+  { tag: [tags.function(tags.variableName), tags.definition(tags.variableName)], color: 'var(--tint-code-function)' },
+])
+
 /** Build a host-owned collaborative or controlled CodeMirror buffer. */
 export function createCodeEditorState({ session, presence, value, onValueChange, readOnly = false, label = 'Lua source editor' }: CodeEditorOptions): EditorState {
   return EditorState.create({
@@ -26,7 +35,7 @@ export function createCodeEditorState({ session, presence, value, onValueChange,
     extensions: [
       lineNumbers(), drawSelection(), highlightActiveLine(),
       keymap.of([...(session ? yUndoManagerKeymap : historyKeymap), ...defaultKeymap, indentWithTab]),
-      StreamLanguage.define(lua), syntaxHighlighting(defaultHighlightStyle),
+      StreamLanguage.define(lua), syntaxHighlighting(tintHighlightStyle),
       session ? yCollab(session.fragment as unknown as ExternalText, presence) : history(),
       EditorView.updateListener.of((update) => {
         if (!session && update.docChanged && update.transactions.some(transaction => transaction.docChanged && !transaction.annotation(externalValue))) {
