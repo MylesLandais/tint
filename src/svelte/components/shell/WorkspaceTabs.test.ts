@@ -11,3 +11,13 @@ it('renders data-driven session content and preserves per-tab snippets',async()=
  expect(screen.getByRole('tabpanel',{name:'Beta'})).toHaveTextContent('Owned tab content')
  expect(screen.queryByText('beta session content')).not.toBeInTheDocument()
 })
+
+it('keeps adjacent actions outside the tablist while retaining tab keyboard navigation', async () => {
+ const onChange=vi.fn()
+ render(Fixture,{value:'alpha',onChange,withActions:true})
+ const action=screen.getByRole('button',{name:'Pin tools'})
+ expect(action.closest('[role="tablist"]')).toBeNull()
+ await fireEvent.keyDown(screen.getByRole('tab',{name:'Alpha'}),{key:'ArrowRight'})
+ expect(onChange).toHaveBeenCalledWith('beta')
+ expect(screen.getByRole('tab',{name:'Beta'})).toHaveFocus()
+})

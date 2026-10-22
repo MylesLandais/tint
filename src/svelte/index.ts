@@ -89,8 +89,8 @@ export type {
   TerminalConsoleProps, TerminalOutput, TerminalSession,
   TerminalSize, TerminalStatus, TintTerminalOptions,
 } from './components/terminal'
-export { CodeEditor } from './components/code-editor'
-export type { CodeEditorProps } from './components/code-editor'
+export { CodeEditor, setCodeEditorValue, revealCodeEditorLine } from './components/code-editor'
+export type { CodeEditorProps, CodeEditorView } from './components/code-editor'
 export { Editor, CodeTabsExtension, editorDocumentToHTML, editorHTMLToDocument, defaultSlashCommands, DEFAULT_EDITOR_CODE_TABS, codeTabsContent } from './components/editor'
 export type { EditorProps, EditorDocument, EditorSerializationOptions, EditorCommandContext, EditorSlashCommand, EditorCodeTab } from './components/editor'
 export { ThemePicker, ThemeToggle, themeNameStore, colorSchemeStore, DEFAULT_THEME, THEME_STORAGE_KEY, COLOR_SCHEME_STORAGE_KEY } from './components/theme'

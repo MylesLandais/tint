@@ -4,6 +4,7 @@
   import './styles.css'
 
   type Props = {
+    class?: string
     id: string
     label: string
     value: string
@@ -19,9 +20,12 @@
     placeholder?: string
     name?: string
     autocomplete?: HTMLInputAttributes['autocomplete']
+    inputmode?: HTMLInputAttributes['inputmode']
+    spellcheck?: HTMLInputAttributes['spellcheck']
   }
 
   let {
+    class: className,
     id,
     label,
     value,
@@ -36,6 +40,8 @@
     placeholder,
     name,
     autocomplete,
+    inputmode,
+    spellcheck,
   }: Props = $props()
 
   let describedBy = $derived(
@@ -43,7 +49,7 @@
   )
 </script>
 
-<div class="tint-text-field" data-invalid={Boolean(error)} data-disabled={disabled} data-required={required}>
+<div class={['tint-text-field', className]} data-invalid={Boolean(error)} data-disabled={disabled} data-required={required}>
   <TextInput
     {id}
     {name}
@@ -51,6 +57,8 @@
     {value}
     {placeholder}
     {autocomplete}
+    {inputmode}
+    {spellcheck}
     {required}
     {disabled}
     readonly={readOnly}

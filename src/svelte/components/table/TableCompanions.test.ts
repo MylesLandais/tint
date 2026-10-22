@@ -116,7 +116,7 @@ describe('Svelte table companions', () => {
     expect(screen.getByText('Details for Allen Mock')).toBeInTheDocument()
     await rerender({ inspectorTab: 'history', onInspectorTabChange, onInspectorWidthChange })
     expect(screen.getByText('History for Allen Mock')).toBeInTheDocument()
-    await fireEvent.keyDown(screen.getByRole('button', { name: /Inspector width 320 pixels/ }), { key: 'ArrowLeft' })
+    await fireEvent.keyDown(screen.getByRole('separator', { name: 'Resize inspector' }), { key: 'ArrowLeft' })
     expect(onInspectorWidthChange).toHaveBeenCalledWith(328)
   })
 

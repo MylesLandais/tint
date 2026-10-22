@@ -6,6 +6,7 @@
     id: string
     label: string
     hideLabel?: boolean
+    inline?: boolean
     description?: string
     error?: string
     required?: boolean
@@ -18,6 +19,7 @@
     id,
     label,
     hideLabel = false,
+    inline = false,
     description,
     error,
     required = false,
@@ -29,6 +31,7 @@
 
 <div
   class={['tint-svelte-form-control', className].filter(Boolean).join(' ')}
+  class:inline
   data-invalid={Boolean(error)}
   data-disabled={disabled}
 >
@@ -41,5 +44,10 @@
 </div>
 
 <style>
+  .inline { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: var(--tint-space-2); }
+  .inline > label { grid-column: 2; grid-row: 1; margin: 0; }
+  .inline > .tint-svelte-form-control__input { grid-column: 1; grid-row: 1; }
+  .inline > p { grid-column: 1 / -1; }
+
   .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 </style>
