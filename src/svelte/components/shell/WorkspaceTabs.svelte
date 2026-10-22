@@ -13,8 +13,9 @@
     value: string
     onChange: (id: string) => void
     label: string
+    size?: 'sm' | 'md'
   }
-  let { tabs, value, onChange, label, content, actions, class: className, ...rest }: Props = $props()
+  let { tabs, value, onChange, label, size = 'md', content, actions, class: className, ...rest }: Props = $props()
   const id = $props.id()
   const refs = new Map<string, HTMLButtonElement>()
   function keydown(event: KeyboardEvent, tab: WorkspaceTab) {
@@ -34,7 +35,7 @@
         aria-selected={tab.id === value} tabindex={tab.id === value ? 0 : -1} disabled={tab.disabled}
         bind:this={() => refs.get(tab.id), (node) => { if (node) refs.set(tab.id, node); else refs.delete(tab.id) }}
         onclick={() => onChange(tab.id)} onkeydown={(event) => keydown(event, tab)}
-        class={['border-b-2 border-transparent px-1 py-3 text-sm text-tint-muted', tab.id === value && 'border-tint-accent text-tint-accent']}>
+        class={['border-b-2 border-transparent px-1 text-tint-muted', size === 'sm' ? 'py-1.5 text-xs' : 'py-3 text-sm', tab.id === value && 'border-tint-accent text-tint-accent']}>
         {tab.label}
       </button>
     {/each}
