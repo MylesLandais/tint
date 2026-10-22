@@ -190,6 +190,48 @@ describe('Tabs', () => {
 })
 
 describe('Dialog', () => {
+  it('restores nested focus and skips an ancestor that closed before its child', async () => {
+    const props = { kind: 'nested-dialog' as const, open: false, replacement: false, onOpenChange: vi.fn() }
+    const modal = render(Harness, props)
+    const opener = screen.getByRole('button', { name: 'Open parent dialog' })
+    opener.focus()
+    await modal.rerender({ ...props, open: true })
+    let childOpener = screen.getByRole('button', { name: 'Open child dialog' })
+    childOpener.focus()
+    await modal.rerender({ ...props, open: true, replacement: true })
+    screen.getByRole('button', { name: 'Finish child dialog' }).focus()
+    await modal.rerender({ ...props, open: true, replacement: false })
+    await waitFor(() => expect(childOpener).toHaveFocus())
+    childOpener = screen.getByRole('button', { name: 'Open child dialog' })
+    childOpener.focus()
+    await modal.rerender({ ...props, open: true, replacement: true })
+    const finish = screen.getByRole('button', { name: 'Finish child dialog' })
+    finish.focus()
+    await modal.rerender({ ...props, open: false, replacement: true })
+    expect(document.body.style.overflow).toBe('hidden')
+    expect(finish).toHaveFocus()
+    await modal.rerender(props)
+    await waitFor(() => expect(opener).toHaveFocus())
+  })
+
+  it('returns to the original opener after replacing a mounted modal', async () => {
+    const props = { kind: 'replacement-dialog' as const, open: false, replacement: false, onOpenChange: vi.fn() }
+    const modal = render(Harness, props)
+    const opener = screen.getByRole('button', { name: 'Open first dialog' })
+    opener.focus()
+    await modal.rerender({ ...props, open: true })
+    screen.getByRole('button', { name: 'Replace dialog' }).focus()
+    await modal.rerender({ ...props, open: true, replacement: true })
+    const finish = screen.getByRole('button', { name: 'Finish replacement' })
+    finish.focus()
+    await tick()
+    expect(finish).toHaveFocus()
+    expect(document.body.style.overflow).toBe('hidden')
+    await modal.rerender({ ...props, open: false, replacement: true })
+    await waitFor(() => expect(opener).toHaveFocus())
+    expect(document.body.style.overflow).not.toBe('hidden')
+  })
+
   it('restores the opener after a controlled async close re-enables it', async () => {
     const props = { kind: 'async-dialog' as const, open: false, busy: false, onOpenChange: vi.fn() }
     const modal = render(Harness, props)
