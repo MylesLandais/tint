@@ -26,7 +26,7 @@ export type { DiceKind } from './components/dice'
 export {
   DataTable, TableToolbar, TablePager, TableColumnsMenu,
   DataFilterControls, InfiniteRows, DataMasonry, WorkspaceGrid,
-  MediaWorkspace, EventReviewControls, CollectionWorkbench,
+  MediaWorkspace, EventReviewControls, CollectionWorkspace,
 } from './components/table'
 export type { DataTableProps, TableColumn, TableEditConfig, TableEditAdapter,
   WorkspaceDocument, WorkspaceCommand, WorkspaceItem, WorkspaceCollisionMode, MediaRelease,

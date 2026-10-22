@@ -231,11 +231,11 @@ test('Table docs keep sorting, selection, and inspector state controlled', async
   await table.getByRole('checkbox', { name: 'Select Night Drive' }).check()
   await expect(page.getByText('Selected IDs: a')).toBeVisible()
 
-  const workbench = page.locator('[data-collection-workbench]')
-  await expect(workbench.getByRole('table', { name: 'Track collection' })).toBeVisible()
-  await workbench.getByRole('button', { name: 'Open Night Drive' }).click()
-  await workbench.getByRole('tab', { name: 'History' }).click()
-  await expect(workbench.getByRole('tabpanel', { name: 'History' })).toContainText('Change history for Night Drive.')
+  const workspace = page.locator('[data-collection-workspace]')
+  await expect(workspace.getByRole('table', { name: 'Track collection' })).toBeVisible()
+  await workspace.getByRole('button', { name: 'Open Night Drive' }).click()
+  await workspace.getByRole('tab', { name: 'History' }).click()
+  await expect(workspace.getByRole('tabpanel', { name: 'History' })).toContainText('Change history for Night Drive.')
 })
 
 test('Auth docs exercise the pure client through Svelte forms', async ({ page }) => {
@@ -470,7 +470,7 @@ test('Voice Input docs keep draft and availability controlled', async ({ page })
 })
 
 test('Framebuffer docs discover sessions and keep selection keyboard accessible', async ({ page }) => {
-  await page.route('**/api/workbench/list_sessions', async (route) => {
+  await page.route('**/api/workspace/list_sessions', async (route) => {
     await route.fulfill({ contentType: 'application/json', body: JSON.stringify({ sessions: [
       { account_id: 'alpha' }, { account_id: 'beta' },
     ] }) })

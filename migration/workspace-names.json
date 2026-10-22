@@ -1,0 +1,25 @@
+{
+  "schema": "tint.workspace-names/v1",
+  "compatibility_files": {
+    "src/core/compatibility/workspace.ts": "One-release route/header/environment boundary",
+    "src/core/compatibility/table.ts": "Deprecated table aliases, prop and attributes",
+    "src/core/compatibility/framebuffer.ts": "Deprecated discovery/stream helpers",
+    "src/svelte/compatibility/workspace.ts": "Deprecated public component alias",
+    "src/core/compatibility/workspace.test.ts": "New/legacy mixed-version regression coverage",
+    "src/svelte/compatibility/workspace.test.ts": "Actual component and prop compatibility coverage",
+    "docs/migrations/workspace-names.md": "Explains exact migration and aliases",
+    "migration/workspace-names.json": "Boundary inventory",
+    "scripts/check-workspace-names.mjs": "Branding verifier pattern",
+    "e2e/workspace-compatibility.spec.ts": "Browser coverage of legacy routes and read failure exclusion"
+  },
+  "historical_files": {
+    "docs/migrations/consumer-inventory.md": {
+      "reason": "Read-only 2026-09-29 consumer snapshot with exact checkout/commit provenance",
+      "sha256": "2396d5830c64b977a92e9becab78fee46057906036b55693268cc5584fe99e63"
+    },
+    "docs/plans/2026-09-04-tint-component-inventory.md": {
+      "reason": "Original component review snapshot",
+      "sha256": "4c46804ecf47ff0269d1b88316e7b1415f0aab7c8175199a14d112adfd6d20bb"
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import type { Snippet } from 'svelte'
+import type { LegacyWorkspaceTableProps } from '../../../core/compatibility/table'
 import type {
   TableColumnCore,
   TableDensity,
@@ -26,7 +27,7 @@ export type TableEditConfig<TRow> = {
   onError?: (error: Error) => void
 }
 
-export type DataTableProps<TRow> = {
+export type DataTableProps<TRow> = LegacyWorkspaceTableProps & {
   /** Pass already sorted, filtered, paged rows; deriveRows remains framework-neutral. */
   rows?: readonly TRow[]
   /** Vendored v8 engine instance; the host must trigger Svelte updates on engine state changes. */
@@ -68,6 +69,6 @@ export type DataTableProps<TRow> = {
   virtual?: boolean
   virtualHeight?: number
   /** Apply Genre, BPM, State hide priority using the table's measured width. */
-  workbenchResponsive?: boolean
+  workspaceResponsive?: boolean
   class?: string
 }
