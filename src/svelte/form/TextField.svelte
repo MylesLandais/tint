@@ -19,6 +19,8 @@
     placeholder?: string
     name?: string
     autocomplete?: HTMLInputAttributes['autocomplete']
+    inputmode?: HTMLInputAttributes['inputmode']
+    spellcheck?: HTMLInputAttributes['spellcheck']
   }
 
   let {
@@ -36,6 +38,8 @@
     placeholder,
     name,
     autocomplete,
+    inputmode,
+    spellcheck,
   }: Props = $props()
 
   let describedBy = $derived(
@@ -51,6 +55,8 @@
     {value}
     {placeholder}
     {autocomplete}
+    {inputmode}
+    {spellcheck}
     {required}
     {disabled}
     readonly={readOnly}

@@ -1,29 +1,38 @@
-import { defaultKeymap, indentWithTab } from '@codemirror/commands'
+import { defaultKeymap, indentWithTab, history, historyKeymap } from '@codemirror/commands'
 import { StreamLanguage, syntaxHighlighting, defaultHighlightStyle } from '@codemirror/language'
 import { lua } from '@codemirror/legacy-modes/mode/lua'
-import { EditorState } from '@codemirror/state'
+import { Annotation, EditorState, Transaction } from '@codemirror/state'
 import { EditorView, keymap, lineNumbers, highlightActiveLine, drawSelection } from '@codemirror/view'
 import { yCollab, yUndoManagerKeymap } from 'y-codemirror.next'
 import type { Text as ExternalText } from 'yjs'
 import type { CollabSession } from '../collab/types'
 import type { EditorPresence } from '../collab/editorPresence'
 
-export type CodeEditorOptions = {
-  session: CollabSession
-  presence?: EditorPresence
+type EditorOptions = {
   readOnly?: boolean
   label?: string
 }
+export type CodeEditorOptions = EditorOptions & (
+  | { session: CollabSession; presence?: EditorPresence; value?: never; onValueChange?: never }
+  | { value: string; onValueChange: (value: string) => void; session?: never; presence?: never }
+)
+export type CodeEditorView = EditorView
+const externalValue = Annotation.define<boolean>()
 
-/** Build the collaborative CodeMirror state without a component framework. */
-export function createCodeEditorState({ session, presence, readOnly = false, label = 'Lua source editor' }: CodeEditorOptions): EditorState {
+/** Build a host-owned collaborative or controlled CodeMirror buffer. */
+export function createCodeEditorState({ session, presence, value, onValueChange, readOnly = false, label = 'Lua source editor' }: CodeEditorOptions): EditorState {
   return EditorState.create({
-    doc: session.fragment.toString(),
+    doc: session ? session.fragment.toString() : value,
     extensions: [
       lineNumbers(), drawSelection(), highlightActiveLine(),
-      keymap.of([...yUndoManagerKeymap, ...defaultKeymap, indentWithTab]),
+      keymap.of([...(session ? yUndoManagerKeymap : historyKeymap), ...defaultKeymap, indentWithTab]),
       StreamLanguage.define(lua), syntaxHighlighting(defaultHighlightStyle),
-      yCollab(session.fragment as unknown as ExternalText, presence),
+      session ? yCollab(session.fragment as unknown as ExternalText, presence) : history(),
+      EditorView.updateListener.of((update) => {
+        if (!session && update.docChanged && update.transactions.some(transaction => transaction.docChanged && !transaction.annotation(externalValue))) {
+          onValueChange?.(update.state.doc.toString())
+        }
+      }),
       EditorState.readOnly.of(readOnly),
       EditorView.contentAttributes.of({ 'aria-label': label, spellcheck: 'false' }),
       EditorView.theme({
@@ -40,4 +49,19 @@ export function createCodeEditorState({ session, presence, readOnly = false, lab
 /** Mount a state in a host element; callers own `destroy()` on lifecycle changes. */
 export function mountCodeEditor(parent: HTMLElement, options: CodeEditorOptions): EditorView {
   return new EditorView({ parent, state: createCodeEditorState(options) })
+}
+
+/** Apply a host replacement without reporting it as a user edit or local undo. */
+export function setCodeEditorValue(view: EditorView, value: string): void {
+  if (view.state.doc.toString() === value) return
+  view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: value },
+    annotations: [externalValue.of(true), Transaction.addToHistory.of(false)] })
+}
+
+/** Reveal debugger/source-tree locations without changing the buffer. */
+export function revealCodeEditorLine(view: EditorView | null, line: number): void {
+  if (!view || !Number.isFinite(line)) return
+  const anchor = view.state.doc.line(Math.max(1, Math.min(view.state.doc.lines, Math.trunc(line)))).from
+  view.dispatch({ selection: { anchor }, effects: EditorView.scrollIntoView(anchor, { y: 'center' }) })
+  view.focus()
 }

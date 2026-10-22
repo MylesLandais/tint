@@ -28,7 +28,7 @@
     { prop: 'PasswordField', type: 'value / onValueChange / visible / onVisibleChange', description: 'Credential input with an accessible visibility toggle.' },
     { prop: 'SelectField', type: 'value / onValueChange / options', description: 'Native single selection with a themed menu: the closed control and the open list both resolve from the active theme.' },
     { prop: 'Select', type: "value / onValueChange / options | children / size: 'md' | 'sm' / invalid", description: 'The bare native select used by SelectField, for toolbars and compact menus. Any <select class="tint-select"> gets the same chrome.' },
-    { prop: 'ToggleField', type: 'checked / onCheckedChange', description: 'Native controlled checkbox. hideLabel visually hides its label while retaining its accessible name, for compact table selection.' },
+    { prop: 'ToggleField', type: 'checked / onCheckedChange', description: 'Native controlled checkbox. inline places the checkbox beside its label for toolbars. hideLabel visually hides its label while retaining its accessible name, for compact table selection.' },
     { prop: 'SliderField', type: 'value / onValueChange / min / max / step', description: 'Native controlled range with a visible value.' },
     { prop: 'FileField', type: 'FormFileValue | null / onValueChange', description: 'File selection and optional image preview.' },
     { prop: 'TagsField', type: 'readonly string[] / onValueChange', description: 'Freeform tokens composed from Tokenizer.' },

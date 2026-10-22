@@ -10,6 +10,10 @@ import TextAreaField from './TextAreaField.svelte'
 import ToggleField from './ToggleField.svelte'
 
 describe('Svelte form fields', () => {
+  it('preserves textarea length bounds through the public field API', () => {
+    render(TextAreaField, { id: 'message', label: 'Message', value: '', onValueChange: vi.fn(), maxLength: 4000 })
+    expect(screen.getByRole('textbox', { name: 'Message' })).toHaveAttribute('maxlength', '4000')
+  })
   it('keeps compact row selection named when its label is visually hidden', async () => {
     const onCheckedChange = vi.fn()
     const { container } = render(ToggleField, { id: 'row-selection', label: 'Select recording', hideLabel: true, checked: false, onCheckedChange })

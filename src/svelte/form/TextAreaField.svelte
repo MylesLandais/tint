@@ -8,12 +8,13 @@
     onValueChange: (value: string) => void
     placeholder?: string
     rows?: number
+    maxLength?: number
     readOnly?: boolean
   }
 
   let {
     id, label, value, onValueChange, description, error,
-    disabled = false, required = false, placeholder, rows = 4, readOnly = false,
+    disabled = false, required = false, placeholder, rows = 4, maxLength, readOnly = false,
   }: Props = $props()
 
   let describedBy = $derived(
@@ -27,6 +28,7 @@
     {value}
     {placeholder}
     {rows}
+    maxlength={maxLength}
     {disabled}
     {required}
     readonly={readOnly}

@@ -6,16 +6,17 @@
 
   type Props = FieldShared & {
     hideLabel?: boolean
+    inline?: boolean
     checked: boolean
     onCheckedChange: (checked: boolean) => void
   }
 
   let {
-    id, label, hideLabel = false, checked, onCheckedChange, description, error, disabled = false,
+    id, label, hideLabel = false, inline = false, checked, onCheckedChange, description, error, disabled = false,
   }: Props = $props()
 </script>
 
-<FormControl {id} {label} {hideLabel} {description} {error} {disabled}>
+<FormControl {id} {label} {hideLabel} {inline} {description} {error} {disabled}>
   <input
     {id}
     type="checkbox"

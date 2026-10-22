@@ -8,6 +8,7 @@
   import type { TableSelectionModel } from '../../../core/table/selection'
   import type { TableRowId } from '../../../core/table/types'
   import { deriveWorkbenchRows, type WorkbenchInspectorTab } from '../../../core/table/workbench'
+  import ResizeHandle from '../shell/ResizeHandle.svelte'
   import DataTable from './DataTable.svelte'
   import DataFilterControls from './DataFilterControls.svelte'
   import TableColumnsMenu from './TableColumnsMenu.svelte'
@@ -90,35 +91,6 @@
     return () => observer.disconnect()
   })
 
-  function resizeInspector(next: number) {
-    onInspectorWidthChange(Math.max(260, Math.min(next, Math.max(260, containerWidth - 400))))
-  }
-
-  function resizeKey(event: KeyboardEvent) {
-    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return
-    event.preventDefault()
-    resizeInspector(inspectorWidth + (event.key === 'ArrowLeft' ? 1 : -1) * (event.shiftKey ? 32 : 8))
-  }
-
-  function resizePointer(event: PointerEvent) {
-    event.preventDefault()
-    const node = event.currentTarget as HTMLElement
-    const start = event.clientX
-    const width = inspectorWidth
-    node.setPointerCapture?.(event.pointerId)
-    const move = (next: PointerEvent) => resizeInspector(width - (next.clientX - start))
-    const end = (next: PointerEvent) => {
-      move(next)
-      node.releasePointerCapture?.(next.pointerId)
-      node.removeEventListener('pointermove', move)
-      node.removeEventListener('pointerup', end)
-      node.removeEventListener('pointercancel', end)
-    }
-    node.addEventListener('pointermove', move)
-    node.addEventListener('pointerup', end)
-    node.addEventListener('pointercancel', end)
-  }
-
   function tabKey(event: KeyboardEvent) {
     if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return
     event.preventDefault()
@@ -154,7 +126,9 @@
       <TablePager page={result.page} {pageSize} total={result.total} onChange={onPageChange} />
     </main>
     {#if layout.inspector === 'right'}
-      <button type="button" class="pane-resize" aria-label={`Inspector width ${inspectorWidth} pixels. Use left and right arrow keys.`} onkeydown={resizeKey} onpointerdown={resizePointer}></button>
+      <ResizeHandle label="Resize inspector" size={inspectorWidth} minSize={260} maxSize={Math.max(260, containerWidth - 400)}
+        primary="second" step={8} shiftStep={32} onSizeChange={onInspectorWidthChange}
+        style="min-width: .5rem; border-radius: var(--tint-radius-sm)" />
     {/if}
     <aside class="inspector" aria-label="Inspector">
       <header><h2>Inspector</h2>{#if activeRow}<p>{activeLabel}</p>{/if}</header>
@@ -187,8 +161,6 @@
   .body { display: grid; min-width: 0; gap: var(--tint-space-2); }
   .body.docked { grid-template-columns: minmax(0, 1fr) 0.5rem minmax(260px, var(--inspector-width)); }
   .table-pane { min-width: 0; border: 1px solid var(--tint-border); border-radius: var(--tint-radius-md); background: var(--tint-panel); }
-  .pane-resize { min-width: 0.5rem; border: 0; border-radius: var(--tint-radius-sm); background: var(--tint-border); cursor: col-resize; }
-  .pane-resize:hover { background: var(--tint-accent); }
   .inspector { min-width: 0; border: 1px solid var(--tint-border); border-radius: var(--tint-radius-md); background: var(--tint-panel); }
   .inspector header { border-bottom: 1px solid var(--tint-border); padding: var(--tint-space-3); }
   h2, p { margin: 0; }
