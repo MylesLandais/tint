@@ -10,6 +10,14 @@ import TextAreaField from './TextAreaField.svelte'
 import ToggleField from './ToggleField.svelte'
 
 describe('Svelte form fields', () => {
+  it('keeps compact row selection named when its label is visually hidden', async () => {
+    const onCheckedChange = vi.fn()
+    const { container } = render(ToggleField, { id: 'row-selection', label: 'Select recording', hideLabel: true, checked: false, onCheckedChange })
+    const checkbox = screen.getByRole('checkbox', { name: 'Select recording' })
+    expect(container.querySelector('label')).toHaveClass('visually-hidden')
+    await fireEvent.click(checkbox)
+    expect(onCheckedChange).toHaveBeenCalledWith(true)
+  })
   it('keeps a blank number distinct from zero', async () => {
     const onValueChange = vi.fn()
     render(NumberField, { id: 'count', label: 'Count', value: 3, onValueChange })
