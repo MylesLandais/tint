@@ -8,9 +8,24 @@ import SelectField from './SelectField.svelte'
 import SliderField from './SliderField.svelte'
 import TagsField from './TagsField.svelte'
 import TextAreaField from './TextAreaField.svelte'
+import TextField from './TextField.svelte'
 import ToggleField from './ToggleField.svelte'
 
 describe('Svelte form fields', () => {
+  it('forwards the native text-field key event so hosts can prevent implicit submission', async () => {
+    const onkeydown = vi.fn((event: KeyboardEvent) => { if (event.key === 'Enter') event.preventDefault() })
+    render(TextField, { id: 'detail', label: 'Detail', value: '', onValueChange: vi.fn(), onkeydown })
+    const input = screen.getByRole('textbox', { name: 'Detail' })
+    const enter = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true })
+    await fireEvent(input, enter)
+    expect(onkeydown).toHaveBeenCalledTimes(1)
+    expect(onkeydown.mock.calls[0][0]).toBe(enter)
+    expect(enter.target).toBe(input)
+    expect(enter.defaultPrevented).toBe(true)
+    const arrow = new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true, cancelable: true })
+    await fireEvent(input, arrow)
+    expect(arrow.defaultPrevented).toBe(false)
+  })
   it('keeps a rejected selection or pending toggle at the host-observed value', async () => {
     const onValueChange = vi.fn(), onCheckedChange = vi.fn()
     const { rerender } = render(Select, { 'aria-label': 'Source file', value: 'a', onValueChange, options: [{ value: 'a', label: 'A' }, { value: 'b', label: 'B' }] })
