@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { CodeTabs, HighlightedCode, type CodeTab } from '../svelte/components/code'
+  import { CodeTabs, HighlightedCode, JsonView, type CodeTab } from '../svelte/components/code'
   import DocPage from './svelte/DocPage.svelte'
   import type { ApiRow } from './svelte/types'
 
@@ -12,13 +12,15 @@
     { prop: 'HighlightedCode.code / language', type: 'string / string?', description: 'Escaped source and a registered language or alias. Unknown languages render as text.' },
     { prop: 'lineNumbers / startLine', type: 'boolean / number', description: 'Addressable lines with an optional first line number.' },
     { prop: 'highlightLines / highlightWords', type: 'readonly number[] / readonly string[]', description: 'Emphasize selected lines or literal words.' },
+    { prop: 'JsonView.value / label', type: 'unknown / string?', description: 'Read-only JSON evidence; an optional label adds a native disclosure. Missing and invalid values remain distinct.' },
+    { prop: 'JsonView.expanded', type: 'boolean (bindable)', description: 'Initial disclosure state; bind to retain host state. Updated evidence preserves an open disclosure.' },
     { prop: 'CodeTabs.tabs', type: 'readonly CodeTab[]', description: 'Code examples with labels, titles, optional Tint icon, and highlighting settings.' },
     { prop: 'value / defaultValue / onValueChange', type: 'string / string / (id) => void', description: 'Controlled active tab, initial local tab, and selection intent.' },
     { prop: 'accessory', type: 'Snippet<[CodeTab]>', description: 'Optional host content synchronized with the active tab.' },
     { prop: 'CodeTabs label', type: 'string', description: 'Accessible name for the tablist.' },
     { prop: 'CodeTabs class', type: 'string', description: 'Additional class on the code tabs container.' },
   ]
-  const usage = `import { CodeTabs, HighlightedCode } from '@nebula/tint/code'
+  const usage = `import { CodeTabs, HighlightedCode, JsonView } from '@nebula/tint/code'
 
 let active = $state('typescript')
 const tabs = [
@@ -27,16 +29,18 @@ const tabs = [
 ]
 
 <CodeTabs {tabs} value={active} onValueChange={(id) => active = id} />
-<pre><HighlightedCode code="const answer = 42" language="typescript" /></pre>`
+<pre><HighlightedCode code="const answer = 42" language="typescript" /></pre>
+<JsonView label="Observed evidence" value={{ revision: 12, released: true }} />`
 </script>
 
 {#snippet accessory(tab: CodeTab)}
   <p class="accessory">Active language: {tab.language}</p>
 {/snippet}
 
-<DocPage title="Code" description="Tint renders highlighted source as text nodes, preserving source text and multi-line grammar context. CodeTabs keeps tab selection and clipboard feedback accessible." importPath="@nebula/tint/code" {usage} {api} accessibility="Code tabs use the tablist, tab, and tabpanel pattern with arrow, Home, and End navigation. The selected tab has a single tab stop. Copy reports success only after the clipboard write resolves; syntax colors are decorative and source remains readable as text.">
+<DocPage title="Code" description="Tint renders highlighted source as text nodes, preserving source text and multi-line grammar context. CodeTabs keeps tab selection and clipboard feedback accessible." importPath="@nebula/tint/code" {usage} {api} accessibility="Code tabs use the tablist, tab, and tabpanel pattern with arrow, Home, and End navigation. The selected tab has a single tab stop. Copy reports success only after the clipboard write resolves; syntax colors are decorative and source remains readable as text. JSON disclosures use native details/summary keyboard behavior; scrollable JSON regions are focusable. Formatting never validates or upgrades evidence.">
   <div class="code-demo">
     <CodeTabs {tabs} {value} onValueChange={(next) => value = next} {accessory} />
+    <JsonView label="Observed evidence" value={{ revision: 12, released: true, effect: null }} expanded />
     <div>
       <h3>Untrusted source remains text</h3>
       <pre><HighlightedCode code={'<div class="x">{a && b}</div>'} language="html" highlightWords={['div']} /></pre>

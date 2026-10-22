@@ -5,16 +5,17 @@
   import './styles.css'
 
   type Props = FieldShared & {
+    hideLabel?: boolean
     checked: boolean
     onCheckedChange: (checked: boolean) => void
   }
 
   let {
-    id, label, checked, onCheckedChange, description, error, disabled = false,
+    id, label, hideLabel = false, checked, onCheckedChange, description, error, disabled = false,
   }: Props = $props()
 </script>
 
-<FormControl {id} {label} {description} {error} {disabled}>
+<FormControl {id} {label} {hideLabel} {description} {error} {disabled}>
   <input
     {id}
     type="checkbox"

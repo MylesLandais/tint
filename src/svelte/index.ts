@@ -62,7 +62,7 @@ export type {
 } from './components/auth'
 export { CharacterCardEditorForm, CharacterDocumentEditor, CharacterLibrary } from './components/character-card'
 export type { CharacterCardFormValues, CharacterDocument, CharacterLibraryItem } from './components/character-card'
-export { HighlightedCode, CodeTabs } from './components/code'
+export { HighlightedCode, CodeTabs, JsonView } from './components/code'
 export type { CodeTab } from './components/code'
 export * from './components/chat'
 export { CalendarMonthView, CalendarToolbar } from './components/calendar'
@@ -153,7 +153,7 @@ export * from './components/audio-workspace'
 export {
   AppShell, NavRail, ResponsiveNavRail, TopNav, WorkspaceHeader,
   CommandPalette, CommandMenu, StatusBar, ErrorBanner, EmptyState as ShellEmptyState,
-  LoadingState, WorkspaceLayout, WorkspaceSplit, WorkspaceTabs,
+  LoadingState, WorkspaceLayout, WorkspaceSplit, WorkspaceTabs, ResizeHandle,
   MetadataPanel, DetailSheet, FilterBar,
 } from './components/shell'
 export type {
