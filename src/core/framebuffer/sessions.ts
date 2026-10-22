@@ -18,19 +18,25 @@ export function workspaceFrameUrl(pageUrl: string, accountId: string, protocol: 
   return url.href
 }
 
-/** Discover the matching read/stream namespace without retrying ambiguous errors. */
-export async function discoverWorkspaceSessions(signal?: AbortSignal): Promise<WorkspaceSessionDiscovery> {
-  const read = (protocol: WorkspaceProtocol) => fetch(workspaceRoute('list_sessions', protocol), {
+function readSessions(protocol: WorkspaceProtocol, signal?: AbortSignal): Promise<Response> {
+  return fetch(workspaceRoute('list_sessions', protocol), {
     method: 'POST', headers: { 'Content-Type': 'application/json', [workspaceClientHeader(protocol)]: 'workspace' },
     body: '{}', signal,
   })
+}
+
+/** Discover the matching read/stream namespace without retrying ambiguous errors. */
+export async function discoverWorkspaceSessions(signal?: AbortSignal): Promise<WorkspaceSessionDiscovery> {
   let protocol: WorkspaceProtocol = 'current'
-  let response = await read(protocol)
-  if (response.status === 404) { protocol = 'legacy'; response = await read(protocol) }
+  let response = await readSessions(protocol, signal)
+  if (response.status === 404) { protocol = 'legacy'; response = await readSessions(protocol, signal) }
   if (!response.ok) throw new Error('Game runtime unavailable')
   return { accounts: workspaceSessionIds(await response.json()), protocol }
 }
 
-export async function fetchWorkspaceSessions(signal?: AbortSignal): Promise<string[]> {
-  return (await discoverWorkspaceSessions(signal)).accounts
+export async function fetchWorkspaceSessions(signal?: AbortSignal, protocol?: WorkspaceProtocol): Promise<string[]> {
+  if (protocol === undefined) return (await discoverWorkspaceSessions(signal)).accounts
+  const response = await readSessions(protocol, signal)
+  if (!response.ok) throw new Error('Game runtime unavailable')
+  return workspaceSessionIds(await response.json())
 }

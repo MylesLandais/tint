@@ -22,11 +22,22 @@ describe('Workspace mixed-version compatibility', () => {
     expect(workbenchLayout).toBe(collectionWorkspaceLayout)
     expect(deriveWorkbenchRows).toBe(deriveWorkspaceRows)
     expect(workbenchSessionIds).toBe(workspaceSessionIds)
-    expect(fetchWorkbenchSessions).toBe(fetchWorkspaceSessions)
     expect(workspaceSessionIds(sessions)).toEqual(['alpha', 'beta'])
     expect(() => workspaceSessionIds({ sessions: 'bad' })).toThrow('Invalid Workspace session response')
     expect(workspaceFrameUrl('https://example.test/docs', 'a/b ?')).toBe('wss://example.test/api/workspace/frames/a%2Fb%20%3F')
     expect(workbenchFrameUrl('http://example.test/docs', 'a/b')).toBe('ws://example.test/api/workbench/frames/a%2Fb')
+  })
+  it('preserves the deprecated helper on a server that rejects unknown namespaces', async () => {
+    const fetcher = vi.fn(async (url: string) => url.startsWith('/api/workspace/')
+      ? new Response('', { status: 403 }) : new Response(JSON.stringify(sessions)))
+    vi.stubGlobal('fetch', fetcher)
+    const signal = new AbortController().signal
+    expect(await fetchWorkbenchSessions(signal)).toEqual(['alpha', 'beta'])
+    expect(fetcher).toHaveBeenCalledOnce()
+    expect(fetcher).toHaveBeenCalledWith('/api/workbench/list_sessions', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Workbench-Client': 'workspace' }, body: '{}', signal })
+    await expect(discoverWorkspaceSessions(signal)).rejects.toThrow('Game runtime unavailable')
+    expect(fetcher).toHaveBeenCalledTimes(2)
+    expect(await fetchWorkspaceSessions(signal, 'legacy')).toEqual(['alpha', 'beta'])
   })
   it('uses current routes/headers without probing legacy on success', async () => {
     const signal = new AbortController().signal

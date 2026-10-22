@@ -28,8 +28,11 @@ Only HTTP 404 permits a read-only fallback to the legacy namespace. The returned
 protocol binds subsequent frame URLs to that same namespace. Authorization,
 conflict, service errors, aborts, malformed responses and transport failures never
 trigger fallback. `fetchWorkspaceSessions` returns only IDs for callers that do
-not need a stream. `workbenchSessionIds` and `fetchWorkbenchSessions` remain
-aliases; `workbenchFrameUrl` preserves its old stream namespace. No game input is
+not need a stream; an explicit second protocol argument reads only that namespace.
+`workbenchSessionIds` remains an alias; `fetchWorkbenchSessions` and
+`workbenchFrameUrl` preserve their old request/stream namespace without probing a
+new route. This keeps existing callers working even when an older server rejects
+unknown namespaces before routing. No game input is
 sent by these helpers.
 
 Vite's docs preview accepts both namespaces. Set `NEBULA_WORKSPACE_URL` to select
