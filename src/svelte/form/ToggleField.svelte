@@ -25,6 +25,10 @@
     {disabled}
     aria-invalid={error ? 'true' : undefined}
     aria-describedby={formDescribedBy(id, description, error)}
-    onchange={(event) => onCheckedChange(event.currentTarget.checked)}
+    onchange={(event) => {
+      const input = event.currentTarget
+      onCheckedChange(input.checked)
+      input.checked = checked
+    }}
   />
 </FormControl>

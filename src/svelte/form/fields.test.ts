@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest'
 import FileField from './FileField.svelte'
 import NumberField from './NumberField.svelte'
 import PasswordField from './PasswordField.svelte'
+import Select from './Select.svelte'
 import SelectField from './SelectField.svelte'
 import SliderField from './SliderField.svelte'
 import TagsField from './TagsField.svelte'
@@ -10,6 +11,21 @@ import TextAreaField from './TextAreaField.svelte'
 import ToggleField from './ToggleField.svelte'
 
 describe('Svelte form fields', () => {
+  it('keeps a rejected selection or pending toggle at the host-observed value', async () => {
+    const onValueChange = vi.fn(), onCheckedChange = vi.fn()
+    const { rerender } = render(Select, { 'aria-label': 'Source file', value: 'a', onValueChange, options: [{ value: 'a', label: 'A' }, { value: 'b', label: 'B' }] })
+    const select = screen.getByRole('combobox', { name: 'Source file' })
+    await fireEvent.change(select, { target: { value: 'b' } })
+    expect(onValueChange).toHaveBeenCalledWith('b')
+    expect(select).toHaveValue('a')
+    await rerender({ 'aria-label': 'Source file', value: 'b', onValueChange, options: [{ value: 'a', label: 'A' }, { value: 'b', label: 'B' }] })
+    expect(select).toHaveValue('b')
+    render(ToggleField, { id: 'observed', label: 'Observed service', checked: false, onCheckedChange })
+    const toggle = screen.getByRole('checkbox', { name: 'Observed service' })
+    await fireEvent.click(toggle)
+    expect(onCheckedChange).toHaveBeenCalledWith(true)
+    expect(toggle).not.toBeChecked()
+  })
   it('preserves textarea length bounds through the public field API', () => {
     render(TextAreaField, { id: 'message', label: 'Message', value: '', onValueChange: vi.fn(), maxLength: 4000 })
     expect(screen.getByRole('textbox', { name: 'Message' })).toHaveAttribute('maxlength', '4000')
