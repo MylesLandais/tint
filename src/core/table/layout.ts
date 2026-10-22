@@ -1,11 +1,11 @@
-export type WorkbenchLayout = {
+export type CollectionWorkspaceLayout = {
   inspector: 'right' | 'below'
   navigation: 'tabs' | 'chips'
   hiddenColumns: readonly string[]
 }
 
-/** The containing workbench, not the browser viewport, sets the pane layout. */
-export function workbenchLayout(containerWidth: number, tableWidth = containerWidth): WorkbenchLayout {
+/** The containing workspace, not the browser viewport, sets the pane layout. */
+export function collectionWorkspaceLayout(containerWidth: number, tableWidth = containerWidth): CollectionWorkspaceLayout {
   const hiddenColumns: string[] = []
   if (tableWidth < 980) hiddenColumns.push('genre')
   if (tableWidth < 840) hiddenColumns.push('bpm')

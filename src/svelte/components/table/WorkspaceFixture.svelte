@@ -1,5 +1,5 @@
 <script lang="ts">
-  import CollectionWorkbench from './CollectionWorkbench.svelte'
+  import CollectionWorkspace from './CollectionWorkspace.svelte'
   import type { TableColumn } from './types'
   import type { TableSelectionModel } from '../../../core/table/selection'
 
@@ -30,7 +30,7 @@
 {#snippet proposal(row: Artist)}<p>Proposal for {row.name}</p>{/snippet}
 {#snippet evidence(row: Artist)}<p>Evidence for {row.name}</p>{/snippet}
 {#snippet history(row: Artist)}<p>History for {row.name}</p>{/snippet}
-<CollectionWorkbench
+<CollectionWorkspace
   {rows} {columns} rowId="id" fields={[]} filterModel={{ items: [] }} onFilterModelChange={() => {}}
   sorting={[]} onSortingChange={() => {}} page={0} pageSize={25} onPageChange={() => {}}
   selectionModel={{ mode: 'ids', ids: [] }} {onSelectionModelChange}

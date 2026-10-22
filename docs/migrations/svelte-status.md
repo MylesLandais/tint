@@ -11,7 +11,7 @@ Rows reflect source files and local migration gates; behavior parity and consume
 - React-specific direct dependency entries: **0**
 - React findings: **0**
 - Svelte files (excluding the retired smoke fixture): **331**
-- Packages with extracted core modules: **41**
+- Packages with extracted core modules: **42**
 - Carbon imports outside approved Tint implementation paths: **0**
 - Public component packages still React-backed: **0**
 - Public UI packages with local gates met: **50/50 (100%)**
@@ -37,6 +37,7 @@ Rows reflect source files and local migration gates; behavior parity and consume
 | code | Yes | Yes | Yes | Yes | Reviewed | Yes | Local gates met |
 | code-editor | Yes | Yes | Yes | Yes | Reviewed | Yes | Local gates met |
 | collab | Yes | — | — | Yes | — | Yes | Core only |
+| compatibility | Yes | — | — | — | — | Yes | Core only |
 | context-menu | — | Yes | Yes | Yes | Reviewed | Yes | Local gates met |
 | demos/discord-panel | — | Yes | Yes | Yes | Reviewed | Yes | Local gates met |
 | dialog | — | Yes | Yes | Yes | Reviewed | Yes | Local gates met |

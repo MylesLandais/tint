@@ -4,7 +4,7 @@ import DataFilterControls from './DataFilterControls.svelte'
 import InfiniteRows from './InfiniteRows.svelte'
 import MasonryFixture from './MasonryFixture.svelte'
 import MediaWorkspace from './MediaWorkspace.svelte'
-import WorkbenchFixture from './WorkbenchFixture.svelte'
+import WorkspaceFixture from './WorkspaceFixture.svelte'
 import WorkspaceGridFixture from './WorkspaceGridFixture.svelte'
 
 afterEach(() => vi.unstubAllGlobals())
@@ -108,8 +108,8 @@ describe('Svelte table companions', () => {
     vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(1200)
     const onInspectorTabChange = vi.fn()
     const onInspectorWidthChange = vi.fn()
-    const { container, rerender } = render(WorkbenchFixture, { onInspectorTabChange, onInspectorWidthChange })
-    await waitFor(() => expect(container.querySelector('[data-collection-workbench]')).toHaveAttribute('data-inspector', 'right'))
+    const { container, rerender } = render(WorkspaceFixture, { onInspectorTabChange, onInspectorWidthChange })
+    await waitFor(() => expect(container.querySelector('[data-collection-workspace]')).toHaveAttribute('data-inspector', 'right'))
     expect(screen.getByText('Details for Allen Mock')).toBeInTheDocument()
     await fireEvent.click(screen.getByRole('tab', { name: 'History' }))
     expect(onInspectorTabChange).toHaveBeenCalledWith('history')
@@ -122,10 +122,10 @@ describe('Svelte table companions', () => {
 
   it('moves the inspector below and switches navigation to chips at a narrow container width', async () => {
     vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(700)
-    const { container } = render(WorkbenchFixture)
+    const { container } = render(WorkspaceFixture)
     await waitFor(() => {
-      expect(container.querySelector('[data-collection-workbench]')).toHaveAttribute('data-inspector', 'below')
-      expect(container.querySelector('[data-collection-workbench]')).toHaveAttribute('data-navigation', 'chips')
+      expect(container.querySelector('[data-collection-workspace]')).toHaveAttribute('data-inspector', 'below')
+      expect(container.querySelector('[data-collection-workspace]')).toHaveAttribute('data-navigation', 'chips')
     })
   })
 })

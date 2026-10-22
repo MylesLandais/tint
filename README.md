@@ -1,6 +1,6 @@
 # Tint
 
-Tint is a Svelte 5 component library for media, chat, editing, data, and workbench interfaces. Components render host-owned state and report user intent through props and callbacks. Framework-neutral models and engines live in plain TypeScript under `src/core`.
+Tint is a Svelte 5 component library for media, chat, editing, data, and Workspace interfaces. Components render host-owned state and report user intent through props and callbacks. Framework-neutral models and engines live in plain TypeScript under `src/core`.
 
 The [live docs](src/docs/svelte/routes.ts) cover component APIs and examples. The root package export and component subpaths expose Svelte components; `@nebula/tint/client` and `@nebula/tint/collab` expose plain TypeScript contracts and runtimes.
 
@@ -111,3 +111,5 @@ To publish, update `version` in `package.json` on `dev`, commit, and push a matc
 `WorkspaceTabs` accepts a shared `content: Snippet<[WorkspaceTab]>` renderer for
 session lists built from data. A tab's own `content` snippet takes precedence.
 The controlled `value` and `onChange` API still owns selection and keyboard navigation.
+
+See [Workspace names and mixed-version compatibility](docs/migrations/workspace-names.md) for the current APIs, deprecated aliases and preview runtime configuration.

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte'
-  import { fetchWorkbenchSessions, workbenchFrameUrl } from '../core/framebuffer'
+  import { discoverWorkspaceSessions, workspaceFrameUrl, type WorkspaceProtocol } from '../svelte/components/framebuffer'
   import { Framebuffer, WorkspaceLayout } from '../svelte'
   import DocPage from './svelte/DocPage.svelte'
   import type { ApiRow } from './svelte/types'
@@ -9,15 +9,18 @@
   let account = $state('')
   let error = $state('')
   let streamStatus = $state('')
-  const frameUrl = $derived(account ? workbenchFrameUrl(location.href, account) : '')
+  let protocol = $state<WorkspaceProtocol>('current')
+  const frameUrl = $derived(account ? workspaceFrameUrl(location.href, account, protocol) : '')
 
   onMount(() => {
     const controller = new AbortController()
     let timer: ReturnType<typeof setTimeout> | undefined
     async function refresh() {
       try {
-        const ids = await fetchWorkbenchSessions(controller.signal)
+        const discovered = await discoverWorkspaceSessions(controller.signal)
+        const ids = discovered.accounts
         if (controller.signal.aborted) return
+        protocol = discovered.protocol
         sessions = ids
         account = ids.includes(account) ? account : ids[0] ?? ''
         error = ''
@@ -56,7 +59,7 @@
   canvasProps={{ 'aria-label': 'Game frame' }} />`
 </script>
 
-<DocPage title="Framebuffer" description="Account-bound game frames rendered by the shared TypeScript stream. This live preview discovers active workbench sessions when a local game runtime is available." importPath="@nebula/tint/framebuffer" {usage} {api} accessibility="Session tabs support arrow keys, Home, and End. The canvas has an accessible name and connection state is announced through a status region. Frame validation rejects the wrong account, mismatched session, and malformed pixel buffers.">
+<DocPage title="Framebuffer" description="Account-bound game frames rendered by the shared TypeScript stream. This live preview discovers active workspace sessions when a local game runtime is available." importPath="@nebula/tint/framebuffer" {usage} {api} accessibility="Session tabs support arrow keys, Home, and End. The canvas has an accessible name and connection state is announced through a status region. Frame validation rejects the wrong account, mismatched session, and malformed pixel buffers.">
   <div class="frame-workspace"><WorkspaceLayout theme="pokeforce">
     {#snippet toolbar()}
       <div class="session-tabs" role="tablist" aria-label="Game clients">

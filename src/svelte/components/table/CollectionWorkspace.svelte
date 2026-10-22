@@ -3,11 +3,12 @@
   import { getCellValue } from '../../../core/table/derive'
   import { toDataSortingState, toTableSort } from '../../../core/table/clientState'
   import type { DataFilterField, DataFilterModel, DataSortingState } from '../../../core/table/filterTypes'
-  import { workbenchLayout } from '../../../core/table/layout'
+  import { legacyCollectionAttributes } from '../../../core/compatibility/table'
+  import { collectionWorkspaceLayout } from '../../../core/table/layout'
   import { matchingQueryKey } from '../../../core/table/query'
   import type { TableSelectionModel } from '../../../core/table/selection'
   import type { TableRowId } from '../../../core/table/types'
-  import { deriveWorkbenchRows, type WorkbenchInspectorTab } from '../../../core/table/workbench'
+  import { deriveWorkspaceRows, type WorkspaceInspectorTab } from '../../../core/table/workspace'
   import ResizeHandle from '../shell/ResizeHandle.svelte'
   import DataTable from './DataTable.svelte'
   import DataFilterControls from './DataFilterControls.svelte'
@@ -42,8 +43,8 @@
     onViewChange?: (viewId: string) => void
     inspectorWidth: number
     onInspectorWidthChange: (width: number) => void
-    inspectorTab: WorkbenchInspectorTab
-    onInspectorTabChange: (tab: WorkbenchInspectorTab) => void
+    inspectorTab: WorkspaceInspectorTab
+    onInspectorTabChange: (tab: WorkspaceInspectorTab) => void
     renderDetails?: Snippet<[TRow]>
     renderProposalReview?: Snippet<[TRow]>
     renderEvidence?: Snippet<[TRow]>
@@ -67,8 +68,8 @@
   let containerWidth = $state(0)
   const panelId = $props.id()
   const idOf = (row: TRow): TableRowId => typeof rowId === 'function' ? rowId(row) : String(row[rowId])
-  let layout = $derived(workbenchLayout(containerWidth))
-  let result = $derived(deriveWorkbenchRows(rows, columns, { filterModel, sorting, page, pageSize }))
+  let layout = $derived(collectionWorkspaceLayout(containerWidth))
+  let result = $derived(deriveWorkspaceRows(rows, columns, { filterModel, sorting, page, pageSize }))
   let activeRow = $derived(rows.find((row) => idOf(row) === activeRowId))
   let activeLabel = $derived(activeRow
     ? String(getCellValue(activeRow, columns[0] ?? { id: 'id' }) ?? idOf(activeRow)) : '')
@@ -108,7 +109,7 @@
   }
 </script>
 
-<section bind:this={root} data-collection-workbench="" data-inspector={layout.inspector} data-navigation={layout.navigation} class={className} aria-label={label}>
+<section bind:this={root} data-collection-workspace="" {...legacyCollectionAttributes} data-inspector={layout.inspector} data-navigation={layout.navigation} class={className} aria-label={label}>
   {#if views.length}
     <nav class="views" aria-label="Collection views" data-layout={layout.navigation}>
       {#each views as view (view.id)}
@@ -122,7 +123,7 @@
         <DataFilterControls {fields} {filterModel} {onFilterModelChange} {sorting} {onSortingChange} />
         <TableColumnsMenu {columns} {hiddenColumns} onChange={onHiddenColumnsChange} />
       </TableToolbar>
-      <DataTable rows={result.rows} {columns} {rowId} {label} rowHeaderColumn={columns[0]?.id} sort={toTableSort(sorting)} onSortChange={(sort) => onSortingChange(toDataSortingState(sort))} {selectionModel} {onSelectionModelChange} selectionQueryKey={queryKey} {activeRowId} {onActiveRowChange} {hiddenColumns} {columnWidths} {onColumnWidthsChange} workbenchResponsive {virtual} resizing={{ columns: true }} />
+      <DataTable rows={result.rows} {columns} {rowId} {label} rowHeaderColumn={columns[0]?.id} sort={toTableSort(sorting)} onSortChange={(sort) => onSortingChange(toDataSortingState(sort))} {selectionModel} {onSelectionModelChange} selectionQueryKey={queryKey} {activeRowId} {onActiveRowChange} {hiddenColumns} {columnWidths} {onColumnWidthsChange} workspaceResponsive {virtual} resizing={{ columns: true }} />
       <TablePager page={result.page} {pageSize} total={result.total} onChange={onPageChange} />
     </main>
     {#if layout.inspector === 'right'}
@@ -152,7 +153,7 @@
 </section>
 
 <style>
-  [data-collection-workbench] { min-width: 0; color: var(--tint-ink); }
+  [data-collection-workspace] { min-width: 0; color: var(--tint-ink); }
   .views { display: flex; gap: var(--tint-space-1); overflow-x: auto; border-bottom: 1px solid var(--tint-border); padding: var(--tint-space-2); }
   .views button, [role='tablist'] button { min-height: 2.25rem; border: 0; border-radius: var(--tint-radius-sm); background: transparent; padding: 0 var(--tint-space-2); color: var(--tint-muted); cursor: pointer; font: inherit; font-size: var(--tint-font-size-sm); white-space: nowrap; }
   .views button[aria-current], [role='tablist'] button[aria-selected='true'] { background: var(--tint-accent-soft); color: var(--tint-ink); }
