@@ -14,6 +14,8 @@
   }: DialogProps = $props()
   const descriptionId = $props.id()
   let modalRoot = $state<HTMLDivElement | null>(null)
+  const modalOpen = $derived(Boolean(open))
+  let lastRoot: HTMLDivElement | null = null
 
   function requestClose(event: CustomEvent<{ trigger: string }>) {
     // Carbon dispatches a cancelable event before changing its own open state.
@@ -24,17 +26,19 @@
 
   // Capture the opener before Carbon's render/mount focus handling runs.
   $effect.pre(() => {
-    if (!open) return
+    if (!modalOpen) return
     const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null
-    const unlock = lockDialogScroll()
+    const unlock = lockDialogScroll(previous)
     return () => {
-      if (unlock()) void tick().then(() => previous?.focus())
+      const restoreFocus = unlock(modalRoot ?? lastRoot)
+      void tick().then(restoreFocus)
     }
   })
 
   $effect(() => {
     const panel = open ? modalRoot?.querySelector<HTMLElement>('[role="dialog"]') : null
     if (!panel) return
+    lastRoot = modalRoot
     const attributes: Record<string, unknown> = {
       id, dir, lang, tabindex: tabindex ?? tabIndex, style,
       'aria-label': ariaLabel ?? (typeof title === 'string' ? title : titleLabel),

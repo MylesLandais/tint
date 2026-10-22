@@ -117,3 +117,8 @@ See [Workspace names and mixed-version compatibility](docs/migrations/workspace-
 `TextField` from `@nebula/tint/form` forwards optional `onkeydown` to the native
 input. Hosts can prevent implicit Enter submission for an auxiliary form field
 without global key listeners or private DOM selectors. Value changes remain controlled.
+
+`Dialog` retains the original opener across a host-controlled modal replacement.
+Nested dialogs return to their parent while it exists; closing the parent first
+transfers the return target to the surviving child. Body scroll stays locked
+until the last dialog closes. Late focus restoration cannot steal focus from a new modal.
