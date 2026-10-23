@@ -41,7 +41,9 @@ choices reset the input; disabled or destroyed intake ignores late delivery.
 Parsing, persistence, and operation ownership stay in the application. The
 [Media Assets docs](src/docs/MediaAssetsDoc.svelte) show both presentations.
 
-`TextField` from `@nebula/tint/form` accepts an optional native `list` ID.
+`TextField` from `@nebula/tint/form` accepts optional native `minLength`,
+`maxLength` and `list` attributes. Length constraints retain browser validation;
+server validation and host values remain application-owned.
 The host renders the datalist and retains free-form value ownership; suggestions
 never impose a closed catalog or select a value automatically. See the
 [Form Fields example](src/docs/form/FormFieldsDoc.svelte).

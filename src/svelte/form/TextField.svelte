@@ -19,6 +19,8 @@
     type?: 'text' | 'email' | 'password' | 'search' | 'tel' | 'url'
     /** Native UTF-16 input bound; host-provided values are never truncated. */
     maxLength?: number
+    /** Native UTF-16 minimum for user-entered values; server validation stays with the host. */
+    minLength?: number
     /** Native datalist ID; suggestions do not restrict host input. */
     list?: string
     placeholder?: string
@@ -44,6 +46,7 @@
     readOnly = false,
     type = 'text',
     maxLength,
+    minLength,
     list,
     placeholder,
     name,
@@ -66,6 +69,7 @@
     {value}
     {placeholder}
     maxlength={maxLength}
+    minlength={minLength}
     {list}
     {autocomplete}
     {inputmode}

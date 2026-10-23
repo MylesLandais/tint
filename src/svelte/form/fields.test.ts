@@ -12,6 +12,21 @@ import TextField from './TextField.svelte'
 import ToggleField from './ToggleField.svelte'
 
 describe('Svelte form fields', () => {
+  it('forwards an optional native minimum length without changing host values or submission policy', async () => {
+    const props = { id: 'invite-secret', label: 'Invite password', type: 'password' as const, value: 'short', onValueChange: vi.fn() }
+    const view = render(TextField, props)
+    const input = screen.getByLabelText('Invite password')
+    expect(input).not.toHaveAttribute('minlength')
+    await view.rerender({ ...props, minLength: 8 })
+    expect(input).toHaveAttribute('minlength', '8')
+    expect(input).toHaveValue('short')
+    expect(props.onValueChange).not.toHaveBeenCalled()
+    await view.rerender({ ...props, minLength: 0 })
+    expect(input).toHaveAttribute('minlength', '0')
+    await view.rerender({ ...props, minLength: undefined })
+    expect(input).not.toHaveAttribute('minlength')
+  })
+
   it('forwards the native text-field key event so hosts can prevent implicit submission', async () => {
     const onkeydown = vi.fn((event: KeyboardEvent) => { if (event.key === 'Enter') event.preventDefault() })
     render(TextField, { id: 'detail', label: 'Detail', value: '', onValueChange: vi.fn(), onkeydown })
