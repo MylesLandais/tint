@@ -427,4 +427,6 @@
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
   .graph[data-compact='true'] { grid-template-columns: 1fr; grid-template-rows: minmax(20rem, 1fr) minmax(12rem, auto); }
   .graph[data-compact='true'] .canvas { min-height: 20rem; }
+  .node[data-status='unknown'] { border-color: var(--tint-warning); }
+  .node[data-status='cancelled'] { border-style: dashed; }
 </style>

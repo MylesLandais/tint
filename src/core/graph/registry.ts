@@ -10,7 +10,7 @@ export type ValidationIssue = {
 }
 
 export type NodeRuntimeSummary = {
-  status: 'idle' | 'running' | 'succeeded' | 'failed'
+  status: 'idle' | 'running' | 'succeeded' | 'failed' | 'cancelled' | 'unknown'
   detail?: string
 }
 
