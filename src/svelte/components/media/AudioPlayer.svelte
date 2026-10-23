@@ -42,7 +42,7 @@
     const source = src, report = onError
     transport.setCallbacks({ onPlay, onPause, onEnded, onError: () => report?.(source) })
   })
-  $effect(() => { transport.setPlaybackGroup(playbackGroup) })
+  $effect(() => { transport.setPlaybackGroup(remote ? undefined : playbackGroup) })
 
   $effect(() => {
     if (!mounted) return

@@ -123,6 +123,19 @@ describe('Svelte MediaPlayer', () => {
     expect(remote.onSeek).not.toHaveBeenCalled()
   })
 
+  it('does not let a local playback group pause a remotely controlled sink', async () => {
+    vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue(undefined)
+    const remote = { playing: true, currentTime: 0, duration: 60, volume: 1, onPlay: vi.fn(), onPause: vi.fn(), onSeek: vi.fn(), onVolumeChange: vi.fn() }
+    const sink = render(MediaPlayer, { kind: 'audio', src: 'remote.wav', label: 'Remote', remote, playbackGroup: 'mixed-authority' })
+    const remoteAudio = sink.container.querySelector('audio')!
+    Object.defineProperty(remoteAudio, 'paused', { configurable: true, value: false })
+    const pause = vi.spyOn(remoteAudio, 'pause').mockImplementation(() => {})
+    const local = render(MediaPlayer, { kind: 'audio', src: 'local.wav', label: 'Local', playbackGroup: 'mixed-authority' })
+    await fireEvent.play(local.container.querySelector('audio')!)
+    expect(pause).not.toHaveBeenCalled()
+    expect(remote.onPause).not.toHaveBeenCalled()
+  })
+
   it('can swap between audio and video kinds on one mounted entry point', async () => {
     const { container, rerender } = render(MediaPlayer, { kind: 'audio', src: 'track.mp3', label: 'Track' })
     expect(container.querySelector('audio')).toBeInTheDocument()
