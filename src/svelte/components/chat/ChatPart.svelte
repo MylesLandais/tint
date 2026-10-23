@@ -103,7 +103,7 @@
     <header class="flex items-center justify-between border-b border-tint-code-border px-3 py-2 text-xs text-tint-code-muted">
       <span>{part.filename ?? part.language ?? 'Code'}</span>
       <span class="inline-flex items-center gap-2">
-        <span role="status" class="text-xs">{copyState === 'failed' ? 'Copy failed. Try again.' : ''}</span>
+        <span role={copyState === 'failed' ? 'status' : undefined} class="text-xs">{copyState === 'failed' ? 'Copy failed. Try again.' : ''}</span>
         <button type="button" onclick={(event) => void copy(event)} disabled={copyState === 'pending'} aria-label={copyLabel} class="rounded px-2 py-1 hover:bg-tint-code-ink/10">{copyState === 'copied' ? 'Copied' : copyState === 'pending' ? 'Copying…' : 'Copy'}</button>
       </span>
     </header>
@@ -197,7 +197,7 @@
     <div class="space-y-2 border-t border-tint-border px-3 py-3 text-sm leading-6 text-tint-muted">
       {#if part.copyable}
         <div class="flex flex-wrap items-center justify-end gap-2">
-          <span role="status" class="text-xs">{copyState === 'failed' ? 'Copy failed. Try again.' : ''}</span>
+          <span role={copyState === 'failed' ? 'status' : undefined} class="text-xs">{copyState === 'failed' ? 'Copy failed. Try again.' : ''}</span>
           <button type="button" onclick={(event) => void copy(event)} disabled={copyState === 'pending'} aria-label={copyLabel} title={part.copyLabel ?? 'Copy reasoning'} class="rounded border border-tint-border px-2 py-1 text-xs hover:bg-tint-panel">{copyState === 'copied' ? 'Copied' : copyState === 'pending' ? 'Copying…' : 'Copy'}</button>
         </div>
       {/if}

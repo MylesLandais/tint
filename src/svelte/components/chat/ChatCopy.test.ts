@@ -107,7 +107,7 @@ test('a retired failure cannot clear a newer success', async () => {
   fresh.resolve(); await fresh.promise; await tick()
   old.reject(new Error('old denied')); await old.promise.catch(() => {}); await tick()
   expect(getByRole(target, 'button', { name: 'Code copied' })).toBeInTheDocument()
-  expect(getByRole(target, 'status').textContent).toBe('')
+  expect(queryByRole(target, 'status')).toBeNull()
 })
 
 test('reasoning copy requires explicit opt-in and keeps exact plain text', async () => {
