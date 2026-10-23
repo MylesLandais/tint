@@ -99,6 +99,12 @@ The source portability and consumer contract tests check that published TypeScri
 
 `@nebula/tint` exports `AuthLayout` (`plain`, `card`, `split`), `LoginForm` (password or email-first), `RegistrationForm`, `OAuthButtons`, `AuthDivider` and `ProviderMark`. Discord, GitHub and Google get brand marks automatically. Provider sign-in goes through the same `AuthTransport`: the host lists providers in `getConfig`, builds the redirect in `oauthStartUrl`, and reports the provider as the session's first `authenticationMethods` entry after its callback. `AuthSnapshot.lastUsedMethod` drives the "Last used" badge; it is remembered on the device, and a server can override it with `AuthConfig.lastUsedMethod`. Tint ships no OAuth server. See `#/components/auth-forms` in the docs.
 
+Roleplay editors (`GroupEditor`, `PersonaEditor`, `RegexRulesEditor`, `ImportReview`)
+compose the same shared buttons and fields. Saved unknown enum values, regex
+extensions, ordered members and empty optional depths remain host-owned data;
+Tint does not execute regex rules or save profiles. See the
+[roleplay forms examples](src/docs/form/RoleplayFormsDoc.svelte).
+
 ## Source layout
 
 - `src/core/`: framework-neutral contracts, state machines, parsers, and engines (including `core/auth` provider registry, last-used memory and registration validation).

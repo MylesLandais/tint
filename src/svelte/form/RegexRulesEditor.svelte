@@ -1,15 +1,20 @@
 <script lang="ts">
   import {
     NEW_REGEX_RULE, isRegexRuleDocument, moveRegexRule, patchRegexRule,
-    regexText, regexTrimText, toggleRegexPlacement,
+    regexText, regexTrimText, toggleRegexPlacement, groupNumberOptions,
     type RegexRuleDocument, type RegexRulesEditorProps,
   } from '../../core/form/roleplay'
+  import Button from '../components/button/Button.svelte'
+  import ToggleField from './ToggleField.svelte'
+  import SelectField from './SelectField.svelte'
+  import NumberField from './NumberField.svelte'
   import TextAreaField from './TextAreaField.svelte'
   import TextField from './TextField.svelte'
   import './roleplay.css'
 
   let { value, onValueChange, placements, disabled = false }: RegexRulesEditorProps = $props()
   const id = $props.id()
+  const macroModes = [{value: 0, label: 'Keep literal'}, {value: 1, label: 'Substitute'}, {value: 2, label: 'Substitute and escape'}]
   const flags = [
     { key: 'disabled', label: 'Disable rule' },
     { key: 'runOnEdit', label: 'Run when editing' },
@@ -28,9 +33,9 @@
     <fieldset class="tint-regex-rule" {disabled}>
       <legend>Rule {index + 1}{valid && regexText(rule, 'scriptName') ? `: ${regexText(rule, 'scriptName')}` : ''}</legend>
       <div class="tint-regex-actions">
-        <button type="button" aria-label={`Move rule ${index + 1} up`} disabled={disabled || index === 0} onclick={() => onValueChange(moveRegexRule(value, index, -1))}>Move up</button>
-        <button type="button" aria-label={`Move rule ${index + 1} down`} disabled={disabled || index === value.length - 1} onclick={() => onValueChange(moveRegexRule(value, index, 1))}>Move down</button>
-        <button type="button" aria-label={`Remove rule ${index + 1}`} {disabled} onclick={() => onValueChange(value.filter((_, slot) => slot !== index))}>Remove</button>
+        <Button size="sm" aria-label={`Move rule ${index + 1} up`} disabled={disabled || index === 0} onclick={() => onValueChange(moveRegexRule(value, index, -1))}>Move up</Button>
+        <Button size="sm" aria-label={`Move rule ${index + 1} down`} disabled={disabled || index === value.length - 1} onclick={() => onValueChange(moveRegexRule(value, index, 1))}>Move down</Button>
+        <Button size="sm" aria-label={`Remove rule ${index + 1}`} {disabled} onclick={() => onValueChange(value.filter((_, slot) => slot !== index))}>Remove</Button>
       </div>
       {#if !valid}
         <p role="alert">This rule has an unsupported format. Remove it or keep the saved profile.</p>
@@ -40,34 +45,29 @@
         <TextAreaField id={`${id}-${index}-replace`} label="Replacement" value={regexText(rule, 'replaceString')} onValueChange={(replaceString) => change(index, { replaceString })} {disabled} />
         <div class="tint-regex-options">
           {#each flags as flag (flag.key)}
-            <label><input type="checkbox" checked={Boolean(rule[flag.key])} {disabled} onchange={(event) => change(index, { [flag.key]: event.currentTarget.checked })} /> {flag.label}</label>
+            <ToggleField id={`${id}-${index}-${flag.key}`} label={flag.label} checked={Boolean(rule[flag.key])} {disabled} inline onCheckedChange={(checked) => change(index, { [flag.key]: checked })} />
           {/each}
         </div>
         <fieldset class="tint-regex-options">
           <legend>Apply to</legend>
           {#each placements as placement (placement.value)}
-            <label><input type="checkbox" checked={Array.isArray(rule.placement) && rule.placement.includes(placement.value)} {disabled} onchange={(event) => change(index, { placement: toggleRegexPlacement(rule, placement.value, event.currentTarget.checked) })} /> {placement.label}</label>
+            <ToggleField id={`${id}-${index}-placement-${placement.value}`} label={placement.label} checked={Array.isArray(rule.placement) && rule.placement.includes(placement.value)} {disabled} inline onCheckedChange={(checked) => change(index, { placement: toggleRegexPlacement(rule, placement.value, checked) })} />
           {/each}
         </fieldset>
         <details>
           <summary>Advanced options</summary>
-          <label>Find macros
-            <select class="tint-field-input" value={String(rule.substituteRegex ?? 0)} {disabled} onchange={(event) => change(index, { substituteRegex: Number(event.currentTarget.value) })}>
-              <option value="0">Keep literal</option><option value="1">Substitute</option><option value="2">Substitute and escape</option>
-            </select>
-          </label>
+          <SelectField id={`${id}-${index}-macros`} label="Find macros" value={String(rule.substituteRegex ?? 0)} {disabled}
+            options={groupNumberOptions(macroModes, Number(rule.substituteRegex ?? 0))} onValueChange={(next) => change(index, { substituteRegex: Number(next) })} />
           <div class="tint-regex-options">
-            <label>Minimum depth
-              <input class="tint-field-input" type="number" step="1" value={typeof rule.minDepth === 'string' || typeof rule.minDepth === 'number' ? rule.minDepth : ''} {disabled} onchange={(event) => change(index, { minDepth: event.currentTarget.value === '' ? null : Number(event.currentTarget.value) })} />
-            </label>
-            <label>Maximum depth
-              <input class="tint-field-input" type="number" step="1" value={typeof rule.maxDepth === 'string' || typeof rule.maxDepth === 'number' ? rule.maxDepth : ''} {disabled} onchange={(event) => change(index, { maxDepth: event.currentTarget.value === '' ? null : Number(event.currentTarget.value) })} />
-            </label>
+            <NumberField id={`${id}-${index}-min-depth`} label="Minimum depth" step={1} value={typeof rule.minDepth === 'string' || typeof rule.minDepth === 'number' ? rule.minDepth : ''} {disabled}
+              onValueChange={(next) => change(index, { minDepth: next === '' ? null : next })} />
+            <NumberField id={`${id}-${index}-max-depth`} label="Maximum depth" step={1} value={typeof rule.maxDepth === 'string' || typeof rule.maxDepth === 'number' ? rule.maxDepth : ''} {disabled}
+              onValueChange={(next) => change(index, { maxDepth: next === '' ? null : next })} />
           </div>
           <TextAreaField id={`${id}-${index}-trim`} label="Trim from captures (one per line)" value={regexTrimText(rule)} onValueChange={(next) => change(index, { trimStrings: next === '' ? [] : next.split('\n') })} {disabled} />
         </details>
       {/if}
     </fieldset>
   {/each}
-  <button type="button" {disabled} onclick={() => onValueChange([...value, { ...NEW_REGEX_RULE, placement: [...(NEW_REGEX_RULE.placement as number[])] }])}>Add regex rule</button>
+  <Button size="sm" {disabled} onclick={() => onValueChange([...value, { ...NEW_REGEX_RULE, placement: [...(NEW_REGEX_RULE.placement as number[])] }])}>Add regex rule</Button>
 </div>
