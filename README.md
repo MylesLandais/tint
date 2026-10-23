@@ -41,6 +41,13 @@ choices reset the input; disabled or destroyed intake ignores late delivery.
 Parsing, persistence, and operation ownership stay in the application. The
 [Media Assets docs](src/docs/MediaAssetsDoc.svelte) show both presentations.
 
+`MediaPlayer` audio supports `preload`, source-qualified `onError`, optional
+`playbackGroup` exclusion and absolute `seekRequest` intents. Each seek supplies
+its source and a fresh ID; ignored or consumed requests never replay after a
+source/authority change in that mount. Source replacement retires the old media
+element and pending play failures; teardown releases owned playback. The
+[Media example](src/docs/MediaDoc.svelte) exercises linked previews and chapters.
+
 `WorkspaceTabs` keeps active and inactive border/text utility classes mutually
 exclusive so the selected tab stays visible in consumer Tailwind builds. The
 host still controls selection; the shared component owns keyboard focus and

@@ -3,18 +3,25 @@
     MediaPlayer, PlaybackQueue, SettingsPopout,
     type PlaybackQueueItem, type SettingsPopoutItem,
   } from '../svelte/components/media'
+  import { Button } from '../svelte/components/button'
+  import type { MediaPlayerAudioProps } from '../svelte/components/media'
   import DocPage from './svelte/DocPage.svelte'
   import type { ApiRow } from './svelte/types'
 
   const queue: PlaybackQueueItem[] = [
-    { id: 'avery', title: 'Avery', subtitle: 'Demo audio', durationSeconds: 23 },
-    { id: 'night', title: 'Night Drive', subtitle: 'Demo audio', durationSeconds: 23 },
+    { id: 'avery', title: 'Avery', subtitle: 'Demo audio', durationSeconds: 2 },
+    { id: 'night', title: 'Night Drive', subtitle: 'Demo audio', durationSeconds: 2 },
   ]
   const settings: SettingsPopoutItem[] = [
     { id: 'normal', label: 'Normal', group: 'Playback speed' },
     { id: 'fast', label: 'Fast', group: 'Playback speed' },
   ]
   const waveform = [0.12, 0.4, 0.25, 0.7, 0.45, 0.8, 0.32, 0.56, 0.94, 0.63, 0.4, 0.72, 0.25, 0.51, 0.82, 0.35]
+  let showLinked = $state(false)
+  let previewSource = $state('/audio/avery.wav')
+  let seekRequest = $state<MediaPlayerAudioProps['seekRequest']>()
+  let seekId = 0
+  let previewError = $state('')
   let kind = $state<'audio' | 'video'>('audio')
   let currentId = $state('avery')
   let playerTitle = $derived(queue.find((item) => item.id === currentId)?.title ?? 'Avery')
@@ -23,6 +30,9 @@
   const api: ApiRow[] = [
     { prop: 'MediaPlayer.kind', type: 'audio | video', description: 'One entry point for audio and video presentation.' },
     { prop: 'src / label / title', type: 'string', description: 'Media URL, accessible transport name, and optional visible title.' },
+    { prop: 'preload / onError', type: 'none | metadata | auto / (src: string) => void', description: 'Audio fetch policy (metadata by default) and one source-qualified failure callback. Replacing a source replaces its native element, retires play failures, and preserves local volume/mute state.' },
+    { prop: 'playbackGroup', type: 'string', description: 'Optional local audio exclusion group. Actual native playback pauses attached peers in the same group; source retirement/teardown releases only owned playback.' },
+    { prop: 'seekRequest', type: '{ id, src, positionSeconds, play? }', description: 'Optional absolute local-audio seek. Supply a fresh string/number ID for each intent and the exact src prop. IDs are consumed once per source in this mount, including requests ignored for mismatched sources or remote authority. No replay on later source/authority changes; remounts are a new lifetime. Invalid/negative positions are ignored; known duration bounds the target.' },
     { prop: 'remote', type: 'RemoteMediaController', description: 'Optional host-owned playback, position, duration, and volume for audio.' },
     { prop: 'waveform / duration', type: 'readonly number[] / number', description: 'Optional normalized waveform and duration hint.' },
     { prop: 'tracks', type: 'MediaTextTrack[]', description: 'Caption, subtitle, or description tracks for video; each supplies a URL, language, and label.' },
@@ -57,7 +67,7 @@ let currentId = $state('track-1')
       <button type="button" aria-pressed={kind === 'video'} onclick={() => kind = 'video'}>Video</button>
     </div>
     {#if kind === 'audio'}
-      <MediaPlayer kind="audio" src="/audio/avery.wav" label={playerTitle} title={playerTitle} artist="Tint demo" duration={23} {waveform} />
+      <MediaPlayer kind="audio" src="/audio/avery.wav" label={playerTitle} title={playerTitle} artist="Tint demo" duration={2} {waveform} />
     {:else}
       <MediaPlayer kind="video" src="/videos/big-buck-bunny.mp4" label="Demo video" title="Big Buck Bunny" autoHideControls={false} />
     {/if}
@@ -68,6 +78,18 @@ let currentId = $state('track-1')
         <span aria-live="polite">Speed: {speed}</span>
       </div>
     </div>
+    <Button onclick={() => { showLinked = !showLinked }}>{showLinked ? 'Hide linked previews' : 'Show linked previews'}</Button>
+    {#if showLinked}
+      <section aria-label="Linked playback previews">
+        <h2>Linked playback previews</h2>
+        <Button onclick={() => { seekRequest = { id: ++seekId, src: previewSource, positionSeconds: 1, play: true } }}>Play chapter at 1 second</Button>
+        <Button onclick={() => { previewSource = '/audio/missing-preview.wav'; previewError = '' }}>Use missing preview</Button>
+        <MediaPlayer kind="audio" src={previewSource} label="First preview" title="First preview" preload="none"
+          playbackGroup="docs-linked-previews" {seekRequest} onError={(source) => { previewError = 'Preview unavailable: ' + source }} />
+        <MediaPlayer kind="audio" src="/audio/avery.wav" label="Second preview" title="Second preview" preload="none" playbackGroup="docs-linked-previews" />
+        {#if previewError}<p role="status">{previewError}</p>{/if}
+      </section>
+    {/if}
   </div>
 </DocPage>
 

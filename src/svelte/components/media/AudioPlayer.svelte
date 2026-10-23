@@ -14,7 +14,7 @@
     src, label, title, duration: durationHint, waveform, shadow = false, size,
     class: className, onPlay, onPause, onPrevious, onNext,
     artist, artwork, artworkAlt = '', playing: playingOverride, playbackNonce,
-    remote, onEnded,
+    remote, onEnded, onError, playbackGroup, seekRequest, preload = 'metadata',
   }: MediaPlayerAudioProps = $props()
   const transport = new MediaTransport()
   let root = $state<HTMLDivElement>(null!)
@@ -25,6 +25,7 @@
   let accentColor = $state('#0f6e56')
   let lastAudibleVolume = 1
   let previous: { src: string; durationHint?: number; playing?: boolean; nonce?: number } | undefined
+  const consumedSeeks = new Map<string, Set<string | number>>()
   let previouslyRemote = false
   let remotePlaying: boolean | undefined
   let remoteVolume: number | undefined
@@ -37,7 +38,11 @@
   let progress = $derived(playbackProgress(currentTime, duration))
   let remaining = $derived(remainingTime(currentTime, duration))
 
-  $effect(() => { transport.setCallbacks({ onPlay, onPause, onEnded }) })
+  $effect(() => {
+    const source = src, report = onError
+    transport.setCallbacks({ onPlay, onPause, onEnded, onError: () => report?.(source) })
+  })
+  $effect(() => { transport.setPlaybackGroup(playbackGroup) })
 
   $effect(() => {
     if (!mounted) return
@@ -50,6 +55,24 @@
     previous = { src, durationHint, playing: playingOverride, nonce: playbackNonce }
     previouslyRemote = false
   })
+
+  $effect(() => {
+    if (!mounted || !audio || !seekRequest) return
+    const request = { ...seekRequest }
+    if (!Number.isFinite(request.positionSeconds) || request.positionSeconds < 0) return
+    const seen = consumedSeeks.get(request.src) ?? new Set<string | number>()
+    if (seen.has(request.id)) return
+    seen.add(request.id); consumedSeeks.set(request.src, seen)
+    if (remote || request.src !== src) return
+    if (transport.seekTo(request.positionSeconds) && request.play) transport.play()
+  })
+
+  function registerAudio(node: HTMLAudioElement) {
+    audio = node
+    node.volume = snapshot.volume; node.muted = snapshot.muted
+    const detach = transport.attach(node)
+    return { destroy: () => { detach(); if (audio === node) audio = null! } }
+  }
 
   $effect(() => {
     if (!mounted || !remote) { remotePlaying = undefined; remoteVolume = undefined; return }
@@ -96,7 +119,6 @@
 
   onMount(() => {
     const unsubscribe = transport.subscribe((next) => { snapshot = next })
-    const detach = transport.attach(audio)
     mounted = true
     const resolveAccent = () => {
       const value = getComputedStyle(root).getPropertyValue('--tint-accent').trim()
@@ -107,7 +129,7 @@
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-scheme'] })
     const scheme = typeof matchMedia === 'function' ? matchMedia('(prefers-color-scheme: dark)') : undefined
     scheme?.addEventListener('change', resolveAccent)
-    return () => { mounted = false; scheme?.removeEventListener('change', resolveAccent); observer.disconnect(); detach(); unsubscribe() }
+    return () => { mounted = false; scheme?.removeEventListener('change', resolveAccent); observer.disconnect(); unsubscribe() }
   })
 </script>
 
@@ -119,7 +141,7 @@
   data-shadow={shadow ? 'offset' : undefined}
   class={['tint-audio-player', className].filter(Boolean).join(' ')}
 >
-  <audio bind:this={audio} {src} preload="metadata" aria-label={label}></audio>
+  {#key src}<audio use:registerAudio {src} {preload} aria-label={label}></audio>{/key}
   <div data-media-surface-wrap="" class="surface-wrap">
     <div data-media-surface="" class="artwork">
       {#if artwork && !(failedArtwork?.src === src && failedArtwork?.artwork === artwork)}
