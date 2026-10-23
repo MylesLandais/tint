@@ -122,3 +122,7 @@ without global key listeners or private DOM selectors. Value changes remain cont
 Nested dialogs return to their parent while it exists; closing the parent first
 transfers the return target to the surviving child. Body scroll stays locked
 until the last dialog closes. Late focus restoration cannot steal focus from a new modal.
+
+`TextField` and `TextAreaField` from `@nebula/tint/form` accept optional native
+`maxLength` bounds. The browser enforces user input limits; Tint preserves host
+values unchanged. See `#/components/form-fields` for the bounded search example.

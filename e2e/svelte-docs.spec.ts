@@ -745,3 +745,15 @@ test('Roleplay form docs keep ordered edits and import intent with the host', as
   await expect(review.getByRole('status')).toHaveText('Import saved.')
   expect(errors).toEqual([])
 })
+
+test('native text bounds preserve search input limits in the public field', async ({ page }) => {
+  await page.goto('/#/components/form-fields')
+  const search = page.getByRole('searchbox', { name: 'Bounded search' })
+  await expect(search).toHaveAttribute('maxlength', '256')
+  await search.focus()
+  await page.keyboard.insertText('x'.repeat(300))
+  await expect(search).toHaveValue('x'.repeat(256))
+  await page.setViewportSize({ width: 390, height: 844 })
+  await expect(search).toBeInViewport()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
+})
