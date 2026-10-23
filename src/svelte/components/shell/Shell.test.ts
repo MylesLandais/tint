@@ -26,10 +26,21 @@ describe('Svelte shell', () => {
     expect(screen.getByRole('listbox', { name: 'Commands' })).toBeInTheDocument()
     expect(screen.getByRole('option', { name: '/open' })).toHaveAttribute('aria-selected', 'true')
     expect(screen.getByRole('option', { name: '/private' })).toBeDisabled()
-    await fireEvent.mouseEnter(screen.getByRole('option', { name: '/play' }))
+    await fireEvent.pointerMove(screen.getByRole('option', { name: '/play' }), { clientX: 20, clientY: 30 })
     expect(onActiveChange).toHaveBeenCalledWith('play')
     await fireEvent.click(screen.getByRole('option', { name: '/play' }))
     expect(onSelect).toHaveBeenCalledWith('play')
+  })
+
+  it('does not replace keyboard selection when rows move under a stationary pointer', async () => {
+    const onActiveChange = vi.fn()
+    render(CommandMenu, { id: 'moving', query: '', items: [{ id: 'first', label: 'First' }, { id: 'last', label: 'Last' }], activeId: 'last', onSelect: vi.fn(), onActiveChange })
+    await fireEvent.pointerMove(screen.getByRole('option', { name: 'Last' }), { clientX: 20, clientY: 30 })
+    onActiveChange.mockClear()
+    await fireEvent.pointerMove(screen.getByRole('option', { name: 'First' }), { clientX: 20, clientY: 30 })
+    expect(onActiveChange).not.toHaveBeenCalled()
+    await fireEvent.pointerMove(screen.getByRole('option', { name: 'First' }), { clientX: 21, clientY: 30 })
+    expect(onActiveChange).toHaveBeenCalledExactlyOnceWith('first')
   })
 
   it('preserves input focus and source order as command results change', async () => {
@@ -56,7 +67,7 @@ describe('Svelte shell', () => {
     expect(input).toHaveFocus()
     await fireEvent.click(open)
     expect(onSelect).toHaveBeenCalledExactlyOnceWith('open / item')
-    await fireEvent.mouseEnter(screen.getByRole('option', { name: 'Locked' }))
+    await fireEvent.pointerMove(screen.getByRole('option', { name: 'Locked' }), { clientX: 20, clientY: 30 })
     expect(onActiveChange).not.toHaveBeenCalled()
     await view.rerender({ ...props, query: 'share' })
     expect(within(list).getAllByRole('option')).toHaveLength(1)
