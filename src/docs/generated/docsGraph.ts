@@ -37,7 +37,7 @@ export const docsGraphNodes: readonly DocsGraphNode[] = [
   { id: "dialog", imports: [], position: {"x": 0, "y": -825} },
   { id: "dice", imports: ["icon"], position: {"x": 340, "y": -75} },
   { id: "dj", imports: ["dialog", "timeline"], position: {"x": 340, "y": 75} },
-  { id: "editor", imports: ["code", "icon"], position: {"x": 1020, "y": 150} },
+  { id: "editor", imports: ["code", "icon", "shell"], position: {"x": 1020, "y": 150} },
   { id: "feed", imports: ["badge", "progress", "shell"], position: {"x": 680, "y": -300} },
   { id: "form", imports: ["button"], position: {"x": 680, "y": -150} },
   { id: "framebuffer", imports: [], position: {"x": 0, "y": -675} },

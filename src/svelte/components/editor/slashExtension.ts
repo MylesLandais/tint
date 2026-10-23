@@ -3,6 +3,7 @@ import Suggestion, { type SuggestionProps } from '@tiptap/suggestion'
 import { mount, unmount } from 'svelte'
 import { get, writable } from 'svelte/store'
 import { filterEditorSlashCommands, mergeEditorSlashCommands } from '../../../core/editor'
+import { commandOptionId, nextCommandIndex } from '../../../core/shell/navigation'
 import SlashMenu from './SlashMenu.svelte'
 import type { EditorSlashCommand } from './types'
 
@@ -35,7 +36,7 @@ export function createSvelteSlashCommandExtension(custom: readonly EditorSlashCo
           const selected = writable(0)
           let unsubscribeSelected: (() => void) | null = null
           const updateActive = (index: number) => {
-            if (current?.items[index]) editorDom.setAttribute('aria-activedescendant', `${menuId}-option-${index}`)
+            if (current?.items[index]) editorDom.setAttribute('aria-activedescendant', commandOptionId(menuId, current.items[index]!.id))
             else editorDom.removeAttribute('aria-activedescendant')
           }
           const choose = (item: EditorSlashCommand) => current?.command(item)
@@ -60,11 +61,11 @@ export function createSvelteSlashCommandExtension(custom: readonly EditorSlashCo
             },
             onUpdate: (props) => renderMenu(props),
             onKeyDown: ({ event }) => {
+              if (event.defaultPrevented || event.isComposing || event.keyCode === 229 || event.ctrlKey || event.metaKey || event.altKey) return false
               if (event.key === 'Escape') return false
               const items = current?.items ?? []
               if (!items.length) return event.key === 'ArrowUp' || event.key === 'ArrowDown' || event.key === 'Enter'
-              if (event.key === 'ArrowUp') { selected.set((get(selected) + items.length - 1) % items.length); return true }
-              if (event.key === 'ArrowDown') { selected.set((get(selected) + 1) % items.length); return true }
+              if (event.key === 'ArrowUp' || event.key === 'ArrowDown' || event.key === 'Home' || event.key === 'End') { selected.set(nextCommandIndex(items, get(selected), event.key)); return true }
               if (event.key === 'Enter') { choose(items[get(selected)]!); return true }
               return false
             },
