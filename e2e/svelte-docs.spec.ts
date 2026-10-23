@@ -454,6 +454,34 @@ test('Media Assets docs open the controlled lightbox and validate files', async 
   await expect(page.getByRole('status')).toContainText('not an accepted file type')
 })
 
+test('compact file intake uses native keyboard activation, validation and repeat selection', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', error => errors.push(error.message))
+  await page.goto('/#/components/media-assets')
+  const button = page.getByRole('button', { name: 'Import document', exact: true })
+  const status = page.getByRole('status')
+  for (const key of ['Enter', 'Space']) {
+    await button.focus()
+    const chooser = page.waitForEvent('filechooser')
+    await page.keyboard.press(key)
+    const picker = await chooser
+    expect(picker.isMultiple()).toBe(false)
+    await picker.setFiles({ name: 'card.json', mimeType: 'application/json', buffer: Buffer.from('{}') })
+    await expect(status).toHaveText('Accepted card.json')
+    await expect(page.locator('input[type="file"]').last()).toHaveValue('')
+  }
+  const chooser = page.waitForEvent('filechooser')
+  await button.click()
+  await (await chooser).setFiles({ name: 'card.txt', mimeType: 'text/plain', buffer: Buffer.from('{}') })
+  await expect(status).toContainText('not an accepted file type')
+  const beforeCancel = await status.textContent()
+  const cancelled = page.waitForEvent('filechooser')
+  await button.click()
+  await (await cancelled).setFiles([])
+  await expect(status).toHaveText(beforeCancel!)
+  expect(errors).toEqual([])
+})
+
 test('Chart docs keep point selection accessible through the data table', async ({ page }) => {
   await page.goto('/#/components/release-chart')
   await expect(page.getByRole('img', { name: 'Release scores compared with file size' })).toBeVisible()

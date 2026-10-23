@@ -34,6 +34,13 @@ Tint publishes TypeScript and Svelte source. Use Svelte 5, a bundler configured 
 
 Use Tint's public components in applications. Carbon Components Svelte is an internal Tint implementation dependency and is not part of Tint's public API.
 
+For toolbar imports, use `UploadDropzone` from `@nebula/tint/media-assets` with
+`compact`, a `label`, and `maxFiles={1}`. It composes Tint's native button with
+the existing file classifier and returns original `File` objects. Repeated
+choices reset the input; disabled or destroyed intake ignores late delivery.
+Parsing, persistence, and operation ownership stay in the application. The
+[Media Assets docs](src/docs/MediaAssetsDoc.svelte) show both presentations.
+
 ## Themes
 
 The default stylesheet supplies the Tint palette and the token contract. To use another included palette, import its stylesheet after `styles.css` and set `data-theme` on a parent element:
