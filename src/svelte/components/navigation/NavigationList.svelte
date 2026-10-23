@@ -3,7 +3,7 @@
   import type { NavigationListProps } from './types'
 
   let {
-    items, activeHref, label = 'Primary navigation', renderLink, onNavigate,
+    items, activeHref, label = 'Primary navigation', orientation = 'vertical', renderLink, onNavigate,
     class: className, ...rest
   }: NavigationListProps = $props()
   let entries = $derived(navigationEntries(items, activeHref))
@@ -17,7 +17,7 @@
   }
 </script>
 
-<nav {...rest} aria-label={label} class={className} data-tint-navigation-list="">
+<nav {...rest} aria-label={label} class={className} data-tint-navigation-list="" data-orientation={orientation}>
   <ul>
     {#each entries as { item, active } (item.id)}
       <li>
@@ -45,6 +45,7 @@
 
 <style>
   ul { display: grid; gap: var(--tint-space-1); margin: 0; padding: 0; list-style: none; }
+  nav[data-orientation='horizontal'] ul { display: flex; flex-wrap: wrap; }
   li { min-width: 0; }
   a { display: flex; min-height: 2.5rem; align-items: center; gap: var(--tint-space-2); border-radius: var(--tint-radius-md); padding: var(--tint-space-2) var(--tint-space-3); color: var(--tint-muted); font-size: var(--tint-font-size-sm); text-decoration: none; transition: background-color var(--tint-motion-base) var(--tint-ease), color var(--tint-motion-base) var(--tint-ease); }
   a:hover { background: var(--tint-surface); color: var(--tint-ink); }

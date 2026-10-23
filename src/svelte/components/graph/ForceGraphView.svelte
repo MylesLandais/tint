@@ -129,4 +129,6 @@
   .node[data-status='warning'] .dot { fill: var(--tint-warning); }
   .node[data-selected='true'] .dot, .node:focus-visible .dot { stroke: var(--tint-accent); stroke-width: 4; }
   .label { fill: var(--tint-ink); font-size: 13px; paint-order: stroke; stroke: var(--tint-panel); stroke-width: 3px; }
+  .node[data-status='unknown'] .dot { fill: var(--tint-warning); }
+  .node[data-status='cancelled'] .dot { fill: var(--tint-muted); }
 </style>

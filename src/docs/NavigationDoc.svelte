@@ -16,6 +16,7 @@
   let sidebarOpen = $state(false)
   const api: ApiRow[] = [
     { prop: 'NavigationList.items / activeHref', type: 'NavigationItem[] / string?', description: 'Host-supplied links and current destination.' },
+    { prop: 'NavigationList.orientation', type: '"vertical" | "horizontal"', description: 'Vertical by default. Horizontal route links wrap to fit the container; native link and keyboard behavior stay intact.' },
     { prop: 'NavigationList.renderLink', type: 'Snippet<[item, content, active]>', description: 'Optional adapter for a host router.' },
     { prop: 'NavigationList.onNavigate', type: '(item: NavigationItem) => void', description: 'Called when a Tint-rendered navigation link is activated.' },
     { prop: 'NavigationList / Breadcrumbs label', type: 'string', description: 'Accessible name for each navigation landmark.' },
@@ -50,6 +51,7 @@ const items = [{ id: 'home', label: 'Home', href: '/home' }]
 {/snippet}
 
 <DocPage title="Navigation" description="Host-controlled links, breadcrumbs, and a container-aware app sidebar. The small-width drawer manages focus and requests dismissal through the host callback." importPath="@nebula/tint/navigation" {usage} {api} accessibility="NavigationList and Breadcrumbs use named navigation landmarks. The active link exposes aria-current. On narrow containers the app sidebar becomes a dialog, traps Tab focus while open, closes on Escape or its backdrop, and returns focus to the toggle.">
+  <section><h3>Route navigation</h3><NavigationList {items} activeHref="#/components/navigation" orientation="horizontal" label="Example routes" /></section>
   <div class="shell-demo">
     <NavigationAppShell brand="Tint" header="Collections" {sidebar} {breadcrumbs} {sidebarOpen} onSidebarOpenChange={(open) => sidebarOpen = open}>
       <div class="workspace"><h3>Workspace</h3><p>Navigate through the sidebar or resize this preview to see the drawer behavior.</p></div>

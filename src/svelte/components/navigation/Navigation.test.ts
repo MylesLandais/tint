@@ -103,3 +103,13 @@ describe('Svelte navigation', () => {
     expect(screen.getByRole('complementary', { name: 'Navigation' })).not.toHaveAttribute('aria-hidden')
   })
 })
+
+it('wraps horizontal route links without replacing their native destinations or active state', async () => {
+  const view = render(NavigationList, { items: [{id:'a',label:'First',href:'/a'},{id:'b',label:'Second',href:'/b'}], activeHref:'/b', orientation:'horizontal', label:'Routes' })
+  expect(screen.getByRole('navigation',{name:'Routes'})).toHaveAttribute('data-orientation','horizontal')
+  expect(screen.getByRole('link',{name:'Second'})).toHaveAttribute('href','/b')
+  expect(screen.getByRole('link',{name:'Second'})).toHaveAttribute('aria-current','page')
+  expect(screen.getByRole('link',{name:'First'})).not.toHaveAttribute('aria-current')
+  await view.rerender({orientation:'vertical'})
+  expect(screen.getByRole('navigation',{name:'Routes'})).toHaveAttribute('data-orientation','vertical')
+})

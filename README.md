@@ -117,7 +117,7 @@ Tint does not execute regex rules or save profiles. See the
 
 ## Workspace and releases
 
-The Workspace gateway consumes Tint as a pinned git submodule at `third_party/tint`; published consumers move by package version. Make library changes in this checkout, land them on `main`, then advance the gateway's submodule pin and run its `npm run check`. The consumer contract test here checks package entry points under a host TypeScript program before a pin or release moves.
+The Workspace gateway consumes Tint as a pinned git submodule at `third_party/tint`; published consumers move by package version. Make library changes in this checkout, land them on `dev`, then advance the gateway's submodule pin and run its `npm run check`. The consumer contract test here checks package entry points under a host TypeScript program before a pin or release moves.
 
 To publish, update `version` in `package.json` on `dev`, commit, and push a matching `v<version>` tag to Forgejo. The [release workflow](.forgejo/workflows/release.yml) runs checks and publishes with `FORGEJO_NPM_TOKEN`. `publishConfig` fixes the target registry to Forgejo. More repository history and mirror details are in [docs/git-history.md](docs/git-history.md).
 
@@ -144,3 +144,5 @@ until the last dialog closes. Late focus restoration cannot steal focus from a n
 `TextField` and `TextAreaField` from `@nebula/tint/form` accept optional native
 `maxLength` bounds. The browser enforces user input limits; Tint preserves host
 values unchanged. See `#/components/form-fields` for the bounded search example.
+
+Route navigation reuses `NavigationList orientation="horizontal"` with wrapped native links. Graph runtime summaries distinguish `unknown` and `cancelled` from ready, queued, success and failure; hosts own reconciliation and execution policy. See the [navigation](src/docs/NavigationDoc.svelte) and [graph](src/docs/graph/GraphDoc.svelte) examples.
