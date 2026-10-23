@@ -19,6 +19,8 @@
     type?: 'text' | 'email' | 'password' | 'search' | 'tel' | 'url'
     /** Native UTF-16 input bound; host-provided values are never truncated. */
     maxLength?: number
+    /** Native datalist ID; suggestions do not restrict host input. */
+    list?: string
     placeholder?: string
     name?: string
     autocomplete?: HTMLInputAttributes['autocomplete']
@@ -42,6 +44,7 @@
     readOnly = false,
     type = 'text',
     maxLength,
+    list,
     placeholder,
     name,
     autocomplete,
@@ -63,6 +66,7 @@
     {value}
     {placeholder}
     maxlength={maxLength}
+    {list}
     {autocomplete}
     {inputmode}
     {spellcheck}

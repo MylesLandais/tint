@@ -8,6 +8,7 @@
   import type { ApiRow } from '../svelte/types'
 
   let search = $state('')
+  let service = $state('custom-service')
   let note = $state('A short note')
   let count = $state<number | ''>(3)
   let password = $state('')
@@ -26,7 +27,7 @@
   const api: ApiRow[] = [
     { prop: 'SliderField.formatValue', type: '(value: number) => string', description: 'Optional visible and accessible value text, such as 100%. The input bounds, step, value and callback remain numeric; omitted formatting preserves the existing defaults.' },
     { prop: 'FieldShared', type: 'id, label, description?, error?, required?, disabled?', description: 'Common label, help, validation, and state props.' },
-    { prop: 'TextField', type: 'value / onValueChange / maxLength?', description: 'Optional native input length bound. Omit it for unrestricted input; existing host values are never truncated.' },
+    { prop: 'TextField', type: 'value / onValueChange / maxLength? / list?', description: 'Optional native input length bound and host datalist ID. Suggestions do not restrict values or select one automatically; existing host values are never truncated.' },
     { prop: 'TextAreaField', type: 'value / onValueChange / rows / spellcheck', description: 'Controlled multiline text. Native spellcheck is optional; omit it to inherit the browser setting or set false for source and structured data.' },
     { prop: 'NumberField', type: 'value / onValueChange / min / max / step', description: 'Controlled numeric input; empty emits an empty string.' },
     { prop: 'PasswordField', type: 'value / onValueChange / visible / onVisibleChange', description: 'Credential input with an accessible visibility toggle.' },
@@ -54,6 +55,8 @@ let enabled = $state(false)
 <DocPage title="Form Fields" description="Controlled fields that share Tint's label, help, error, disabled, and required semantics." importPath="@nebula/tint/form" {usage} {api} accessibility="Select menus keep native semantics, keyboard (arrows, Home, End, type-ahead) and screen-reader behavior. The control boundary, chevron and focus ring meet 3:1 and the option text 4.5:1 in every theme and scheme, which the theme tests enforce; the open list is painted from the same tokens, and forced-colors mode falls back to system colors. Labels connect to their controls. Descriptions and error messages use aria-describedby, invalid fields use aria-invalid, and disabled controls are native disabled inputs. The password visibility toggle is a separate named button.">
   <div class="fields">
     <TextField id="gallery-search" label="Bounded search" type="search" value={search} onValueChange={(next) => search = next} maxLength={256} description="Up to 256 UTF-16 code units, enforced by the native input." />
+    <TextField id="gallery-service" label="Service suggestions" value={service} list="gallery-service-options" onValueChange={(next) => service = next} description="Choose a native suggestion or enter a custom service name." />
+    <datalist id="gallery-service-options"><option value="local-service"></option><option value="remote-service"></option></datalist>
     <TextAreaField id="gallery-note" label="Note" value={note} onValueChange={(next) => note = next} rows={3} />
     <NumberField id="gallery-count" label="Count" value={count} onValueChange={(next) => count = next} min={0} max={20} />
     <PasswordField id="gallery-password" label="Password" value={password} onValueChange={(next) => password = next} autocomplete="new-password" />

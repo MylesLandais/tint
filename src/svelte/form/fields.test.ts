@@ -40,6 +40,23 @@ describe('Svelte form fields', () => {
     await view.rerender({ ...props, maxLength: undefined })
     expect(input).not.toHaveAttribute('maxlength')
   })
+  it('forwards a host datalist reference without selecting or restricting its value', async () => {
+    const props = { id: 'service', label: 'Service', value: 'custom-service', onValueChange: vi.fn() }
+    const view = render(TextField, props)
+    const input = screen.getByLabelText('Service')
+    expect(input).not.toHaveAttribute('list')
+    await view.rerender({ ...props, list: 'service-options' })
+    expect(input).toHaveAttribute('list', 'service-options')
+    expect(input).toHaveValue('custom-service')
+    expect(input).not.toHaveAttribute('pattern')
+    await fireEvent.input(input, { target: { value: 'another-custom-service' } })
+    expect(props.onValueChange).toHaveBeenCalledWith('another-custom-service')
+    await view.rerender({ ...props, list: 'other-options' })
+    expect(input).toHaveAttribute('list', 'other-options')
+    await view.rerender({ ...props, list: undefined })
+    expect(input).not.toHaveAttribute('list')
+    expect(input).toHaveValue(props.value)
+  })
   it('keeps a rejected selection or pending toggle at the host-observed value', async () => {
     const onValueChange = vi.fn(), onCheckedChange = vi.fn()
     const { rerender } = render(Select, { 'aria-label': 'Source file', value: 'a', onValueChange, options: [{ value: 'a', label: 'A' }, { value: 'b', label: 'B' }] })
