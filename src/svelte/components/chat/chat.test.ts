@@ -62,6 +62,18 @@ describe('Svelte chat composer', () => {
     expect(onSubmit).not.toHaveBeenCalled()
   })
 
+  it('exposes a dismissed host suggestion menu without an active descendant', async () => {
+    const props = { value: '/open', onValueChange: vi.fn(), onSubmit: vi.fn(),
+      inputListboxId: 'commands', inputExpanded: false }
+    const view = render(ChatComposer, props)
+    const input = screen.getByRole('combobox')
+    expect(input).toHaveAttribute('aria-expanded', 'false')
+    expect(input).not.toHaveAttribute('aria-activedescendant')
+    await view.rerender({ ...props, inputExpanded: true, inputActiveOptionId: 'commands-open' })
+    expect(input).toHaveAttribute('aria-expanded', 'true')
+    expect(input).toHaveAttribute('aria-activedescendant', 'commands-open')
+  })
+
   it('lets an anchored suggestion menu intercept Enter while exposing its active option', async () => {
     const onSubmit = vi.fn()
     const onInputKeydown = vi.fn((event: KeyboardEvent) => event.preventDefault())

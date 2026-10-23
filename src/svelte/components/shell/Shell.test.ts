@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/svelte'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/svelte'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import CommandPalette from './CommandPalette.svelte'
 import CommandMenu from './CommandMenu.svelte'
@@ -30,6 +30,57 @@ describe('Svelte shell', () => {
     expect(onActiveChange).toHaveBeenCalledWith('play')
     await fireEvent.click(screen.getByRole('option', { name: '/play' }))
     expect(onSelect).toHaveBeenCalledWith('play')
+  })
+
+  it('preserves input focus and source order as command results change', async () => {
+    const input = document.createElement('input')
+    document.body.append(input)
+    input.focus()
+    const onSelect = vi.fn(), onActiveChange = vi.fn()
+    const items = [
+      { id: 'open / item', label: 'Open', group: 'One' },
+      { id: 'share', label: 'Share', group: 'Two' },
+      { id: 'locked', label: 'Locked', group: 'One', disabled: true },
+    ]
+    const props = { id: 'inline', items, query: '', activeId: items[0]!.id,
+      preserveInputFocus: true, grouped: false, icon: false as const, onSelect, onActiveChange }
+    const view = render(CommandMenu, props)
+    const list = screen.getByRole('listbox')
+    expect(within(list).getAllByRole('option').map((item) => item.textContent?.trim())).toEqual(['Open', 'Share', 'Locked'])
+    const open = screen.getByRole('option', { name: 'Open' })
+    expect(open.id).not.toMatch(/\s/)
+    expect(open).toHaveAttribute('tabindex', '-1')
+    const mouse = new MouseEvent('mousedown', { bubbles: true, cancelable: true })
+    open.dispatchEvent(mouse)
+    expect(mouse.defaultPrevented).toBe(true)
+    expect(input).toHaveFocus()
+    await fireEvent.click(open)
+    expect(onSelect).toHaveBeenCalledExactlyOnceWith('open / item')
+    await fireEvent.mouseEnter(screen.getByRole('option', { name: 'Locked' }))
+    expect(onActiveChange).not.toHaveBeenCalled()
+    await view.rerender({ ...props, query: 'share' })
+    expect(within(list).getAllByRole('option')).toHaveLength(1)
+    expect(screen.getByRole('option', { name: 'Share' })).toHaveAttribute('aria-selected', 'false')
+    await fireEvent.click(open)
+    expect(onSelect).toHaveBeenCalledTimes(1)
+    view.unmount()
+    await fireEvent.click(screen.queryByRole('option') ?? open)
+    expect(onSelect).toHaveBeenCalledTimes(1)
+    input.remove()
+  })
+
+  it('leaves composing and modified palette keys to the input', async () => {
+    const onSelect = vi.fn()
+    render(CommandPalette, { open: true, onOpenChange: vi.fn(), query: '', onQueryChange: vi.fn(), onSelect,
+      items: [{ id: 'open', label: 'Open' }, { id: 'share', label: 'Share' }] })
+    const input = screen.getByRole('combobox')
+    await fireEvent.keyDown(input, { key: 'Enter', isComposing: true, keyCode: 229 })
+    await fireEvent.keyDown(input, { key: 'Enter', ctrlKey: true })
+    expect(onSelect).not.toHaveBeenCalled()
+    await fireEvent.keyDown(input, { key: 'End' })
+    expect(input).toHaveAttribute('aria-activedescendant', screen.getByRole('option', { name: 'Share' }).id)
+    await fireEvent.keyDown(input, { key: 'Enter' })
+    expect(onSelect).toHaveBeenCalledExactlyOnceWith('share')
   })
 
   it('keeps pane sizes and tab selection controlled while keyboard focus follows tabs', async () => {

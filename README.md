@@ -41,6 +41,14 @@ choices reset the input; disabled or destroyed intake ignores late delivery.
 Parsing, persistence, and operation ownership stay in the application. The
 [Media Assets docs](src/docs/MediaAssetsDoc.svelte) show both presentations.
 
+`CommandMenu` from `@nebula/tint/shell` renders the shared command listbox
+used by `CommandPalette` and editor slash completion. Inline hosts can set
+`preserveInputFocus`, `grouped={false}` and `icon={false}`; use
+`commandOptionId` and `nextCommandIndex` for active-option identity and keyboard
+navigation. Hosts retain draft, filtering policy, dismissal and execution.
+`ChatComposer` accepts `inputExpanded` alongside its listbox and input-key hooks.
+See the [Shell API](src/docs/ShellDoc.svelte).
+
 `TextField` from `@nebula/tint/form` accepts optional native `minLength`,
 `maxLength` and `list` attributes. Length constraints retain browser validation;
 server validation and host values remain application-owned.
