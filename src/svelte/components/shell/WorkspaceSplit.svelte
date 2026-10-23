@@ -12,13 +12,14 @@
     minSize?: number
     maxSize?: number
     onSizeChange: (size: number) => void
+    onResizingChange?: (resizing: boolean) => void
     label: string
     first: Snippet
     second: Snippet
   }
   let {
     direction = 'horizontal', primary = 'first', size, minSize = 0, maxSize = 1000,
-    onSizeChange, label, first, second, class: className, style, ...rest
+    onSizeChange, onResizingChange, label, first, second, class: className, style, ...rest
   }: Props = $props()
   const id = $props.id()
   let current = $derived(clampSplitSize(size, minSize, maxSize))
@@ -29,7 +30,7 @@
 
 <div {...rest} data-tint-workspace-split data-direction={direction} class={className} style={gridStyle}>
   <div id={`${id}-first`} data-tint-workspace-pane="first" style="display: grid; min-width: 0; min-height: 0; overflow: auto">{@render first()}</div>
-  <ResizeHandle {direction} {primary} size={current} {minSize} {maxSize} {onSizeChange} {label}
+  <ResizeHandle {direction} {primary} size={current} {minSize} {maxSize} {onSizeChange} {onResizingChange} {label}
     aria-controls={`${id}-${primary}`} data-tint-workspace-separator />
   <div id={`${id}-second`} data-tint-workspace-pane="second" style="display: grid; min-width: 0; min-height: 0; overflow: auto">{@render second()}</div>
 </div>

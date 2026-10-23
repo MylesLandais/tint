@@ -46,6 +46,12 @@ The host renders the datalist and retains free-form value ownership; suggestions
 never impose a closed catalog or select a value automatically. See the
 [Form Fields example](src/docs/form/FormFieldsDoc.svelte).
 
+`ResizeHandle` and `WorkspaceSplit` from `@nebula/tint/shell` expose optional
+`onResizingChange` for pointer capture lifetime. Start/end callbacks let hosts
+coordinate their own drag appearance and persistence. Cancellation, disable,
+axis/side change and destruction end capture once. Keyboard intent only emits
+`onSizeChange`; saved values and application policy remain host-owned.
+
 ## Themes
 
 The default stylesheet supplies the Tint palette and the token contract. To use another included palette, import its stylesheet after `styles.css` and set `data-theme` on a parent element:
