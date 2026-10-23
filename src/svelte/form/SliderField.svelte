@@ -23,13 +23,14 @@
 
 <FormControl {id} {label} {description} {error} {disabled}>
   <div class="tint-svelte-slider">
+    <!-- Native ranges normalize their value as bounds change; apply value last. -->
     <input
       {id}
       type="range"
-      {value}
       {min}
       {max}
       {step}
+      {value}
       {disabled}
       class="tint-svelte-slider__input"
       aria-invalid={error ? 'true' : undefined}
