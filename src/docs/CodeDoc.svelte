@@ -13,6 +13,7 @@
     { prop: 'lineNumbers / startLine', type: 'boolean / number', description: 'Addressable lines with an optional first line number.' },
     { prop: 'highlightLines / highlightWords', type: 'readonly number[] / readonly string[]', description: 'Emphasize selected lines or literal words.' },
     { prop: 'JsonView.value / label', type: 'unknown / string?', description: 'Read-only JSON evidence; an optional label adds a native disclosure. Missing and invalid values remain distinct.' },
+    { prop: 'JsonView.previewLimit / previewExpanded', type: 'number? / boolean (bindable)', description: 'Optional bounded preview with shared disclosure. The full formatted value stays available; truncated text is plain text, and updated observations retain disclosure intent.' },
     { prop: 'JsonView.expanded', type: 'boolean (bindable)', description: 'Initial disclosure state; bind to retain host state. Updated evidence preserves an open disclosure.' },
     { prop: 'CodeTabs.tabs', type: 'readonly CodeTab[]', description: 'Code examples with labels, titles, optional Tint icon, and highlighting settings.' },
     { prop: 'value / defaultValue / onValueChange', type: 'string / string / (id) => void', description: 'Controlled active tab, initial local tab, and selection intent.' },
@@ -41,6 +42,7 @@ const tabs = [
   <div class="code-demo">
     <CodeTabs {tabs} {value} onValueChange={(next) => value = next} {accessory} />
     <JsonView label="Observed evidence" value={{ revision: 12, released: true, effect: null }} expanded />
+    <JsonView aria-label="Bounded evidence" value={{ payload: 'Synthetic evidence ' .repeat(30) }} previewLimit={120} />
     <div>
       <h3>Untrusted source remains text</h3>
       <pre><HighlightedCode code={'<div class="x">{a && b}</div>'} language="html" highlightWords={['div']} /></pre>

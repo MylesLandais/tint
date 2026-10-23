@@ -12,6 +12,38 @@ import TextField from './TextField.svelte'
 import ToggleField from './ToggleField.svelte'
 
 describe('Svelte form fields', () => {
+  it('delivers the original file and clears native selection for repeated choices', async () => {
+    const onFileChange = vi.fn(), onValueChange = vi.fn()
+    const view = render(FileField, { id:'clip', label:'WAV clip', value:null, onValueChange, onFileChange })
+    const input = screen.getByLabelText('WAV clip') as HTMLInputElement
+    const file = new File(['synthetic'], 'clip.wav', {type:'audio/wav'})
+    await fireEvent.change(input, { target:{files:[file]} })
+    expect(onFileChange).toHaveBeenCalledWith(file)
+    expect(onValueChange).toHaveBeenCalledWith(expect.objectContaining({name:'clip.wav',mimeType:'audio/wav'}))
+    expect(input.value).toBe('')
+    await view.rerender({id:'clip',label:'WAV clip',value:onValueChange.mock.calls[0][0],onValueChange,onFileChange})
+    await fireEvent.click(screen.getByRole('button',{name:'Remove clip.wav'}))
+    expect(onFileChange).toHaveBeenLastCalledWith(null)
+    expect(onValueChange).toHaveBeenLastCalledWith(null)
+  })
+  it('does not dispatch a disabled or destroyed file chooser result', async () => {
+    const onFileChange=vi.fn(),onValueChange=vi.fn()
+    const view=render(FileField,{id:'clip',label:'WAV clip',value:null,disabled:true,onValueChange,onFileChange})
+    const input=screen.getByLabelText('WAV clip');const file=new File(['synthetic'],'clip.wav')
+    await fireEvent.change(input,{target:{files:[file]}});expect(onValueChange).not.toHaveBeenCalled()
+    await view.rerender({id:'clip',label:'WAV clip',value:null,disabled:false,onValueChange,onFileChange})
+    await view.unmount();await fireEvent.change(input,{target:{files:[file]}})
+    expect(onValueChange).not.toHaveBeenCalled();expect(onFileChange).not.toHaveBeenCalled()
+  })
+  it('revokes only owned file previews and releases them at teardown', async () => {
+    const revoke=vi.spyOn(URL,'revokeObjectURL'),onValueChange=vi.fn()
+    const view=render(FileField,{id:'cover',label:'Cover',value:{name:'remote.png',mimeType:'image/png',objectUrl:'blob:host-owned'},onValueChange})
+    const input=screen.getByLabelText('Cover');await fireEvent.change(input,{target:{files:[new File(['image'],'new.png',{type:'image/png'})]}})
+    expect(revoke).not.toHaveBeenCalledWith('blob:host-owned')
+    const next=onValueChange.mock.calls[0][0];await view.rerender({id:'cover',label:'Cover',value:next,onValueChange})
+    await view.unmount();expect(revoke).toHaveBeenCalledWith(next.objectUrl);revoke.mockRestore()
+  })
+
   it('forwards an optional native minimum length without changing host values or submission policy', async () => {
     const props = { id: 'invite-secret', label: 'Invite password', type: 'password' as const, value: 'short', onValueChange: vi.fn() }
     const view = render(TextField, props)

@@ -54,6 +54,16 @@ coordinate their own drag appearance and persistence. Cancellation, disable,
 axis/side change and destruction end capture once. Keyboard intent only emits
 `onSizeChange`; saved values and application policy remain host-owned.
 
+`FileField.onFileChange` supplies the original browser File (or null) separately
+from serializable form metadata. The host owns encoding and upload. Repeated
+choices clear native selection; disabled/destroyed intake ignores late events.
+Only preview URLs created by the component are released by it.
+
+`JsonView.previewLimit` bounds long evidence with existing Tint Button disclosure;
+`previewExpanded` can be bound to host state. Truncated text remains clearly a
+preview, and missing/invalid evidence remains distinct. See the
+[Code examples](src/docs/CodeDoc.svelte).
+
 ## Themes
 
 The default stylesheet supplies the Tint palette and the token contract. To use another included palette, import its stylesheet after `styles.css` and set `data-theme` on a parent element:
