@@ -323,7 +323,7 @@ test('Code docs preserve text and navigate tabs by keyboard', async ({ page }) =
   await expect(tabs.getByRole('tab', { name: 'Python' })).toHaveAttribute('aria-selected', 'true')
   await expect(page.getByRole('tabpanel')).toContainText('print(greeting)')
   await expect(page.getByText('Active language: python')).toBeVisible()
-  await expect(page.locator('.code-demo > div pre code')).toContainText('<div class="x">{a && b}</div>')
+  await expect(page.locator('.code-demo > div').filter({ has: page.getByRole('heading', { name: 'Untrusted source remains text', exact: true }) }).locator('pre code')).toContainText('<div class="x">{a && b}</div>')
 })
 
 test('Calendar docs keep month, day, and event intent host controlled', async ({ page }) => {
@@ -399,7 +399,7 @@ test('Terminal docs preserve the host session through disconnect and reconnect',
 
 test('Code Editor docs mount the shared session and toggle read only', async ({ page }) => {
   await page.goto('/#/components/code-editor')
-  const editor = page.locator('[data-tint-code-editor] .cm-content')
+  const editor = page.getByRole('textbox', { name: 'Demo shared Lua source', exact: true })
   await expect(editor).toBeVisible()
   await expect(editor).toContainText('Hello, Tint')
   await page.getByRole('checkbox', { name: 'Read only' }).check()
