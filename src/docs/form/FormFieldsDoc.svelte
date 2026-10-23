@@ -18,6 +18,7 @@
   let gain = $state(0.5)
   let fit = $state(1)
   let file = $state<FormFileValue | null>(null)
+  let originalName = $state('')
   let tags = $state<string[]>(['ambient'])
   let custom = $state('')
   const genres = [
@@ -36,7 +37,7 @@
     { prop: 'Select', type: "value / onValueChange / options | children / size: 'md' | 'sm' / invalid", description: 'The bare native select used by SelectField, for toolbars and compact menus. Any <select class="tint-select"> gets the same chrome.' },
     { prop: 'ToggleField', type: 'checked / onCheckedChange', description: 'Native controlled checkbox. inline places the checkbox beside its label for toolbars. hideLabel visually hides its label while retaining its accessible name, for compact table selection.' },
     { prop: 'SliderField', type: 'value / onValueChange / min / max / step', description: 'Native controlled range with a visible value.' },
-    { prop: 'FileField', type: 'FormFileValue | null / onValueChange', description: 'File selection and optional image preview.' },
+    { prop: 'FileField', type: 'FormFileValue | null / onValueChange / onFileChange?', description: 'Controlled file metadata and optional image preview. onFileChange delivers the original File or null for host-owned encoding; only component-created preview URLs are released.' },
     { prop: 'TagsField', type: 'readonly string[] / onValueChange', description: 'Freeform tokens composed from Tokenizer.' },
     { prop: 'FormControl', type: 'id / label / children', description: 'Shared label, help, and error wrapper for custom controls; hideLabel retains a visually hidden label.' },
   ]
@@ -68,13 +69,13 @@ let enabled = $state(false)
     <ToggleField id="gallery-published" label="Published" checked={published} onCheckedChange={(next) => published = next} />
     <SliderField id="gallery-gain" label="Gain" value={gain} onValueChange={(next) => gain = next} />
     <SliderField id="gallery-fit" label="Fit scale" value={fit} onValueChange={(next) => fit = next} min={0.8} max={1.2} step={0.05} formatValue={(value) => `${Math.round(value * 100)}%`} />
-    <FileField id="gallery-file" label="Cover artwork" value={file} onValueChange={(next) => file = next} accept="image/*" />
+    <FileField id="gallery-file" label="Cover artwork" value={file} onValueChange={(next) => file = next} onFileChange={(next) => originalName = next?.name ?? ''} accept="image/*" />
     <TagsField id="gallery-tags" label="Tags" value={tags} onValueChange={(next) => tags = next} />
     <FormControl id="gallery-custom" label="Custom control" description="Use FormControl to label a native input.">
       <input id="gallery-custom" value={custom} oninput={(event) => custom = event.currentTarget.value} />
     </FormControl>
   </div>
-  <p class="summary" aria-live="polite">Count: {count === '' ? 'empty' : count} · Published: {published ? 'yes' : 'no'} · Tags: {tags.join(', ') || 'none'}</p>
+  <p class="summary" aria-live="polite">Original file: {originalName || 'none'} · Count: {count === '' ? 'empty' : count} · Published: {published ? 'yes' : 'no'} · Tags: {tags.join(', ') || 'none'}</p>
 </DocPage>
 
 <style>
