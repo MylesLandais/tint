@@ -26,6 +26,7 @@
   let filtered = $derived(filterCommands(items, query))
   let groups = $derived(grouped ? [...new Set(filtered.map((item) => item.group ?? 'Commands'))] : ['Commands'])
   let node = $state<HTMLDivElement>()
+  let pointer: { x: number; y: number } | undefined
   let alive = true
   onDestroy(() => { alive = false })
 
@@ -54,7 +55,11 @@
         <button id={commandOptionId(id, item.id)} type="button" role="option" aria-selected={!item.disabled && item.id === activeId}
           disabled={item.disabled} tabindex={preserveInputFocus ? -1 : undefined}
           onmousedown={(event) => { if (preserveInputFocus) event.preventDefault() }}
-          onmouseenter={() => { if (alive && !item.disabled) onActiveChange?.(item.id) }}
+          onpointermove={(event) => {
+            if (pointer?.x === event.clientX && pointer?.y === event.clientY) return
+            pointer = { x: event.clientX, y: event.clientY }
+            if (alive && !item.disabled) onActiveChange?.(item.id)
+          }}
           onclick={() => choose(item.id)}
           class={['flex min-h-10 w-full items-center gap-3 rounded-md px-3 py-2 text-left hover:bg-tint-surface',
             item.id === activeId && 'bg-tint-accent-soft']}>
