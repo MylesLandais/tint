@@ -41,6 +41,11 @@ choices reset the input; disabled or destroyed intake ignores late delivery.
 Parsing, persistence, and operation ownership stay in the application. The
 [Media Assets docs](src/docs/MediaAssetsDoc.svelte) show both presentations.
 
+`TextField` from `@nebula/tint/form` accepts an optional native `list` ID.
+The host renders the datalist and retains free-form value ownership; suggestions
+never impose a closed catalog or select a value automatically. See the
+[Form Fields example](src/docs/form/FormFieldsDoc.svelte).
+
 ## Themes
 
 The default stylesheet supplies the Tint palette and the token contract. To use another included palette, import its stylesheet after `styles.css` and set `data-theme` on a parent element:
