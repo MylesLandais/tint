@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { untrack, type Snippet } from 'svelte'
+  import { onDestroy, untrack, type Snippet } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
   import { AlertCircle, ArrowUpRight, FileText, Music2, RotateCcw, Wrench } from '@lucide/svelte'
   import {
@@ -7,6 +7,7 @@
     type ChatCustomPart, type ChatId, type ChatImageItem, type ChatMessageAction,
     type ChatMessageActionPayload, type ChatMessageData, type ChatMessagePart, type ChatToolApprovalPayload,
   } from '../../../core/chat'
+  import { createChatClipboard, type ChatCopyState } from '../../../core/chat/clipboard'
   import HighlightedCode from '../code/HighlightedCode.svelte'
   import MediaPlayer from '../media/MediaPlayer.svelte'
   import ChatMediaLightbox from './ChatMediaLightbox.svelte'
@@ -32,7 +33,19 @@
       onRenderError?: (error: Error) => void
       className?: string
     } = $props()
-  let copied = $state(false)
+  let copyState = $state<ChatCopyState>('idle')
+  let copyText = $derived(part.type === 'code' ? part.code : part.type === 'reasoning' && part.copyable ? part.text : null)
+  let copyIdentity = $derived(JSON.stringify([message?.id ?? messageId, part.id, part.type]))
+  const clipboard = createChatClipboard(
+    () => copyText === null ? null : { identity: copyIdentity, text: copyText },
+    (text) => navigator.clipboard.writeText(text),
+    (state) => { copyState = state },
+  )
+  $effect(() => { void copyText; void copyIdentity; clipboard.invalidate() })
+  onDestroy(clipboard.dispose)
+  let copyLabel = $derived(part.type === 'reasoning' && part.copyLabel ? part.copyLabel
+    : part.type === 'code' ? (copyState === 'copied' ? 'Code copied' : 'Copy code')
+    : copyState === 'copied' ? 'Reasoning copied' : 'Copy reasoning')
   let reason = $state('')
   let lightboxIndex = $state<number | null>(null)
   let reasoningOpen = $state(untrack(() => part.type === 'reasoning' && Boolean(part.defaultExpanded)))
@@ -52,9 +65,10 @@
     if (id) onAction?.({ messageId: id, action, ...extra })
   }
 
-  async function copy(value: string) {
-    try { await navigator.clipboard.writeText(value); copied = true }
-    catch { copied = false }
+  function copy(event: MouseEvent) {
+    event.preventDefault()
+    event.stopPropagation()
+    void clipboard.copy()
   }
 
   function preview(value: unknown) { return chatJsonPreview(value) }
@@ -88,7 +102,10 @@
   <section {...rest} data-chat-part="code" data-status={part.status} class={['overflow-hidden rounded-xl border border-tint-code-border bg-tint-code text-tint-code-ink', className, legacyClassName]}>
     <header class="flex items-center justify-between border-b border-tint-code-border px-3 py-2 text-xs text-tint-code-muted">
       <span>{part.filename ?? part.language ?? 'Code'}</span>
-      <button type="button" onclick={() => void copy(part.code)} aria-label={copied ? 'Code copied' : 'Copy code'} class="rounded px-2 py-1 hover:bg-tint-code-ink/10">{copied ? 'Copied' : 'Copy'}</button>
+      <span class="inline-flex items-center gap-2">
+        <span role="status" class="text-xs">{copyState === 'failed' ? 'Copy failed. Try again.' : ''}</span>
+        <button type="button" onclick={(event) => void copy(event)} disabled={copyState === 'pending'} aria-label={copyLabel} class="rounded px-2 py-1 hover:bg-tint-code-ink/10">{copyState === 'copied' ? 'Copied' : copyState === 'pending' ? 'Copying…' : 'Copy'}</button>
+      </span>
     </header>
     <pre class="overflow-x-auto p-4 text-[0.8125rem] leading-6"><HighlightedCode code={part.code} language={part.language} /></pre>
   </section>
@@ -176,8 +193,16 @@
   </section>
 {:else if part.type === 'reasoning'}
   <details {...rest} data-chat-part="reasoning" data-status={part.status} open={reasoningOpen} ontoggle={(event) => { reasoningOpen = event.currentTarget.open }} class={['rounded-xl border border-tint-border bg-tint-surface', className, legacyClassName]}>
-    <summary class="cursor-pointer px-3 py-2.5 text-xs font-medium text-tint-muted">{part.title ?? (part.status === 'pending' || part.status === 'streaming' ? 'Thinking' : 'Reasoning')}{part.durationMs ? ` · ${(part.durationMs / 1000).toFixed(1)}s` : ''}</summary>
-    <div class="border-t border-tint-border px-3 py-3 text-sm leading-6 text-tint-muted">{part.text}</div>
+    <summary class="cursor-pointer px-3 py-2.5 text-xs font-medium text-tint-muted"><span class="break-words">{part.title ?? (part.status === 'pending' || part.status === 'streaming' ? 'Thinking' : 'Reasoning')}{part.durationMs ? ` · ${(part.durationMs / 1000).toFixed(1)}s` : ''}</span></summary>
+    <div class="space-y-2 border-t border-tint-border px-3 py-3 text-sm leading-6 text-tint-muted">
+      {#if part.copyable}
+        <div class="flex flex-wrap items-center justify-end gap-2">
+          <span role="status" class="text-xs">{copyState === 'failed' ? 'Copy failed. Try again.' : ''}</span>
+          <button type="button" onclick={(event) => void copy(event)} disabled={copyState === 'pending'} aria-label={copyLabel} title={part.copyLabel ?? 'Copy reasoning'} class="rounded border border-tint-border px-2 py-1 text-xs hover:bg-tint-panel">{copyState === 'copied' ? 'Copied' : copyState === 'pending' ? 'Copying…' : 'Copy'}</button>
+        </div>
+      {/if}
+      <div class="whitespace-pre-wrap break-words">{part.text}</div>
+    </div>
   </details>
 {:else if part.type === 'tool'}
   <details {...rest} data-chat-part="tool" data-status={part.tool.status} class={['overflow-hidden rounded-xl border border-tint-border bg-tint-panel', className, legacyClassName]}>

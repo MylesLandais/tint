@@ -64,6 +64,15 @@ Only preview URLs created by the component are released by it.
 preview, and missing/invalid evidence remains distinct. See the
 [Code examples](src/docs/CodeDoc.svelte).
 
+`ChatReasoning` and built-in reasoning message parts accept opt-in `copyable`
+and an optional `copyLabel`. The existing disclosure preserves the reader's
+choice across streaming updates and renders plain text with whitespace intact.
+Reasoning remains excluded from message-level copy. Shared message/code/reasoning copy
+excludes duplicate pending writes, reports failures, and qualifies feedback by
+source, message, part and mounted lifetime; a stale clipboard completion cannot
+claim the new text was copied. Message copy emits its captured action only after
+a current write succeeds. See the [Chat example](src/docs/ChatDoc.svelte).
+
 ## Themes
 
 The default stylesheet supplies the Tint palette and the token contract. To use another included palette, import its stylesheet after `styles.css` and set `data-theme` on a parent element:
