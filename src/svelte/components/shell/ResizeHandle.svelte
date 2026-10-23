@@ -12,15 +12,30 @@
     step?: number
     shiftStep?: number
     onSizeChange: (size: number) => void
+    /** Pointer capture lifetime; keyboard changes only emit onSizeChange. */
+    onResizingChange?: (resizing: boolean) => void
   }
   let {
     label, size, minSize = 0, maxSize = 1000, direction = 'horizontal', primary = 'first',
-    step = 10, shiftStep = 50, onSizeChange, disabled = false, class: className, ...rest
+    step = 10, shiftStep = 50, onSizeChange, onResizingChange, disabled = false, class: className, ...rest
   }: Props = $props()
   let separator = $state<HTMLButtonElement | null>(null)
   let drag: { pointer: number; start: number; size: number } | null = null
   let current = $derived(clampSplitSize(size, minSize, maxSize))
   let horizontal = $derived(direction === 'horizontal')
+
+  function finish() {
+    if (!drag) return
+    const pointer = drag.pointer
+    drag = null
+    if (separator?.hasPointerCapture(pointer)) separator.releasePointerCapture(pointer)
+    onResizingChange?.(false)
+  }
+  $effect(() => {
+    void direction; void primary
+    if (disabled) finish()
+    return finish
+  })
 
   function pointerDown(event: PointerEvent) {
     if (disabled || event.button !== 0 || drag) return
@@ -28,6 +43,7 @@
     separator?.focus()
     separator?.setPointerCapture(event.pointerId)
     drag = { pointer: event.pointerId, start: horizontal ? event.clientX : event.clientY, size: current }
+    onResizingChange?.(true)
   }
   function pointerMove(event: PointerEvent) {
     if (disabled || !drag || drag.pointer !== event.pointerId) return
@@ -35,8 +51,7 @@
   }
   function pointerEnd(event: PointerEvent) {
     if (drag?.pointer !== event.pointerId) return
-    drag = null
-    if (separator?.hasPointerCapture(event.pointerId)) separator.releasePointerCapture(event.pointerId)
+    finish()
   }
   function keydown(event: KeyboardEvent) {
     if (disabled) return
@@ -54,7 +69,7 @@
   aria-valuemax={maxSize} aria-valuenow={current} aria-valuetext={`${current} pixels`}
   {disabled} data-tint-resize-handle class={className}
   onpointerdown={pointerDown} onpointermove={pointerMove} onpointerup={pointerEnd}
-  onpointercancel={pointerEnd} onlostpointercapture={() => { drag = null }} onkeydown={keydown}></button>
+  onpointercancel={pointerEnd} onlostpointercapture={pointerEnd} onkeydown={keydown}></button>
 
 <style>
   button { min-width: 5px; min-height: 5px; border: 0; padding: 0; background: var(--tint-border); cursor: col-resize; touch-action: none; user-select: none; }
