@@ -755,6 +755,8 @@ test('Roleplay form docs keep ordered edits and import intent with the host', as
   await expect(group.getByRole('status')).toHaveText('Group members: aria, bea')
   await group.getByRole('button', { name: 'Move Bea up' }).click()
   await expect(group.getByRole('status')).toHaveText('Group members: bea, aria')
+  await group.getByRole('checkbox', { name: 'Mute Bea', exact: true }).check()
+  await expect(group.getByRole('checkbox', { name: 'Mute Bea', exact: true })).toBeChecked()
   await group.getByRole('combobox', { name: 'Character prompts' }).selectOption('1')
   await expect(group.getByRole('textbox', { name: 'Joined prompt prefix' })).toHaveValue('Conversation:')
 
@@ -766,6 +768,13 @@ test('Roleplay form docs keep ordered edits and import intent with the host', as
   const regex = page.getByRole('region', { name: 'Regex editor example' })
   await regex.getByRole('button', { name: 'Add regex rule' }).click()
   await expect(regex.getByRole('status')).toHaveText('Rules: 2')
+  const firstRule = regex.getByRole('group', { name: 'Rule 1: Trim spaces', exact: true })
+  await firstRule.getByText('Advanced options', { exact: true }).click()
+  await firstRule.getByRole('spinbutton', { name: 'Minimum depth' }).fill('0')
+  await expect(firstRule.getByRole('spinbutton', { name: 'Minimum depth' })).toHaveValue('0')
+  await firstRule.getByRole('spinbutton', { name: 'Minimum depth' }).fill('')
+  await firstRule.getByRole('combobox', { name: 'Find macros' }).selectOption('2')
+  await expect(firstRule.getByRole('combobox', { name: 'Find macros' })).toHaveValue('2')
 
   const review = page.getByRole('region', { name: 'Import review example' })
   await expect(review.getByRole('table', { name: 'Import file coverage' })).toContainText('Chats')
