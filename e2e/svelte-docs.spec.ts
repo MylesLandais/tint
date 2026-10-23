@@ -757,3 +757,19 @@ test('native text bounds preserve search input limits in the public field', asyn
   await expect(search).toBeInViewport()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
 })
+
+
+test('slider formatting preserves native keyboard values and accessible units', async ({ page }) => {
+  await page.goto('/#/components/form-fields')
+  const slider = page.getByRole('slider', { name: 'Fit scale' })
+  await expect(slider).toHaveValue('1')
+  await expect(slider).toHaveAttribute('aria-valuetext', '100%')
+  await slider.focus()
+  await page.keyboard.press('ArrowRight')
+  await expect(slider).toHaveValue('1.05')
+  await expect(slider).toHaveAttribute('aria-valuetext', '105%')
+  await expect(page.locator('output[for="gallery-fit"]')).toHaveText('105%')
+  await page.setViewportSize({ width: 390, height: 844 })
+  await expect(slider).toBeInViewport()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+})

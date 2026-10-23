@@ -122,6 +122,33 @@ describe('Svelte form fields', () => {
     expect(onSlider).toHaveBeenCalledWith(0.75)
   })
 
+  it('formats slider output and accessible text while keeping numeric input and intents', async () => {
+    const props = { id: 'fit', label: 'Fit', value: 1, min: 0.8, max: 1.2, step: 0.05, onValueChange: vi.fn() }
+    const view = render(SliderField, props)
+    const input = screen.getByRole('slider', { name: 'Fit' })
+    const output = view.container.querySelector('output')!
+    expect(input).toHaveAttribute('aria-valuetext', '1')
+    expect(output).toHaveTextContent(/^1$/)
+    const formatValue = (value: number) => `${Math.round(value * 100)}%`
+    await view.rerender({ ...props, formatValue })
+    expect(input).toHaveValue('1')
+    expect(input).toHaveAttribute('min', '0.8')
+    expect(input).toHaveAttribute('max', '1.2')
+    expect(input).toHaveAttribute('step', '0.05')
+    expect(input).toHaveAttribute('aria-valuetext', '100%')
+    expect(output).toHaveTextContent('100%')
+    await fireEvent.input(input, { target: { value: '1.1' } })
+    expect(props.onValueChange).toHaveBeenCalledWith(1.1)
+    await view.rerender({ ...props, value: 1.1, formatValue })
+    expect(input).toHaveAttribute('aria-valuetext', '110%')
+    expect(output).toHaveTextContent('110%')
+    await view.rerender({ ...props, value: 1.1, formatValue: undefined, disabled: true })
+    expect(input).toBeDisabled()
+    expect(input).toHaveAttribute('aria-valuetext', '1.1')
+    expect(output).toHaveTextContent('1.10')
+    expect(props.onValueChange).toHaveBeenCalledTimes(1)
+  })
+
   it('uses Tokenizer for freeform tags and emits the next selected list', async () => {
     const onValueChange = vi.fn()
     const props = { id: 'tags', label: 'Tags', value: ['alpha'], onValueChange }

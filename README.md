@@ -114,6 +114,11 @@ The controlled `value` and `onChange` API still owns selection and keyboard navi
 
 See [Workspace names and mixed-version compatibility](docs/migrations/workspace-names.md) for the current APIs, deprecated aliases and preview runtime configuration.
 
+`SliderField` from `@nebula/tint/form` accepts optional `formatValue` for visible
+output and accessible value text, such as percentages. Native bounds, step and
+callback values stay numeric; omission preserves the existing presentation.
+See the [form field examples](http://tint.localhost/#/components/form-fields).
+
 `TextField` from `@nebula/tint/form` forwards optional `onkeydown` to the native
 input. Hosts can prevent implicit Enter submission for an auxiliary form field
 without global key listeners or private DOM selectors. Value changes remain controlled.

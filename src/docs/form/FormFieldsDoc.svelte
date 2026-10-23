@@ -14,6 +14,7 @@
   let genre = $state('ambient')
   let published = $state(false)
   let gain = $state(0.5)
+  let fit = $state(1)
   let file = $state<FormFileValue | null>(null)
   let tags = $state<string[]>(['ambient'])
   let custom = $state('')
@@ -23,6 +24,7 @@
     { value: 'jazz', label: 'Jazz' },
   ]
   const api: ApiRow[] = [
+    { prop: 'SliderField.formatValue', type: '(value: number) => string', description: 'Optional visible and accessible value text, such as 100%. The input bounds, step, value and callback remain numeric; omitted formatting preserves the existing defaults.' },
     { prop: 'FieldShared', type: 'id, label, description?, error?, required?, disabled?', description: 'Common label, help, validation, and state props.' },
     { prop: 'TextField', type: 'value / onValueChange / maxLength?', description: 'Optional native input length bound. Omit it for unrestricted input; existing host values are never truncated.' },
     { prop: 'TextAreaField', type: 'value / onValueChange / rows / spellcheck', description: 'Controlled multiline text. Native spellcheck is optional; omit it to inherit the browser setting or set false for source and structured data.' },
@@ -60,6 +62,7 @@ let enabled = $state(false)
     <SelectField id="gallery-genre-disabled" label="Genre (disabled)" value={genre} onValueChange={() => {}} options={genres} disabled />
     <ToggleField id="gallery-published" label="Published" checked={published} onCheckedChange={(next) => published = next} />
     <SliderField id="gallery-gain" label="Gain" value={gain} onValueChange={(next) => gain = next} />
+    <SliderField id="gallery-fit" label="Fit scale" value={fit} onValueChange={(next) => fit = next} min={0.8} max={1.2} step={0.05} formatValue={(value) => `${Math.round(value * 100)}%`} />
     <FileField id="gallery-file" label="Cover artwork" value={file} onValueChange={(next) => file = next} accept="image/*" />
     <TagsField id="gallery-tags" label="Tags" value={tags} onValueChange={(next) => tags = next} />
     <FormControl id="gallery-custom" label="Custom control" description="Use FormControl to label a native input.">
