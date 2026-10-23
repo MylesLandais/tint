@@ -1,6 +1,6 @@
 import { mount, unmount, tick } from 'svelte'
 import { SvelteMap } from 'svelte/reactivity'
-import { fireEvent, getByRole } from '@testing-library/dom'
+import { fireEvent, getByRole, queryByRole } from '@testing-library/dom'
 import { afterEach, expect, test, vi } from 'vitest'
 import type { ChatMessageData } from '../../../core/chat'
 import ChatMessage from './ChatMessage.svelte'
@@ -49,9 +49,11 @@ test('retired message copy cannot call the host after teardown', async () => {
 test('one current message copy acknowledges its captured ID and excludes reasoning', async () => {
   const pending = deferred(), write = vi.fn().mockReturnValue(pending.promise), { onAction } = fixture(write)
   const button = getByRole(target, 'button', { name: 'Copy message' })
+  expect(queryByRole(target, 'status')).toBeNull()
   await fireEvent.click(button); await fireEvent.click(button)
   expect(write).toHaveBeenCalledTimes(1); expect(write).toHaveBeenCalledWith('original')
   pending.resolve(); await pending.promise; await tick()
   expect(getByRole(target, 'button', { name: 'Message copied' })).toBeInTheDocument()
+  expect(queryByRole(target, 'status')).toBeNull()
   expect(onAction).toHaveBeenCalledExactlyOnceWith({ messageId: 'message-1', action: 'copy' })
 })

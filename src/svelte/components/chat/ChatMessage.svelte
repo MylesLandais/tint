@@ -91,7 +91,7 @@
       {#if message.status === 'stopped'}<span class="text-xs text-tint-muted">Stopped</span>{/if}
       <div data-chat-message-actions="" class="flex items-center gap-1">
         {#if canSpeak}<button type="button" onclick={speak} aria-pressed={isSpeaking || undefined} aria-label={showReplay ? `Replay ${actorName}` : `Play ${actorName}`} class="inline-flex items-center gap-1 rounded-md px-2 py-1.5 text-xs font-medium text-tint-muted hover:bg-tint-surface"><Volume2 size={14} />{showReplay ? 'Replay' : 'Play'}</button>{/if}
-        <span role="status" class="text-xs text-tint-muted">{copyState === 'failed' ? 'Copy failed. Try again.' : ''}</span>
+        <span role={copyState === 'failed' ? 'status' : undefined} class="text-xs text-tint-muted">{copyState === 'failed' ? 'Copy failed. Try again.' : ''}</span>
         <button type="button" onclick={() => void copy()} disabled={copyState === 'pending'} aria-label={copyState === 'copied' ? 'Message copied' : 'Copy message'} class="inline-flex items-center gap-1 rounded-md p-1.5 text-xs text-tint-muted hover:bg-tint-surface"><Copy size={14} /></button>
         <button type="button" onclick={() => emit('reply')} class="inline-flex items-center gap-1 rounded-md px-2 py-1.5 text-xs font-medium text-tint-muted hover:bg-tint-surface"><Reply size={14} />Reply</button>
         {#if canRetry && !hasInlineRetry}<button type="button" onclick={() => emit('retry')} class="inline-flex items-center gap-1 rounded-md px-2 py-1.5 text-xs font-medium text-tint-muted hover:bg-tint-surface"><RotateCcw size={14} />Retry</button>{/if}

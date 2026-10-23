@@ -71,7 +71,8 @@ Reasoning remains excluded from message-level copy. Shared message/code/reasonin
 excludes duplicate pending writes, reports failures, and qualifies feedback by
 source, message, part and mounted lifetime; a stale clipboard completion cannot
 claim the new text was copied. Message copy emits its captured action only after
-a current write succeeds. See the [Chat example](src/docs/ChatDoc.svelte).
+a current write succeeds. Idle copy feedback adds no status region; failures
+expose their retryable message without replacing transcript announcements. See the [Chat example](src/docs/ChatDoc.svelte).
 
 ## Themes
 
