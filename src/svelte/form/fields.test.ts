@@ -26,6 +26,20 @@ describe('Svelte form fields', () => {
     await fireEvent(input, arrow)
     expect(arrow.defaultPrevented).toBe(false)
   })
+  it('forwards optional native text bounds without truncating host values', async () => {
+    const props = { id: 'search', label: 'Search', value: 'authoritative value', onValueChange: vi.fn() }
+    const view = render(TextField, props)
+    const input = screen.getByRole('textbox', { name: 'Search' })
+    expect(input).not.toHaveAttribute('maxlength')
+    await view.rerender({ ...props, maxLength: 4 })
+    expect(input).toHaveAttribute('maxlength', '4')
+    expect(input).toHaveValue(props.value)
+    expect(props.onValueChange).not.toHaveBeenCalled()
+    await view.rerender({ ...props, maxLength: 0 })
+    expect(input).toHaveAttribute('maxlength', '0')
+    await view.rerender({ ...props, maxLength: undefined })
+    expect(input).not.toHaveAttribute('maxlength')
+  })
   it('keeps a rejected selection or pending toggle at the host-observed value', async () => {
     const onValueChange = vi.fn(), onCheckedChange = vi.fn()
     const { rerender } = render(Select, { 'aria-label': 'Source file', value: 'a', onValueChange, options: [{ value: 'a', label: 'A' }, { value: 'b', label: 'B' }] })
