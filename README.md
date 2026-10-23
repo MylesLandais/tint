@@ -41,6 +41,11 @@ choices reset the input; disabled or destroyed intake ignores late delivery.
 Parsing, persistence, and operation ownership stay in the application. The
 [Media Assets docs](src/docs/MediaAssetsDoc.svelte) show both presentations.
 
+`WorkspaceTabs` keeps active and inactive border/text utility classes mutually
+exclusive so the selected tab stays visible in consumer Tailwind builds. The
+host still controls selection; the shared component owns keyboard focus and
+keeps hidden panel contents mounted. See the [Shell API](src/docs/ShellDoc.svelte).
+
 `CommandMenu` from `@nebula/tint/shell` renders the shared command listbox
 used by `CommandPalette` and editor slash completion. Inline hosts can set
 `preserveInputFocus`, `grouped={false}` and `icon={false}`; use

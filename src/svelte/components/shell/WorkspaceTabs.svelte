@@ -35,7 +35,7 @@
         aria-selected={tab.id === value} tabindex={tab.id === value ? 0 : -1} disabled={tab.disabled}
         bind:this={() => refs.get(tab.id), (node) => { if (node) refs.set(tab.id, node); else refs.delete(tab.id) }}
         onclick={() => onChange(tab.id)} onkeydown={(event) => keydown(event, tab)}
-        class={['border-b-2 border-transparent px-1 text-tint-muted', size === 'sm' ? 'py-1.5 text-xs' : 'py-3 text-sm', tab.id === value && 'border-tint-accent text-tint-accent']}>
+        class={['border-b-2 px-1', size === 'sm' ? 'py-1.5 text-xs' : 'py-3 text-sm', tab.id === value ? 'border-tint-accent text-tint-accent' : 'border-transparent text-tint-muted']}>
         {tab.label}
       </button>
     {/each}
