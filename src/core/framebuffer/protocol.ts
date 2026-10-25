@@ -1,4 +1,4 @@
-export type FrameEncoding = 'rgba' | 'png'
+export type FrameEncoding = 'rgba' | 'png' | 'h264'
 export type FrameMode = 'frame' | 'map'
 
 export type FrameEnvelope = {
@@ -8,6 +8,9 @@ export type FrameEnvelope = {
   sessionId: string
   frameId: string
   payloadOffset: number
+  /** H.264 only: whether this access unit can start decoding, and its `avc1.*` codec string. */
+  keyframe?: boolean
+  codec?: string
 }
 
 /** Validate the account-bound frame header before allocating or presenting pixels. */
@@ -42,5 +45,7 @@ export function parseFrameEnvelope(
     sessionId,
     frameId: String(header.frame_id),
     payloadOffset: size + 4,
+    keyframe: header.keyframe === true,
+    codec: typeof header.codec === 'string' ? header.codec : undefined,
   }
 }
