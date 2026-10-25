@@ -1,6 +1,7 @@
 <script lang="ts">
   import { tick, type Snippet } from 'svelte'
   import TextField from '../../form/TextField.svelte'
+  import ToggleField from '../../form/ToggleField.svelte'
   import Button from '../button/Button.svelte'
   import AuthDivider from './AuthDivider.svelte'
   import OAuthButtons from './OAuthButtons.svelte'
@@ -12,6 +13,10 @@
     password: string
     onIdentifierChange: (value: string) => void
     onPasswordChange: (value: string) => void
+    /** Checked state of "remember this browser". Defaults to unchecked. */
+    remember?: boolean
+    /** Providing this shows the checkbox on the password step (needs `labels.remember`). */
+    onRememberChange?: (value: boolean) => void
     /** Called once the credential step is complete. In `email-first` mode that is after the password step. */
     onSubmit: () => void | Promise<void>
     labels: LoginFormLabels
@@ -32,7 +37,7 @@
   }
 
   let {
-    identifier, password, onIdentifierChange, onPasswordChange, onSubmit, labels,
+    identifier, password, onIdentifierChange, onPasswordChange, remember = false, onRememberChange, onSubmit, labels,
     mode = 'password', identifierType = 'email', providers = [], providerLayout = 'stack',
     lastUsed = null, onProviderSelect, forgotPasswordHref, busy = false, error, alternate, class: className,
   }: Props = $props()
@@ -124,6 +129,10 @@
         />
         {#if forgotPasswordHref && labels.forgotPassword}<a class="link" href={forgotPasswordHref}>{labels.forgotPassword}</a>{/if}
       </div>
+    {/if}
+
+    {#if showPassword && onRememberChange && labels.remember}
+      <ToggleField id={`${id}-remember`} label={labels.remember} checked={remember} disabled={busy} inline onCheckedChange={onRememberChange} />
     {/if}
 
     <Button type="submit" variant="primary" loading={busy} class="tint-login-submit">

@@ -14,6 +14,10 @@
     passwordPlaceholder?: string
     onIdentifierChange: (value: string) => void
     onPasswordChange: (value: string) => void
+    /** Checked state of "remember this browser". Defaults to unchecked. */
+    remember?: boolean
+    /** Providing this shows the checkbox (needs `labels.remember`). */
+    onRememberChange?: (value: boolean) => void
     onSubmit: () => void | Promise<void>
     class?: string
   }
@@ -21,7 +25,7 @@
   let {
     identifier, password, busy = false, error, labels,
     identifierPlaceholder, passwordPlaceholder,
-    onIdentifierChange, onPasswordChange, onSubmit, class: className,
+    onIdentifierChange, onPasswordChange, remember = false, onRememberChange, onSubmit, class: className,
   }: Props = $props()
 
   let schema = $derived(createCredentialFormSchema({
@@ -31,6 +35,7 @@
     hidePassword: labels.hidePassword,
     identifierPlaceholder,
     passwordPlaceholder,
+    remember: onRememberChange ? labels.remember : undefined,
   }))
 
   function valuesChanged(values: Record<string, unknown>) {
@@ -38,6 +43,7 @@
     const nextPassword = typeof values.password === 'string' ? values.password : password
     if (nextIdentifier !== identifier) onIdentifierChange(nextIdentifier)
     if (nextPassword !== password) onPasswordChange(nextPassword)
+    if (onRememberChange && typeof values.remember === 'boolean' && values.remember !== remember) onRememberChange(values.remember)
   }
 </script>
 
@@ -45,7 +51,7 @@
   {#if error && typeof error !== 'string'}<div role="alert">{@render error()}</div>{/if}
   <FormLayout
     {schema}
-    values={{ identifier, password }}
+    values={{ identifier, password, remember }}
     onValuesChange={valuesChanged}
     {busy}
     error={typeof error === 'string' ? error : undefined}

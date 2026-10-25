@@ -8,6 +8,8 @@ export type IdentifierSignInFormLabels = {
   submitting: string
   showPassword: string
   hidePassword: string
+  /** Label of the "remember this browser" checkbox; shown only when the host also passes `onRememberChange`. */
+  remember?: string
 }
 
 export type OAuthOption = { id: string; label: string; href: string; icon?: Snippet }
@@ -31,6 +33,8 @@ export type LoginFormLabels = {
   providers: string
   divider: string
   lastUsed: string
+  /** Label of the "remember this browser" checkbox; shown only when the host also passes `onRememberChange`. */
+  remember?: string
 }
 
 export type RegistrationFormLabels = {

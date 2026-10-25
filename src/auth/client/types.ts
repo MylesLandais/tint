@@ -73,7 +73,12 @@ export type AuthSnapshot = {
 export type AuthEventType = 'INITIAL_SESSION' | 'SIGNED_IN' | 'SIGNED_OUT' | 'SESSION_UPDATED' | 'TASK_REQUIRED'
 export type AuthEvent = { type: AuthEventType; snapshot: AuthSnapshot }
 
-export type PasswordSignInInput = { identifier: string; password: string }
+export type PasswordSignInInput = {
+  identifier: string
+  password: string
+  /** Ask the server to keep this browser signed in. A server may lock such a session to this browser and network. */
+  remember?: boolean
+}
 export type PasswordSignUpInput = { identifier: string; password: string; displayName?: string; inviteCode?: string }
 export type IdentifierVerificationInput = { token: string }
 export type CredentialRecoveryRequestInput = { identifier: string }

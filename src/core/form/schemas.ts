@@ -8,6 +8,8 @@ export function createCredentialFormSchema(labels: {
   hidePassword: string
   identifierPlaceholder?: string
   passwordPlaceholder?: string
+  /** Adds a "remember this browser" checkbox under the password. Omit for no checkbox. */
+  remember?: string
 }): FormSchema {
   return {
     id: 'auth.credentials',
@@ -34,6 +36,9 @@ export function createCredentialFormSchema(labels: {
             showPasswordLabel: labels.showPassword,
             hidePasswordLabel: labels.hidePassword,
           },
+          ...(labels.remember
+            ? [{ name: 'remember', kind: 'toggle' as const, label: labels.remember }]
+            : []),
         ],
       },
     ],
