@@ -28,6 +28,19 @@ describe('Svelte auth forms', () => {
     await waitFor(() => expect(onSubmit).toHaveBeenCalledOnce())
   })
 
+  it('offers "remember this browser" only when the host opts in, unchecked by default', async () => {
+    const onRememberChange = vi.fn()
+    const base = { identifier: 'a@b.test', password: 'x', onIdentifierChange: vi.fn(), onPasswordChange: vi.fn(), onSubmit: vi.fn() }
+    const view = render(IdentifierSignInForm, { ...base, labels })
+    expect(screen.queryByRole('checkbox')).toBeNull()
+    view.unmount()
+    render(IdentifierSignInForm, { ...base, labels: { ...labels, remember: 'Remember this browser' }, onRememberChange })
+    const box = screen.getByRole('checkbox', { name: 'Remember this browser' })
+    expect((box as HTMLInputElement).checked).toBe(false)
+    await fireEvent.click(box)
+    expect(onRememberChange).toHaveBeenCalledWith(true)
+  })
+
   it('keeps recovery submission controlled and respects busy state', async () => {
     const onSubmit = vi.fn()
     const view = render(CredentialRecoveryForm, {
