@@ -132,7 +132,7 @@
     {/if}
 
     {#if showPassword && onRememberChange && labels.remember}
-      <ToggleField id={`${id}-remember`} label={labels.remember} checked={remember} disabled={busy} inline onCheckedChange={onRememberChange} />
+      <ToggleField id={`${id}-remember`} label={labels.remember} checked={remember} disabled={busy} onCheckedChange={onRememberChange} />
     {/if}
 
     <Button type="submit" variant="primary" loading={busy} class="tint-login-submit">

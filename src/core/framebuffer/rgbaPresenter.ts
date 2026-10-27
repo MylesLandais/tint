@@ -6,10 +6,23 @@ async function gpuRequest<T>(request:Promise<T>,onLate?:(value:T)=>void):Promise
   try{return await Promise.race([request.then(value=>{if(expired)onLate?.(value);return value}),timeout])}
   finally{clearTimeout(timer)}
 }
+/** A hardware compatibility adapter can be available when Core offers only software. */
+export async function requestFrameAdapter(gpu:GPU):Promise<GPUAdapter|null> {
+  let core:GPUAdapter|null=null
+  try {core=await gpuRequest(gpu.requestAdapter())}catch{/* Try the smaller feature set before WebGL2. */}
+  if(core&&!core.info?.isFallbackAdapter)return core
+  // Frame upload, textureLoad and a single render target fit Compatibility mode.
+  // In particular, Linux GLES hardware may expose this while Core uses SwiftShader.
+  try {
+    const compatible=await gpuRequest(gpu.requestAdapter({featureLevel:'compatibility'}))
+    if(compatible&&!compatible.info?.isFallbackAdapter)return compatible
+    return core??compatible
+  }catch{return core}
+}
 export async function rgbaPresenter(canvas:HTMLCanvasElement,forceWebGL=false):Promise<Presenter> {
   if(!forceWebGL && navigator.gpu) {
     let adapter:GPUAdapter|null=null,device:GPUDevice|undefined
-    try {adapter=await gpuRequest(navigator.gpu.requestAdapter());if(adapter)device=await gpuRequest(adapter.requestDevice(),late=>late.destroy())}catch{/* Try WebGL2 when WebGPU initialization is unavailable. */}
+    try {adapter=await requestFrameAdapter(navigator.gpu);if(adapter)device=await gpuRequest(adapter.requestDevice(),late=>late.destroy())}catch{/* Try WebGL2 when WebGPU initialization is unavailable. */}
     if(adapter&&device) {
       const gpu=device,context=canvas.getContext('webgpu')!
       const format=navigator.gpu.getPreferredCanvasFormat()

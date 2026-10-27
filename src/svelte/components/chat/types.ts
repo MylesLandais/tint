@@ -108,6 +108,9 @@ export type ChatComposerProps = Omit<HTMLFormAttributes, 'children' | 'onsubmit'
   accept?: string
   multiple?: boolean
   metadata?: Readonly<Record<string, unknown>>
+  appearance?: 'standard' | 'agent'
+  /** Host-owned model and execution controls; Tint never grants tool authority. */
+  controls?: Snippet
   actions?: Snippet
   inputRef?: (node: HTMLTextAreaElement | null) => void
   onInputKeydown?: (event: KeyboardEvent) => void

@@ -20,6 +20,28 @@ function message(id: string, overrides: Partial<ChatMessageData> = {}): ChatMess
 afterEach(() => vi.restoreAllMocks())
 
 describe('Svelte chat composer', () => {
+  it('keeps model controls separate from submission and retains the host payload', async () => {
+    const onSubmit = vi.fn()
+    const chooseModel = vi.fn()
+    const controls = createRawSnippet(() => ({
+      render: () => '<button type="button">Choose model</button>',
+      setup: (node) => { node.addEventListener('click', chooseModel); return () => node.removeEventListener('click', chooseModel) },
+    }))
+    const view = render(ChatComposer, {
+      value: 'Keep my draft', appearance: 'agent', controls,
+      onValueChange: vi.fn(), onSubmit, metadata: { conversationId: 'existing-thread' },
+    })
+    await fireEvent.click(screen.getByRole('button', { name: 'Choose model' }))
+    expect(chooseModel).toHaveBeenCalledOnce()
+    expect(onSubmit).not.toHaveBeenCalled()
+    expect(screen.getByRole('textbox')).toHaveValue('Keep my draft')
+    expect(view.container.querySelector('[data-appearance="agent"]')).not.toBeNull()
+    await fireEvent.keyDown(screen.getByRole('textbox'), { key: 'Enter', shiftKey: true })
+    expect(onSubmit).not.toHaveBeenCalled()
+    await fireEvent.keyDown(screen.getByRole('textbox'), { key: 'Enter' })
+    expect(onSubmit).toHaveBeenCalledWith({ text: 'Keep my draft', attachments: [], metadata: { conversationId: 'existing-thread' } })
+  })
+
   it('submits a trimmed host payload on Enter, but not during IME composition', async () => {
     const onSubmit = vi.fn()
     const onValueChange = vi.fn()

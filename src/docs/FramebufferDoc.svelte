@@ -59,7 +59,12 @@
   canvasProps={{ 'aria-label': 'Game frame' }} />`
 </script>
 
-<DocPage title="Framebuffer" description="Account-bound game frames rendered by the shared TypeScript stream. This live preview discovers active workspace sessions when a local game runtime is available." importPath="@nebula/tint/framebuffer" {usage} {api} accessibility="Session tabs support arrow keys, Home, and End. The canvas has an accessible name and connection state is announced through a status region. Frame validation rejects the wrong account, mismatched session, and malformed pixel buffers.">
+<DocPage title="Framebuffer" description="Account-bound game frames rendered by the shared TypeScript stream. This live preview discovers active workspace sessions when a local workspace runtime is available." importPath="@nebula/tint/framebuffer" {usage} {api} accessibility="Session tabs support arrow keys, Home, and End. The canvas has an accessible name and connection state is announced through a status region. Frame validation rejects the wrong account, mismatched session, and malformed pixel buffers.">
+  <p>The renderer keeps a hardware Core WebGPU adapter when available. When Core
+    offers only software or is unavailable, it also requests the Compatibility
+    feature level, which can expose hardware through GLES on Linux. WebGL2 remains
+    the fallback. Browser GPU settings still need visible-output verification;
+    completed GPU commands alone do not establish successful presentation.</p>
   <div class="frame-workspace"><WorkspaceLayout theme="pokeforce">
     {#snippet toolbar()}
       <div class="session-tabs" role="tablist" aria-label="Game clients">

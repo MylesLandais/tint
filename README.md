@@ -34,6 +34,12 @@ Tint publishes TypeScript and Svelte source. Use Svelte 5, a bundler configured 
 
 Use Tint's public components in applications. Carbon Components Svelte is an internal Tint implementation dependency and is not part of Tint's public API.
 
+The [Framebuffer preview](src/docs/FramebufferDoc.svelte) documents account-bound
+native video. Its renderer prefers hardware WebGPU, including a Compatibility
+adapter when Core provides only software, and falls back to WebGL2 when WebGPU
+is unavailable. A backend label does not verify visible presentation; qualify
+the actual browser/GPU configuration with source frames and rendered output.
+
 For toolbar imports, use `UploadDropzone` from `@nebula/tint/media-assets` with
 `compact`, a `label`, and `maxFiles={1}`. It composes Tint's native button with
 the existing file classifier and returns original `File` objects. Repeated
@@ -173,6 +179,17 @@ Tint does not execute regex rules or save profiles. See the
 The Workspace gateway consumes Tint as a pinned git submodule at `third_party/tint`; published consumers move by package version. Make library changes in this checkout, land them on `dev`, then advance the gateway's submodule pin and run its `npm run check`. The consumer contract test here checks package entry points under a host TypeScript program before a pin or release moves.
 
 To publish, update `version` in `package.json` on `dev`, commit, and push a matching `v<version>` tag to Forgejo. The [release workflow](.forgejo/workflows/release.yml) runs checks and publishes with `FORGEJO_NPM_TOKEN`. `publishConfig` fixes the target registry to Forgejo. More repository history and mirror details are in [docs/git-history.md](docs/git-history.md).
+
+### Agent chat composers
+
+`ChatComposer` accepts `appearance="agent"` for a multiline draft card and an
+optional `controls` snippet beside its attachment/action controls. Hosts can put
+their model selector there while retaining the same controlled `value`,
+attachments, metadata and submit callback. Controls should use `type="button"`
+so selecting a model does not submit or replace the draft. The host disables
+model changes while a submission is in flight and owns tool permissions.
+The standard appearance remains the default. Enter, Shift+Enter and IME behavior
+use the existing composer input contract in both appearances.
 
 `WorkspaceTabs` accepts a shared `content: Snippet<[WorkspaceTab]>` renderer for
 session lists built from data. A tab's own `content` snippet takes precedence.
