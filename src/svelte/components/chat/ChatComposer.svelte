@@ -10,7 +10,7 @@
     placeholder = 'Write a message…', inputLabel = placeholder,
     submitLabel = 'Send message', submitDisabled = false, submitDisabledReason,
     stopLabel = 'Stop response', maxLength,
-    submitOnEnter = true, accept, multiple = true, metadata, actions, inputRef,
+    submitOnEnter = true, accept, multiple = true, metadata, appearance = 'standard', controls, actions, inputRef,
     onInputKeydown, inputListboxId, inputActiveOptionId,
     onValueChange, onSubmit, onStop, onAttachmentAdd, onAttachmentRemove,
     class: className, className: legacyClassName, ...rest
@@ -64,7 +64,7 @@
   }
 </script>
 
-<form {...rest} data-chat-composer="" data-state={composerState} onsubmit={submit}
+<form {...rest} data-chat-composer="" data-state={composerState} data-appearance={appearance} onsubmit={submit}
   ondragover={(event) => { if (onAttachmentAdd) { event.preventDefault(); dragging = true } }}
   ondragleave={leave} ondrop={drop}
   class={['relative border-t border-tint-border bg-tint-panel/95 px-3 py-3 backdrop-blur sm:px-5 sm:py-4', className, legacyClassName]}>
@@ -85,7 +85,7 @@
         {/each}
       </div>
     {/if}
-    <div class="px-2 pt-1">
+    <div data-chat-composer-input="" class="px-2 pt-1">
       <ChatComposerInput {value} {onValueChange} {onInputKeydown} submitOnEnter={submitOnEnter && !readonly} inputRef={(node) => { textarea = node; inputRef?.(node) }}
         role={inputListboxId ? 'combobox' : undefined} aria-autocomplete={inputListboxId ? 'list' : undefined}
         aria-expanded={inputListboxId ? true : undefined} aria-controls={inputListboxId} aria-activedescendant={inputActiveOptionId}
@@ -93,6 +93,7 @@
     </div>
     <div data-chat-composer-footer="" class="mt-1 flex items-center justify-between gap-3">
       <div class="flex min-w-0 flex-1 items-center gap-1">
+        {#if controls}<div data-chat-composer-controls="">{@render controls()}</div>{/if}
         {#if onAttachmentAdd}
           <input use:registerFileInput type="file" {accept} {multiple} onchange={attachFromPicker} class="sr-only" tabindex="-1" />
           <ChatActionButton label="Attach files" onclick={() => fileInput?.click()} disabled={readonly || streaming} class="text-tint-muted hover:bg-tint-surface hover:text-tint-ink"><Paperclip size={18} /></ChatActionButton>
@@ -109,3 +110,15 @@
   </div>
   {#if error}<p id={errorId} role="alert" class="mx-auto mt-2 max-w-[var(--tint-chat-measure,48rem)] px-2 text-xs text-tint-danger-ink">{error}</p>{/if}
 </form>
+
+<style>
+  [data-chat-composer-controls] { display: flex; min-width: 0; align-items: center; gap: .35rem; }
+  [data-appearance='agent'] > div:first-child { border-radius: 1rem; padding: .75rem; background: var(--tint-panel); }
+  [data-appearance='agent'] [data-chat-composer-input] { padding: .25rem .35rem .75rem; }
+  [data-appearance='agent'] :global(textarea) { min-height: 5rem; font-size: .9375rem; line-height: 1.65; }
+  [data-appearance='agent'] [data-chat-composer-footer] { border-top: 1px solid var(--tint-border); padding-top: .65rem; gap: .5rem; }
+  @media (max-width: 600px) {
+    [data-chat-composer-controls] { max-width: 55%; }
+    [data-appearance='agent'] [data-chat-composer-footer] > div { flex-wrap: wrap; }
+  }
+</style>
