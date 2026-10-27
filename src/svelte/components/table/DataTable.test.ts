@@ -67,7 +67,7 @@ describe('Svelte DataTable', () => {
 
   it('uses the measured table container width for progressive column hiding', async () => {
     vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(700)
-    render(ArtistTable, { rows, columns, rowId: 'id', workbenchResponsive: true })
+    render(ArtistTable, { rows, columns, rowId: 'id', workspaceResponsive: true })
     await waitFor(() => expect(screen.queryByRole('columnheader', { name: 'Genre' })).toBeNull())
     expect(screen.queryByRole('columnheader', { name: 'BPM' })).toBeNull()
     expect(screen.queryByRole('columnheader', { name: 'State' })).toBeNull()

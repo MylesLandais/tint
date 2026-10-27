@@ -25,7 +25,7 @@
     { prop: 'GroupEditor.value / onValueChange', type: 'GroupFields / (value) => void', description: 'Host-owned group settings and ordered members.' },
     { prop: 'GroupEditor.characters / strategies / promptModes', type: 'readonly option[]', description: 'Current catalogs; unknown saved values remain selectable.' },
     { prop: 'PersonaEditor.value / onValueChange', type: 'PersonaFields / (value) => void', description: 'Host-owned persona and prompt placement.' },
-    { prop: 'RegexRulesEditor.value / onValueChange', type: 'readonly RegexRuleDocument[] / (value) => void', description: 'Ordered rules; preserves fields the editor does not understand.' },
+    { prop: 'RegexRulesEditor.value / onValueChange', type: 'readonly RegexRuleDocument[] / (value) => void', description: 'Ordered rules; preserves unknown fields, placements and saved macro modes. Cleared optional depths emit null; numeric zero remains zero.' },
     { prop: 'ImportReview.rows / onImport', type: 'readonly ImportReviewRow[] / () => void', description: 'Review preserved files and emit import intent; the host performs persistence.' },
     { prop: 'disabled', type: 'boolean', description: 'Locks editor actions and inputs.' },
   ]
@@ -38,7 +38,7 @@
 <ImportReview {rows} onImport={() => saveImport()} />`
 </script>
 
-<DocPage title="Roleplay Forms" description="Controlled group, persona, regex, and import review editors for roleplay data." importPath="@nebula/tint/form" {usage} {api} accessibility="Every editable field has an associated label. Ordered group members and regex rules expose named move and remove buttons. Disabled editors lock actions and inputs. ImportReview reports busy, error, and completion states semantically. The host owns values, rule execution, and import persistence.">
+<DocPage title="Roleplay Forms" description="Controlled group, persona, regex, and import review editors composed from Tint buttons and fields. Values, rule execution and persistence stay with the host." importPath="@nebula/tint/form" {usage} {api} accessibility="Every editable field has an associated label. Ordered group members and regex rules expose named move and remove buttons. Disabled editors lock actions and inputs. ImportReview reports busy, error, and completion states semantically. The host owns values, rule execution, and import persistence.">
   <div class="roleplay-doc">
     <section aria-label="Group editor example">
       <h3>Group</h3>

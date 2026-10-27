@@ -16,6 +16,7 @@
   ]
   let tab = $state('overview')
   let splitSize = $state(230)
+  let resizing = $state(false)
   let paletteOpen = $state(false)
   let query = $state('')
   let action = $state('none')
@@ -24,8 +25,10 @@
     { prop: 'NavRail / ResponsiveNavRail / TopNav', type: 'groups / activeId / callbacks', description: 'Host-supplied navigation with compact and drawer presentations.' },
     { prop: 'NavRail context', type: 'Snippet', description: 'A contextual view, such as a page thread list, shown in place of the groups while the rail is expanded; also rendered in the ResponsiveNavRail drawer. The host supplies its own way back.' },
     { prop: 'WorkspaceHeader', type: 'title / subtitle / breadcrumbs / actions', description: 'Workspace heading and action slot.' },
-    { prop: 'WorkspaceTabs', type: 'tabs / value / onChange / label', description: 'Controlled tab navigation with arrow, Home, and End keys.' },
-    { prop: 'WorkspaceSplit', type: 'size / onSizeChange / first / second', description: 'Host-owned pane size with keyboard and pointer resizing.' },
+    { prop: 'WorkspaceTabs', type: 'tabs / value / onChange / label', description: 'Controlled tab navigation with arrow, Home, and End keys. Optional actions snippet renders adjacent controls outside the tablist; size="sm" fits compact toolbars.' },
+    { prop: 'ResizeHandle', type: 'size / onSizeChange / onResizingChange? / minSize / maxSize / label', description: 'The controlled separator used by WorkspaceSplit. direction/primary select axis/side; step/shiftStep customize keyboard increments. Optional onResizingChange reports pointer capture start/end, including cancellation, disable, axis change and destruction; keyboard intent only emits onSizeChange. Persistence stays with the host.' },
+    { prop: 'WorkspaceSplit', type: 'size / onSizeChange / onResizingChange? / first / second', description: 'Host-owned pane size with keyboard and pointer resizing.' },
+    { prop: 'CommandMenu', type: 'id / items / query / activeId / onSelect / onActiveChange?', description: 'Shared controlled listbox used by CommandPalette and the editor slash adapter. Pointer motion updates active selection; scroll/layout boundary entry does not replace keyboard selection. preserveInputFocus keeps pointer selection in a host input; grouped=false retains source order. icon accepts a decorative snippet or false. emptyText accepts text or a snippet. Hosts own filtering policy, key handling and dismissal; commandOptionId builds matching IDREFs and nextCommandIndex skips disabled commands.' },
     { prop: 'CommandPalette', type: 'open / query / items / onSelect', description: 'Controlled searchable command dialog.' },
     { prop: 'StatusBar', type: 'items / connection', description: 'Readable application state and connection copy.' },
   ]
@@ -57,9 +60,10 @@ let inspectorWidth = $state(240)
   <div class="shell-demo">
     <WorkspaceHeader title="Collection" subtitle="12 tracks" breadcrumbs={[{ label: 'Library', href: '#/components/table' }, { label: 'Collection' }]} />
     <WorkspaceTabs {tabs} value={tab} onChange={(next) => tab = next} label="Collection views" />
-    <WorkspaceSplit size={splitSize} minSize={140} maxSize={350} onSizeChange={(next) => splitSize = next} label="Resize inspector" {first} {second} />
+    <WorkspaceSplit size={splitSize} minSize={140} maxSize={350} onSizeChange={(next) => splitSize = next} onResizingChange={(active) => resizing = active} label="Resize inspector" {first} {second} />
     <StatusBar items={[{ id: 'saved', label: 'Saved', tone: 'success' }]} connection={{ state: 'connected', label: 'Connected' }} />
   </div>
+  <p data-resize-demo-state>Split interaction: {resizing ? 'dragging' : 'idle'}</p>
   <div class="command-demo">
     <button type="button" onclick={() => paletteOpen = true}>Open command palette</button>
     <span aria-live="polite">Selected command: {action}</span>

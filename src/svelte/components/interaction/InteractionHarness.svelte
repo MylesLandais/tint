@@ -1,20 +1,38 @@
 <script lang="ts">
+  import Button from '../button/Button.svelte'
   import Menu from '../menu/Menu.svelte'
   import Popover from '../popover/Popover.svelte'
   import Dialog from '../dialog/Dialog.svelte'
 
   let {
-    kind, open, onOpenChange, onSelect, placement = 'center',
+    kind, open, onOpenChange, onSelect, placement = 'center', busy = false, replacement = false,
   }: {
-    kind: 'menu' | 'popover' | 'dialog'
+    kind: 'menu' | 'popover' | 'dialog' | 'async-dialog' | 'replacement-dialog' | 'nested-dialog'
     open: boolean
     onOpenChange: (open: boolean) => void
     onSelect?: () => void
     placement?: 'center' | 'right'
+    busy?: boolean
+    replacement?: boolean
   } = $props()
 </script>
 
-{#if kind === 'menu'}
+{#if kind === 'nested-dialog'}
+  <Button onclick={() => onOpenChange(true)}>Open parent dialog</Button>
+  <Dialog {open} {onOpenChange} title="Parent dialog"><Button>Open child dialog</Button></Dialog>
+  <Dialog open={replacement} {onOpenChange} title="Child dialog"><Button>Finish child dialog</Button></Dialog>
+{:else if kind === 'replacement-dialog'}
+  <Button onclick={() => onOpenChange(true)}>Open first dialog</Button>
+  <Dialog open={open && !replacement} {onOpenChange} title="First dialog">
+    <Button>Replace dialog</Button>
+  </Dialog>
+  {#if open && replacement}<Dialog open={true} {onOpenChange} title="Replacement dialog"><Button>Finish replacement</Button></Dialog>{/if}
+{:else if kind === 'async-dialog'}
+  <Button disabled={busy} onclick={() => onOpenChange(true)}>Open pending dialog</Button>
+  <Dialog {open} {onOpenChange} title="Pending operation">
+    <p>Host-owned pending operation.</p>
+  </Dialog>
+{:else if kind === 'menu'}
   <Menu {open} {onOpenChange} label="Actions menu" items={[
     { id: 'archive', label: 'Archive', onSelect },
     { id: 'separator', type: 'separator' },

@@ -17,8 +17,9 @@
     { prop: 'MediaLightbox.open / index', type: 'boolean / number', description: 'Controlled preview visibility and selected image.' },
     { prop: 'MediaLightbox.onClose / onIndexChange', type: '() => void / (index) => void', description: 'Dismiss and adjacent-image intent.' },
     { prop: 'UploadDropzone.accept / maxSizeBytes / maxFiles', type: 'string[] / number / number', description: 'File validation constraints before host processing.' },
+    { prop: 'UploadDropzone.compact', type: 'boolean', description: 'Defaults to false. Compose a native Tint button for toolbar file intake, retaining the same validation, drop handling and original File callbacks.' },
     { prop: 'UploadDropzone.disabled / label / description', type: 'boolean / string / string', description: 'Disabled intake state and visible text for the keyboard-operable dropzone.' },
-    { prop: 'onFilesAccepted / onFilesRejected', type: '(files) => void / (rejections) => void', description: 'Host receives accepted files and reasons for rejects.' },
+    { prop: 'onFilesAccepted / onFilesRejected', type: '(files) => void / (rejections) => void', description: 'Host receives original accepted Files and reasons for rejects. Each choice resets the input, including rejected or cancelled choices. Disabled intake ignores late chooser results. Parsing and persistence remain with the host.' },
     { prop: 'UploadQueue.tasks', type: 'readonly UploadTask[]', description: 'Host-owned queue progress with retry and cancel intent callbacks.' },
     { prop: 'UploadQueue.onCancel / onRetry', type: '(taskId: string) => void', description: 'Optional host commands; cancel appears for queued or uploading tasks and retry for failed tasks.' },
     { prop: 'UploadQueue.emptyLabel', type: 'string', description: 'Text shown when there are no upload tasks.' },
@@ -33,7 +34,9 @@ let index = $state(0)
 <MediaLightbox {assets} {index} {open}
   onClose={() => open = false} onIndexChange={(next) => index = next} />
 <UploadDropzone accept={['image/*']} maxFiles={4}
-  onFilesAccepted={(files) => enqueueUploads(files)} />`
+  onFilesAccepted={(files) => enqueueUploads(files)} />
+<UploadDropzone compact label="Import document" accept={['.json']} maxFiles={1}
+  onFilesAccepted={(files) => importDocument(files[0])} />`
 
   function accepted(files: readonly File[]) { uploadMessage = `Accepted ${files.map((file) => file.name).join(', ')}` }
   function rejected(rejections: readonly FileRejection[]) { uploadMessage = rejections.map((item) => item.message).join(' ') }
@@ -44,6 +47,7 @@ let index = $state(0)
     <GalleryGrid {assets} onSelect={(next) => { index = next; open = true }} />
     <MediaLightbox {assets} {index} {open} onClose={() => open = false} onIndexChange={(next) => index = next} />
     <UploadDropzone accept={['image/*']} maxSizeBytes={2_000_000} maxFiles={4} onFilesAccepted={accepted} onFilesRejected={rejected} />
+    <div><UploadDropzone compact label="Import document" accept={['.json']} maxFiles={1} onFilesAccepted={accepted} onFilesRejected={rejected} /></div>
     <p role="status">{uploadMessage}</p>
     <UploadQueue tasks={[]} emptyLabel="No demo uploads are queued." />
   </div>

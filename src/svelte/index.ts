@@ -26,7 +26,7 @@ export type { DiceKind } from './components/dice'
 export {
   DataTable, TableToolbar, TablePager, TableColumnsMenu,
   DataFilterControls, InfiniteRows, DataMasonry, WorkspaceGrid,
-  MediaWorkspace, EventReviewControls, CollectionWorkbench,
+  MediaWorkspace, EventReviewControls, CollectionWorkspace,
 } from './components/table'
 export type { DataTableProps, TableColumn, TableEditConfig, TableEditAdapter,
   WorkspaceDocument, WorkspaceCommand, WorkspaceItem, WorkspaceCollisionMode, MediaRelease,
@@ -62,7 +62,7 @@ export type {
 } from './components/auth'
 export { CharacterCardEditorForm, CharacterDocumentEditor, CharacterLibrary } from './components/character-card'
 export type { CharacterCardFormValues, CharacterDocument, CharacterLibraryItem } from './components/character-card'
-export { HighlightedCode, CodeTabs } from './components/code'
+export { HighlightedCode, CodeTabs, JsonView } from './components/code'
 export type { CodeTab } from './components/code'
 export * from './components/chat'
 export { CalendarMonthView, CalendarToolbar } from './components/calendar'
@@ -89,8 +89,8 @@ export type {
   TerminalConsoleProps, TerminalOutput, TerminalSession,
   TerminalSize, TerminalStatus, TintTerminalOptions,
 } from './components/terminal'
-export { CodeEditor } from './components/code-editor'
-export type { CodeEditorProps } from './components/code-editor'
+export { CodeEditor, setCodeEditorValue, revealCodeEditorLine } from './components/code-editor'
+export type { CodeEditorProps, CodeEditorView } from './components/code-editor'
 export { Editor, CodeTabsExtension, editorDocumentToHTML, editorHTMLToDocument, defaultSlashCommands, DEFAULT_EDITOR_CODE_TABS, codeTabsContent } from './components/editor'
 export type { EditorProps, EditorDocument, EditorSerializationOptions, EditorCommandContext, EditorSlashCommand, EditorCodeTab } from './components/editor'
 export { ThemePicker, ThemeToggle, themeNameStore, colorSchemeStore, DEFAULT_THEME, THEME_STORAGE_KEY, COLOR_SCHEME_STORAGE_KEY } from './components/theme'
@@ -153,7 +153,7 @@ export * from './components/audio-workspace'
 export {
   AppShell, NavRail, ResponsiveNavRail, TopNav, WorkspaceHeader,
   CommandPalette, CommandMenu, StatusBar, ErrorBanner, EmptyState as ShellEmptyState,
-  LoadingState, WorkspaceLayout, WorkspaceSplit, WorkspaceTabs,
+  LoadingState, WorkspaceLayout, WorkspaceSplit, WorkspaceTabs, ResizeHandle,
   MetadataPanel, DetailSheet, FilterBar,
 } from './components/shell'
 export type {

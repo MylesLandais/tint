@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { untrack } from 'svelte'
+  import { onDestroy, untrack } from 'svelte'
   import { Copy, Reply, RotateCcw, Volume2 } from '@lucide/svelte'
   import { chatMessageText, chatTimestamp, replySnippet, stripBidi, type ChatCustomPart } from '../../../core/chat'
+  import { createChatClipboard, type ChatCopyState } from '../../../core/chat/clipboard'
   import Avatar from '../identity/Avatar.svelte'
   import ChatPart from './ChatPart.svelte'
   import type { ChatMessageProps } from './types'
@@ -12,11 +13,19 @@
     onRenderError, class: className, className: legacyClassName, ...rest
   }: ChatMessageProps<ChatCustomPart> = $props()
   let root: HTMLElement | null = null
-  let copied = $state(false)
+  let copyState = $state<ChatCopyState>('idle')
   let hasSpoken = $state(false)
   let actorName = $derived(stripBidi(message.actor.name))
   let timestamp = $derived(chatTimestamp(message.createdAt))
   let copyText = $derived(chatMessageText(message))
+  let copyIdentity = $derived(message.id)
+  const clipboard = createChatClipboard(
+    () => ({ identity: copyIdentity, text: copyText }),
+    (text) => navigator.clipboard.writeText(text),
+    (state) => { copyState = state },
+  )
+  $effect(() => { void copyText; void copyIdentity; clipboard.invalidate() })
+  onDestroy(clipboard.dispose)
   let busy = $derived(message.status === 'sending' || message.status === 'streaming')
   let isSpeaking = $derived(speakingMessageId === message.id)
   let hasAudio = $derived(message.parts.some((part) => part.type === 'audio'))
@@ -32,10 +41,9 @@
   }
 
   function emit(action: 'copy' | 'retry' | 'reply' | 'speak') { onAction?.({ messageId: message.id, action }) }
-  async function copy() {
-    try { await navigator.clipboard.writeText(copyText); copied = true }
-    catch { copied = false }
-    emit('copy')
+  function copy() {
+    const id = message.id, acknowledge = onAction
+    void clipboard.copy(() => acknowledge?.({ messageId: id, action: 'copy' }))
   }
   function speak() {
     hasSpoken = true
@@ -45,7 +53,7 @@
     emit('speak')
   }
   const initialId = untrack(() => message.id)
-  $effect(() => { if (message.id !== initialId) { copied = false; hasSpoken = false } })
+  $effect(() => { if (message.id !== initialId) { hasSpoken = false } })
 </script>
 
 <article use:register {...rest} aria-label={`${actorName}, ${timestamp.label || 'message'}`} aria-busy={busy || undefined}
@@ -83,7 +91,8 @@
       {#if message.status === 'stopped'}<span class="text-xs text-tint-muted">Stopped</span>{/if}
       <div data-chat-message-actions="" class="flex items-center gap-1">
         {#if canSpeak}<button type="button" onclick={speak} aria-pressed={isSpeaking || undefined} aria-label={showReplay ? `Replay ${actorName}` : `Play ${actorName}`} class="inline-flex items-center gap-1 rounded-md px-2 py-1.5 text-xs font-medium text-tint-muted hover:bg-tint-surface"><Volume2 size={14} />{showReplay ? 'Replay' : 'Play'}</button>{/if}
-        <button type="button" onclick={() => void copy()} aria-label={copied ? 'Message copied' : 'Copy message'} class="inline-flex items-center gap-1 rounded-md p-1.5 text-xs text-tint-muted hover:bg-tint-surface"><Copy size={14} /></button>
+        <span role={copyState === 'failed' ? 'status' : undefined} class="text-xs text-tint-muted">{copyState === 'failed' ? 'Copy failed. Try again.' : ''}</span>
+        <button type="button" onclick={() => void copy()} disabled={copyState === 'pending'} aria-label={copyState === 'copied' ? 'Message copied' : 'Copy message'} class="inline-flex items-center gap-1 rounded-md p-1.5 text-xs text-tint-muted hover:bg-tint-surface"><Copy size={14} /></button>
         <button type="button" onclick={() => emit('reply')} class="inline-flex items-center gap-1 rounded-md px-2 py-1.5 text-xs font-medium text-tint-muted hover:bg-tint-surface"><Reply size={14} />Reply</button>
         {#if canRetry && !hasInlineRetry}<button type="button" onclick={() => emit('retry')} class="inline-flex items-center gap-1 rounded-md px-2 py-1.5 text-xs font-medium text-tint-muted hover:bg-tint-surface"><RotateCcw size={14} />Retry</button>{/if}
       </div>

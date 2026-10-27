@@ -87,12 +87,23 @@ describe('roleplay Svelte forms', () => {
     await fireEvent.click(screen.getByRole('checkbox', { name: 'User input' }))
     expect(onValueChange.mock.lastCall![0][0].placement).toEqual([99])
     await fireEvent.click(screen.getByText('Advanced options'))
-    await fireEvent.change(screen.getByRole('spinbutton', { name: 'Minimum depth' }), { target: { value: '' } })
+    await fireEvent.input(screen.getByRole('spinbutton', { name: 'Minimum depth' }), { target: { value: '' } })
     expect(onValueChange.mock.lastCall![0][0]).toMatchObject({ minDepth: null, extra: { source: 'host' } })
     await view.rerender({ ...props, value: [{ ...value[0], findRegex: 'better' }] })
     expect(screen.getByRole('textbox', { name: 'Find expression' })).toHaveValue('better')
     await fireEvent.click(screen.getByRole('button', { name: 'Add regex rule' }))
     expect(onValueChange.mock.lastCall![0]).toHaveLength(2)
+  })
+
+  it('retains an unknown saved macro mode while editing unrelated regex fields', async () => {
+    const onValueChange = vi.fn()
+    const rule = { scriptName: 'Imported', findRegex: 'x', placement: [91], substituteRegex: 77, minDepth: 0, maxDepth: null, extension: { keep: true } }
+    const props = { value: [rule], onValueChange, placements: [{ value: 1, label: 'User input' }] }
+    render(RegexRulesEditor, props)
+    await fireEvent.click(screen.getByText('Advanced options'))
+    expect(screen.getByRole('combobox', { name: 'Find macros' })).toHaveValue('77')
+    await fireEvent.input(screen.getByRole('textbox', { name: 'Rule name' }), { target: { value: 'Renamed' } })
+    expect(onValueChange.mock.lastCall![0][0]).toEqual({ ...rule, scriptName: 'Renamed' })
   })
 
   it('reorders regex rules without changing the original documents and locks them while saving', async () => {

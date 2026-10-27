@@ -7,7 +7,7 @@
   import type { TreeNode, TreeViewProps } from './types'
 
   let {
-    nodes, expandedIds, onExpandedChange, selectedIds, onSelectedChange,
+    nodes, expandedIds, onExpandedChange, selectedIds, onSelectedChange, selectionMode = 'multiple',
     class: className, 'aria-label': ariaLabel, 'aria-labelledby': ariaLabelledby, ...rest
   }: TreeViewProps = $props()
   let root = $state<HTMLUListElement>()
@@ -74,7 +74,7 @@
 
   function toggleSelect(id: string) {
     if (!onSelectedChange) return
-    onSelectedChange(toggleTreeId(selectedIds ?? [], id))
+    onSelectedChange(selectionMode === 'single' ? [id] : toggleTreeId(selectedIds ?? [], id))
   }
 
   function onTreeItemKeydown(event: KeyboardEvent, id: string) {
@@ -121,6 +121,7 @@
   data-tree-view=""
   aria-label={ariaLabelledby ? ariaLabel : ariaLabel ?? 'Tree'}
   aria-labelledby={ariaLabelledby}
+  aria-multiselectable={selectable ? selectionMode === 'multiple' : undefined}
   class={['tint-tree', className].filter(Boolean).join(' ')}
 >
   {#snippet branch(node: TreeNode, depth: number)}
@@ -135,9 +136,13 @@
       aria-level={depth + 1}
       aria-expanded={hasChildren ? isExpanded : undefined}
       aria-selected={isSelected}
-      aria-checked={selectable ? isSelected : undefined}
+      aria-checked={selectable && selectionMode === 'multiple' ? isSelected : undefined}
       aria-label={nodeLabel(node) || undefined}
       tabindex={activeId === node.id ? 0 : -1}
+      onclick={(event) => {
+        if (selectionMode === 'single' && event.target instanceof Element &&
+            event.target.closest('[role="treeitem"]') === event.currentTarget && !event.target.closest('button,input,a')) toggleSelect(node.id)
+      }}
       onfocus={() => { activeId = node.id }}
       onkeydown={(event) => onTreeItemKeydown(event, node.id)}
     >
@@ -153,7 +158,7 @@
         {:else}
           <span class="tint-tree-spacer" aria-hidden="true"></span>
         {/if}
-        {#if selectable}
+        {#if selectable && selectionMode === 'multiple'}
           <input
             type="checkbox"
             checked={isSelected}
@@ -183,6 +188,7 @@
 <style>
   .tint-tree, .tint-tree-group { margin: 0; list-style: none; padding: 0; }
   .tint-tree-row { display: flex; min-height: 2rem; align-items: center; gap: var(--tint-space-1); border-radius: var(--tint-radius-sm); padding-right: var(--tint-space-1); color: var(--tint-ink); font-size: var(--tint-font-size-sm); }
+  [role='treeitem'][aria-selected='true'] > .tint-tree-row { background: var(--tint-accent-soft); color: var(--tint-accent); }
   [role='treeitem']:is(:focus-visible, :hover) > .tint-tree-row { background: var(--tint-accent-soft); }
   [role='treeitem']:focus-visible { outline: var(--tint-focus-width) solid var(--tint-focus); outline-offset: var(--tint-focus-offset); }
   .tint-tree-toggle { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 1.25rem; height: 1.25rem; border: 0; border-radius: var(--tint-radius-sm); padding: 0; background: transparent; color: var(--tint-muted); cursor: pointer; }

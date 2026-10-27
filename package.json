@@ -20,7 +20,8 @@
     "check:svelte": "svelte-check --tsconfig ./tsconfig.svelte.json",
     "check:migration": "node scripts/check-react-migration.mjs",
     "migration:refresh": "node scripts/check-react-migration.mjs --refresh",
-    "check": "npm run check:migration && tsc -b && npm run check:svelte && npm run lint && npm test",
+    "check:names": "node scripts/check-workspace-names.mjs",
+    "check": "npm run check:names && npm run check:migration && tsc -b && npm run check:svelte && npm run lint && npm test",
     "test": "vitest run",
     "test:e2e": "playwright test",
     "preview": "vite preview"
@@ -108,6 +109,7 @@
     "@codemirror/legacy-modes": "^6.5.4",
     "@codemirror/state": "^6.7.4",
     "@codemirror/view": "^6.43.11",
+    "@lezer/highlight": "1.2.3",
     "@lucide/svelte": "^1.49.0",
     "@tanstack/svelte-virtual": "^3.13.39",
     "@tiptap/core": "^3.29.2",

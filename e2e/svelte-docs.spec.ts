@@ -115,6 +115,7 @@ test('Svelte interaction docs exercise controlled menu, tabs, dialog, and contex
   await expect(page.getByRole('dialog', { name: 'Create view' })).toBeVisible()
   await page.keyboard.press('Escape')
   await expect(page.getByRole('dialog', { name: 'Create view' })).not.toBeVisible()
+  await expect(page.getByRole('button', { name: 'Open dialog' })).toBeFocused()
 
   await page.goto('/#/components/context-menu')
   await page.getByRole('button', { name: 'Open actions with keyboard or touch' }).click()
@@ -231,11 +232,11 @@ test('Table docs keep sorting, selection, and inspector state controlled', async
   await table.getByRole('checkbox', { name: 'Select Night Drive' }).check()
   await expect(page.getByText('Selected IDs: a')).toBeVisible()
 
-  const workbench = page.locator('[data-collection-workbench]')
-  await expect(workbench.getByRole('table', { name: 'Track collection' })).toBeVisible()
-  await workbench.getByRole('button', { name: 'Open Night Drive' }).click()
-  await workbench.getByRole('tab', { name: 'History' }).click()
-  await expect(workbench.getByRole('tabpanel', { name: 'History' })).toContainText('Change history for Night Drive.')
+  const workspace = page.locator('[data-collection-workspace]')
+  await expect(workspace.getByRole('table', { name: 'Track collection' })).toBeVisible()
+  await workspace.getByRole('button', { name: 'Open Night Drive' }).click()
+  await workspace.getByRole('tab', { name: 'History' }).click()
+  await expect(workspace.getByRole('tabpanel', { name: 'History' })).toContainText('Change history for Night Drive.')
 })
 
 test('Auth docs exercise the pure client through Svelte forms', async ({ page }) => {
@@ -322,7 +323,7 @@ test('Code docs preserve text and navigate tabs by keyboard', async ({ page }) =
   await expect(tabs.getByRole('tab', { name: 'Python' })).toHaveAttribute('aria-selected', 'true')
   await expect(page.getByRole('tabpanel')).toContainText('print(greeting)')
   await expect(page.getByText('Active language: python')).toBeVisible()
-  await expect(page.locator('.code-demo > div pre code')).toContainText('<div class="x">{a && b}</div>')
+  await expect(page.locator('.code-demo > div').filter({ has: page.getByRole('heading', { name: 'Untrusted source remains text', exact: true }) }).locator('pre code')).toContainText('<div class="x">{a && b}</div>')
 })
 
 test('Calendar docs keep month, day, and event intent host controlled', async ({ page }) => {
@@ -353,6 +354,12 @@ test('Shell docs keep tabs, split size, and command selection controlled', async
   await page.goto('/#/components/shell')
   await page.getByRole('tab', { name: 'History' }).click()
   await expect(page.getByText('Recent activity')).toBeVisible()
+  const activeTab = page.getByRole('tab', { name: 'History' })
+  const activeStyle = await activeTab.evaluate(node => ({ border: getComputedStyle(node).borderBottomColor, color: getComputedStyle(node).color }))
+  const inactiveStyle = await page.getByRole('tab', { name: 'Overview', exact: true }).evaluate(node => ({ border: getComputedStyle(node).borderBottomColor, color: getComputedStyle(node).color }))
+  expect(activeStyle.border).not.toBe('rgba(0, 0, 0, 0)')
+  expect(activeStyle.color).not.toBe(inactiveStyle.color)
+  expect(inactiveStyle.border).toBe('rgba(0, 0, 0, 0)')
   const separator = page.getByRole('separator', { name: 'Resize inspector' })
   await separator.focus()
   await page.keyboard.press('ArrowRight')
@@ -398,7 +405,7 @@ test('Terminal docs preserve the host session through disconnect and reconnect',
 
 test('Code Editor docs mount the shared session and toggle read only', async ({ page }) => {
   await page.goto('/#/components/code-editor')
-  const editor = page.locator('[data-tint-code-editor] .cm-content')
+  const editor = page.getByRole('textbox', { name: 'Demo shared Lua source', exact: true })
   await expect(editor).toBeVisible()
   await expect(editor).toContainText('Hello, Tint')
   await page.getByRole('checkbox', { name: 'Read only' }).check()
@@ -453,6 +460,34 @@ test('Media Assets docs open the controlled lightbox and validate files', async 
   await expect(page.getByRole('status')).toContainText('not an accepted file type')
 })
 
+test('compact file intake uses native keyboard activation, validation and repeat selection', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', error => errors.push(error.message))
+  await page.goto('/#/components/media-assets')
+  const button = page.getByRole('button', { name: 'Import document', exact: true })
+  const status = page.getByRole('status')
+  for (const key of ['Enter', 'Space']) {
+    await button.focus()
+    const chooser = page.waitForEvent('filechooser')
+    await page.keyboard.press(key)
+    const picker = await chooser
+    expect(picker.isMultiple()).toBe(false)
+    await picker.setFiles({ name: 'card.json', mimeType: 'application/json', buffer: Buffer.from('{}') })
+    await expect(status).toHaveText('Accepted card.json')
+    await expect(page.locator('input[type="file"]').last()).toHaveValue('')
+  }
+  const chooser = page.waitForEvent('filechooser')
+  await button.click()
+  await (await chooser).setFiles({ name: 'card.txt', mimeType: 'text/plain', buffer: Buffer.from('{}') })
+  await expect(status).toContainText('not an accepted file type')
+  const beforeCancel = await status.textContent()
+  const cancelled = page.waitForEvent('filechooser')
+  await button.click()
+  await (await cancelled).setFiles([])
+  await expect(status).toHaveText(beforeCancel!)
+  expect(errors).toEqual([])
+})
+
 test('Chart docs keep point selection accessible through the data table', async ({ page }) => {
   await page.goto('/#/components/release-chart')
   await expect(page.getByRole('img', { name: 'Release scores compared with file size' })).toBeVisible()
@@ -470,7 +505,7 @@ test('Voice Input docs keep draft and availability controlled', async ({ page })
 })
 
 test('Framebuffer docs discover sessions and keep selection keyboard accessible', async ({ page }) => {
-  await page.route('**/api/workbench/list_sessions', async (route) => {
+  await page.route('**/api/workspace/list_sessions', async (route) => {
     await route.fulfill({ contentType: 'application/json', body: JSON.stringify({ sessions: [
       { account_id: 'alpha' }, { account_id: 'beta' },
     ] }) })
@@ -726,6 +761,8 @@ test('Roleplay form docs keep ordered edits and import intent with the host', as
   await expect(group.getByRole('status')).toHaveText('Group members: aria, bea')
   await group.getByRole('button', { name: 'Move Bea up' }).click()
   await expect(group.getByRole('status')).toHaveText('Group members: bea, aria')
+  await group.getByRole('checkbox', { name: 'Mute Bea', exact: true }).check()
+  await expect(group.getByRole('checkbox', { name: 'Mute Bea', exact: true })).toBeChecked()
   await group.getByRole('combobox', { name: 'Character prompts' }).selectOption('1')
   await expect(group.getByRole('textbox', { name: 'Joined prompt prefix' })).toHaveValue('Conversation:')
 
@@ -737,10 +774,52 @@ test('Roleplay form docs keep ordered edits and import intent with the host', as
   const regex = page.getByRole('region', { name: 'Regex editor example' })
   await regex.getByRole('button', { name: 'Add regex rule' }).click()
   await expect(regex.getByRole('status')).toHaveText('Rules: 2')
+  const firstRule = regex.getByRole('group', { name: 'Rule 1: Trim spaces', exact: true })
+  await firstRule.getByText('Advanced options', { exact: true }).click()
+  await firstRule.getByRole('spinbutton', { name: 'Minimum depth' }).fill('0')
+  await expect(firstRule.getByRole('spinbutton', { name: 'Minimum depth' })).toHaveValue('0')
+  await firstRule.getByRole('spinbutton', { name: 'Minimum depth' }).fill('')
+  await firstRule.getByRole('combobox', { name: 'Find macros' }).selectOption('2')
+  await expect(firstRule.getByRole('combobox', { name: 'Find macros' })).toHaveValue('2')
 
   const review = page.getByRole('region', { name: 'Import review example' })
   await expect(review.getByRole('table', { name: 'Import file coverage' })).toContainText('Chats')
   await review.getByRole('button', { name: 'Import 3 files' }).click()
   await expect(review.getByRole('status')).toHaveText('Import saved.')
   expect(errors).toEqual([])
+})
+
+test('native text bounds preserve search input limits in the public field', async ({ page }) => {
+  await page.goto('/#/components/form-fields')
+  const search = page.getByRole('searchbox', { name: 'Bounded search' })
+  await expect(search).toHaveAttribute('maxlength', '256')
+  await search.focus()
+  await page.keyboard.insertText('x'.repeat(300))
+  await expect(search).toHaveValue('x'.repeat(256))
+  await page.setViewportSize({ width: 390, height: 844 })
+  await expect(search).toBeInViewport()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
+})
+
+
+test('slider formatting preserves native keyboard values and accessible units', async ({ page }) => {
+  await page.goto('/#/components/form-fields')
+  const gain = page.getByRole('slider', { name: 'Gain' })
+  await expect(gain).toHaveValue('0.5')
+  await gain.focus()
+  await page.keyboard.press('ArrowRight')
+  await expect(gain).toHaveValue('0.55')
+  await expect(gain).toHaveAttribute('aria-valuetext', '0.55')
+  const slider = page.getByRole('slider', { name: 'Fit scale' })
+  await expect(slider).toHaveValue('1')
+  await expect(slider).toHaveAttribute('aria-valuetext', '100%')
+  await slider.focus()
+  await page.keyboard.press('ArrowRight')
+  await expect(slider).toHaveValue('1.05')
+  await expect(slider).toHaveAttribute('aria-valuetext', '105%')
+  await expect(page.locator('output[for="gallery-fit"]')).toHaveText('105%')
+  await page.setViewportSize({ width: 390, height: 844 })
+  await slider.scrollIntoViewIfNeeded()
+  await expect(slider).toBeInViewport()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })
