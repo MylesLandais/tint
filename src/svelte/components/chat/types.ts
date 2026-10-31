@@ -95,6 +95,8 @@ export type ChatMessageProps<TCustomPart extends ChatCustomPart = never> = Omit<
 export type ChatComposerProps = Omit<HTMLFormAttributes, 'children' | 'onsubmit'> & {
   value: string
   attachments?: readonly ChatAttachmentData[]
+  /** Image cards opt into an uncropped preview; other files retain compact chips. */
+  attachmentPresentation?: 'chips' | 'cards'
   state?: ChatComposerState
   error?: string
   placeholder?: string

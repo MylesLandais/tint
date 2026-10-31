@@ -126,6 +126,7 @@
     { prop: 'enableSpeak / speakingMessageId', type: 'boolean / ChatId | null', description: 'One controlled conversation playback slot with Play and Replay intent.' },
     { prop: 'ChatComposer value / onValueChange', type: 'string / callback', description: 'Controlled draft text; Enter sends and Shift+Enter inserts a new line.' },
     { prop: 'attachments / onAttachmentAdd / onAttachmentRemove', type: 'ChatAttachmentData[] / callbacks', description: 'Controlled attachments and file intent; in-flight or failed items are excluded from submit.' },
+    { prop: 'attachmentPresentation', type: "'chips' | 'cards'", description: 'Defaults to chips. Cards show the complete image with ordered Reference labels, a full-image lightbox and a separate remove action. The tray scrolls horizontally.' },
     { prop: 'state / onSubmit / onStop', type: 'ChatComposerState / callbacks', description: 'Host-driven lifecycle and trimmed submit payload; stop is an intent callback.' },
     { prop: 'ChatPreference options / selectedOptionId / onSelect', type: 'ChatPreferenceOption[] / ChatId / callback', description: 'Controlled preference selection with keyboard radio navigation and nested rich parts.' },
   ]
@@ -133,11 +134,14 @@
 
 let messages = $state<ChatMessageData[]>(initialMessages)
 let draft = $state('')
+let attachments = $state<ChatAttachmentData[]>(initialAttachments)
 
 <ChatConversation label="Support conversation">
   <ChatMessageList {messages} currentActorId="me"
     onMessageAction={(intent) => handleMessageIntent(intent)} />
   <ChatComposer value={draft} onValueChange={(next) => draft = next}
+    {attachments} attachmentPresentation="cards"
+    onAttachmentRemove={(id) => attachments = attachments.filter((item) => item.id !== id)}
     onSubmit={(payload) => sendFromHost(payload)} />
 </ChatConversation>`
 </script>

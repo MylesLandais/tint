@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/svelte'
 import { createRawSnippet } from 'svelte'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import type { ChatCustomPart, ChatMessageData, ChatPreferenceOption } from '../../../core/chat'
+import type { ChatAttachmentData, ChatCustomPart, ChatMessageData, ChatPreferenceOption } from '../../../core/chat'
 import ChatComposer from './ChatComposer.svelte'
 import ChatMessage from './ChatMessage.svelte'
 import ChatMessageAlternatives from './ChatMessageAlternatives.svelte'
@@ -20,6 +20,71 @@ function message(id: string, overrides: Partial<ChatMessageData> = {}): ChatMess
 afterEach(() => vi.restoreAllMocks())
 
 describe('Svelte chat composer', () => {
+  const referenceAttachments: ChatAttachmentData[] = [
+    { id: 'room', name: 'wide-room.png', mediaType: 'image/png', status: 'ready', url: '/fixtures/room-original.png', previewUrl: '/fixtures/room-thumbnail.png' },
+    { id: 'notes', name: 'notes.txt', mediaType: 'text/plain', status: 'ready', url: '/fixtures/notes.txt' },
+    { id: 'forest', name: 'tall-forest.png', mediaType: 'image/png', status: 'ready', url: '/fixtures/forest-original.png', previewUrl: '/fixtures/forest-thumbnail.png' },
+    { id: 'unavailable', name: 'unavailable.png', mediaType: 'image/png', status: 'error', error: 'No preview available' },
+  ]
+
+  it('keeps image attachments compact unless cards are requested', () => {
+    const view = render(ChatComposer, {
+      value: 'Existing draft', attachments: referenceAttachments, onValueChange: vi.fn(), onSubmit: vi.fn(),
+    })
+    expect(view.container.querySelector('[data-chat-composer]')).toHaveAttribute('data-attachment-presentation', 'chips')
+    expect(view.container.querySelector('[data-chat-attachment-card]')).toBeNull()
+    expect(view.container.querySelector('[data-attachment-id="room"] img')).toHaveAttribute('src', '/fixtures/room-thumbnail.png')
+    expect(screen.queryByRole('button', { name: /Preview reference/ })).toBeNull()
+    expect(screen.queryByRole('button', { name: /Remove / })).toBeNull()
+  })
+
+  it('previews originals and emits separate remove intent without submitting or changing the payload', async () => {
+    const onSubmit = vi.fn(), onAttachmentRemove = vi.fn(), onValueChange = vi.fn()
+    const view = render(ChatComposer, {
+      value: 'Existing draft', attachments: referenceAttachments, attachmentPresentation: 'cards',
+      onValueChange, onSubmit, onAttachmentRemove, metadata: { conversationId: 'existing-thread' },
+    })
+    expect(view.container.querySelector('[data-chat-composer-attachments]')).toHaveAttribute('data-presentation', 'cards')
+    expect(screen.getAllByRole('button', { name: /Preview reference/ })).toHaveLength(2)
+    expect(screen.getByRole('button', { name: 'Preview reference 1: wide-room.png' })).toHaveAttribute('aria-haspopup', 'dialog')
+    expect(view.container.querySelector('[data-attachment-id="notes"]')).not.toHaveAttribute('data-chat-attachment-card')
+    expect(view.container.querySelector('[data-attachment-id="unavailable"]')).not.toHaveAttribute('data-chat-attachment-card')
+    const preview = screen.getByRole('button', { name: 'Preview reference 2: tall-forest.png' })
+    expect(preview).toHaveAttribute('type', 'button')
+    preview.focus()
+    await fireEvent.click(preview)
+    expect(screen.getByRole('dialog', { name: 'tall-forest.png' })).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: 'tall-forest.png' })).toHaveAttribute('src', '/fixtures/forest-original.png')
+    expect(onSubmit).not.toHaveBeenCalled()
+    await fireEvent.click(screen.getByRole('button', { name: 'Close' }))
+    await waitFor(() => expect(preview).toHaveFocus())
+    await fireEvent.click(screen.getByRole('button', { name: 'Remove tall-forest.png' }))
+    expect(onAttachmentRemove).toHaveBeenCalledExactlyOnceWith('forest')
+    expect(onSubmit).not.toHaveBeenCalled()
+    expect(onValueChange).not.toHaveBeenCalled()
+    expect(screen.getByRole('textbox')).toHaveValue('Existing draft')
+    // Removal is host-controlled; preview and remove intent do not rewrite attachments.
+    await fireEvent.click(screen.getByRole('button', { name: 'Send message' }))
+    expect(onSubmit).toHaveBeenCalledExactlyOnceWith({
+      text: 'Existing draft', attachments: referenceAttachments.slice(0, 3), metadata: { conversationId: 'existing-thread' },
+    })
+  })
+
+  it('keeps the selected attachment by ID when reordered and closes when the host removes it', async () => {
+    const onSubmit = vi.fn()
+    const base = { value: 'Existing draft', attachments: referenceAttachments, attachmentPresentation: 'cards' as const,
+      onValueChange: vi.fn(), onSubmit }
+    const view = render(ChatComposer, base)
+    await fireEvent.click(screen.getByRole('button', { name: 'Preview reference 2: tall-forest.png' }))
+    await view.rerender({ ...base, attachments: [referenceAttachments[2]!, referenceAttachments[1]!, referenceAttachments[0]!] })
+    expect(screen.getByRole('img', { name: 'tall-forest.png' })).toHaveAttribute('src', '/fixtures/forest-original.png')
+    await view.rerender({ ...base, attachments: [referenceAttachments[0]!] })
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
+    expect(screen.getByRole('button', { name: 'Preview reference 1: wide-room.png' })).toBeInTheDocument()
+    expect(onSubmit).not.toHaveBeenCalled()
+    expect(screen.getByRole('textbox')).toHaveValue('Existing draft')
+  })
+
   it('keeps model controls separate from submission and retains the host payload', async () => {
     const onSubmit = vi.fn()
     const chooseModel = vi.fn()
