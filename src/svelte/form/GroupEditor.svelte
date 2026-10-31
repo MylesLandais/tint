@@ -4,6 +4,8 @@
     moveGroupMember, muteGroupMember, removeGroupMember,
     type GroupEditorProps, type GroupFields,
   } from '../../core/form/roleplay'
+  import Button from '../components/button/Button.svelte'
+  import ToggleField from './ToggleField.svelte'
   import NumberField from './NumberField.svelte'
   import SelectField from './SelectField.svelte'
   import TextAreaField from './TextAreaField.svelte'
@@ -31,18 +33,18 @@
       {#each rows as row (row.key)}
         <li>
           <span class="tint-roleplay-editor__member-name">{row.label}{#if !row.available}<small>Unavailable character</small>{/if}</span>
-          <label class="tint-roleplay-editor__check"><input type="checkbox" checked={value.mutedMembers.includes(row.member)} {disabled} aria-label={`Mute ${row.label}`} onchange={(event) => onValueChange(muteGroupMember(value, row.member, event.currentTarget.checked))} /> Muted</label>
+          <ToggleField id={`${id}-mute-${row.key}`} label={`Mute ${row.label}`} checked={value.mutedMembers.includes(row.member)} {disabled} inline onCheckedChange={(checked) => onValueChange(muteGroupMember(value, row.member, checked))} />
           <div class="tint-roleplay-editor__actions">
-            <button type="button" aria-label={`Move ${row.label} up`} disabled={disabled || row.index === 0} onclick={() => onValueChange(moveGroupMember(value, row.index, -1))}>↑</button>
-            <button type="button" aria-label={`Move ${row.label} down`} disabled={disabled || row.index === rows.length - 1} onclick={() => onValueChange(moveGroupMember(value, row.index, 1))}>↓</button>
-            <button type="button" aria-label={`Remove ${row.label}`} {disabled} onclick={() => onValueChange(removeGroupMember(value, row.index))}>Remove</button>
+            <Button size="sm" aria-label={`Move ${row.label} up`} disabled={disabled || row.index === 0} onclick={() => onValueChange(moveGroupMember(value, row.index, -1))}>↑</Button>
+            <Button size="sm" aria-label={`Move ${row.label} down`} disabled={disabled || row.index === rows.length - 1} onclick={() => onValueChange(moveGroupMember(value, row.index, 1))}>↓</Button>
+            <Button size="sm" aria-label={`Remove ${row.label}`} {disabled} onclick={() => onValueChange(removeGroupMember(value, row.index))}>Remove</Button>
           </div>
         </li>
       {/each}
     </ol>
     <div class="tint-roleplay-editor__add">
       <SelectField id={`${id}-add`} label="Add character" value={selected} onValueChange={(next) => candidate = next} disabled={disabled || !available.length} options={available.length ? available : [{ value: '', label: 'No more characters' }]} />
-      <button type="button" disabled={disabled || !selected} onclick={() => change({ members: [...value.members, selected] })}>Add member</button>
+      <Button size="sm" disabled={disabled || !selected} onclick={() => change({ members: [...value.members, selected] })}>Add member</Button>
     </div>
   </fieldset>
 
@@ -51,8 +53,8 @@
     <SelectField id={`${id}-mode`} label="Character prompts" value={String(value.promptMode)} onValueChange={(promptMode) => change({ promptMode: Number(promptMode) })} options={groupNumberOptions(promptModes, value.promptMode)} {disabled} />
     <NumberField id={`${id}-delay`} label="Automatic reply delay (seconds)" value={value.delay} onValueChange={(delay) => change({ delay })} step="any" required {disabled} />
   </div>
-  <label class="tint-roleplay-editor__check"><input type="checkbox" checked={value.allowSelfReplies} {disabled} onchange={(event) => change({ allowSelfReplies: event.currentTarget.checked })} /> Allow consecutive replies from the same character</label>
-  <label class="tint-roleplay-editor__check"><input type="checkbox" checked={value.favorite} {disabled} onchange={(event) => change({ favorite: event.currentTarget.checked })} /> Favorite group</label>
+  <ToggleField id={`${id}-self-replies`} label="Allow consecutive replies from the same character" checked={value.allowSelfReplies} {disabled} inline onCheckedChange={(allowSelfReplies) => change({allowSelfReplies})} />
+  <ToggleField id={`${id}-favorite`} label="Favorite group" checked={value.favorite} {disabled} inline onCheckedChange={(favorite) => change({favorite})} />
   {#if value.promptMode !== 0}
     <div class="tint-roleplay-editor__settings">
       <TextAreaField id={`${id}-prefix`} label="Joined prompt prefix" value={value.prefix} onValueChange={(prefix) => change({ prefix })} rows={3} {disabled} />

@@ -23,6 +23,14 @@ describe('shell navigation model', () => {
     expect(nextCommandIndex(items, 2, 'Home')).toBe(0)
   })
 
+  it('starts from the proper edge when the previous command is absent or disabled', () => {
+    const items = [{ id: 'a', label: 'A' }, { id: 'off', label: 'Off', disabled: true }, { id: 'b', label: 'B' }]
+    expect(nextCommandIndex(items, -1, 'ArrowUp')).toBe(2)
+    expect(nextCommandIndex(items, -1, 'ArrowDown')).toBe(0)
+    expect(nextCommandIndex(items, 1, 'ArrowUp')).toBe(2)
+    expect(nextCommandIndex([], -1, 'ArrowUp')).toBe(-1)
+  })
+
   it('moves tabs over disabled peers and wraps from the end', () => {
     const tabs = [{ id: 'one', label: 'One' }, { id: 'off', label: 'Off', disabled: true }, { id: 'two', label: 'Two' }]
     expect(nextWorkspaceTabId(tabs, 'one', 'ArrowRight')).toBe('two')

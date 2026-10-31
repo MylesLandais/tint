@@ -1,6 +1,8 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/svelte'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import MediaPlayer from './MediaPlayer.svelte'
+
+afterEach(() => vi.restoreAllMocks())
 
 describe('Svelte MediaPlayer', () => {
   it('renders controlled audio metadata and derives elapsed time from media events', async () => {
@@ -77,6 +79,61 @@ describe('Svelte MediaPlayer', () => {
     expect(tracks[0]).toHaveAttribute('default')
     expect(tracks[1]).toHaveAttribute('kind', 'subtitles')
     expect(tracks[1]).toHaveAttribute('srclang', 'es')
+  })
+
+  it('replaces source elements and qualifies errors by their owned source', async () => {
+    const onError = vi.fn()
+    const view = render(MediaPlayer, { kind: 'audio', src: 'first.wav', label: 'Preview', preload: 'none', onError })
+    const first = view.container.querySelector('audio')!
+    expect(first).toHaveAttribute('preload', 'none')
+    await view.rerender({ kind: 'audio', src: 'second.wav', label: 'Preview', preload: 'none', onError })
+    const second = view.container.querySelector('audio')!
+    expect(first).not.toBe(second)
+    await fireEvent.error(first)
+    expect(onError).not.toHaveBeenCalled()
+    await fireEvent.error(second); await fireEvent.error(second)
+    expect(onError).toHaveBeenCalledExactlyOnceWith('second.wav')
+  })
+
+  it('applies fresh source-bound chapter seeks once and ignores stale or reused requests', async () => {
+    const play = vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue(undefined)
+    const props = { kind: 'audio' as const, src: 'chapter.wav', label: 'Chapter', duration: 60 }
+    const view = render(MediaPlayer, { ...props, seekRequest: { id: 'first', src: 'chapter.wav', positionSeconds: 12, play: true } })
+    const audio = view.container.querySelector('audio')!
+    await waitFor(() => expect(audio.currentTime).toBe(12))
+    expect(play).toHaveBeenCalledTimes(1)
+    await view.rerender({ ...props, seekRequest: { id: 'first', src: 'chapter.wav', positionSeconds: 30, play: true } })
+    expect(audio.currentTime).toBe(12)
+    await view.rerender({ ...props, seekRequest: { id: 'second', src: 'chapter.wav', positionSeconds: 20 } })
+    expect(audio.currentTime).toBe(20)
+    await view.rerender({ ...props, src: 'other.wav', seekRequest: { id: 'second', src: 'chapter.wav', positionSeconds: 20, play: true } })
+    expect(view.container.querySelector('audio')!.currentTime).toBe(0)
+    expect(play).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not defer mismatched or remote seek requests into a later local source', async () => {
+    const props = { kind: 'audio' as const, src: 'current.wav', label: 'Track' }
+    const view = render(MediaPlayer, { ...props, seekRequest: { id: 'stale', src: 'old.wav', positionSeconds: 12 } })
+    await view.rerender({ ...props, src: 'old.wav', seekRequest: { id: 'stale', src: 'old.wav', positionSeconds: 12 } })
+    expect(view.container.querySelector('audio')!.currentTime).toBe(0)
+    const remote = { playing: false, currentTime: 0, duration: 60, volume: 1, onPlay: vi.fn(), onPause: vi.fn(), onSeek: vi.fn(), onVolumeChange: vi.fn() }
+    await view.rerender({ ...props, remote, seekRequest: { id: 'remote', src: 'current.wav', positionSeconds: 20 } })
+    await view.rerender({ ...props, remote: undefined, seekRequest: { id: 'remote', src: 'current.wav', positionSeconds: 20 } })
+    expect(view.container.querySelector('audio')!.currentTime).toBe(0)
+    expect(remote.onSeek).not.toHaveBeenCalled()
+  })
+
+  it('does not let a local playback group pause a remotely controlled sink', async () => {
+    vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue(undefined)
+    const remote = { playing: true, currentTime: 0, duration: 60, volume: 1, onPlay: vi.fn(), onPause: vi.fn(), onSeek: vi.fn(), onVolumeChange: vi.fn() }
+    const sink = render(MediaPlayer, { kind: 'audio', src: 'remote.wav', label: 'Remote', remote, playbackGroup: 'mixed-authority' })
+    const remoteAudio = sink.container.querySelector('audio')!
+    Object.defineProperty(remoteAudio, 'paused', { configurable: true, value: false })
+    const pause = vi.spyOn(remoteAudio, 'pause').mockImplementation(() => {})
+    const local = render(MediaPlayer, { kind: 'audio', src: 'local.wav', label: 'Local', playbackGroup: 'mixed-authority' })
+    await fireEvent.play(local.container.querySelector('audio')!)
+    expect(pause).not.toHaveBeenCalled()
+    expect(remote.onPause).not.toHaveBeenCalled()
   })
 
   it('can swap between audio and video kinds on one mounted entry point', async () => {

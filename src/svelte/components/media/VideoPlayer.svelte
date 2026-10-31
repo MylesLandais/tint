@@ -87,13 +87,20 @@
     return () => { document.removeEventListener('keydown', onKeydown); document.body.style.overflow = previousOverflow; restore?.focus() }
   })
 
+  function registerVideo(node: HTMLVideoElement) {
+    video = node
+    node.volume = snapshot.volume; node.muted = videoAttrs.muted ?? snapshot.muted
+    node.playbackRate = playbackSpeed
+    const detach = transport.attach(node)
+    return { destroy: () => { detach(); if (video === node) video = null! } }
+  }
+
   onMount(() => {
     const unsubscribe = transport.subscribe((next) => { snapshot = next })
-    const detach = transport.attach(video)
     const onFullscreenChange = () => { fullscreen = document.fullscreenElement === root }
     document.addEventListener('fullscreenchange', onFullscreenChange)
     mounted = true
-    return () => { mounted = false; document.removeEventListener('fullscreenchange', onFullscreenChange); detach(); unsubscribe() }
+    return () => { mounted = false; document.removeEventListener('fullscreenchange', onFullscreenChange); unsubscribe() }
   })
 </script>
 
@@ -116,8 +123,8 @@
   onfocusin={revealControls}
   onfocusout={(event) => { if (!root.contains(event.relatedTarget as Node | null)) maybeHideControls() }}
 >
-  <video
-    bind:this={video}
+  {#key src}<video
+    use:registerVideo
     {...videoAttrs}
     {src}
     {poster}
@@ -128,7 +135,7 @@
     {#each tracks as track (`${track.kind}:${track.srcLang}:${track.src}`)}
       <track src={track.src} kind={track.kind} srclang={track.srcLang} label={track.label} default={track.default} />
     {/each}
-  </video>
+  </video>{/key}
 
   {#if showControls}
     <div class="chrome">

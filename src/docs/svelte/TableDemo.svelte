@@ -3,8 +3,8 @@
   import type { DataFilterField, DataFilterModel, DataSortingState } from '../../core/table/filterTypes'
   import type { TableSelectionModel } from '../../core/table/selection'
   import type { TableSort } from '../../core/table/types'
-  import type { WorkbenchInspectorTab } from '../../core/table/workbench'
-  import { CollectionWorkbench, DataTable, type TableColumn } from '../../svelte/components/table'
+  import type { WorkspaceInspectorTab } from '../../core/table/workspace'
+  import { CollectionWorkspace, DataTable, type TableColumn } from '../../svelte/components/table'
 
   type Track = { id: string; title: string; genre: string; bpm: number; state: string }
   const tracks: Track[] = [
@@ -37,7 +37,7 @@
   let activeRowId = $state<string | null>('a')
   let hiddenColumns = $state<string[]>([])
   let inspectorWidth = $state(320)
-  let inspectorTab = $state<WorkbenchInspectorTab>('details')
+  let inspectorTab = $state<WorkspaceInspectorTab>('details')
   let activeViewId = $state('all')
 </script>
 
@@ -49,10 +49,10 @@
     <p aria-live="polite">Selected IDs: {selected.join(', ') || 'none'}</p>
   </section>
 
-  <section aria-labelledby="workbench-demo-title">
-    <h3 id="workbench-demo-title">Collection Workbench</h3>
+  <section aria-labelledby="workspace-demo-title">
+    <h3 id="workspace-demo-title">Collection Workspace</h3>
     <p>The available container width controls table columns, navigation, and inspector placement.</p>
-    <CollectionWorkbench
+    <CollectionWorkspace
       rows={tracks} {columns} rowId="id" {fields} {filterModel}
       onFilterModelChange={(next) => { filterModel = next; page = 0 }}
       {sorting} onSortingChange={(next) => sorting = next}
@@ -70,7 +70,7 @@
       {#snippet renderProposalReview(row: Track)}<p>Review the proposed metadata for {row.title}.</p>{/snippet}
       {#snippet renderEvidence(row: Track)}<p>Evidence supplied by the host for {row.title}.</p>{/snippet}
       {#snippet renderHistory(row: Track)}<p>Change history for {row.title}.</p>{/snippet}
-    </CollectionWorkbench>
+    </CollectionWorkspace>
   </section>
 </div>
 

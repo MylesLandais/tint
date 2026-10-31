@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { buildFilterItem, operatorsFor } from './filterControls'
 import { columnsFor, placeMasonryItems } from './masonry'
 import { filterMediaReleases } from './mediaWorkspace'
-import { deriveWorkbenchRows } from './workbench'
+import { deriveWorkspaceRows } from './workspace'
 import { compactWorkspaceItems, workspaceBreakpointFor, workspaceLayoutsEqual } from './workspaceGrid'
 
 describe('table companions', () => {
@@ -58,13 +58,13 @@ describe('table companions', () => {
     ])
   })
 
-  it('filters, sorts, and pages the workbench in plain TypeScript', () => {
+  it('filters, sorts, and pages the workspace in plain TypeScript', () => {
     const rows = [
       { id: 'a', genre: 'ambient', bpm: 90 },
       { id: 'b', genre: 'house', bpm: 128 },
       { id: 'c', genre: 'house', bpm: 122 },
     ]
-    const result = deriveWorkbenchRows(rows, [{ id: 'genre' }, { id: 'bpm' }], {
+    const result = deriveWorkspaceRows(rows, [{ id: 'genre' }, { id: 'bpm' }], {
       filterModel: { items: [{ id: 'f', field: 'genre', operator: 'equals', value: 'house' }] },
       sorting: [{ id: 'bpm', desc: true }], page: 1, pageSize: 1,
     })

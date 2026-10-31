@@ -115,6 +115,8 @@ export type ChatComposerProps = Omit<HTMLFormAttributes, 'children' | 'onsubmit'
   inputRef?: (node: HTMLTextAreaElement | null) => void
   onInputKeydown?: (event: KeyboardEvent) => void
   inputListboxId?: string
+  /** Expanded state of a controlled suggestion list; defaults to true when its ID is supplied. */
+  inputExpanded?: boolean
   inputActiveOptionId?: string
   onValueChange: (value: string) => void
   onSubmit: (payload: ChatSubmitPayload) => void

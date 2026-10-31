@@ -1,11 +1,12 @@
 <script lang="ts" generics="TRow">
   import { tick } from 'svelte'
+  import { resolveWorkspaceResponsive, legacyResponsiveAttributes } from '../../../core/compatibility/table'
   import { get } from 'svelte/store'
   import { createVirtualizer } from '@tanstack/svelte-virtual'
   import { createTableRow, deleteTableRow, normalizeTableError, updateTableCell } from '../../../core/table/commands'
   import { getCellValue, nextSort, visibleColumns } from '../../../core/table/derive'
   import { formatFieldValue, resolveFieldType } from '../../../core/table/fieldTypes'
-  import { workbenchLayout } from '../../../core/table/layout'
+  import { collectionWorkspaceLayout } from '../../../core/table/layout'
   import {
     isRowSelected,
     selectMatchingQuery,
@@ -24,8 +25,10 @@
     expanded, onExpandedChange, renderExpanded, hiddenColumns = [],
     resizing, columnWidths, rowHeights, onColumnWidthsChange, onRowHeightsChange,
     onResize, editing, activeRowId, onActiveRowChange, virtual = false,
-    virtualHeight = 480, workbenchResponsive = false, class: className,
+    virtualHeight = 480, workspaceResponsive, class: className, ...legacyProps
   }: DataTableProps<TRow> = $props()
+
+  const responsive = $derived(resolveWorkspaceResponsive(workspaceResponsive, legacyProps))
 
   const ROW_HEIGHT = { compact: 28, comfortable: 40, spacious: 52 } as const
   let rows = $derived.by(() => {
@@ -45,8 +48,8 @@
     column.label ?? (typeof column.header === 'string' ? column.header : column.id)
   const widthFor = (column: TableColumn<TRow>) => resolvedColumnWidths[column.id] ?? column.width
 
-  let autoHidden = $derived(workbenchResponsive && measuredWidth > 0
-    ? workbenchLayout(measuredWidth).hiddenColumns : [])
+  let autoHidden = $derived(responsive && measuredWidth > 0
+    ? collectionWorkspaceLayout(measuredWidth).hiddenColumns : [])
   let effectiveHidden = $derived([...new Set([...hiddenColumns, ...autoHidden])])
   let shown = $derived(visibleColumns(columns, effectiveHidden))
   let resolvedColumnWidths = $derived(columnWidths ?? localColumnWidths)
@@ -236,7 +239,7 @@
   }
 </script>
 
-<div bind:this={viewport} data-table="" data-density={density} data-scrolled={scrolledRight || undefined} data-virtual={virtualActive || undefined} data-workbench-responsive={workbenchResponsive || undefined} class={className} class:virtual={virtualActive} style:max-height={virtualActive ? `${virtualHeight}px` : undefined} onscroll={() => scrolledRight = (viewport?.scrollLeft ?? 0) > 0}>
+<div bind:this={viewport} data-table="" data-density={density} data-scrolled={scrolledRight || undefined} data-virtual={virtualActive || undefined} data-workspace-responsive={responsive || undefined} {...legacyResponsiveAttributes(responsive)} class={className} class:virtual={virtualActive} style:max-height={virtualActive ? `${virtualHeight}px` : undefined} onscroll={() => scrolledRight = (viewport?.scrollLeft ?? 0) > 0}>
   {#if editing?.adapter.create}
     <div class="create-row"><button type="button" onclick={createRow} disabled={editBusy}>{editBusy ? 'Creating…' : 'New row'}</button></div>
   {/if}

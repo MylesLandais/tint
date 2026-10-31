@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Button from '../components/button/Button.svelte'
   import type { Snippet } from 'svelte'
   import { importFileCount, type ImportReviewRow } from '../../core/form/roleplay'
   import './roleplay.css'
@@ -42,5 +43,5 @@
   {#if typeof error === 'string'}<div role="alert">{error}</div>
   {:else if error}<div role="alert">{@render error()}</div>{/if}
   {#if complete}<p role="status">Import saved.</p>
-  {:else}<button type="button" disabled={disabled || busy || files === 0} onclick={onImport}>{busy ? 'Importing…' : `Import ${files} files`}</button>{/if}
+  {:else}<Button variant="primary" disabled={disabled || busy || files === 0} onclick={onImport}>{busy ? 'Importing…' : `Import ${files} files`}</Button>{/if}
 </section>

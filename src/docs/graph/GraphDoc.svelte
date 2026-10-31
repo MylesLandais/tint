@@ -2,7 +2,7 @@
   import type { Component } from 'svelte'
   import {
     ForceGraphView, InteractiveGraphView, TimelineView, emptySelection,
-    type GraphCommand, type GraphDocument, type GraphSelection, type GraphSpan, type TimelineVariant,
+    type NodeRuntimeSummary, type GraphCommand, type GraphDocument, type GraphSelection, type GraphSpan, type TimelineVariant,
     type SvelteNodeViewProps, type SvelteNodeInspectorProps,
   } from '../../svelte'
   import GraphNodeDemo from './GraphNodeDemo.svelte'
@@ -19,11 +19,12 @@
   const inspectorRenderers = new Map<string, Component<SvelteNodeInspectorProps>>([['script', GraphInspectorDemo]])
   let variant = $state<TimelineVariant>('gantt')
   let lastCommand = $state('none')
+  const runtimeByNodeId = new Map<string, NodeRuntimeSummary>([['n-script', {status:'unknown'}], ['n-python', {status:'cancelled'}]])
   let spans = $state<GraphSpan[]>([
     { id: 'receive', nodeId: 'n-trigger', start: 0, end: 12, status: 'succeeded' },
     { id: 'normalize', nodeId: 'n-normalize', start: 12, end: 45, status: 'succeeded' },
-    { id: 'enrich', nodeId: 'n-script', start: 48, end: 118, status: 'running' },
-    { id: 'score', nodeId: 'n-python', start: 54, end: 94, status: 'failed' },
+    { id: 'enrich', nodeId: 'n-script', start: 48, end: 118, status: 'unknown' },
+    { id: 'score', nodeId: 'n-python', start: 54, end: 94, status: 'cancelled' },
   ])
   function changeSpan(id: string, next: { start: number; end: number }) {
     spans = spans.map((span) => span.id === id ? { ...span, ...next } : span)
@@ -35,7 +36,7 @@
     { prop: 'selection / onSelectionChange', type: 'GraphSelection / callback', description: 'Optional controlled node, edge, and group selection.' },
     { prop: 'registry / nodeRenderers / inspectorRenderers', type: 'GraphNodeRegistry / Svelte component maps', description: 'Pure definitions plus optional Svelte node and inspector views keyed by node kind.' },
     { prop: 'readonly / viewport / onViewportChange', type: 'boolean / GraphViewport / callback', description: 'Edit availability and host-directed camera state.' },
-    { prop: 'validationByNodeId / runtimeByNodeId', type: 'NodeValidationMap / ReadonlyMap<string, NodeRuntimeSummary>', description: 'Host-provided validation issues and runtime status used by graph views and inspectors.' },
+    { prop: 'validationByNodeId / runtimeByNodeId', type: 'NodeValidationMap / ReadonlyMap<string, NodeRuntimeSummary>', description: 'Host-provided validation and runtime states, including explicit cancelled and unknown outcomes. Unknown remains unknown until the host reconciles it.' },
     { prop: 'showInspector / showFullscreenControl', type: 'boolean', description: 'Show or hide the interactive graph inspector and fullscreen control.' },
     { prop: 'onCommand', type: '(command: GraphCommand) => void', description: 'Receives graph edit intents from interactive, force, and timeline views.' },
     { prop: 'class / className', type: 'string', description: 'Optional class on the graph view surface.' },
@@ -60,12 +61,12 @@ let selection = $state(emptySelection())
   <div class="graph-demo">
     <label class="readonly"><input type="checkbox" bind:checked={readonly} /> Read only</label>
     <label class="readonly"><input type="checkbox" bind:checked={customRenderer} /> Custom script renderer and inspector</label>
-    <div class="interactive"><InteractiveGraphView {document} {selection} {readonly}
+    <div class="interactive"><InteractiveGraphView {document} {selection} {readonly} {runtimeByNodeId}
       nodeRenderers={customRenderer ? nodeRenderers : undefined} inspectorRenderers={customRenderer ? inspectorRenderers : undefined}
       onDocumentChange={(next) => document = next} onSelectionChange={(next) => selection = next} onCommand={command} /></div>
     <p aria-live="polite">Selected nodes: {selection.nodeIds.size} · Last command: {lastCommand}</p>
     <div class="projections">
-      <section><h3>Force network</h3><ForceGraphView {document} {selection} static={true} height={280} onSelectionChange={(next) => selection = next} onCommand={command} /></section>
+      <section><h3>Force network</h3><ForceGraphView {document} {selection} {runtimeByNodeId} static={true} height={280} onSelectionChange={(next) => selection = next} onCommand={command} /></section>
       <section><h3>Timeline</h3><label>Layout <select class="tint-select" bind:value={variant}><option value="gantt">Gantt</option><option value="trace">Trace</option><option value="range">Range</option></select></label><TimelineView {document} {spans} {variant} {selection} onSpanChange={changeSpan} onSelectionChange={(next) => selection = next} onCommand={command} /></section>
     </div>
   </div>

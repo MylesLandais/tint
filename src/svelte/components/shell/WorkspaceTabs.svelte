@@ -1,15 +1,21 @@
 <script lang="ts">
+  import type { Snippet } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
   import { nextWorkspaceTabId } from '../../../core/shell/navigation'
   import type { WorkspaceTab } from './types'
 
   type Props = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
     tabs: readonly WorkspaceTab[]
+    /** Shared renderer for data-driven tabs; a tab's own snippet takes precedence. */
+    content?: Snippet<[WorkspaceTab]>
+    /** Controls adjacent to the tablist, outside its keyboard navigation. */
+    actions?: Snippet
     value: string
     onChange: (id: string) => void
     label: string
+    size?: 'sm' | 'md'
   }
-  let { tabs, value, onChange, label, class: className, ...rest }: Props = $props()
+  let { tabs, value, onChange, label, size = 'md', content, actions, class: className, ...rest }: Props = $props()
   const id = $props.id()
   const refs = new Map<string, HTMLButtonElement>()
   function keydown(event: KeyboardEvent, tab: WorkspaceTab) {
@@ -22,19 +28,27 @@
 </script>
 
 <div {...rest} data-tint-tabs class={className}>
+  {#snippet tablist()}
   <div role="tablist" aria-label={label} class="flex gap-6 border-b border-tint-border">
     {#each tabs as tab (tab.id)}
       <button type="button" role="tab" id={`${id}-${tab.id}`} aria-controls={`${id}-${tab.id}-panel`}
         aria-selected={tab.id === value} tabindex={tab.id === value ? 0 : -1} disabled={tab.disabled}
         bind:this={() => refs.get(tab.id), (node) => { if (node) refs.set(tab.id, node); else refs.delete(tab.id) }}
         onclick={() => onChange(tab.id)} onkeydown={(event) => keydown(event, tab)}
-        class={['border-b-2 border-transparent px-1 py-3 text-sm text-tint-muted', tab.id === value && 'border-tint-accent text-tint-accent']}>
+        class={['border-b-2 px-1', size === 'sm' ? 'py-1.5 text-xs' : 'py-3 text-sm', tab.id === value ? 'border-tint-accent text-tint-accent' : 'border-transparent text-tint-muted']}>
         {tab.label}
       </button>
     {/each}
   </div>
+  {/snippet}
+  {#if actions}
+    <div data-tint-tabs-bar style="display: flex; align-items: center; gap: var(--tint-space-2); min-width: 0">
+      <div style="min-width: 0; flex: 1">{@render tablist()}</div>
+      <div data-tint-tabs-actions style="display: flex; align-items: center; gap: var(--tint-space-2)">{@render actions()}</div>
+    </div>
+  {:else}{@render tablist()}{/if}
   {#each tabs as tab (tab.id)}
     <div role="tabpanel" id={`${id}-${tab.id}-panel`} aria-labelledby={`${id}-${tab.id}`}
-      hidden={value !== tab.id} tabindex="0" class="pt-4">{@render tab.content?.()}</div>
+      hidden={value !== tab.id} tabindex="0" class="pt-4">{#if tab.content}{@render tab.content()}{:else if content}{@render content(tab)}{/if}</div>
   {/each}
 </div>

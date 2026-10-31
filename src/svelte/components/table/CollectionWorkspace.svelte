@@ -3,11 +3,13 @@
   import { getCellValue } from '../../../core/table/derive'
   import { toDataSortingState, toTableSort } from '../../../core/table/clientState'
   import type { DataFilterField, DataFilterModel, DataSortingState } from '../../../core/table/filterTypes'
-  import { workbenchLayout } from '../../../core/table/layout'
+  import { legacyCollectionAttributes } from '../../../core/compatibility/table'
+  import { collectionWorkspaceLayout } from '../../../core/table/layout'
   import { matchingQueryKey } from '../../../core/table/query'
   import type { TableSelectionModel } from '../../../core/table/selection'
   import type { TableRowId } from '../../../core/table/types'
-  import { deriveWorkbenchRows, type WorkbenchInspectorTab } from '../../../core/table/workbench'
+  import { deriveWorkspaceRows, type WorkspaceInspectorTab } from '../../../core/table/workspace'
+  import ResizeHandle from '../shell/ResizeHandle.svelte'
   import DataTable from './DataTable.svelte'
   import DataFilterControls from './DataFilterControls.svelte'
   import TableColumnsMenu from './TableColumnsMenu.svelte'
@@ -41,8 +43,8 @@
     onViewChange?: (viewId: string) => void
     inspectorWidth: number
     onInspectorWidthChange: (width: number) => void
-    inspectorTab: WorkbenchInspectorTab
-    onInspectorTabChange: (tab: WorkbenchInspectorTab) => void
+    inspectorTab: WorkspaceInspectorTab
+    onInspectorTabChange: (tab: WorkspaceInspectorTab) => void
     renderDetails?: Snippet<[TRow]>
     renderProposalReview?: Snippet<[TRow]>
     renderEvidence?: Snippet<[TRow]>
@@ -66,8 +68,8 @@
   let containerWidth = $state(0)
   const panelId = $props.id()
   const idOf = (row: TRow): TableRowId => typeof rowId === 'function' ? rowId(row) : String(row[rowId])
-  let layout = $derived(workbenchLayout(containerWidth))
-  let result = $derived(deriveWorkbenchRows(rows, columns, { filterModel, sorting, page, pageSize }))
+  let layout = $derived(collectionWorkspaceLayout(containerWidth))
+  let result = $derived(deriveWorkspaceRows(rows, columns, { filterModel, sorting, page, pageSize }))
   let activeRow = $derived(rows.find((row) => idOf(row) === activeRowId))
   let activeLabel = $derived(activeRow
     ? String(getCellValue(activeRow, columns[0] ?? { id: 'id' }) ?? idOf(activeRow)) : '')
@@ -90,35 +92,6 @@
     return () => observer.disconnect()
   })
 
-  function resizeInspector(next: number) {
-    onInspectorWidthChange(Math.max(260, Math.min(next, Math.max(260, containerWidth - 400))))
-  }
-
-  function resizeKey(event: KeyboardEvent) {
-    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return
-    event.preventDefault()
-    resizeInspector(inspectorWidth + (event.key === 'ArrowLeft' ? 1 : -1) * (event.shiftKey ? 32 : 8))
-  }
-
-  function resizePointer(event: PointerEvent) {
-    event.preventDefault()
-    const node = event.currentTarget as HTMLElement
-    const start = event.clientX
-    const width = inspectorWidth
-    node.setPointerCapture?.(event.pointerId)
-    const move = (next: PointerEvent) => resizeInspector(width - (next.clientX - start))
-    const end = (next: PointerEvent) => {
-      move(next)
-      node.releasePointerCapture?.(next.pointerId)
-      node.removeEventListener('pointermove', move)
-      node.removeEventListener('pointerup', end)
-      node.removeEventListener('pointercancel', end)
-    }
-    node.addEventListener('pointermove', move)
-    node.addEventListener('pointerup', end)
-    node.addEventListener('pointercancel', end)
-  }
-
   function tabKey(event: KeyboardEvent) {
     if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return
     event.preventDefault()
@@ -136,7 +109,7 @@
   }
 </script>
 
-<section bind:this={root} data-collection-workbench="" data-inspector={layout.inspector} data-navigation={layout.navigation} class={className} aria-label={label}>
+<section bind:this={root} data-collection-workspace="" {...legacyCollectionAttributes} data-inspector={layout.inspector} data-navigation={layout.navigation} class={className} aria-label={label}>
   {#if views.length}
     <nav class="views" aria-label="Collection views" data-layout={layout.navigation}>
       {#each views as view (view.id)}
@@ -150,11 +123,13 @@
         <DataFilterControls {fields} {filterModel} {onFilterModelChange} {sorting} {onSortingChange} />
         <TableColumnsMenu {columns} {hiddenColumns} onChange={onHiddenColumnsChange} />
       </TableToolbar>
-      <DataTable rows={result.rows} {columns} {rowId} {label} rowHeaderColumn={columns[0]?.id} sort={toTableSort(sorting)} onSortChange={(sort) => onSortingChange(toDataSortingState(sort))} {selectionModel} {onSelectionModelChange} selectionQueryKey={queryKey} {activeRowId} {onActiveRowChange} {hiddenColumns} {columnWidths} {onColumnWidthsChange} workbenchResponsive {virtual} resizing={{ columns: true }} />
+      <DataTable rows={result.rows} {columns} {rowId} {label} rowHeaderColumn={columns[0]?.id} sort={toTableSort(sorting)} onSortChange={(sort) => onSortingChange(toDataSortingState(sort))} {selectionModel} {onSelectionModelChange} selectionQueryKey={queryKey} {activeRowId} {onActiveRowChange} {hiddenColumns} {columnWidths} {onColumnWidthsChange} workspaceResponsive {virtual} resizing={{ columns: true }} />
       <TablePager page={result.page} {pageSize} total={result.total} onChange={onPageChange} />
     </main>
     {#if layout.inspector === 'right'}
-      <button type="button" class="pane-resize" aria-label={`Inspector width ${inspectorWidth} pixels. Use left and right arrow keys.`} onkeydown={resizeKey} onpointerdown={resizePointer}></button>
+      <ResizeHandle label="Resize inspector" size={inspectorWidth} minSize={260} maxSize={Math.max(260, containerWidth - 400)}
+        primary="second" step={8} shiftStep={32} onSizeChange={onInspectorWidthChange}
+        style="min-width: .5rem; border-radius: var(--tint-radius-sm)" />
     {/if}
     <aside class="inspector" aria-label="Inspector">
       <header><h2>Inspector</h2>{#if activeRow}<p>{activeLabel}</p>{/if}</header>
@@ -178,7 +153,7 @@
 </section>
 
 <style>
-  [data-collection-workbench] { min-width: 0; color: var(--tint-ink); }
+  [data-collection-workspace] { min-width: 0; color: var(--tint-ink); }
   .views { display: flex; gap: var(--tint-space-1); overflow-x: auto; border-bottom: 1px solid var(--tint-border); padding: var(--tint-space-2); }
   .views button, [role='tablist'] button { min-height: 2.25rem; border: 0; border-radius: var(--tint-radius-sm); background: transparent; padding: 0 var(--tint-space-2); color: var(--tint-muted); cursor: pointer; font: inherit; font-size: var(--tint-font-size-sm); white-space: nowrap; }
   .views button[aria-current], [role='tablist'] button[aria-selected='true'] { background: var(--tint-accent-soft); color: var(--tint-ink); }
@@ -187,8 +162,6 @@
   .body { display: grid; min-width: 0; gap: var(--tint-space-2); }
   .body.docked { grid-template-columns: minmax(0, 1fr) 0.5rem minmax(260px, var(--inspector-width)); }
   .table-pane { min-width: 0; border: 1px solid var(--tint-border); border-radius: var(--tint-radius-md); background: var(--tint-panel); }
-  .pane-resize { min-width: 0.5rem; border: 0; border-radius: var(--tint-radius-sm); background: var(--tint-border); cursor: col-resize; }
-  .pane-resize:hover { background: var(--tint-accent); }
   .inspector { min-width: 0; border: 1px solid var(--tint-border); border-radius: var(--tint-radius-md); background: var(--tint-panel); }
   .inspector header { border-bottom: 1px solid var(--tint-border); padding: var(--tint-space-3); }
   h2, p { margin: 0; }

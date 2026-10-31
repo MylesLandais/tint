@@ -1,6 +1,6 @@
 /**
  * Docs-only in-memory store shared by the Avery subscriptions chat scenario and
- * the Policy / Feed workbenches.
+ * the Policy / Feed workspacees.
  *
  * Lives under `src/docs` on purpose — component packages stay presentational and
  * must not grow a global mutation store. All writes are mock; no server.

@@ -67,8 +67,8 @@
     { prop: 'DataTable.columns', type: 'TableColumn<TRow>[]', description: 'Stable column IDs, accessors, headers, sizing, and field types.' },
     { prop: 'sort / onSortChange', type: 'TableSort | null / callback', description: 'Controlled sort state and intent.' },
     { prop: 'selectionModel', type: "{ mode: 'ids' } | { mode: 'query' }", description: 'Visible or query-wide selection, including rows outside the page.' },
-    { prop: 'CollectionWorkbench.filterModel', type: 'DataFilterModel', description: 'Host-owned filter items.' },
-    { prop: 'CollectionWorkbench.inspectorTab', type: "'details' | 'proposal' | 'evidence' | 'history'", description: 'Host-owned inspector section.' },
+    { prop: 'CollectionWorkspace.filterModel', type: 'DataFilterModel', description: 'Host-owned filter items.' },
+    { prop: 'CollectionWorkspace.inspectorTab', type: "'details' | 'proposal' | 'evidence' | 'history'", description: 'Host-owned inspector section.' },
     { prop: 'renderDetails / renderProposalReview / renderEvidence / renderHistory', type: 'Snippet<[TRow]>', description: 'Host-supplied inspector content.' },
     { prop: 'EventReviewControls.quickFilters / selectedQuickFilterId', type: 'EventReviewOption[] / string | null', description: 'Host-owned event filter choices and selected ID.' },
     { prop: 'EventReviewControls.onQuickFilterChange', type: '(id: string) => void', description: 'Reports a filter choice without changing it internally.' },
@@ -105,7 +105,7 @@ const store = createDatasetStore({
   title="Dataset Editor"
   description="A typed, spreadsheet-fast grid for editing records: Airtable-style fields and views, Notion-style record pages, Excel-style keyboard and clipboard. Controlled, virtualized, and built on a framework-neutral core."
   importPath="@nebula/tint/table" {usage} {api}
-  accessibility="The grid uses role=grid with aria-activedescendant, so focus stays on one element while the active cell moves; typing starts an edit in a real labelled input. Column headers expose aria-sort and open a menu with arrow-key navigation. Invalid cells set aria-invalid and point aria-describedby at their message; the outline is also dotted when unfocused so state never relies on colour alone. Edits, pastes, undo and redo are announced through a polite live region. Resize handles are keyboard operable, rows can be opened as a record from the keyboard, and transitions respect prefers-reduced-motion. The older DataTable keeps native table semantics with checkbox selection, and the workbench inspector uses named tabs and panels."
+  accessibility="The grid uses role=grid with aria-activedescendant, so focus stays on one element while the active cell moves; typing starts an edit in a real labelled input. Column headers expose aria-sort and open a menu with arrow-key navigation. Invalid cells set aria-invalid and point aria-describedby at their message; the outline is also dotted when unfocused so state never relies on colour alone. Edits, pastes, undo and redo are announced through a polite live region. Resize handles are keyboard operable, rows can be opened as a record from the keyboard, and transitions respect prefers-reduced-motion. The older DataTable keeps native table semantics with checkbox selection, and the workspace inspector uses named tabs and panels."
 >
   <DatasetDemo />
 
@@ -147,8 +147,8 @@ const store = createDatasetStore({
     </section>
 
     <section id="related" aria-labelledby="related-title">
-      <h2 id="related-title" tabindex="-1">Related: DataTable and Collection Workbench</h2>
-      <p>For read-oriented collections with selection, query-wide selection, filtering and an inspector, use <code>DataTable</code> and <code>CollectionWorkbench</code>. They share the same core row pipeline.</p>
+      <h2 id="related-title" tabindex="-1">Related: DataTable and Collection Workspace</h2>
+      <p>For read-oriented collections with selection, query-wide selection, filtering and an inspector, use <code>DataTable</code> and <code>CollectionWorkspace</code>. They share the same core row pipeline.</p>
       <div class="related"><TableDemo /></div>
       <div class="event-review-demo">
         <h3>Event review controls</h3>

@@ -47,3 +47,16 @@ describe('Svelte graph projections', () => {
     expect([...(onSelectionChange.mock.calls[0]?.[0].nodeIds ?? [])]).toEqual(['b'])
   })
 })
+
+it('keeps unknown and cancelled outcomes explicit in network and timeline projections', () => {
+ const runtimeByNodeId = new Map([['a',{status:'unknown' as const}],['b',{status:'cancelled' as const}]])
+ const force = render(ForceGraphView,{document,static:true,runtimeByNodeId})
+ expect(screen.getByRole('button',{name:/Fetch \(Task, unknown\)/})).toHaveAttribute('data-status','unknown')
+ expect(screen.getByRole('button',{name:/Judge \(Task, cancelled\)/})).toHaveAttribute('data-status','cancelled')
+ force.unmount()
+ const timeline = render(TimelineView,{document,spans:[{id:'u',nodeId:'a',start:0,end:10,status:'unknown'},{id:'c',nodeId:'b',start:10,end:20,status:'cancelled'}]})
+ expect(screen.getByRole('button',{name:'Fetch (unknown)'})).toBeInTheDocument()
+ expect(screen.getByRole('button',{name:'Judge (cancelled)'})).toBeInTheDocument()
+ expect(timeline.container.querySelector('.bar[data-status="unknown"]')).toBeInTheDocument()
+ expect(timeline.container.querySelector('.bar[data-status="cancelled"]')).toBeInTheDocument()
+})

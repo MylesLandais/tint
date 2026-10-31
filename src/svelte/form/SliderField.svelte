@@ -10,30 +10,34 @@
     min?: number
     max?: number
     step?: number
+    /** Display and accessible value text; input and callback values remain numeric. */
+    formatValue?: (value: number) => string
   }
 
   let {
     id, label, value, onValueChange, description, error,
-    disabled = false, min = 0, max = 1, step = 0.05,
+    disabled = false, min = 0, max = 1, step = 0.05, formatValue,
   }: Props = $props()
+  const formattedValue = $derived(formatValue?.(value))
 </script>
 
 <FormControl {id} {label} {description} {error} {disabled}>
   <div class="tint-svelte-slider">
+    <!-- Native ranges normalize their value as bounds change; apply value last. -->
     <input
       {id}
       type="range"
-      {value}
       {min}
       {max}
       {step}
+      {value}
       {disabled}
       class="tint-svelte-slider__input"
       aria-invalid={error ? 'true' : undefined}
       aria-describedby={formDescribedBy(id, description, error)}
-      aria-valuetext={String(value)}
+      aria-valuetext={formattedValue ?? String(value)}
       oninput={(event) => onValueChange(Number(event.currentTarget.value))}
     />
-    <output for={id}>{formatSliderValue(value)}</output>
+    <output for={id}>{formattedValue ?? formatSliderValue(value)}</output>
   </div>
 </FormControl>

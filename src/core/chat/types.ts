@@ -114,7 +114,7 @@ export type ChatApprovalData = {
 }
 
 export type ChatPartBase = {
-  /** Stable within its message; keys the part's React element. */
+  /** Stable within its message; keys the rendered part. */
   id: ChatId
   status?: ChatPartStatus
 }
@@ -224,6 +224,10 @@ export type ChatReasoningPart = ChatPartBase & {
   durationMs?: number
   /** Initial open state only. Streaming never force-opens the disclosure. */
   defaultExpanded?: boolean
+  /** Explicitly allow copying this part. Message-level copy still excludes reasoning. */
+  copyable?: boolean
+  /** Accessible name/title for the optional copy action. Defaults to `Copy reasoning`. */
+  copyLabel?: string
 }
 
 export type ChatToolPart = ChatPartBase & {

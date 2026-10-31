@@ -15,7 +15,7 @@
       { id: 'intro', type: 'text', format: 'markdown', text: 'Welcome! **Send a message**, inspect this safe [source](https://example.com), or try the controls below.' },
       { id: 'code', type: 'code', language: 'ts', code: 'const answer = 42' },
       { id: 'source', type: 'sources', sources: [{ id: 'docs', title: 'Example source', url: 'https://example.com', description: 'An external citation.' }] },
-      { id: 'reasoning', type: 'reasoning', text: 'A concise summary of how the sample answer was prepared.', title: 'Reasoning summary' },
+      { id: 'reasoning', type: 'reasoning', text: 'A concise summary of how the sample answer was prepared.', title: 'Reasoning summary', copyable: true },
     ] },
     { id: 'tool', actor: assistant, createdAt: '2026-08-02T15:00:10Z', status: 'complete', parts: [
       { id: 'tool-run', type: 'tool', tool: { id: 'lookup', name: 'lookup', title: 'Look up sample data', status: 'succeeded', input: { query: 'Tint' }, output: { matches: 1 } } },
@@ -101,6 +101,14 @@
     eventNote = `${files.length} file${files.length === 1 ? '' : 's'} attached`
   }
 
+  function continueSummary() {
+    messages = messages.map((message) => message.id !== 'welcome' ? message : { ...message,
+      parts: message.parts.map((part) => part.type !== 'reasoning' ? part : { ...part,
+        text: `${part.text}\nAn additional line arrived in the same summary.`, status: 'streaming',
+      }),
+    })
+  }
+
   function loadEarlier() {
     hasEarlier = false
     messages = [{ id: 'earlier', actor: me, createdAt: '2026-08-02T14:59:00Z', status: 'complete', parts: [{ id: 'earlier-text', type: 'text', text: 'An earlier message preserved while history is prepended.' }] }, ...messages]
@@ -109,8 +117,10 @@
 
   const api: ApiRow[] = [
     { prop: 'ChatMessageList messages / currentActorId', type: 'ChatMessageData[] / ChatId', description: 'Host-owned transcript, alignment, grouping, and reader identity.' },
-    { prop: 'onMessageAction / onToolApproval', type: 'callbacks', description: 'Copy, reply, retry, image, speak, and approval intent; the host updates data.' },
+    { prop: 'onMessageAction / onToolApproval', type: 'callbacks', description: 'Reply, retry, image, speak, and approval intent; copy acknowledges a successful current clipboard write. The host updates data.' },
     { prop: 'renderPart / onRenderError', type: 'ChatPartRenderer / callback', description: 'Svelte Snippet override for custom parts, with a per-part error boundary.' },
+    { prop: 'ChatReasoning part.copyable / copyLabel', type: 'boolean / string', description: 'Explicit opt-in copy for plain reasoning text; message copy still excludes reasoning. Copy acknowledgements belong to the current source/message/part and expire after 1.5 seconds. Failed clipboard access remains retryable.' },
+    { prop: 'ChatReasoning part.defaultExpanded', type: 'boolean', description: 'Initial disclosure state. Streaming/status changes preserve the reader’s choice; the host owns content visibility and product labels.' },
     { prop: 'renderMessageFooter', type: '(message) => Snippet | null', description: 'Optional host-rendered controls beside each message’s built-in actions; compose ChatMessageAlternatives and ChatMessageEditor for saved versions and inline edits.' },
     { prop: 'hasEarlier / onLoadEarlier / followOutput', type: 'boolean / callbacks', description: 'History loading and optional host-controlled scroll following.' },
     { prop: 'enableSpeak / speakingMessageId', type: 'boolean / ChatId | null', description: 'One controlled conversation playback slot with Play and Replay intent.' },
@@ -139,7 +149,7 @@ let draft = $state('')
 <DocPage title="Chat" description="Controlled Svelte conversation primitives for text, Markdown, media, tool output, approvals, and preferences. The live demo uses local state and timers only." importPath="@nebula/tint/chat" {usage} {api}
   accessibility="The transcript is a named log with live reading disabled while tokens stream; a separate polite status reports completed remote turns. Messages have roving keyboard focus, nested actions return focus with Escape, and the composer keeps focus while submitting. Preference cards use a radiogroup with arrow-key navigation. Images have alt text, media has labels and transcripts, and approval buttons have explicit names.">
   <div class="chat-doc-demo">
-    <div class="demo-toolbar"><strong>Tint Assistant</strong><span>Local fixture · no network request</span><button type="button" onclick={() => { if (responseTimer) clearTimeout(responseTimer); responseTimer = undefined; messages = structuredClone(initial); draft = ''; attachments = []; composerState = 'idle'; replyTo = null; hasEarlier = true; selectedPreference = undefined; preferenceStatus = 'pending'; eventNote = 'Demo reset' }}>Reset demo</button></div>
+    <div class="demo-toolbar"><strong>Tint Assistant</strong><span>Local fixture · no network request</span><button type="button" onclick={continueSummary}>Continue reasoning summary</button><button type="button" onclick={() => { if (responseTimer) clearTimeout(responseTimer); responseTimer = undefined; messages = structuredClone(initial); draft = ''; attachments = []; composerState = 'idle'; replyTo = null; hasEarlier = true; selectedPreference = undefined; preferenceStatus = 'pending'; eventNote = 'Demo reset' }}>Reset demo</button></div>
     <div class="chat-doc-conversation"><ChatConversation label="Tint chat component demonstration" class="h-full">
       <ChatMessageList {messages} currentActorId="reader" {hasEarlier} onLoadEarlier={loadEarlier} onMessageAction={messageAction} onToolApproval={toolApproval} enableSpeak={true}
         renderMessageFooter={(message) => message.id === 'welcome' ? welcomeFooter : undefined}

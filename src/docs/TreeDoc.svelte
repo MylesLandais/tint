@@ -14,6 +14,7 @@
   let expandedIds = $state<string[]>(['collections'])
   let selectedIds = $state<string[]>(['ambient'])
   const api: ApiRow[] = [
+    { prop: 'selectionMode', type: "'single' | 'multiple'", description: 'Single mode emits only the activated ID and exposes a single-select tree; multiple remains the default.' },
     { prop: 'nodes', type: 'TreeNode[]', description: 'Hierarchical nodes with stable IDs, labels, children, and optional trailing content.' },
     { prop: 'expandedIds', type: 'readonly string[] | ReadonlySet<string>', description: 'Host-owned expanded branches.' },
     { prop: 'onExpandedChange', type: '(ids: string[]) => void', description: 'Expansion intent.' },

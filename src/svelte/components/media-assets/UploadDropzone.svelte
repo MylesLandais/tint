@@ -1,13 +1,16 @@
 <script lang="ts">
   import { Upload } from '@lucide/svelte'
+  import { onDestroy } from 'svelte'
   import { classifyFiles, type FileRejection } from '../../../core/media/assets'
   import Icon from '../icon/Icon.svelte'
+  import Button from '../button/Button.svelte'
 
   type Props = {
     accept?: readonly string[]
     maxSizeBytes?: number
     maxFiles?: number
     disabled?: boolean
+    compact?: boolean
     label?: string
     description?: string
     onFilesAccepted: (files: readonly File[]) => void
@@ -16,13 +19,17 @@
   }
   let {
     accept = [], maxSizeBytes = Number.POSITIVE_INFINITY, maxFiles = Number.POSITIVE_INFINITY,
-    disabled = false, label = 'Upload files', description = 'Drag files here or choose files.',
+    disabled = false, compact = false, label = 'Upload files', description = 'Drag files here or choose files.',
     onFilesAccepted, onFilesRejected, class: className,
   }: Props = $props()
   let input = $state<HTMLInputElement>(null!)
   let dragging = $state(false)
+  let alive = true
+  onDestroy(() => { alive = false })
 
   function ingest(list: FileList | readonly File[]) {
+    // A native chooser can return after the host has started another operation.
+    if (!alive || disabled) return
     const { accepted, rejected } = classifyFiles(list, { accept, maxSizeBytes, maxFiles })
     if (accepted.length) onFilesAccepted(accepted)
     if (rejected.length) onFilesRejected?.(rejected)
@@ -42,6 +49,20 @@
   }
 </script>
 
+{#snippet fileInput()}
+  <input bind:this={input} type="file" hidden multiple={maxFiles > 1} accept={accept.join(',') || undefined} {disabled}
+    onclick={(event) => event.stopPropagation()}
+    onchange={(event) => { if (event.currentTarget.files) ingest(event.currentTarget.files); event.currentTarget.value = '' }} />
+{/snippet}
+
+{#if compact}
+  <Button {disabled} class={className} data-tint-upload-dropzone="" data-compact="true"
+    onclick={() => input.click()} ondragover={(event) => event.preventDefault()} ondrop={drop}>
+    {#snippet leading()}<Icon icon={Upload} size="sm" />{/snippet}
+    {label}
+  </Button>
+  {@render fileInput()}
+{:else}
 <div
   role="button"
   tabindex={disabled ? -1 : 0}
@@ -59,10 +80,9 @@
   <Icon icon={Upload} size="lg" />
   <span class="label">{label}</span>
   <span class="description">{description}</span>
-  <input bind:this={input} type="file" hidden multiple={maxFiles > 1} accept={accept.join(',') || undefined} {disabled}
-    onclick={(event) => event.stopPropagation()}
-    onchange={(event) => { if (event.currentTarget.files) ingest(event.currentTarget.files); event.currentTarget.value = '' }} />
+  {@render fileInput()}
 </div>
+{/if}
 
 <style>
   .tint-upload-dropzone { display: flex; min-height: 9rem; flex-direction: column; align-items: center; justify-content: center; gap: .5rem; border: 2px dashed var(--tint-border); border-radius: var(--tint-radius-lg); padding: 1.5rem; color: var(--tint-muted); text-align: center; cursor: pointer; transition: border-color var(--tint-motion-base) var(--tint-ease), background var(--tint-motion-base) var(--tint-ease); }

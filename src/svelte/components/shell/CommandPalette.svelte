@@ -1,7 +1,8 @@
 <script lang="ts">
   import type { Snippet } from 'svelte'
   import type { HTMLAttributes, HTMLInputAttributes } from 'svelte/elements'
-  import { filterCommands, nextCommandIndex } from '../../../core/shell/navigation'
+  import { filterCommands, nextCommandIndex, commandOptionId } from '../../../core/shell/navigation'
+  import CommandMenu from './CommandMenu.svelte'
   import type { CommandPaletteItem } from './types'
 
   type Props = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
@@ -33,6 +34,7 @@
   }
 
   function keydown(event: KeyboardEvent) {
+    if (event.defaultPrevented || event.isComposing || event.keyCode === 229 || event.ctrlKey || event.metaKey || event.altKey) return
     if (event.key === 'Escape') { event.preventDefault(); onOpenChange(false); return }
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Home' || event.key === 'End') {
       event.preventDefault()
@@ -72,28 +74,14 @@
       <div class="flex items-center gap-2 border-b border-tint-border px-4 py-3">
         <span aria-hidden="true" class="text-tint-muted">⌕</span>
         <input {...inputProps} bind:this={input} role="combobox" aria-label={inputProps?.['aria-label'] ?? label} aria-expanded="true" aria-controls={listId}
-          aria-activedescendant={activeIndex >= 0 ? `${listId}-${filtered[activeIndex]?.id}` : undefined}
+          aria-activedescendant={activeIndex >= 0 ? commandOptionId(listId, filtered[activeIndex]!.id) : undefined}
           value={query} oninput={(event) => { active = 0; onQueryChange(event.currentTarget.value) }} onkeydown={keydown}
           {placeholder} class={['tint-command-palette-input w-full bg-transparent text-sm placeholder:text-tint-muted', inputProps?.class]} />
       </div>
-      <div id={listId} role="listbox" aria-label={label} class="max-h-80 overflow-auto p-2">
-        {#if filtered.length}
-          {#each filtered as item, index (item.id)}
-            <button type="button" id={`${listId}-${item.id}`} role="option" aria-selected={index === activeIndex} disabled={item.disabled}
-              onmouseenter={() => { if (!item.disabled) active = index }} onclick={() => choose(item)}
-              class={['flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left hover:bg-tint-surface', index === activeIndex && 'bg-tint-accent-soft']}>
-              <span class="min-w-0 flex-1"><span class="block text-sm font-medium">{item.label}</span>
-                {#if item.description}<span class="block truncate text-xs text-tint-muted">{item.description}</span>{/if}
-              </span>
-              {#if item.shortcut}<kbd class="text-xs text-tint-muted">{item.shortcut}</kbd>{/if}
-            </button>
-          {/each}
-        {:else}
-          <div class="px-3 py-8 text-center text-sm text-tint-muted">
-            {#if typeof emptyText === 'string'}{emptyText}{:else}{@render emptyText()}{/if}
-          </div>
-        {/if}
-      </div>
+      <CommandMenu id={listId} items={filtered} query="" {label} {emptyText} grouped={false} icon={false}
+        activeId={filtered[activeIndex]?.id} onActiveChange={(id) => { active = filtered.findIndex((item) => item.id === id) }}
+        onSelect={(id) => { const item = filtered.find((item) => item.id === id); if (item) choose(item) }}
+        class="rounded-none border-0 shadow-none" />
     </div>
   </div>
 {/if}

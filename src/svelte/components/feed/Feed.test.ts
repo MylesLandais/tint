@@ -130,9 +130,17 @@ describe('Svelte feed presentation', () => {
     expect(first).toHaveAttribute('aria-valuenow', '250')
     await fireEvent.keyDown(first, { key: 'ArrowRight' })
     expect(onStartWidthChange).toHaveBeenCalledWith(258)
-    await fireEvent.pointerDown(first, { clientX: 100 })
-    await fireEvent.pointerMove(window, { clientX: 200 })
-    await fireEvent.pointerUp(window)
+    first.setPointerCapture = vi.fn()
+    first.hasPointerCapture = () => true
+    first.releasePointerCapture = vi.fn()
+    const pointer = async (type: string, x: number) => {
+      const event = new Event(type, { bubbles: true, cancelable: true })
+      Object.assign(event, { pointerId: 1, clientX: x, button: 0 })
+      await fireEvent(first, event)
+    }
+    await pointer('pointerdown', 100)
+    await pointer('pointermove', 200)
+    await pointer('pointerup', 200)
     expect(onStartWidthChange).toHaveBeenCalledWith(350)
     width = 800
     callbacks[0]?.([], {} as ResizeObserver)

@@ -44,6 +44,7 @@ export function nextCommandIndex(items: readonly CommandPaletteItem[], active: n
   if (key === 'Home') return enabled[0]
   if (key === 'End') return enabled[enabled.length - 1]
   const current = enabled.indexOf(active)
+  if (current < 0) return key === 'ArrowDown' ? enabled[0] : enabled[enabled.length - 1]
   const next = key === 'ArrowDown' ? current + 1 : current - 1
   return enabled[(next + enabled.length) % enabled.length]
 }
@@ -59,4 +60,9 @@ export function nextWorkspaceTabId(tabs: readonly WorkspaceTab[], currentId: str
   const index = enabled.findIndex((tab) => tab.id === currentId)
   const offset = key === 'ArrowRight' ? 1 : -1
   return enabled[(index + offset + enabled.length) % enabled.length].id
+}
+
+/** Stable IDREF for every command presentation, including arbitrary host command IDs. */
+export function commandOptionId(listId: string, commandId: string): string {
+  return `${listId}-${encodeURIComponent(commandId)}`
 }

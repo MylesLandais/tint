@@ -36,13 +36,13 @@ export function pointerSplitSize(startSize: number, delta: number, primary: Work
   return clampSplitSize(startSize + delta * (primary === 'first' ? 1 : -1), minSize, maxSize)
 }
 
-export function keyboardSplitSize(current: number, key: string, shift: boolean, direction: WorkspaceSplitDirection, primary: WorkspaceSplitPrimary, minSize: number, maxSize: number): number | null {
+export function keyboardSplitSize(current: number, key: string, shift: boolean, direction: WorkspaceSplitDirection, primary: WorkspaceSplitPrimary, minSize: number, maxSize: number, steps = { step: 10, shiftStep: 50 }): number | null {
   if (key === 'Home') return minSize
   if (key === 'End') return maxSize
   const forward = direction === 'horizontal' ? 'ArrowRight' : 'ArrowDown'
   const backward = direction === 'horizontal' ? 'ArrowLeft' : 'ArrowUp'
   if (key !== forward && key !== backward) return null
-  const step = (shift ? 50 : 10) * (key === forward ? 1 : -1)
+  const step = (shift ? steps.shiftStep : steps.step) * (key === forward ? 1 : -1)
   return pointerSplitSize(current, step, primary, minSize, maxSize)
 }
 

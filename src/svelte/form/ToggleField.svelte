@@ -5,16 +5,18 @@
   import './styles.css'
 
   type Props = FieldShared & {
+    hideLabel?: boolean
+    inline?: boolean
     checked: boolean
     onCheckedChange: (checked: boolean) => void
   }
 
   let {
-    id, label, checked, onCheckedChange, description, error, disabled = false,
+    id, label, hideLabel = false, inline = false, checked, onCheckedChange, description, error, disabled = false,
   }: Props = $props()
 </script>
 
-<FormControl {id} {label} {description} {error} {disabled}>
+<FormControl {id} {label} {hideLabel} {inline} {description} {error} {disabled}>
   <input
     {id}
     type="checkbox"
@@ -23,6 +25,10 @@
     {disabled}
     aria-invalid={error ? 'true' : undefined}
     aria-describedby={formDescribedBy(id, description, error)}
-    onchange={(event) => onCheckedChange(event.currentTarget.checked)}
+    onchange={(event) => {
+      const input = event.currentTarget
+      onCheckedChange(input.checked)
+      input.checked = checked
+    }}
   />
 </FormControl>

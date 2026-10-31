@@ -9,12 +9,15 @@
   session.fragment.insert(0, '-- Tint collaborative Lua\nlocal greeting = "Hello, Tint"\nprint(greeting)\n')
   onDestroy(() => session.destroy())
   let readOnly = $state(false)
+  let source = $state('-- Controlled local Lua\nreturn true')
 
   const api: ApiRow[] = [
+    { prop: 'value / onValueChange', type: 'string / callback', description: 'Controlled local buffer, mutually exclusive with session. Parent echoes do not remount; host replacements are not user edits.' },
     { prop: 'session', type: 'CollabSession', description: 'Host-owned Yjs document and text fragment; stable for the buffer lifetime.' },
     { prop: 'presence', type: 'EditorPresence?', description: 'Optional shared collaborator selections.' },
     { prop: 'readOnly', type: 'boolean', description: 'Disables editing while retaining viewing and selection.' },
     { prop: 'label', type: 'string', description: 'Accessible name for the CodeMirror content.' },
+    { prop: 'revealCodeEditorLine', type: '(view, line) => void', description: 'Focus and reveal a clamped debugger/source-tree line without editing the buffer.' },
     { prop: 'onView', type: '(EditorView | null) => void', description: 'Receives the mounted view and null when it is destroyed.' },
   ]
   const usage = `import { CodeEditor } from '@nebula/tint/code-editor'
@@ -22,13 +25,17 @@ import { createCollabSession } from '@nebula/tint/collab'
 
 const session = createCollabSession({ room: 'workspace:1:note:1' })
 // The host retains and destroys this session.
-<CodeEditor {session} label="Shared Lua source" />`
+<CodeEditor {session} label="Shared Lua source" />
+
+// A file buffer can use the same editor without a collaboration session.
+<CodeEditor value={source} onValueChange={(next) => source = next} />`
 </script>
 
-<DocPage title="Code Editor" description="A CodeMirror Lua editor mounted over a host-owned Yjs session. The document, transport, persistence, and presence lifecycle stay outside the Svelte component." importPath="@nebula/tint/code-editor" {usage} {api} accessibility="The CodeMirror content has a host-supplied accessible label. Read-only mode prevents edits, and the editor follows Tint code colors through semantic tokens.">
+<DocPage title="Code Editor" description="A CodeMirror Lua editor for a controlled file buffer or host-owned Yjs session. The document, transport, persistence, and presence lifecycle stay outside the Svelte component." importPath="@nebula/tint/code-editor" {usage} {api} accessibility="The CodeMirror content has a host-supplied accessible label. Read-only mode prevents edits, and the editor and its Lua tokens follow Tint semantic code colors for the active theme.">
   <div class="editor-demo">
     <label><input type="checkbox" checked={readOnly} onchange={(event) => readOnly = event.currentTarget.checked} /> Read only</label>
-    <div class="editor"><CodeEditor {session} {readOnly} label="Demo Lua source" /></div>
+    <div class="editor"><CodeEditor {session} {readOnly} label="Demo shared Lua source" /></div>
+    <div class="editor"><CodeEditor value={source} onValueChange={(next) => source = next} {readOnly} label="Demo file buffer" /></div>
   </div>
 </DocPage>
 

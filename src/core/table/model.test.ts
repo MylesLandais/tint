@@ -8,7 +8,7 @@ import {
   toggleVisibleSelection,
   toSelectionChange,
 } from './selection'
-import { workbenchLayout } from './layout'
+import { collectionWorkspaceLayout } from './layout'
 import { createTableRow, deleteTableRow, updateTableCell } from './commands'
 import { vi } from 'vitest'
 
@@ -73,14 +73,14 @@ describe('table selection', () => {
   })
 })
 
-describe('workbench container layout', () => {
+describe('workspace container layout', () => {
   it('docks the inspector at 1180, chips the nav at 720, and hides columns in order', () => {
-    expect(workbenchLayout(1180, 1100).inspector).toBe('right')
-    expect(workbenchLayout(1179, 1100).inspector).toBe('below')
-    expect(workbenchLayout(720).navigation).toBe('chips')
-    expect(workbenchLayout(1100, 970).hiddenColumns).toEqual(['genre'])
-    expect(workbenchLayout(1100, 820).hiddenColumns).toEqual(['genre', 'bpm'])
-    expect(workbenchLayout(1100, 700).hiddenColumns).toEqual(['genre', 'bpm', 'state'])
+    expect(collectionWorkspaceLayout(1180, 1100).inspector).toBe('right')
+    expect(collectionWorkspaceLayout(1179, 1100).inspector).toBe('below')
+    expect(collectionWorkspaceLayout(720).navigation).toBe('chips')
+    expect(collectionWorkspaceLayout(1100, 970).hiddenColumns).toEqual(['genre'])
+    expect(collectionWorkspaceLayout(1100, 820).hiddenColumns).toEqual(['genre', 'bpm'])
+    expect(collectionWorkspaceLayout(1100, 700).hiddenColumns).toEqual(['genre', 'bpm', 'state'])
   })
 })
 

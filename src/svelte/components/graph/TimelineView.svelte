@@ -56,7 +56,7 @@
                 style:left={`${((interval.start - projection.start) / domain) * 100}%`}
                 style:width={`${Math.max((interval.end - interval.start) / domain, .004) * 100}%`}
                 style:margin-inline-start={`${interval.depth * .6}rem`}>
-                <button type="button" class="bar-body" title={`${interval.label} — ${Math.round(interval.end - interval.start)}`} onclick={() => select(interval)}>
+                <button type="button" class="bar-body" aria-label={`${interval.label} (${interval.status ?? 'ready'})`} title={`${interval.label} — ${Math.round(interval.end - interval.start)}`} onclick={() => select(interval)}>
                   <span class="bar-label">{interval.label}</span>
                 </button>
                 {#if editable}
@@ -100,4 +100,6 @@
   .handle[data-edge='start'] { left: -.25rem; }
   .handle[data-edge='end'] { right: -.25rem; }
   .handle:focus-visible, .bar-body:focus-visible { outline: 2px solid var(--tint-focus, var(--tint-accent)); outline-offset: 2px; }
+  .bar[data-status='unknown'] { border-color: var(--tint-warning); background: var(--tint-warning-soft); }
+  .bar[data-status='cancelled'] { border-style: dashed; opacity: .75; }
 </style>

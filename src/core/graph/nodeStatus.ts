@@ -1,6 +1,9 @@
 import type { NodeRuntimeSummary, ValidationIssue } from './registry'
 
 /**
+ * Unknown and cancelled are explicit runtime observations; neither implies readiness.
+ * The host owns reconciliation, cancellation and retries.
+ *
  * What a node's chrome shows: its runtime state, or the worst thing wrong with
  * it when it is not running.
  *
@@ -19,6 +22,8 @@ export type NodeStatus =
   | 'running'
   | 'succeeded'
   | 'failed'
+  | 'cancelled'
+  | 'unknown'
 
 /**
  * Runtime wins while a run is in progress or has finished, because it is the
@@ -29,6 +34,8 @@ export function resolveNodeStatus(
   validation: readonly ValidationIssue[],
   runtime: NodeRuntimeSummary | undefined,
 ): NodeStatus {
+  if (runtime?.status === 'unknown') return 'unknown'
+  if (runtime?.status === 'cancelled') return 'cancelled'
   if (runtime?.status === 'running') return 'running'
   if (runtime?.status === 'failed') return 'failed'
   if (runtime?.status === 'succeeded') return 'succeeded'
@@ -46,6 +53,8 @@ const LABELS: Record<NodeStatus, string> = {
   running: 'RUN',
   succeeded: 'DONE',
   failed: 'FAIL',
+  cancelled: 'CANCELLED',
+  unknown: 'UNKNOWN',
 }
 
 export function nodeStatusLabel(status: NodeStatus): string {

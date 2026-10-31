@@ -46,6 +46,13 @@ export type MediaPlayerAudioProps = MediaPlayerBaseProps & {
   playbackNonce?: number
   remote?: RemoteMediaController
   onEnded?: () => void
+  preload?: 'none' | 'metadata' | 'auto'
+  /** Called once for an owned media/play failure, with the exact prop source. */
+  onError?: (src: string) => void
+  /** Local players in the same group pause peers; remote controllers retain authority. */
+  playbackGroup?: string
+  /** A fresh ID expresses a new seek intent; consumed IDs do not replay in this mount. */
+  seekRequest?: { id: string | number; src: string; positionSeconds: number; play?: boolean }
 }
 
 export type MediaPlayerVideoProps = MediaPlayerBaseProps & {

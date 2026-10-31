@@ -15,6 +15,18 @@ const nodes = [
 ]
 
 describe('TreeView', () => {
+  it('activates a single file by label or keyboard without checkbox or ancestor selection', async () => {
+    const onSelectedChange=vi.fn()
+    render(TreeView, { nodes, expandedIds: ['album'], onExpandedChange: vi.fn(), selectedIds: ['track-a'], selectionMode: 'single', onSelectedChange })
+    expect(screen.getByRole('tree')).toHaveAttribute('aria-multiselectable', 'false')
+    expect(screen.queryByRole('checkbox')).toBeNull()
+    await fireEvent.click(screen.getByText('Track B'))
+    expect(onSelectedChange).toHaveBeenLastCalledWith(['track-b'])
+    expect(onSelectedChange).toHaveBeenCalledTimes(1)
+    await fireEvent.keyDown(screen.getByRole('treeitem', { name: 'Other' }), { key: 'Enter' })
+    expect(onSelectedChange).toHaveBeenLastCalledWith(['other'])
+    expect(screen.getByRole('treeitem', { name: 'Track A' })).toHaveAttribute('aria-selected', 'true')
+  })
   it('reports expansion and checkbox selection while the host owns both values', async () => {
     const onExpandedChange = vi.fn()
     const onSelectedChange = vi.fn()

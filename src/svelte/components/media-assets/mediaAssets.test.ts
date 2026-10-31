@@ -48,6 +48,48 @@ describe('Svelte media assets', () => {
     expect(click).not.toHaveBeenCalled()
   })
 
+  it('uses a native compact picker and preserves raw files across repeated choices', async () => {
+    const onFilesAccepted = vi.fn()
+    const { container } = render(UploadDropzone, { compact: true, label: 'Import card', accept: ['.json'], maxFiles: 1, onFilesAccepted })
+    const button = screen.getByRole('button', { name: 'Import card' })
+    expect(button.tagName).toBe('BUTTON')
+    const input = container.querySelector<HTMLInputElement>('input[type="file"]')!
+    const click = vi.spyOn(input, 'click')
+    await fireEvent.click(button)
+    expect(click).toHaveBeenCalledOnce()
+    expect(input.multiple).toBe(false)
+    expect(input.accept).toBe('.json')
+    const file = new File(['{"data":{"name":"Fixture"}}'], 'card.JSON', { type: '' })
+    await fireEvent.change(input, { target: { files: [file] } })
+    await fireEvent.change(input, { target: { files: [file] } })
+    expect(onFilesAccepted).toHaveBeenCalledTimes(2)
+    expect(onFilesAccepted.mock.calls[0][0][0]).toBe(file)
+    expect(onFilesAccepted.mock.calls[1][0][0]).toBe(file)
+    expect(input.value).toBe('')
+  })
+
+  it('ignores file delivery if the host disabled the picker after it opened', async () => {
+    const onFilesAccepted = vi.fn(), onFilesRejected = vi.fn()
+    const props = { label: 'Import card', accept: ['.json'], onFilesAccepted, onFilesRejected }
+    const view = render(UploadDropzone, props)
+    const input = view.container.querySelector<HTMLInputElement>('input[type="file"]')!
+    await fireEvent.click(screen.getByRole('button', { name: /Import card/ }))
+    await view.rerender({ ...props, disabled: true })
+    expect(input).toBeDisabled()
+    await fireEvent.change(input, { target: { files: [new File(['{}'], 'card.json')] } })
+    expect(onFilesAccepted).not.toHaveBeenCalled()
+    expect(onFilesRejected).not.toHaveBeenCalled()
+  })
+
+  it('ignores a chooser result after its owner is destroyed', async () => {
+    const onFilesAccepted = vi.fn()
+    const view = render(UploadDropzone, { compact: true, onFilesAccepted })
+    const input = view.container.querySelector<HTMLInputElement>('input[type="file"]')!
+    await view.unmount()
+    await fireEvent.change(input, { target: { files: [new File(['{}'], 'card.json')] } })
+    expect(onFilesAccepted).not.toHaveBeenCalled()
+  })
+
   it('shows upload progress and emits retry and cancel intent', async () => {
     const file = new File(['a'], 'cover.png', { type: 'image/png' })
     const onCancel = vi.fn()

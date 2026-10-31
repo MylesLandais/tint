@@ -24,7 +24,13 @@
   data-size={size}
   {value}
   aria-invalid={invalid ? 'true' : rest['aria-invalid']}
-  onchange={(event) => { onValueChange?.(event.currentTarget.value); onchange?.(event) }}
+  onchange={(event) => {
+    const input = event.currentTarget
+    onValueChange?.(input.value)
+    onchange?.(event)
+    // A host may reject a file/view change or wait for an acknowledgement.
+    input.value = value
+  }}
 >
   {#if options}
     {#each options as option (option.value)}

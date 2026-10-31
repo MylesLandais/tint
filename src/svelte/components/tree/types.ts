@@ -14,6 +14,7 @@ export type TreeViewProps = Omit<HTMLAttributes<HTMLUListElement>, 'children'> &
   nodes: readonly TreeNode[]
   expandedIds: ReadonlySet<string> | readonly string[]
   onExpandedChange: (expandedIds: string[]) => void
+  selectionMode?: 'single' | 'multiple'
   selectedIds?: ReadonlySet<string> | readonly string[]
   onSelectedChange?: (selectedIds: string[]) => void
 }

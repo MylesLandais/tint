@@ -9,6 +9,8 @@ export type BreadcrumbItem = CoreBreadcrumbItem<NavigationContent>
 export type NavigationListProps = Omit<HTMLAttributes<HTMLElement>, 'children'> & {
   items: readonly NavigationItem[]
   activeHref?: string
+  /** Wrap route links horizontally; native link and Tab behavior are unchanged. */
+  orientation?: 'vertical' | 'horizontal'
   label?: string
   /** Replaces the anchor; render `content` inside a custom link and set its active state. */
   renderLink?: Snippet<[item: NavigationItem, content: Snippet, active: boolean]>
