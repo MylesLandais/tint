@@ -194,6 +194,8 @@ export type ChatFilePart = ChatPartBase & {
 export type ChatAudioPart = ChatPartBase & {
   type: 'audio'
   src: string
+  /** `voice` keeps spoken replies in a compact row, including in wide chats. Defaults to `media`. */
+  presentation?: 'media' | 'voice'
   /** Optional visible track or recording title. */
   title?: string
   /** Optional artist, speaker, or source. */

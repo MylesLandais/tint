@@ -111,6 +111,20 @@ describe('Svelte chat composer', () => {
 })
 
 describe('Svelte chat parts and message', () => {
+  it('opts spoken replies into the voice layout without changing audio metadata or the media default', async () => {
+    const part = { id: 'voice', type: 'audio' as const, src: '/reply.wav', title: 'Spoken reply', artist: 'Reference A', transcript: 'Hello there.' }
+    const view = render(ChatPart, { part })
+    const audio = view.container.querySelector('[data-chat-part="audio"]')
+    expect(audio).toHaveAttribute('data-audio-presentation', 'media')
+    await view.rerender({ part: { ...part, presentation: 'voice' } })
+    expect(audio).toHaveAttribute('data-audio-presentation', 'voice')
+    expect(view.container.querySelector('audio')).toHaveAttribute('src', '/reply.wav')
+    expect(screen.getByText('Spoken reply')).toBeInTheDocument()
+    expect(screen.getByText('Reference A')).toBeInTheDocument()
+    expect(screen.getByText('Hello there.')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /play/i })).toBeEnabled()
+  })
+
   it('renders GFM and strips unsafe links and raw HTML', () => {
     const view = render(ChatPart, { part: { id: 'm', type: 'text', format: 'markdown',
       text: '**Safe** [go](https://example.com) [bad](javascript:alert%281%29) <script>oops</script>' } })

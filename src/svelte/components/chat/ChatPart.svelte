@@ -168,7 +168,7 @@
   {#if previewUrl}<ChatMediaLightbox open={lightboxIndex !== null} images={[{ id: attachment.id, src: attachment.url ?? previewUrl, alt: stripBidi(attachment.name), href: attachment.url }]}
     index={0} onClose={() => { lightboxIndex = null }} onIndexChange={() => undefined} />{/if}
 {:else if part.type === 'audio'}
-  <section {...rest} data-chat-part="audio" data-status={part.status} class={['rounded-xl border border-tint-border bg-tint-panel p-3', className, legacyClassName]}>
+  <section {...rest} data-chat-part="audio" data-audio-presentation={part.presentation ?? 'media'} data-status={part.status} class={['rounded-xl border border-tint-border bg-tint-panel p-3', className, legacyClassName]}>
     <div class="mb-2 flex items-center gap-2 text-xs font-medium text-tint-muted"><Music2 size={16} />Audio</div>
     <MediaPlayer kind="audio" src={part.src} label={part.title ?? 'audio message'} title={part.title} artist={part.artist} artwork={part.artwork}
       artworkAlt={part.artworkAlt} duration={part.duration} waveform={part.waveform}
@@ -250,6 +250,19 @@
 </svelte:boundary>
 
 <style>
+  [data-audio-presentation='voice'] :global([data-media-surface-wrap]) {
+    flex-direction: row;
+    align-items: center;
+    gap: .625rem;
+    padding: .625rem;
+  }
+  [data-audio-presentation='voice'] :global([data-media-surface]) {
+    width: 3.5rem;
+    height: 3.5rem;
+    max-width: none;
+    aspect-ratio: auto;
+  }
+  [data-audio-presentation='voice'] :global([data-media-transport]) { gap: 0; }
   .markdown :global(p) { margin: .5rem 0; }
   .markdown :global(p:first-child) { margin-top: 0; }
   .markdown :global(p:last-child) { margin-bottom: 0; }

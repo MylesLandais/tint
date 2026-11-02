@@ -54,6 +54,11 @@ source/authority change in that mount. Source replacement retires the old media
 element and pending play failures; teardown releases owned playback. The
 [Media example](src/docs/MediaDoc.svelte) exercises linked previews and chapters.
 
+For spoken replies, set `presentation: 'voice'` on a `ChatAudioPart` from
+`@nebula/tint/chat`. It keeps the player in a compact row in wide conversations
+and retains the small-screen controls. Omit it for the existing media layout.
+The [Chat example](src/docs/ChatDoc.svelte) includes a voice part and transcript.
+
 `WorkspaceTabs` keeps active and inactive border/text utility classes mutually
 exclusive so the selected tab stays visible in consumer Tailwind builds. The
 host still controls selection; the shared component owns keyboard focus and
