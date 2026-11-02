@@ -1,0 +1,451 @@
+{
+  "tint": {
+    "font-mono": {
+      "$type": "fontFamily",
+      "$value": [
+        "IBM Plex Mono",
+        "ui-monospace",
+        "monospace"
+      ],
+      "$description": "--font-mono",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--font-mono",
+          "cssValue": "'IBM Plex Mono', ui-monospace, monospace",
+          "source": "src/index.css",
+          "line": 29
+        }
+      }
+    },
+    "font-sans": {
+      "$type": "fontFamily",
+      "$value": [
+        "IBM Plex Sans",
+        "ui-sans-serif",
+        "system-ui",
+        "sans-serif"
+      ],
+      "$description": "--font-sans",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--font-sans",
+          "cssValue": "'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif",
+          "source": "src/index.css",
+          "line": 28
+        }
+      }
+    },
+    "control-lg": {
+      "$type": "dimension",
+      "$value": {
+        "value": 2.75,
+        "unit": "rem"
+      },
+      "$description": "--tint-control-lg",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-control-lg",
+          "cssValue": "2.75rem",
+          "source": "src/styles/layout-scale.css",
+          "line": 28
+        }
+      }
+    },
+    "control-md": {
+      "$type": "dimension",
+      "$value": {
+        "value": 2.25,
+        "unit": "rem"
+      },
+      "$description": "--tint-control-md",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-control-md",
+          "cssValue": "2.25rem",
+          "source": "src/styles/layout-scale.css",
+          "line": 27
+        }
+      }
+    },
+    "control-sm": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1.75,
+        "unit": "rem"
+      },
+      "$description": "--tint-control-sm",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-control-sm",
+          "cssValue": "1.75rem",
+          "source": "src/styles/layout-scale.css",
+          "line": 26
+        }
+      }
+    },
+    "ease": {
+      "$type": "cubicBezier",
+      "$value": [
+        0.2,
+        0,
+        0.38,
+        0.9
+      ],
+      "$description": "--tint-ease",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-ease",
+          "cssValue": "cubic-bezier(0.2, 0, 0.38, 0.9)",
+          "source": "src/styles/layout-scale.css",
+          "line": 46
+        }
+      }
+    },
+    "focus-offset": {
+      "$type": "dimension",
+      "$value": {
+        "value": 2,
+        "unit": "px"
+      },
+      "$description": "--tint-focus-offset",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-focus-offset",
+          "cssValue": "2px",
+          "source": "src/styles/layout-scale.css",
+          "line": 41
+        }
+      }
+    },
+    "focus-width": {
+      "$type": "dimension",
+      "$value": {
+        "value": 2,
+        "unit": "px"
+      },
+      "$description": "--tint-focus-width",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-focus-width",
+          "cssValue": "2px",
+          "source": "src/styles/layout-scale.css",
+          "line": 40
+        }
+      }
+    },
+    "font-size-lg": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1.25,
+        "unit": "rem"
+      },
+      "$description": "--tint-font-size-lg",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-font-size-lg",
+          "cssValue": "1.25rem",
+          "source": "src/styles/layout-scale.css",
+          "line": 34
+        }
+      }
+    },
+    "font-size-md": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1,
+        "unit": "rem"
+      },
+      "$description": "--tint-font-size-md",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-font-size-md",
+          "cssValue": "1rem",
+          "source": "src/styles/layout-scale.css",
+          "line": 33
+        }
+      }
+    },
+    "font-size-sm": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0.875,
+        "unit": "rem"
+      },
+      "$description": "--tint-font-size-sm",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-font-size-sm",
+          "cssValue": "0.875rem",
+          "source": "src/styles/layout-scale.css",
+          "line": 32
+        }
+      }
+    },
+    "font-size-xl": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1.75,
+        "unit": "rem"
+      },
+      "$description": "--tint-font-size-xl",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-font-size-xl",
+          "cssValue": "1.75rem",
+          "source": "src/styles/layout-scale.css",
+          "line": 35
+        }
+      }
+    },
+    "font-size-xs": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0.75,
+        "unit": "rem"
+      },
+      "$description": "--tint-font-size-xs",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-font-size-xs",
+          "cssValue": "0.75rem",
+          "source": "src/styles/layout-scale.css",
+          "line": 31
+        }
+      }
+    },
+    "leading-normal": {
+      "$type": "number",
+      "$value": 1.5,
+      "$description": "--tint-leading-normal",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-leading-normal",
+          "cssValue": "1.5",
+          "source": "src/styles/layout-scale.css",
+          "line": 37
+        }
+      }
+    },
+    "leading-tight": {
+      "$type": "number",
+      "$value": 1.25,
+      "$description": "--tint-leading-tight",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-leading-tight",
+          "cssValue": "1.25",
+          "source": "src/styles/layout-scale.css",
+          "line": 36
+        }
+      }
+    },
+    "motion-base": {
+      "$type": "duration",
+      "$value": {
+        "value": 180,
+        "unit": "ms"
+      },
+      "$description": "--tint-motion-base",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-motion-base",
+          "cssValue": "180ms",
+          "source": "src/styles/layout-scale.css",
+          "line": 45
+        }
+      }
+    },
+    "motion-fast": {
+      "$type": "duration",
+      "$value": {
+        "value": 110,
+        "unit": "ms"
+      },
+      "$description": "--tint-motion-fast",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-motion-fast",
+          "cssValue": "110ms",
+          "source": "src/styles/layout-scale.css",
+          "line": 44
+        }
+      }
+    },
+    "radius-full": {
+      "$type": "dimension",
+      "$value": {
+        "value": 9999,
+        "unit": "px"
+      },
+      "$description": "--tint-radius-full",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-radius-full",
+          "cssValue": "9999px",
+          "source": "src/styles/layout-scale.css",
+          "line": 23
+        }
+      }
+    },
+    "radius-lg": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0.75,
+        "unit": "rem"
+      },
+      "$description": "--tint-radius-lg",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-radius-lg",
+          "cssValue": "0.75rem",
+          "source": "src/styles/layout-scale.css",
+          "line": 22
+        }
+      }
+    },
+    "radius-md": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0.45,
+        "unit": "rem"
+      },
+      "$description": "--tint-radius-md",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-radius-md",
+          "cssValue": "0.45rem",
+          "source": "src/styles/layout-scale.css",
+          "line": 21
+        }
+      }
+    },
+    "radius-sm": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0.25,
+        "unit": "rem"
+      },
+      "$description": "--tint-radius-sm",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-radius-sm",
+          "cssValue": "0.25rem",
+          "source": "src/styles/layout-scale.css",
+          "line": 20
+        }
+      }
+    },
+    "space-1": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0.25,
+        "unit": "rem"
+      },
+      "$description": "--tint-space-1",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-space-1",
+          "cssValue": "0.25rem",
+          "source": "src/styles/layout-scale.css",
+          "line": 11
+        }
+      }
+    },
+    "space-2": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0.5,
+        "unit": "rem"
+      },
+      "$description": "--tint-space-2",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-space-2",
+          "cssValue": "0.5rem",
+          "source": "src/styles/layout-scale.css",
+          "line": 12
+        }
+      }
+    },
+    "space-3": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0.75,
+        "unit": "rem"
+      },
+      "$description": "--tint-space-3",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-space-3",
+          "cssValue": "0.75rem",
+          "source": "src/styles/layout-scale.css",
+          "line": 13
+        }
+      }
+    },
+    "space-4": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1,
+        "unit": "rem"
+      },
+      "$description": "--tint-space-4",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-space-4",
+          "cssValue": "1rem",
+          "source": "src/styles/layout-scale.css",
+          "line": 14
+        }
+      }
+    },
+    "space-5": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1.5,
+        "unit": "rem"
+      },
+      "$description": "--tint-space-5",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-space-5",
+          "cssValue": "1.5rem",
+          "source": "src/styles/layout-scale.css",
+          "line": 15
+        }
+      }
+    },
+    "space-6": {
+      "$type": "dimension",
+      "$value": {
+        "value": 2,
+        "unit": "rem"
+      },
+      "$description": "--tint-space-6",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-space-6",
+          "cssValue": "2rem",
+          "source": "src/styles/layout-scale.css",
+          "line": 16
+        }
+      }
+    },
+    "space-7": {
+      "$type": "dimension",
+      "$value": {
+        "value": 3,
+        "unit": "rem"
+      },
+      "$description": "--tint-space-7",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-space-7",
+          "cssValue": "3rem",
+          "source": "src/styles/layout-scale.css",
+          "line": 17
+        }
+      }
+    }
+  }
+}

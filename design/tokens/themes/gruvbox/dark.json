@@ -1,0 +1,844 @@
+{
+  "tint": {
+    "accent": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5568627450980392,
+          0.7529411764705882,
+          0.48627450980392156
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-accent",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-accent",
+          "cssValue": "light-dark(#417956, #8ec07c)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 36
+        }
+      }
+    },
+    "accent-hover": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6627450980392157,
+          0.8196078431372549,
+          0.5607843137254902
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-accent-hover",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-accent-hover",
+          "cssValue": "light-dark(#356047, #a9d18f)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 37
+        }
+      }
+    },
+    "accent-soft": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1843137254901961,
+          0.22745098039215686,
+          0.17254901960784313
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-accent-soft",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-accent-soft",
+          "cssValue": "light-dark(#e8e0bd, #2f3a2c)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 38
+        }
+      }
+    },
+    "bg": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1568627450980392,
+          0.1568627450980392,
+          0.1568627450980392
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-bg",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-bg",
+          "cssValue": "light-dark(#fbf1c7, #282828)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 18
+        }
+      }
+    },
+    "border": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.2823529411764706,
+          0.26666666666666666,
+          0.25882352941176473
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-border",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-border",
+          "cssValue": "light-dark(#d5c4a1, #484442)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 25
+        }
+      }
+    },
+    "border-strong": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.3607843137254902,
+          0.3411764705882353,
+          0.32941176470588235
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-border-strong",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-border-strong",
+          "cssValue": "light-dark(#bdae93, #5c5754)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 26
+        }
+      }
+    },
+    "chrome": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.11372549019607843,
+          0.12549019607843137,
+          0.12941176470588237
+        ],
+        "alpha": 0.9333333333333333
+      },
+      "$description": "--tint-chrome",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-chrome",
+          "cssValue": "#1d2021ee",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 71
+        }
+      }
+    },
+    "chrome-border": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9215686274509803,
+          0.8588235294117647,
+          0.6980392156862745
+        ],
+        "alpha": 0.1607843137254902
+      },
+      "$description": "--tint-chrome-border",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-chrome-border",
+          "cssValue": "#ebdbb229",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 73
+        }
+      }
+    },
+    "chrome-ink": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9215686274509803,
+          0.8588235294117647,
+          0.6980392156862745
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-chrome-ink",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-chrome-ink",
+          "cssValue": "#ebdbb2",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 72
+        }
+      }
+    },
+    "code": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.11372549019607843,
+          0.12549019607843137,
+          0.12941176470588237
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code",
+          "cssValue": "light-dark(#f9f5d7, #1d2021)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 56
+        }
+      }
+    },
+    "code-border": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.23529411764705882,
+          0.2196078431372549,
+          0.21176470588235294
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-border",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-border",
+          "cssValue": "light-dark(#d5c4a1, #3c3836)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 59
+        }
+      }
+    },
+    "code-comment": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5725490196078431,
+          0.5137254901960784,
+          0.4549019607843137
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-comment",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-comment",
+          "cssValue": "light-dark(#928374, #928374)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 66
+        }
+      }
+    },
+    "code-function": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5568627450980392,
+          0.7529411764705882,
+          0.48627450980392156
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-function",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-function",
+          "cssValue": "light-dark(#427b58, #8ec07c)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 67
+        }
+      }
+    },
+    "code-ink": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9215686274509803,
+          0.8588235294117647,
+          0.6980392156862745
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-ink",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-ink",
+          "cssValue": "light-dark(#3c3836, #ebdbb2)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 57
+        }
+      }
+    },
+    "code-keyword": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.984313725490196,
+          0.28627450980392155,
+          0.20392156862745098
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-keyword",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-keyword",
+          "cssValue": "light-dark(#9d0006, #fb4934)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 63
+        }
+      }
+    },
+    "code-muted": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6588235294117647,
+          0.6,
+          0.5176470588235295
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-muted",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-muted",
+          "cssValue": "light-dark(#7a6d62, #a89984)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 58
+        }
+      }
+    },
+    "code-number": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8274509803921568,
+          0.5254901960784314,
+          0.6078431372549019
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-number",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-number",
+          "cssValue": "light-dark(#8f3f71, #d3869b)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 65
+        }
+      }
+    },
+    "code-punctuation": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6588235294117647,
+          0.6,
+          0.5176470588235295
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-punctuation",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-punctuation",
+          "cssValue": "light-dark(#7c6f64, #a89984)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 68
+        }
+      }
+    },
+    "code-string": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7215686274509804,
+          0.7333333333333333,
+          0.14901960784313725
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-string",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-string",
+          "cssValue": "light-dark(#79740e, #b8bb26)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 64
+        }
+      }
+    },
+    "danger": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.984313725490196,
+          0.28627450980392155,
+          0.20392156862745098
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-danger",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-danger",
+          "cssValue": "light-dark(#9d0006, #fb4934)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 42
+        }
+      }
+    },
+    "danger-ink": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.984313725490196,
+          0.33725490196078434,
+          0.25882352941176473
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-danger-ink",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-danger-ink",
+          "cssValue": "light-dark(#9d0006, #fb5642)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 44
+        }
+      }
+    },
+    "danger-soft": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.23529411764705882,
+          0.13333333333333333,
+          0.13333333333333333
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-danger-soft",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-danger-soft",
+          "cssValue": "light-dark(#f2dcc4, #3c2222)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 43
+        }
+      }
+    },
+    "field": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1568627450980392,
+          0.1568627450980392,
+          0.1568627450980392
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-field",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-field",
+          "cssValue": "light-dark(#ebdbb2, #282828)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 30
+        }
+      }
+    },
+    "focus": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5568627450980392,
+          0.7529411764705882,
+          0.48627450980392156
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-focus",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-focus",
+          "cssValue": "light-dark(#417956, #8ec07c)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 31
+        }
+      }
+    },
+    "info": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5137254901960784,
+          0.6470588235294118,
+          0.596078431372549
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-info",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-info",
+          "cssValue": "light-dark(#076678, #83a598)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 51
+        }
+      }
+    },
+    "info-ink": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5137254901960784,
+          0.6470588235294118,
+          0.596078431372549
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-info-ink",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-info-ink",
+          "cssValue": "light-dark(#076678, #83a598)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 53
+        }
+      }
+    },
+    "info-soft": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.13725490196078433,
+          0.20392156862745098,
+          0.22745098039215686
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-info-soft",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-info-soft",
+          "cssValue": "light-dark(#dbe6e0, #23343a)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 52
+        }
+      }
+    },
+    "ink": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9215686274509803,
+          0.8588235294117647,
+          0.6980392156862745
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-ink",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-ink",
+          "cssValue": "light-dark(#3c3836, #ebdbb2)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 21
+        }
+      }
+    },
+    "muted": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6588235294117647,
+          0.6,
+          0.5176470588235295
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-muted",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-muted",
+          "cssValue": "light-dark(#665c54, #a89984)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 22
+        }
+      }
+    },
+    "on-accent": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.11372549019607843,
+          0.12549019607843137,
+          0.12941176470588237
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-on-accent",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-on-accent",
+          "cssValue": "light-dark(#fbf1c7, #1d2021)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 39
+        }
+      }
+    },
+    "panel": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.19607843137254902,
+          0.18823529411764706,
+          0.1843137254901961
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-panel",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-panel",
+          "cssValue": "light-dark(#f9f5d7, #32302f)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 20
+        }
+      }
+    },
+    "selection": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1843137254901961,
+          0.22745098039215686,
+          0.17254901960784313
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-selection",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-selection",
+          "cssValue": "light-dark(#e8e0bd, #2f3a2c)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 32
+        }
+      }
+    },
+    "shadow-color": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0,
+          0,
+          0
+        ],
+        "alpha": 0.55
+      },
+      "$description": "--tint-shadow-color",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-shadow-color",
+          "cssValue": "light-dark(rgb(60 56 54 / 0.18), rgb(0 0 0 / 0.55))",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 75
+        }
+      }
+    },
+    "success": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7215686274509804,
+          0.7333333333333333,
+          0.14901960784313725
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-success",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-success",
+          "cssValue": "light-dark(#79740e, #b8bb26)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 48
+        }
+      }
+    },
+    "success-ink": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7215686274509804,
+          0.7333333333333333,
+          0.14901960784313725
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-success-ink",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-success-ink",
+          "cssValue": "light-dark(#6c670c, #b8bb26)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 50
+        }
+      }
+    },
+    "success-soft": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1843137254901961,
+          0.19607843137254902,
+          0.12549019607843137
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-success-soft",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-success-soft",
+          "cssValue": "light-dark(#eae5b0, #2f3220)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 49
+        }
+      }
+    },
+    "surface": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.11372549019607843,
+          0.12549019607843137,
+          0.12941176470588237
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-surface",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-surface",
+          "cssValue": "light-dark(#ebdbb2, #1d2021)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 19
+        }
+      }
+    },
+    "warning": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9803921568627451,
+          0.7411764705882353,
+          0.1843137254901961
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-warning",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-warning",
+          "cssValue": "light-dark(#b57614, #fabd2f)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 45
+        }
+      }
+    },
+    "warning-ink": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9803921568627451,
+          0.7411764705882353,
+          0.1843137254901961
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-warning-ink",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-warning-ink",
+          "cssValue": "light-dark(#af3a03, #fabd2f)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 47
+        }
+      }
+    },
+    "warning-soft": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.22745098039215686,
+          0.18823529411764706,
+          0.12549019607843137
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-warning-soft",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-warning-soft",
+          "cssValue": "light-dark(#f4e4b8, #3a3020)",
+          "source": "src/styles/themes/gruvbox.css",
+          "line": 46
+        }
+      }
+    }
+  }
+}

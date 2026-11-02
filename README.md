@@ -121,6 +121,12 @@ accents; import `@nebula/tint/themes/carbon.css` and set `data-theme="carbon"`.
 
 ## Develop
 
+Tint's [Penpot workflow](design/penpot/README.md) covers generated DTCG tokens,
+the Penpot import profile, component identities, and sandbox editing rules.
+Run `npm run design:export`, `npm run design:check`, and `npm run design:test`
+after changing token CSS or the component inventory. `npm run design:report`
+reports pending imports and mappings that need review.
+
 ```bash
 npm install
 npm run dev

@@ -1,0 +1,36 @@
+{
+  "tint": {
+    "motion-base": {
+      "$type": "duration",
+      "$value": {
+        "value": 0,
+        "unit": "ms"
+      },
+      "$description": "--tint-motion-base",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-motion-base",
+          "cssValue": "0ms",
+          "source": "src/styles/layout-scale.css",
+          "line": 52
+        }
+      }
+    },
+    "motion-fast": {
+      "$type": "duration",
+      "$value": {
+        "value": 0,
+        "unit": "ms"
+      },
+      "$description": "--tint-motion-fast",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-motion-fast",
+          "cssValue": "0ms",
+          "source": "src/styles/layout-scale.css",
+          "line": 51
+        }
+      }
+    }
+  }
+}

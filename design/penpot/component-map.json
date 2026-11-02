@@ -1,0 +1,4250 @@
+{
+  "schemaVersion": 1,
+  "library": "Tint UI Kit",
+  "sourceTreeSha256": "5d7b4cf6c110a358c3424dfc1353e3d1d5cda1b138a37b0f1f23c96e0ef27bb8",
+  "components": [
+    {
+      "id": "tint.TintSvelteSmoke",
+      "source": "src/svelte/TintSvelteSmoke.svelte",
+      "sourceSha256": "a2b4acf776890800e96c108e12801be15507b8f92b889304ab8a25383333b868",
+      "exports": [],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.client.ClientBindingsView",
+      "source": "src/svelte/client/ClientBindingsView.svelte",
+      "sourceSha256": "3a7be1ce2ad3e4db271d7f6a51d5bcac6b89ed92726e711fce0095c24d7da168",
+      "exports": [],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.activity.ActivityFeed",
+      "source": "src/svelte/components/activity/ActivityFeed.svelte",
+      "sourceSha256": "1dde126ad9265bb32093ebb43699413573154c48a712b31ccd64786c4b887879",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/activity",
+          "name": "ActivityFeed"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.activity.ActivityFeedRow",
+      "source": "src/svelte/components/activity/ActivityFeedRow.svelte",
+      "sourceSha256": "f48bca0f748171261196fa77fb7989db8efcf668d5b849cac1141afa860c87f2",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/activity",
+          "name": "ActivityFeedRow"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.activity.ActivityRowView",
+      "source": "src/svelte/components/activity/ActivityRowView.svelte",
+      "sourceSha256": "e2e306a10d7e52375eda59ba0c31405d8a91334f8699e2c03d9045148bdd6c98",
+      "exports": [],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.annotation.AnnotationCanvas",
+      "source": "src/svelte/components/annotation/AnnotationCanvas.svelte",
+      "sourceSha256": "ce0f320775d18cbc7761a8f45156b3e80072838b70cd859a8296c897504b38a6",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/annotation",
+          "name": "AnnotationCanvas"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.audio-engine.AudioEngineProvider",
+      "source": "src/svelte/components/audio-engine/AudioEngineProvider.svelte",
+      "sourceSha256": "d733a8814f7ba9ab7d6c58ef5fb1214f3f8f9285be4a5341b0b29d76326f5b6f",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/audio-engine",
+          "name": "AudioEngineProvider"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.audio-input.AudioInput",
+      "source": "src/svelte/components/audio-input/AudioInput.svelte",
+      "sourceSha256": "47f2f45e41972901f81cefe4ccaa026b96858e7daa8e311b67aaa907a722a5e7",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/audio-input",
+          "name": "AudioInput"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.audio-workspace.Midnight128Workspace",
+      "source": "src/svelte/components/audio-workspace/Midnight128Workspace.svelte",
+      "sourceSha256": "b51834985651fe5f76615a61ab46e378fbd90d1aab81eb2ce9b2125bb3878575",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/audio-workspace",
+          "name": "Midnight128Workspace"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.audio-workspace.TrackImportController",
+      "source": "src/svelte/components/audio-workspace/TrackImportController.svelte",
+      "sourceSha256": "b1c49f72d239be6a3e0aecc0b01be725f47ce59cd3f799e417e79838a06a0d66",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/audio-workspace",
+          "name": "TrackImportController"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.auth.AuthDivider",
+      "source": "src/svelte/components/auth/AuthDivider.svelte",
+      "sourceSha256": "ab8714f2823a2805598119a7b605e913b0df637f9467ba6239d3dccdf5e7e646",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/auth",
+          "name": "AuthDivider"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.auth.AuthLayout",
+      "source": "src/svelte/components/auth/AuthLayout.svelte",
+      "sourceSha256": "6527c69c2a67e9b6081ccbd76b3b7b32bcfb01db1c4657271486b7c8ebfe8b34",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/auth",
+          "name": "AuthLayout"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.auth.CredentialRecoveryForm",
+      "source": "src/svelte/components/auth/CredentialRecoveryForm.svelte",
+      "sourceSha256": "7cfef0479e5dc08833b443852d0e7a813d690321a02728fb12761d1cdfed3ed2",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/auth",
+          "name": "CredentialRecoveryForm"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.auth.IdentifierSignInForm",
+      "source": "src/svelte/components/auth/IdentifierSignInForm.svelte",
+      "sourceSha256": "a7656f5e230683e17ed01a83ad572f65ca0061f026f7fafbdb9dd8bfa68a62ba",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/auth",
+          "name": "IdentifierSignInForm"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.auth.LoginForm",
+      "source": "src/svelte/components/auth/LoginForm.svelte",
+      "sourceSha256": "d31ce885fff3c3284468319c8b0be2e3ab86c84d077917f51e61f32bd62284dc",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/auth",
+          "name": "LoginForm"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.auth.OAuthButtons",
+      "source": "src/svelte/components/auth/OAuthButtons.svelte",
+      "sourceSha256": "26f7e5b888a8c63ecfca7057658297e61fbbfccd01bf3127b6d8aa2b1bb2edab",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/auth",
+          "name": "OAuthButtons"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.auth.PasswordCredentialInput",
+      "source": "src/svelte/components/auth/PasswordCredentialInput.svelte",
+      "sourceSha256": "2b544d77098a4f08fcad35bf957319281d81de74e889e7ecf1dafad5ab91af69",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/auth",
+          "name": "PasswordCredentialInput"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.auth.ProviderMark",
+      "source": "src/svelte/components/auth/ProviderMark.svelte",
+      "sourceSha256": "d2ae63990af6f14e342433a333c81784d25e24f4dfa324793afe9f1c026ba2c3",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/auth",
+          "name": "ProviderMark"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.auth.RegistrationForm",
+      "source": "src/svelte/components/auth/RegistrationForm.svelte",
+      "sourceSha256": "1d42c23b278455360e8528986fe5977b12880f460a5c8caefe91969e4b979dee",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/auth",
+          "name": "RegistrationForm"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.badge.Badge",
+      "source": "src/svelte/components/badge/Badge.svelte",
+      "sourceSha256": "1d0a30500781831e6a6c7aa79fc46bf152f288f06ca59360e5ad9585eca61abc",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/badge",
+          "name": "Badge"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.board.BoardCard",
+      "source": "src/svelte/components/board/BoardCard.svelte",
+      "sourceSha256": "8cdb936dbaa9c704490fedd8b9075c919d00e184a2ccc8eb1052e10a3fc21199",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/board",
+          "name": "BoardCard"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.board.BoardCardView",
+      "source": "src/svelte/components/board/BoardCardView.svelte",
+      "sourceSha256": "2e96219f6b452307946287292c85709fdeb2ccb74166b554ea38893f0bbdcb0b",
+      "exports": [],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.board.BoardDetail",
+      "source": "src/svelte/components/board/BoardDetail.svelte",
+      "sourceSha256": "d8ebbcf268f1693e5251ac25efcc5aba7b64d7fdd291db767ba4cd9c362efc7b",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/board",
+          "name": "BoardDetail"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.board.BoardLayout",
+      "source": "src/svelte/components/board/BoardLayout.svelte",
+      "sourceSha256": "30edd9532ea58ee8d7cf0e8ca08023e0b30f86422cf56d18b9b48aa70ad58128",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/board",
+          "name": "BoardLayout"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.board.BoardLayoutToggle",
+      "source": "src/svelte/components/board/BoardLayoutToggle.svelte",
+      "sourceSha256": "30f02a02eb33c614a3c068caa8d7c3f603b06bcefb3208a3f3b72408f632f664",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/board",
+          "name": "BoardLayoutToggle"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.button.Button",
+      "source": "src/svelte/components/button/Button.svelte",
+      "sourceSha256": "837878a47b536ceee4cff6cb486a1609606661e70f712d3043527b1ec0885c23",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/button",
+          "name": "Button"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.calendar.CalendarMonthView",
+      "source": "src/svelte/components/calendar/CalendarMonthView.svelte",
+      "sourceSha256": "ecddecfe5462a65239a98e43656ed2ab852043803678c67cc729b8b9532ad09f",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/calendar",
+          "name": "CalendarMonthView"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.calendar.CalendarToolbar",
+      "source": "src/svelte/components/calendar/CalendarToolbar.svelte",
+      "sourceSha256": "7a031ca1bd3ede63b9198f3a7a0b92c73e5c1c3dfbf74d2dd37e0a84f00510d4",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/calendar",
+          "name": "CalendarToolbar"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.character-card.CharacterCardEditorForm",
+      "source": "src/svelte/components/character-card/CharacterCardEditorForm.svelte",
+      "sourceSha256": "d11693fcea0639ea6789a433297f812a80fecf460e04ebd56cdae3af2114ff2c",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/character-card",
+          "name": "CharacterCardEditorForm"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.character-card.CharacterDocumentEditor",
+      "source": "src/svelte/components/character-card/CharacterDocumentEditor.svelte",
+      "sourceSha256": "dd7da18ebec3cddda40b614c3a8bc78286f73424a448c1a41dcd624c0560b932",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/character-card",
+          "name": "CharacterDocumentEditor"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.character-card.CharacterLibrary",
+      "source": "src/svelte/components/character-card/CharacterLibrary.svelte",
+      "sourceSha256": "34e4404d28634c3ef1ceb0972701c3c6cc7e2dbc07dae6a273c9a842a7c8559b",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/character-card",
+          "name": "CharacterLibrary"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.charts.BarChart",
+      "source": "src/svelte/components/charts/BarChart.svelte",
+      "sourceSha256": "3548302e619357072c18b7c6723404510205502f8d539eb43a2c41e4d85c1632",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/charts",
+          "name": "BarChart"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.charts.ChartFrame",
+      "source": "src/svelte/components/charts/ChartFrame.svelte",
+      "sourceSha256": "9382acfd73ced5ae374e8256f0ecf70c850ed6b6906c538f5d089fcb3ad4515d",
+      "exports": [],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.charts.MetricCard",
+      "source": "src/svelte/components/charts/MetricCard.svelte",
+      "sourceSha256": "140be1a4fedaf2d94723e5061df6287f0cf6c89b204bb9216be59e78b0d883ca",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/charts",
+          "name": "MetricCard"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.charts.TimeSeriesChart",
+      "source": "src/svelte/components/charts/TimeSeriesChart.svelte",
+      "sourceSha256": "2514c7b239f9b2e01359a0f76ec43dbe7ecde14ad8c448e1b002c808de9353dc",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/charts",
+          "name": "TimeSeriesChart"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatActionButton",
+      "source": "src/svelte/components/chat/ChatActionButton.svelte",
+      "sourceSha256": "e5e3ad7aa4601efae060d38b0b49516ea9613e0a03aa4059ecb08c10772f8917",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatActionButton"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatApproval",
+      "source": "src/svelte/components/chat/ChatApproval.svelte",
+      "sourceSha256": "9779296e376644e32a20aa5a01f49b83d92a3b6d9351b406b9c7b6507ad5cca4",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatApproval"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatArtifact",
+      "source": "src/svelte/components/chat/ChatArtifact.svelte",
+      "sourceSha256": "e8dc2c344054fb39835c63c84fc314fa29a25d6c399087be37d6e758aa811789",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatArtifact"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatAudio",
+      "source": "src/svelte/components/chat/ChatAudio.svelte",
+      "sourceSha256": "7e8de0ba2584453c4d5f3f6dd6ba6787203275ec1a0fb2c99bb79a1abb9c4468",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatAudio"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatCodeBlock",
+      "source": "src/svelte/components/chat/ChatCodeBlock.svelte",
+      "sourceSha256": "19ad843f3591a6b09e535db843d0f8070e21adb5e7875d5903fe4c37d8d51fa6",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatCodeBlock"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatComposer",
+      "source": "src/svelte/components/chat/ChatComposer.svelte",
+      "sourceSha256": "3368dcd8b5f970c7dd25bd7b2009b531ecd5507d3a08193322e1645b9e70d32d",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatComposer"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatComposerAttachments",
+      "source": "src/svelte/components/chat/ChatComposerAttachments.svelte",
+      "sourceSha256": "c34a007aafc94b54872c7b068db3da506618b48d894fe2e1e90306eefc953c26",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatComposerAttachments"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatComposerFooter",
+      "source": "src/svelte/components/chat/ChatComposerFooter.svelte",
+      "sourceSha256": "619a91457c0989c555eb24ca7f14d47521b5b879d927c190b842399337a27942",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatComposerFooter"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatComposerInput",
+      "source": "src/svelte/components/chat/ChatComposerInput.svelte",
+      "sourceSha256": "c7e7ca0a06dc965419c8339d6e4f3e29975a0791f2760f2f69cf768211598b4e",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatComposerInput"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatConversation",
+      "source": "src/svelte/components/chat/ChatConversation.svelte",
+      "sourceSha256": "413825c684bd7c22e523035b798a43149ebbbab4a92be49accac2732aa9662bd",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatConversation"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatDateDivider",
+      "source": "src/svelte/components/chat/ChatDateDivider.svelte",
+      "sourceSha256": "3165956d7b9f4158c07c19e185830a5f39a4e2a6d9e899695abb3eb814e82300",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatDateDivider"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatEmptyState",
+      "source": "src/svelte/components/chat/ChatEmptyState.svelte",
+      "sourceSha256": "f06eb0f4f565e17ee56695cc4d6f0b4b69108bb30d1cdf0983e649c88f85c928",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatEmptyState"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatError",
+      "source": "src/svelte/components/chat/ChatError.svelte",
+      "sourceSha256": "2b1a6e3afa4780790befd5fea2db6d9746b4f37c5d22a1097574947b4e564ab9",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatError"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatFile",
+      "source": "src/svelte/components/chat/ChatFile.svelte",
+      "sourceSha256": "3f23140cc27bbda23163838675d210dbf16b2e7bca2214d2ba3a8a7a5506ec0b",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatFile"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatImage",
+      "source": "src/svelte/components/chat/ChatImage.svelte",
+      "sourceSha256": "3baef7b1591cf2c756cb1f70b13a696535b3f0e7647b6c5072fe175512866e3b",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatImage"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatImages",
+      "source": "src/svelte/components/chat/ChatImages.svelte",
+      "sourceSha256": "4fab83b4509b625011df364ac9795f33eb39596ae58e9655f92e5a6dd1082dda",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatImages"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatMediaLightbox",
+      "source": "src/svelte/components/chat/ChatMediaLightbox.svelte",
+      "sourceSha256": "9576f90403424e265b148c99dc30957beb33aed6eda90d85171b61de6442bb44",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatMediaLightbox"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatMessage",
+      "source": "src/svelte/components/chat/ChatMessage.svelte",
+      "sourceSha256": "bc7aafaeba07f708ed3a80d413ffc8f732df78bdb2c65d86a138307a381d1edd",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatMessage"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatMessageActions",
+      "source": "src/svelte/components/chat/ChatMessageActions.svelte",
+      "sourceSha256": "086328fb224cbad88fd1d8400bb81786c8fdc41c14040309953c57887de3eb77",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatMessageActions"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatMessageAlternatives",
+      "source": "src/svelte/components/chat/ChatMessageAlternatives.svelte",
+      "sourceSha256": "752db96d726ee7bda6e27191aa1b84be430ba8322e7ade47b043400bc6b970d6",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatMessageAlternatives"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatMessageContent",
+      "source": "src/svelte/components/chat/ChatMessageContent.svelte",
+      "sourceSha256": "c1bb090246072b8c0dca7a0be8330017a67f53e4f0ddc1ce811618952b62a754",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatMessageContent"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatMessageEditor",
+      "source": "src/svelte/components/chat/ChatMessageEditor.svelte",
+      "sourceSha256": "b72035d300e3e6bea1748b3227a2b3446716c5379b83c8159650fa7d88cdabb3",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatMessageEditor"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatMessageList",
+      "source": "src/svelte/components/chat/ChatMessageList.svelte",
+      "sourceSha256": "3c5b1e53e5ee6ab35b23d979ad2289215742f69a429f07ae8a7369f8be68ecca",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatMessageList"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatPart",
+      "source": "src/svelte/components/chat/ChatPart.svelte",
+      "sourceSha256": "cabd0b4962b959342ea6e1dca6f7a085fdc138eb37bd1713d4b67110e5ced1a2",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatPart"
+        },
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatBuiltInPart"
+        },
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatMessagePartView"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatPartContainer",
+      "source": "src/svelte/components/chat/ChatPartContainer.svelte",
+      "sourceSha256": "0d9a49485bc0885ddf4ce5cec87784492fd983c0c465afe8afb7d16e4d119696",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatPartContainer"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatPreference",
+      "source": "src/svelte/components/chat/ChatPreference.svelte",
+      "sourceSha256": "ca9ce867a861ccf840d4d32bfdb9be3ef25ac872e5753f42ab6b7a30682422da",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatPreference"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatReasoning",
+      "source": "src/svelte/components/chat/ChatReasoning.svelte",
+      "sourceSha256": "69512c8da31b8e3e14f2a268bdf77a8f55c205317d66924b7050cc11c2b85f04",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatReasoning"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatScrollToBottom",
+      "source": "src/svelte/components/chat/ChatScrollToBottom.svelte",
+      "sourceSha256": "3e4debc80b821d1a8531e7060cec272d3d5ed881231187db4696665dfbd33b64",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatScrollToBottom"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatSources",
+      "source": "src/svelte/components/chat/ChatSources.svelte",
+      "sourceSha256": "a2a9ad378dba6eee9b432616e36956684c29989c68711faccdb514b0a845e82e",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatSources"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatText",
+      "source": "src/svelte/components/chat/ChatText.svelte",
+      "sourceSha256": "36a6a178296a2f5dcaeb47b7ba6b75b9dc1a918e55b1374f430ad6c2cb7c1981",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatText"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatTool",
+      "source": "src/svelte/components/chat/ChatTool.svelte",
+      "sourceSha256": "d3eaceeb60806d1f11c87e3addf9427d33e26eeba67aad351b1d6228dee920a7",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatTool"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.chat.ChatTypingIndicator",
+      "source": "src/svelte/components/chat/ChatTypingIndicator.svelte",
+      "sourceSha256": "0d7b4dfcd28924f9b4eb0202ff8815e048ade61e3bc24a24fc960fd50b7d3a0f",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/chat",
+          "name": "ChatTypingIndicator"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.code.CodeTabs",
+      "source": "src/svelte/components/code/CodeTabs.svelte",
+      "sourceSha256": "8abff8af88216a4612179479b6126f42f29f9db568679a58152696a0a628a3de",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/code",
+          "name": "CodeTabs"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.code.HighlightedCode",
+      "source": "src/svelte/components/code/HighlightedCode.svelte",
+      "sourceSha256": "eabc0cd5620807bd7fc7dfd731d1fb8d89041a6add4d873cc16358f9b0f852af",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/code",
+          "name": "HighlightedCode"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.code.JsonView",
+      "source": "src/svelte/components/code/JsonView.svelte",
+      "sourceSha256": "c230a5a9b2a09f8ed24929020c778fcba571a8a86ff79cfdfb8122dd32f149ff",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/code",
+          "name": "JsonView"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.code-editor.CodeEditor",
+      "source": "src/svelte/components/code-editor/CodeEditor.svelte",
+      "sourceSha256": "1e87fccb79578c25601d2859b0915e6d2774af30725d97bd11099031daedaf41",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/code-editor",
+          "name": "CodeEditor"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.context-menu.ContextMenu",
+      "source": "src/svelte/components/context-menu/ContextMenu.svelte",
+      "sourceSha256": "afb1f18f29bfdf7d96229585827b2f520b7704376f5dbd7f430ec116312e61d9",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/context-menu",
+          "name": "ContextMenu"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.dialog.Dialog",
+      "source": "src/svelte/components/dialog/Dialog.svelte",
+      "sourceSha256": "8f95b0701ae3725feb8db52393ada77497fe4648969a4aeb9b798ec878f36dbf",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/dialog",
+          "name": "Dialog"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.dice.D10",
+      "source": "src/svelte/components/dice/D10.svelte",
+      "sourceSha256": "ec2e4af1072b802f00c3bc199a8cd957384a615ace3120a104ad2a0636fbe54a",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/dice",
+          "name": "D10"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.dice.D20",
+      "source": "src/svelte/components/dice/D20.svelte",
+      "sourceSha256": "230af094c5d0e04469b98265da3a0634b1928c943ced3abd18b1b30666064395",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/dice",
+          "name": "D20"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.dice.DiceRoller",
+      "source": "src/svelte/components/dice/DiceRoller.svelte",
+      "sourceSha256": "397b588c800efbb556a9ee37662c063982baf4a398f736b0268af385eafb5605",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/dice",
+          "name": "DiceRoller"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.dj.AnalysisQueue",
+      "source": "src/svelte/components/dj/AnalysisQueue.svelte",
+      "sourceSha256": "9a320164e26309c82a4dfef575675ed2b5c2022f1c9d424fdd293cae5865be64",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/dj",
+          "name": "AnalysisQueue"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.dj.DualWaveform",
+      "source": "src/svelte/components/dj/DualWaveform.svelte",
+      "sourceSha256": "9c8ddfa0412c1c25ee387463fe0935136693ff4c359968fcbb3e96ce818c819d",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/dj",
+          "name": "DualWaveform"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.dj.ImportTracksDialog",
+      "source": "src/svelte/components/dj/ImportTracksDialog.svelte",
+      "sourceSha256": "82878b1811bd8e3686f3472cae3a60dc24f5b014c81584e3ada0b3bd71b0f808",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/dj",
+          "name": "ImportTracksDialog"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.dj.TransitionAuditionControls",
+      "source": "src/svelte/components/dj/TransitionAuditionControls.svelte",
+      "sourceSha256": "d1e967e01ee13be78136c7aa66b6353bee03bbf95ec78aaf622f8d20d696d9ba",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/dj",
+          "name": "TransitionAuditionControls"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.dj.TransitionPresetPicker",
+      "source": "src/svelte/components/dj/TransitionPresetPicker.svelte",
+      "sourceSha256": "2ed26db7bf662d2998a17c6503d4a2cfa84a1ac33aa94ac39a756ce39a55effb",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/dj",
+          "name": "TransitionPresetPicker"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.editor.CodeTabsNodeView",
+      "source": "src/svelte/components/editor/CodeTabsNodeView.svelte",
+      "sourceSha256": "8424457ad32d077457930c7799163a4fa49af8003b30ae2a49667751b2fdacdb",
+      "exports": [],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.editor.Editor",
+      "source": "src/svelte/components/editor/Editor.svelte",
+      "sourceSha256": "2a07315ca6878ac9332d145574c0fc43c8319dad928e957fd298686ec078019e",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/editor",
+          "name": "Editor"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.editor.EditorBubbleMenu",
+      "source": "src/svelte/components/editor/EditorBubbleMenu.svelte",
+      "sourceSha256": "7c9d0ebfe9dc3131a1e97d6bdc16c4bf7e7de61ff0e1b0e1e2e712037a0aca59",
+      "exports": [],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.editor.EditorToolbar",
+      "source": "src/svelte/components/editor/EditorToolbar.svelte",
+      "sourceSha256": "8951d38a7dd1d9e7b6292c624ca345c416fdf1a6931461815958169241d265ef",
+      "exports": [],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.editor.SlashMenu",
+      "source": "src/svelte/components/editor/SlashMenu.svelte",
+      "sourceSha256": "d4549192f15c368b40570b4e604b43e49b418c7f5e5dccf073dbd74441301223",
+      "exports": [],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.editor.ToolbarAction",
+      "source": "src/svelte/components/editor/ToolbarAction.svelte",
+      "sourceSha256": "cb87c5565e1dcc30f6ab69530ae5bff623a19a3776cf7623960854fe79532525",
+      "exports": [],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.feed.AutomationQueuePanel",
+      "source": "src/svelte/components/feed/AutomationQueuePanel.svelte",
+      "sourceSha256": "5f8631729c3c874ffbb25efd128d3dec01862e0d9afd17fdab87df8d04efed5d",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/feed",
+          "name": "AutomationQueuePanel"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.feed.FeedEntryCard",
+      "source": "src/svelte/components/feed/FeedEntryCard.svelte",
+      "sourceSha256": "cfe7f934a5117d9e417e8ca51a99ce4e5a3968be00afdd7a262e15694a42ce57",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/feed",
+          "name": "FeedEntryCard"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.feed.FeedEntryRow",
+      "source": "src/svelte/components/feed/FeedEntryRow.svelte",
+      "sourceSha256": "f9b96269df7dea34992cc5511881f8b4521c81f8ef4b0779a7ffebc3be9e27fb",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/feed",
+          "name": "FeedEntryRow"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.feed.FeedEntryView",
+      "source": "src/svelte/components/feed/FeedEntryView.svelte",
+      "sourceSha256": "fb3cebbeee794af3ff89aca38bf9006c2e59a55f53e6064ef4758af1f222a2a1",
+      "exports": [],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.feed.FeedLayout",
+      "source": "src/svelte/components/feed/FeedLayout.svelte",
+      "sourceSha256": "e20741cdea439c2388dc1c20c92ada0e1da140f5af1333fd7056324e1daf9eee",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/feed",
+          "name": "FeedLayout"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.feed.HighlightLayer",
+      "source": "src/svelte/components/feed/HighlightLayer.svelte",
+      "sourceSha256": "a9830a596e2a152dbbd0d017a4793814f1665f18fd47f3eaef4ca43323ee7ad6",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/feed",
+          "name": "HighlightLayer"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.feed.NarrationTransport",
+      "source": "src/svelte/components/feed/NarrationTransport.svelte",
+      "sourceSha256": "9e77daa5742e76405f6ff9be703f12464a6a196d1eaa69de071a46de83f600e7",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/feed",
+          "name": "NarrationTransport"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.feed.ReaderPane",
+      "source": "src/svelte/components/feed/ReaderPane.svelte",
+      "sourceSha256": "aae4c75d1d1b83945c7d8613f45843c7cc6ed4455195150ae274abe8d9b95a28",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/feed",
+          "name": "ReaderPane"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.feed.SelectionToolbar",
+      "source": "src/svelte/components/feed/SelectionToolbar.svelte",
+      "sourceSha256": "ad02163b4288e58efca7caee7a90848e1479867c4dd5577df538aafa0838999d",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/feed",
+          "name": "SelectionToolbar"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.feed.SourceHealthBadge",
+      "source": "src/svelte/components/feed/SourceHealthBadge.svelte",
+      "sourceSha256": "5fb412903c7753d87f18231a75016eef5cb1c0ba3087c9987df4454f117cb1ea",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/feed",
+          "name": "SourceHealthBadge"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.feed.SplitPane",
+      "source": "src/svelte/components/feed/SplitPane.svelte",
+      "sourceSha256": "e52ceedbeb1130845c235100ca4f9554b5359854f7403b5e62d28c80b28aa030",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/feed",
+          "name": "SplitPane"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.feed.ViewModeToggle",
+      "source": "src/svelte/components/feed/ViewModeToggle.svelte",
+      "sourceSha256": "7eb76624c27217c7b1aa49536d18533b11bff30a18f237fcbfeb72371834fc44",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/feed",
+          "name": "ViewModeToggle"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.framebuffer.Framebuffer",
+      "source": "src/svelte/components/framebuffer/Framebuffer.svelte",
+      "sourceSha256": "d93b2c113a547e37c4ba8fc979f72f00db9587ecc34d70682e76d55aeff5d434",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/framebuffer",
+          "name": "Framebuffer"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.graph.ForceGraphView",
+      "source": "src/svelte/components/graph/ForceGraphView.svelte",
+      "sourceSha256": "b867cd698118c778c70af1125ae538437ffeeb01fd6c299614ca9f145648841a",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/graph",
+          "name": "ForceGraphView"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.graph.InteractiveGraphView",
+      "source": "src/svelte/components/graph/InteractiveGraphView.svelte",
+      "sourceSha256": "769b107789ad2fcad880eaac2761b68b17b221fb6503af7cd329ddd1c6399981",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/graph",
+          "name": "InteractiveGraphView"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.graph.NodeConfigurationForm",
+      "source": "src/svelte/components/graph/NodeConfigurationForm.svelte",
+      "sourceSha256": "d4a4f91662dc8e80ce7606f1bdc5bdc9a7d5bba33316855351d09bdca78d0db0",
+      "exports": [],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.graph.NodeInspector",
+      "source": "src/svelte/components/graph/NodeInspector.svelte",
+      "sourceSha256": "6578992436e1405c4853dccd93dec5f7b3db4d1567e6824cbbb618fc0c20aa88",
+      "exports": [],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.graph.TimelineView",
+      "source": "src/svelte/components/graph/TimelineView.svelte",
+      "sourceSha256": "dbf32bb6a60cdc13645a85aea91768ca1c805eb835248078dde14923c8f69c73",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/graph",
+          "name": "TimelineView"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.icon.Icon",
+      "source": "src/svelte/components/icon/Icon.svelte",
+      "sourceSha256": "2959c402692009ddd34cb843da6cafc20ee4de179ed1ad8031b26792663d48d6",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/icon",
+          "name": "Icon"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.icon.Spinner",
+      "source": "src/svelte/components/icon/Spinner.svelte",
+      "sourceSha256": "cc317247c2cf1ab9c0ff9533a258e5e509acf2308d66db7675a2eed8b2d6003b",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/icon",
+          "name": "Spinner"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.icon.StatusIcon",
+      "source": "src/svelte/components/icon/StatusIcon.svelte",
+      "sourceSha256": "6949c95a07eb6f9db53e1ec44047a140892a33e5372acef008aa79572ba272c6",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/icon",
+          "name": "StatusIcon"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.identity.Avatar",
+      "source": "src/svelte/components/identity/Avatar.svelte",
+      "sourceSha256": "28ab927bd29b79daa56d325368c28c742deb9eadb7790a3c43c632cd532c4d22",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/identity",
+          "name": "Avatar"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.identity.AvatarGroup",
+      "source": "src/svelte/components/identity/AvatarGroup.svelte",
+      "sourceSha256": "f5a29abc1dc582c7ec9dd0ae9b845f2e57523420637cab8e8c03cb73d7f7b28a",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/identity",
+          "name": "AvatarGroup"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.interaction.InteractionHarness",
+      "source": "src/svelte/components/interaction/InteractionHarness.svelte",
+      "sourceSha256": "f5b0af1c6156ad4e4994fe8d0537931dfc59121df5143de59c928eabf47a866b",
+      "exports": [],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.media.AudioPlayer",
+      "source": "src/svelte/components/media/AudioPlayer.svelte",
+      "sourceSha256": "31642ca9da03f6e2c819228713257d12300fcf097f301d7580ffb6355809e59d",
+      "exports": [],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.media.MediaPlaceholder",
+      "source": "src/svelte/components/media/MediaPlaceholder.svelte",
+      "sourceSha256": "10434a5035c724ebf73bd9644350d6a9248e08147ca1ed37a848d20a222f27ee",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/media-player",
+          "name": "MediaPlaceholder"
+        },
+        {
+          "entrypoint": "@nebula/tint/video-player",
+          "name": "MediaPlaceholder"
+        },
+        {
+          "entrypoint": "@nebula/tint/media",
+          "name": "MediaPlaceholder"
+        },
+        {
+          "entrypoint": "@nebula/tint/settings-popout",
+          "name": "MediaPlaceholder"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.media.MediaPlayer",
+      "source": "src/svelte/components/media/MediaPlayer.svelte",
+      "sourceSha256": "69bbc70a6b471c3bb232cd529f8c2f5d6e8780c079c68735ae09fd7f965575e6",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/media-player",
+          "name": "MediaPlayer"
+        },
+        {
+          "entrypoint": "@nebula/tint/video-player",
+          "name": "MediaPlayer"
+        },
+        {
+          "entrypoint": "@nebula/tint/media",
+          "name": "MediaPlayer"
+        },
+        {
+          "entrypoint": "@nebula/tint/settings-popout",
+          "name": "MediaPlayer"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.media.MediaScrubber",
+      "source": "src/svelte/components/media/MediaScrubber.svelte",
+      "sourceSha256": "e1ab781b30d434983c71ecca27990907cce0b9496733be08c906d36c34186e82",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/media-player",
+          "name": "MediaScrubber"
+        },
+        {
+          "entrypoint": "@nebula/tint/video-player",
+          "name": "MediaScrubber"
+        },
+        {
+          "entrypoint": "@nebula/tint/media",
+          "name": "MediaScrubber"
+        },
+        {
+          "entrypoint": "@nebula/tint/settings-popout",
+          "name": "MediaScrubber"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.media.PlaybackQueue",
+      "source": "src/svelte/components/media/PlaybackQueue.svelte",
+      "sourceSha256": "f80cd41b7cb1f80159eaa4cfacb96dcb1f2293402910f09a84452a2b5ffa1cfe",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/media-player",
+          "name": "PlaybackQueue"
+        },
+        {
+          "entrypoint": "@nebula/tint/video-player",
+          "name": "PlaybackQueue"
+        },
+        {
+          "entrypoint": "@nebula/tint/media",
+          "name": "PlaybackQueue"
+        },
+        {
+          "entrypoint": "@nebula/tint/settings-popout",
+          "name": "PlaybackQueue"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.media.QueueArtwork",
+      "source": "src/svelte/components/media/QueueArtwork.svelte",
+      "sourceSha256": "ff8d3b7b25b95a3972d40548edd183165d77300bf2ccd0c762e216744faae028",
+      "exports": [],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.media.SettingsPopout",
+      "source": "src/svelte/components/media/SettingsPopout.svelte",
+      "sourceSha256": "73b2b0ecc2677516dbb38f6c2811ebcf09b445526742fe3ef8fa19c6ca8b6279",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/media-player",
+          "name": "SettingsPopout"
+        },
+        {
+          "entrypoint": "@nebula/tint/video-player",
+          "name": "SettingsPopout"
+        },
+        {
+          "entrypoint": "@nebula/tint/media",
+          "name": "SettingsPopout"
+        },
+        {
+          "entrypoint": "@nebula/tint/settings-popout",
+          "name": "SettingsPopout"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.media.Slider",
+      "source": "src/svelte/components/media/Slider.svelte",
+      "sourceSha256": "d7f1db327b8125b8e8234b2d6e47fabae7ff0fc4e59f4db6936a135242ffe3a3",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/media-player",
+          "name": "Slider"
+        },
+        {
+          "entrypoint": "@nebula/tint/video-player",
+          "name": "Slider"
+        },
+        {
+          "entrypoint": "@nebula/tint/media",
+          "name": "Slider"
+        },
+        {
+          "entrypoint": "@nebula/tint/settings-popout",
+          "name": "Slider"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.media.VideoPlayer",
+      "source": "src/svelte/components/media/VideoPlayer.svelte",
+      "sourceSha256": "e6661c69b2e0af354bee4e99556d81251fccc5935adc2028e297f9adf6de0a80",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/media-player",
+          "name": "VideoPlayer"
+        },
+        {
+          "entrypoint": "@nebula/tint/video-player",
+          "name": "VideoPlayer"
+        },
+        {
+          "entrypoint": "@nebula/tint/media",
+          "name": "VideoPlayer"
+        },
+        {
+          "entrypoint": "@nebula/tint/settings-popout",
+          "name": "VideoPlayer"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.media.VolumeControl",
+      "source": "src/svelte/components/media/VolumeControl.svelte",
+      "sourceSha256": "050c9a08f77fa86105d29a24d54b17b644f5343ff5a3c97fa415dd9c6f24fdde",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/media-player",
+          "name": "VolumeControl"
+        },
+        {
+          "entrypoint": "@nebula/tint/video-player",
+          "name": "VolumeControl"
+        },
+        {
+          "entrypoint": "@nebula/tint/media",
+          "name": "VolumeControl"
+        },
+        {
+          "entrypoint": "@nebula/tint/settings-popout",
+          "name": "VolumeControl"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.media.Waveform",
+      "source": "src/svelte/components/media/Waveform.svelte",
+      "sourceSha256": "9f2fcb948c8c3c338574bbed9c6da9159ce371f63b68b0b0beb88b0500fbcee4",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/media-player",
+          "name": "Waveform"
+        },
+        {
+          "entrypoint": "@nebula/tint/video-player",
+          "name": "Waveform"
+        },
+        {
+          "entrypoint": "@nebula/tint/media",
+          "name": "Waveform"
+        },
+        {
+          "entrypoint": "@nebula/tint/settings-popout",
+          "name": "Waveform"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.media-assets.GalleryGrid",
+      "source": "src/svelte/components/media-assets/GalleryGrid.svelte",
+      "sourceSha256": "7fc41cad6e571a2d2ce74c69f565077455fcfb79c7896b7d3dd5ee6862dbc16a",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/media-assets",
+          "name": "GalleryGrid"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.media-assets.MediaLightbox",
+      "source": "src/svelte/components/media-assets/MediaLightbox.svelte",
+      "sourceSha256": "b6f2b9dca5a1e9b6f97ee71404ebe5b69266200f0f83e9cda993ba7f1fa18669",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/media-assets",
+          "name": "MediaLightbox"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.media-assets.UploadDropzone",
+      "source": "src/svelte/components/media-assets/UploadDropzone.svelte",
+      "sourceSha256": "7b602a9dcc22d9b6f994603fd5cbb2f46de7806cbcb19888652625f2bc2c3ddb",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/media-assets",
+          "name": "UploadDropzone"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.media-assets.UploadPreview",
+      "source": "src/svelte/components/media-assets/UploadPreview.svelte",
+      "sourceSha256": "4e4e2f213e88412f486f416a4809486e9af2f9ed57ee357fb767c5a4c0cd4214",
+      "exports": [],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.media-assets.UploadQueue",
+      "source": "src/svelte/components/media-assets/UploadQueue.svelte",
+      "sourceSha256": "757f0f9ec1602684a7dec33c0a02700ffb983fe3f9c5cd27e66e4b8311c4feb1",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/media-assets",
+          "name": "UploadQueue"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.menu.Menu",
+      "source": "src/svelte/components/menu/Menu.svelte",
+      "sourceSha256": "f5458b1098951f386c9fd11c2c9fd134a28b55aa6978a9bb9f0c670895d9f7ae",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/menu",
+          "name": "Menu"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.navigation.AppShell",
+      "source": "src/svelte/components/navigation/AppShell.svelte",
+      "sourceSha256": "7ea97dee59ba5db759c4dc2df2f7e6f8b16b1a42d11891c07c9b055c05fddcdc",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/navigation",
+          "name": "AppShell"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.navigation.Breadcrumbs",
+      "source": "src/svelte/components/navigation/Breadcrumbs.svelte",
+      "sourceSha256": "b0dd6ae66acc59f574c30bb71eb2c6751ac031bfa49a5941606e471fb3d412a5",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/navigation",
+          "name": "Breadcrumbs"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.navigation.NavigationList",
+      "source": "src/svelte/components/navigation/NavigationList.svelte",
+      "sourceSha256": "3aaa23d7f29e7d47d90a64683c61cdc70d271f6ab5b66ebea1c088038ec15f82",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/navigation",
+          "name": "NavigationList"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.notify.NotificationBell",
+      "source": "src/svelte/components/notify/NotificationBell.svelte",
+      "sourceSha256": "fa21b1b8a686202aaebd21a6b16ca65b67bb114903c251ac11bf84330a6c6352",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/notify",
+          "name": "NotificationBell"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.notify.NotificationList",
+      "source": "src/svelte/components/notify/NotificationList.svelte",
+      "sourceSha256": "191777dd3ffe72edc850873f16dd7016f1e7c1dde55e39222ac8721458cf3653",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/notify",
+          "name": "NotificationList"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.notify.NotificationSettingsPanel",
+      "source": "src/svelte/components/notify/NotificationSettingsPanel.svelte",
+      "sourceSha256": "78414cd07cc0828a57e3d949931f7b8da5dd9e5d226492a3e8f4837829051379",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/notify",
+          "name": "NotificationSettingsPanel"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.panel.Panel",
+      "source": "src/svelte/components/panel/Panel.svelte",
+      "sourceSha256": "ba32ff15c0d3719a3a7dc2d98ab519f76b35e010445aac4019ef355b5d92f3e2",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/panel",
+          "name": "Panel"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.policy.PolicyDryRun",
+      "source": "src/svelte/components/policy/PolicyDryRun.svelte",
+      "sourceSha256": "810644eb9cd8ff2ee157f158fea8f1de3d06604d011bf9b194143c54d84d75e2",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/policy",
+          "name": "PolicyDryRun"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.policy.PolicyEditor",
+      "source": "src/svelte/components/policy/PolicyEditor.svelte",
+      "sourceSha256": "9ebde902ecbee0aa279cb22d1940569302590b73aa6f6dc1840fdd13cea1f98d",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/policy",
+          "name": "PolicyEditor"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.policy.PolicyTable",
+      "source": "src/svelte/components/policy/PolicyTable.svelte",
+      "sourceSha256": "af5a6e0e5c7c354feddea293232f4cb5a1d77675ee3869675db9aa20cf903ab8",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/policy",
+          "name": "PolicyTable"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.popover.Popover",
+      "source": "src/svelte/components/popover/Popover.svelte",
+      "sourceSha256": "9cd71fc5e8e940d3c4fb0c9dd0520dd583051945a81f22300c3d99add0152001",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/popover",
+          "name": "Popover"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.progress.ProgressBar",
+      "source": "src/svelte/components/progress/ProgressBar.svelte",
+      "sourceSha256": "b9665b4e8211387440403c99503c62dcba4dd59bddd795b78618a7a2f7842ef4",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/progress",
+          "name": "ProgressBar"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.release-chart.ReleaseChart",
+      "source": "src/svelte/components/release-chart/ReleaseChart.svelte",
+      "sourceSha256": "5e853bc9c1f65357eca0a7c60e979fc4adc98e945b1c9208e275dc0dd1305836",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/release-chart",
+          "name": "ReleaseChart"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.scatter-plot.ScatterPlot",
+      "source": "src/svelte/components/scatter-plot/ScatterPlot.svelte",
+      "sourceSha256": "87d3a66d608d9a85b375adabe02f44792c43cf362ce5ad948adadbf2803a2e9d",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/scatter-plot",
+          "name": "ScatterPlot"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.scrolling-label.ScrollingLabel",
+      "source": "src/svelte/components/scrolling-label/ScrollingLabel.svelte",
+      "sourceSha256": "abf1fbbab1019f0f4314fe9daa48f8e60e8b6d69580e00ebe5bab27ee374b2e1",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/scrolling-label",
+          "name": "ScrollingLabel"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.shell.AppShell",
+      "source": "src/svelte/components/shell/AppShell.svelte",
+      "sourceSha256": "92d8c860cef5b2611299df3716d326b557588a5a1758be6dac38c3e8896dde6f",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/shell",
+          "name": "AppShell"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.shell.CommandMenu",
+      "source": "src/svelte/components/shell/CommandMenu.svelte",
+      "sourceSha256": "ee4a8d3c02be4f12fea32b89d1948b6f1d03a7b040d2f1beb56e19047ce19f43",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/shell",
+          "name": "CommandMenu"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.shell.CommandPalette",
+      "source": "src/svelte/components/shell/CommandPalette.svelte",
+      "sourceSha256": "795f79d1323c9ca936d081d5bf4e29e75e92e2d475a73596133b5edabde2ea8d",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/shell",
+          "name": "CommandPalette"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.shell.DetailSheet",
+      "source": "src/svelte/components/shell/DetailSheet.svelte",
+      "sourceSha256": "3f17cf8e73e2dad87e57a3cd192c9ab4c60573036e71e2d6135c43f6992121ef",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/shell",
+          "name": "DetailSheet"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.shell.EmptyState",
+      "source": "src/svelte/components/shell/EmptyState.svelte",
+      "sourceSha256": "c79bb296cf4ba10e8ea9fa17565f3c70645ad4ced5689da8dd37a938750ea85b",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/shell",
+          "name": "EmptyState"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.shell.ErrorBanner",
+      "source": "src/svelte/components/shell/ErrorBanner.svelte",
+      "sourceSha256": "59a570f66de84951d8ff5b6e7061c4eabaa8d3b035b3df611fd04c95c5e88d78",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/shell",
+          "name": "ErrorBanner"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.shell.FilterBar",
+      "source": "src/svelte/components/shell/FilterBar.svelte",
+      "sourceSha256": "e4391826206f8c2d642dae934bc9bcef2cf6b00e02860e204787ee6db47bf040",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/shell",
+          "name": "FilterBar"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.shell.LoadingState",
+      "source": "src/svelte/components/shell/LoadingState.svelte",
+      "sourceSha256": "b98852317c04155505668db9dd7343a1837b5f85deb98cd72ccfb503e361e6ce",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/shell",
+          "name": "LoadingState"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.shell.MetadataPanel",
+      "source": "src/svelte/components/shell/MetadataPanel.svelte",
+      "sourceSha256": "8f0788d98abffc7c556417d5aa35c049fe0d097c34baa926c059cfa7c7811f56",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/shell",
+          "name": "MetadataPanel"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.shell.NavRail",
+      "source": "src/svelte/components/shell/NavRail.svelte",
+      "sourceSha256": "99b0f6352157ccc3a8623eafa8caa0cdc7214d9d088b5b125891cf85c2f0e3e2",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/shell",
+          "name": "NavRail"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.shell.ResizeHandle",
+      "source": "src/svelte/components/shell/ResizeHandle.svelte",
+      "sourceSha256": "237976687515247a1b205b8dff778bc31bac16af9d99d00fe8a957f2fbb82d83",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/shell",
+          "name": "ResizeHandle"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.shell.ResponsiveNavRail",
+      "source": "src/svelte/components/shell/ResponsiveNavRail.svelte",
+      "sourceSha256": "613f0677a28c16045b3898a366043845ac822ef1af673bd3d80f24cecf1a65fa",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/shell",
+          "name": "ResponsiveNavRail"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.shell.StatusBar",
+      "source": "src/svelte/components/shell/StatusBar.svelte",
+      "sourceSha256": "dca0382e54c828ed7255b22e2460591e871f8d07ef2eaef1b57c6c98217f54b2",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/shell",
+          "name": "StatusBar"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.shell.TopNav",
+      "source": "src/svelte/components/shell/TopNav.svelte",
+      "sourceSha256": "2efe0c07384b3fb8229ed589411da813818543e0ef0c135ad7d8fecc205170e9",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/shell",
+          "name": "TopNav"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.shell.WorkspaceHeader",
+      "source": "src/svelte/components/shell/WorkspaceHeader.svelte",
+      "sourceSha256": "a0b2af0cdad8e68dc9ec52076e6c3d0f9ad03f3d86ae42a37f19ebed7176bd48",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/shell",
+          "name": "WorkspaceHeader"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.shell.WorkspaceLayout",
+      "source": "src/svelte/components/shell/WorkspaceLayout.svelte",
+      "sourceSha256": "de64c078dcbf55d086997c214c31c08a24a29338807b629931b87a3c2a637dc7",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/shell",
+          "name": "WorkspaceLayout"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.shell.WorkspaceSplit",
+      "source": "src/svelte/components/shell/WorkspaceSplit.svelte",
+      "sourceSha256": "c41bbf3696330d01e0dadb0bec935d134958b91fa8446e5449ab12c558bbca09",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/shell",
+          "name": "WorkspaceSplit"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.shell.WorkspaceTabs",
+      "source": "src/svelte/components/shell/WorkspaceTabs.svelte",
+      "sourceSha256": "263996b286809ce320994e3fc531b1589973aa2a9291e69c4c3d6e3341ce43fc",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/shell",
+          "name": "WorkspaceTabs"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.status.ConnectionStatus",
+      "source": "src/svelte/components/status/ConnectionStatus.svelte",
+      "sourceSha256": "3f2eefdefde33d81b370f93be45bcbc22ae08841941c393c0686a25b5546bb95",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/status",
+          "name": "ConnectionStatus"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.status.EmptyState",
+      "source": "src/svelte/components/status/EmptyState.svelte",
+      "sourceSha256": "f93d605d516b35b5cc13183ed6d052a35fa18a0cc8295b0bda7749100c8f6713",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/status",
+          "name": "EmptyState"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.status.ErrorState",
+      "source": "src/svelte/components/status/ErrorState.svelte",
+      "sourceSha256": "a6210ff575925d6beaf2e10b9a69457a154a8c150a196b89a0610d24f9651b61",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/status",
+          "name": "ErrorState"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.status.Skeleton",
+      "source": "src/svelte/components/status/Skeleton.svelte",
+      "sourceSha256": "b0e74f9d3b465b490aacdf2f4c63005e62121634e1b614bd08c03b407c561d6f",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/status",
+          "name": "Skeleton"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.surface.Card",
+      "source": "src/svelte/components/surface/Card.svelte",
+      "sourceSha256": "4f57e57d87192aef77de1c027fbfc8154542b09528c13472a8bd0bb7d8207750",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/surface",
+          "name": "Card"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.surface.Surface",
+      "source": "src/svelte/components/surface/Surface.svelte",
+      "sourceSha256": "ad4382600cf0c7287e9f72d5acbf4e9a35e5f8ca027feee62b08b3f2b0270549",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/surface",
+          "name": "Surface"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.table.CellPopover",
+      "source": "src/svelte/components/table/CellPopover.svelte",
+      "sourceSha256": "ac71e3af5b5cfb5fcc850261e3dea913f8fd6e4f463f45f2430bc5f6bae75348",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/table",
+          "name": "CellPopover"
+        },
+        {
+          "entrypoint": "@nebula/tint/workspace-grid",
+          "name": "CellPopover"
+        },
+        {
+          "entrypoint": "@nebula/tint/media-workspace",
+          "name": "CellPopover"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.table.CollectionWorkspace",
+      "source": "src/svelte/components/table/CollectionWorkspace.svelte",
+      "sourceSha256": "1d2a0a648e0313a89dc6d2530f1124dc0e36315f7107c05faeaa3c5a529cf62f",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/table",
+          "name": "CollectionWorkspace"
+        },
+        {
+          "entrypoint": "@nebula/tint/table",
+          "name": "CollectionWorkbench"
+        },
+        {
+          "entrypoint": "@nebula/tint/workspace-grid",
+          "name": "CollectionWorkspace"
+        },
+        {
+          "entrypoint": "@nebula/tint/workspace-grid",
+          "name": "CollectionWorkbench"
+        },
+        {
+          "entrypoint": "@nebula/tint/media-workspace",
+          "name": "CollectionWorkspace"
+        },
+        {
+          "entrypoint": "@nebula/tint/media-workspace",
+          "name": "CollectionWorkbench"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.table.DataFilterControls",
+      "source": "src/svelte/components/table/DataFilterControls.svelte",
+      "sourceSha256": "a258e9493f16b209c208c7b78e9891b12a2a7aba8fd98759ba14a2355f0fcbda",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/table",
+          "name": "DataFilterControls"
+        },
+        {
+          "entrypoint": "@nebula/tint/workspace-grid",
+          "name": "DataFilterControls"
+        },
+        {
+          "entrypoint": "@nebula/tint/media-workspace",
+          "name": "DataFilterControls"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.table.DataMasonry",
+      "source": "src/svelte/components/table/DataMasonry.svelte",
+      "sourceSha256": "4289bdbff7fa53aceb92aaf30f15cb4a5941b237795a44f92c6f8dc5d71b678b",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/table",
+          "name": "DataMasonry"
+        },
+        {
+          "entrypoint": "@nebula/tint/workspace-grid",
+          "name": "DataMasonry"
+        },
+        {
+          "entrypoint": "@nebula/tint/media-workspace",
+          "name": "DataMasonry"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.table.DataTable",
+      "source": "src/svelte/components/table/DataTable.svelte",
+      "sourceSha256": "08bbd3be9b90cb76ea5787b94f5706a7c811b6081b3e556ce54a42c2b4cafcf0",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/table",
+          "name": "DataTable"
+        },
+        {
+          "entrypoint": "@nebula/tint/workspace-grid",
+          "name": "DataTable"
+        },
+        {
+          "entrypoint": "@nebula/tint/media-workspace",
+          "name": "DataTable"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.table.DatasetCell",
+      "source": "src/svelte/components/table/DatasetCell.svelte",
+      "sourceSha256": "a74790837259be5bd9f0e731fece82879fbccb5111c4651ab750c6b15db0da98",
+      "exports": [],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.table.DatasetCellEditor",
+      "source": "src/svelte/components/table/DatasetCellEditor.svelte",
+      "sourceSha256": "7be266aed8fd82e188f889f9b9bf9d72033c3e7dc6b77346fba25655dc5130fd",
+      "exports": [],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.table.DatasetEditor",
+      "source": "src/svelte/components/table/DatasetEditor.svelte",
+      "sourceSha256": "744c206b106ff14121c98e8f4e611bed629de02f88057b6d729c36afd383f747",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/table",
+          "name": "DatasetEditor"
+        },
+        {
+          "entrypoint": "@nebula/tint/workspace-grid",
+          "name": "DatasetEditor"
+        },
+        {
+          "entrypoint": "@nebula/tint/media-workspace",
+          "name": "DatasetEditor"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.table.DatasetGrid",
+      "source": "src/svelte/components/table/DatasetGrid.svelte",
+      "sourceSha256": "1cd4afd7dbc12a409a6706d8242bffa84df7c7428a4ca880192f7c99546bead2",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/table",
+          "name": "DatasetGrid"
+        },
+        {
+          "entrypoint": "@nebula/tint/workspace-grid",
+          "name": "DatasetGrid"
+        },
+        {
+          "entrypoint": "@nebula/tint/media-workspace",
+          "name": "DatasetGrid"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.table.EventReviewControls",
+      "source": "src/svelte/components/table/EventReviewControls.svelte",
+      "sourceSha256": "53517d69f5308c55c93ce2f60829f5b1ea5f77cd012739948edad58e27942386",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/table",
+          "name": "EventReviewControls"
+        },
+        {
+          "entrypoint": "@nebula/tint/workspace-grid",
+          "name": "EventReviewControls"
+        },
+        {
+          "entrypoint": "@nebula/tint/media-workspace",
+          "name": "EventReviewControls"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.table.FieldMenu",
+      "source": "src/svelte/components/table/FieldMenu.svelte",
+      "sourceSha256": "6750e8dc93f17162f77c269ccbebe6e7e968bdeed762613fb8961ee5bc70fa81",
+      "exports": [],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.table.InfiniteRows",
+      "source": "src/svelte/components/table/InfiniteRows.svelte",
+      "sourceSha256": "51a255c9c0b1646d841b4b50aad97dbb80c024cd7b9abd5fcd308a53a36b07ac",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/table",
+          "name": "InfiniteRows"
+        },
+        {
+          "entrypoint": "@nebula/tint/workspace-grid",
+          "name": "InfiniteRows"
+        },
+        {
+          "entrypoint": "@nebula/tint/media-workspace",
+          "name": "InfiniteRows"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.table.MediaWorkspace",
+      "source": "src/svelte/components/table/MediaWorkspace.svelte",
+      "sourceSha256": "2f175d683af7d9232d8842c29d9e43a37d81555168bf96f143452afd7f8985bb",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/table",
+          "name": "MediaWorkspace"
+        },
+        {
+          "entrypoint": "@nebula/tint/workspace-grid",
+          "name": "MediaWorkspace"
+        },
+        {
+          "entrypoint": "@nebula/tint/media-workspace",
+          "name": "MediaWorkspace"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.table.RecordPanel",
+      "source": "src/svelte/components/table/RecordPanel.svelte",
+      "sourceSha256": "5c6471140f020e50b1cf5847ea4d02ca835ffbec33d94b0ae0c97cf0072b5a1d",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/table",
+          "name": "RecordPanel"
+        },
+        {
+          "entrypoint": "@nebula/tint/workspace-grid",
+          "name": "RecordPanel"
+        },
+        {
+          "entrypoint": "@nebula/tint/media-workspace",
+          "name": "RecordPanel"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.table.RowMenu",
+      "source": "src/svelte/components/table/RowMenu.svelte",
+      "sourceSha256": "9bb92ccd35da8a64876a0de5727617edc45603a6864faa5b90e83e70ff5fec95",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/table",
+          "name": "RowMenu"
+        },
+        {
+          "entrypoint": "@nebula/tint/workspace-grid",
+          "name": "RowMenu"
+        },
+        {
+          "entrypoint": "@nebula/tint/media-workspace",
+          "name": "RowMenu"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.table.TableColumnsMenu",
+      "source": "src/svelte/components/table/TableColumnsMenu.svelte",
+      "sourceSha256": "40b9a7efa075f251b14eba8177cae0c537e4c424b7bc7decbbdbb83a650eb5a0",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/table",
+          "name": "TableColumnsMenu"
+        },
+        {
+          "entrypoint": "@nebula/tint/workspace-grid",
+          "name": "TableColumnsMenu"
+        },
+        {
+          "entrypoint": "@nebula/tint/media-workspace",
+          "name": "TableColumnsMenu"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.table.TablePager",
+      "source": "src/svelte/components/table/TablePager.svelte",
+      "sourceSha256": "805e8b2c71f869d579273b6100dee5f2b6be5d4a0d633ff152a587e1fd93d688",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/table",
+          "name": "TablePager"
+        },
+        {
+          "entrypoint": "@nebula/tint/workspace-grid",
+          "name": "TablePager"
+        },
+        {
+          "entrypoint": "@nebula/tint/media-workspace",
+          "name": "TablePager"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.table.TableToolbar",
+      "source": "src/svelte/components/table/TableToolbar.svelte",
+      "sourceSha256": "fb6768da87cad54049e253ceafac3efd57b5c82fa6ab5b133ac3c2ce33fe7e01",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/table",
+          "name": "TableToolbar"
+        },
+        {
+          "entrypoint": "@nebula/tint/workspace-grid",
+          "name": "TableToolbar"
+        },
+        {
+          "entrypoint": "@nebula/tint/media-workspace",
+          "name": "TableToolbar"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.table.ViewBar",
+      "source": "src/svelte/components/table/ViewBar.svelte",
+      "sourceSha256": "ec3ba95b8f68792f9791720bf07802d7fe830086f214a9792765ec37428a6461",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/table",
+          "name": "ViewBar"
+        },
+        {
+          "entrypoint": "@nebula/tint/workspace-grid",
+          "name": "ViewBar"
+        },
+        {
+          "entrypoint": "@nebula/tint/media-workspace",
+          "name": "ViewBar"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.table.WorkspaceGrid",
+      "source": "src/svelte/components/table/WorkspaceGrid.svelte",
+      "sourceSha256": "9c8c62d0b3f0c9d1fb8b9b38ff44da1f2c567ad760386218d4440c9516a3b09d",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/table",
+          "name": "WorkspaceGrid"
+        },
+        {
+          "entrypoint": "@nebula/tint/workspace-grid",
+          "name": "WorkspaceGrid"
+        },
+        {
+          "entrypoint": "@nebula/tint/media-workspace",
+          "name": "WorkspaceGrid"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.tabs.Tabs",
+      "source": "src/svelte/components/tabs/Tabs.svelte",
+      "sourceSha256": "b8e7c9751b00f10310322c5ba71f8c107a35cc4923dd4d0f8ca012b395081ef9",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/tabs",
+          "name": "Tabs"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.telemetry.TraceMetrics",
+      "source": "src/svelte/components/telemetry/TraceMetrics.svelte",
+      "sourceSha256": "5488fe47c40e51c5ba9dd1564788bedef4503a080fdda4b80a9d565dc8479225",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/telemetry",
+          "name": "TraceMetrics"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.telemetry.TraceServiceMap",
+      "source": "src/svelte/components/telemetry/TraceServiceMap.svelte",
+      "sourceSha256": "7acd581fd5ec6eb037afc092157966c845cfaac5725d544732bab090678acbf2",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/telemetry",
+          "name": "TraceServiceMap"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.telemetry.TraceSpanDetail",
+      "source": "src/svelte/components/telemetry/TraceSpanDetail.svelte",
+      "sourceSha256": "180a1aa8991a8b557ac20144c9b18d9072998821092484f6263b655234cfe85d",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/telemetry",
+          "name": "TraceSpanDetail"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.telemetry.TraceViewer",
+      "source": "src/svelte/components/telemetry/TraceViewer.svelte",
+      "sourceSha256": "a43ff745875a557fef60ce26df67214035336e784787755b77f3bd5bc41a63ea",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/telemetry",
+          "name": "TraceViewer"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.telemetry.TraceWaterfall",
+      "source": "src/svelte/components/telemetry/TraceWaterfall.svelte",
+      "sourceSha256": "45161b7b0bf3a15e1ac19707e2512fd44e73a8cecaed1ddb7dc81b9d7cd46d19",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/telemetry",
+          "name": "TraceWaterfall"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.terminal.TerminalConsole",
+      "source": "src/svelte/components/terminal/TerminalConsole.svelte",
+      "sourceSha256": "d127bbc58b82e38c585518d8112b3e9343a46c12d58577336783599720680b47",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/terminal",
+          "name": "TerminalConsole"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.testing.Harness",
+      "source": "src/svelte/components/testing/Harness.svelte",
+      "sourceSha256": "7ec380d003fb26e17ec65d457b4208912550e613d0af14a17637299546c3a7b8",
+      "exports": [],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.theme.ThemePicker",
+      "source": "src/svelte/components/theme/ThemePicker.svelte",
+      "sourceSha256": "e50705659ae10df6af2d4ad9460e032d077a4e11e174dd01657166a270cb5b89",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/theme",
+          "name": "ThemePicker"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.theme.ThemeToggle",
+      "source": "src/svelte/components/theme/ThemeToggle.svelte",
+      "sourceSha256": "b4fccfc7d4e62f215e18ff446b96f3677a3f8268ba12c6e0c703ef9eba80956e",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/theme",
+          "name": "ThemeToggle"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.tile-map.TileMapViewport",
+      "source": "src/svelte/components/tile-map/TileMapViewport.svelte",
+      "sourceSha256": "011f6c7db2940cff9ff5a8ab3513a2b88748cc0059eca826cd0c4425df89c11b",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/tile-map",
+          "name": "TileMapViewport"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.timeline.AutomationLane",
+      "source": "src/svelte/components/timeline/AutomationLane.svelte",
+      "sourceSha256": "c9dec7322862df40e3d8f38e0bd7980ec374f915ac0bdfe4f745ead3c2d35343",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/timeline",
+          "name": "AutomationLane"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.timeline.BeatGridOverlay",
+      "source": "src/svelte/components/timeline/BeatGridOverlay.svelte",
+      "sourceSha256": "aca0484d111167efde0237eba805a8d0738404c965f64ef605456fbce843aef2",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/timeline",
+          "name": "BeatGridOverlay"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.timeline.TransitionRegion",
+      "source": "src/svelte/components/timeline/TransitionRegion.svelte",
+      "sourceSha256": "bf4496f957393132173e45c07175a135cbaa1d9313439d14267ab1f569d7e0fc",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/timeline",
+          "name": "TransitionRegion"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.timeline.WaveformCanvas",
+      "source": "src/svelte/components/timeline/WaveformCanvas.svelte",
+      "sourceSha256": "870742c401f52a9af7acc9bfc01cc92f21fb4cca263053865a69e32e82c4b01f",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/timeline",
+          "name": "WaveformCanvas"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.toast.ToastActions",
+      "source": "src/svelte/components/toast/ToastActions.svelte",
+      "sourceSha256": "cd4c93b513cda5cf2a0ac7c47ca7cd801feb9bb643f4de100aa3684f279bb52a",
+      "exports": [],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.toast.ToastHarness",
+      "source": "src/svelte/components/toast/ToastHarness.svelte",
+      "sourceSha256": "3d921cc39fdbb25bace7ce5bc758ce826d4738e72ea661fb63a6f60bc90b49d2",
+      "exports": [],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.toast.ToastProvider",
+      "source": "src/svelte/components/toast/ToastProvider.svelte",
+      "sourceSha256": "1dd144272569d1155f42d46f337ba6858af356f2675ab6acafdc37e7e3026ed6",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/toast",
+          "name": "ToastProvider"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.tree.TreeView",
+      "source": "src/svelte/components/tree/TreeView.svelte",
+      "sourceSha256": "6cc016176523ce21702ad660f8abdd83b04905b49b749a5c57a918b9187f88cd",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/tree",
+          "name": "TreeView"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.form.FileField",
+      "source": "src/svelte/form/FileField.svelte",
+      "sourceSha256": "309cf8e69e33f7cc7a254484af24809216493c5556181b424ddd5d1746822ea5",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/form",
+          "name": "FileField"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.form.FormControl",
+      "source": "src/svelte/form/FormControl.svelte",
+      "sourceSha256": "f78b51bc404a1cf2dcf4c9928bc727c0517884e2014672ca659093ef9d6b9298",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/form",
+          "name": "FormControl"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.form.FormFieldView",
+      "source": "src/svelte/form/FormFieldView.svelte",
+      "sourceSha256": "5954f166d31cfade8375e5aa6c4b75488b7ae0246d0349abc7206a11f9fe11d4",
+      "exports": [],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.form.FormLayout",
+      "source": "src/svelte/form/FormLayout.svelte",
+      "sourceSha256": "41e51b2960d02e1482e2111d223c6b37aa944939944f4c25226bfdb93721b54c",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/form",
+          "name": "FormLayout"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.form.FormSectionView",
+      "source": "src/svelte/form/FormSectionView.svelte",
+      "sourceSha256": "ba39660fce55a21f72fb47c31e85872f12fa75533ee43c5285507973a62bbd55",
+      "exports": [],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.form.GroupEditor",
+      "source": "src/svelte/form/GroupEditor.svelte",
+      "sourceSha256": "ed110e56d7034c01dfc7200142986a30b196256c027ea7e0ae199823e60cfffd",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/form",
+          "name": "GroupEditor"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.form.ImportReview",
+      "source": "src/svelte/form/ImportReview.svelte",
+      "sourceSha256": "562dc0e33c4a629f9d600c885af3135a0b274a4ec4d69528a065c72ef5a77414",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/form",
+          "name": "ImportReview"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.form.NumberField",
+      "source": "src/svelte/form/NumberField.svelte",
+      "sourceSha256": "9bd13ed641f1b7d6c845e6dd89345901d130681b44c3e594a98d559619037f29",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/form",
+          "name": "NumberField"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.form.PasswordField",
+      "source": "src/svelte/form/PasswordField.svelte",
+      "sourceSha256": "f9bd669b6aad238e8b7c84394742f3be677eedf0ae043131843f3ad5513f7672",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/form",
+          "name": "PasswordField"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.form.PersonaEditor",
+      "source": "src/svelte/form/PersonaEditor.svelte",
+      "sourceSha256": "55c7a612b17896e1acfc7d7d1a725077daff3278dc3dbebe4f521d9bae691068",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/form",
+          "name": "PersonaEditor"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.form.RegexRulesEditor",
+      "source": "src/svelte/form/RegexRulesEditor.svelte",
+      "sourceSha256": "744991e1d0e12f894479545fdd74734e631630fcfef9d258b9fe70c76a457c5d",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/form",
+          "name": "RegexRulesEditor"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.form.Select",
+      "source": "src/svelte/form/Select.svelte",
+      "sourceSha256": "1243af3ebf2cdcfa9e9a3d402832f8e6c8ea0e44cd5da6c897fa45c92a550b28",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/form",
+          "name": "Select"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.form.SelectField",
+      "source": "src/svelte/form/SelectField.svelte",
+      "sourceSha256": "a395640e27217a29a27a518830da5f2062de0940d07d8e423e637d5531f0252e",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/form",
+          "name": "SelectField"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.form.SliderField",
+      "source": "src/svelte/form/SliderField.svelte",
+      "sourceSha256": "5ff512577c99448f64ba74de5f0b230c91f6e8f43428f6c383707b3e544895e6",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/form",
+          "name": "SliderField"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.form.TagsField",
+      "source": "src/svelte/form/TagsField.svelte",
+      "sourceSha256": "35270d732d8a04b904e541ff77b3063b38440deb51afe4d5b9778a481d386a52",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/form",
+          "name": "TagsField"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.form.TextAreaField",
+      "source": "src/svelte/form/TextAreaField.svelte",
+      "sourceSha256": "c986506401971e84ef92d2b2516da31f44d2d25cf76308041b7b9e5ec4388274",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/form",
+          "name": "TextAreaField"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.form.TextField",
+      "source": "src/svelte/form/TextField.svelte",
+      "sourceSha256": "726a6fd502dfc712526c662d4546753fdd112e9cde329db2613eafec3168bfc0",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/form",
+          "name": "TextField"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.form.TintFluidForm",
+      "source": "src/svelte/form/TintFluidForm.svelte",
+      "sourceSha256": "a7f9b51ccb717c7ff0176100f5d4f2607b405a3d02268290c861b5ff79a3ff53",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/form",
+          "name": "TintFluidForm"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.form.ToggleField",
+      "source": "src/svelte/form/ToggleField.svelte",
+      "sourceSha256": "b3333e0caef7618c5297c31ce2edcaf7df4dc9bf6a2445e7cb4e8e44cdb5d7fd",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/form",
+          "name": "ToggleField"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.form.Token",
+      "source": "src/svelte/form/Token.svelte",
+      "sourceSha256": "516b26e6b956e7f1f9854f11668ce714b9af4a010c98e5b96f1befb1e56292c5",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/form",
+          "name": "Token"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.form.Tokenizer",
+      "source": "src/svelte/form/Tokenizer.svelte",
+      "sourceSha256": "9fc5a492fc8ba078f1b6a1f51f12980fae2194d7df798f2a8a38b88d32a46b7d",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/form",
+          "name": "Tokenizer"
+        }
+      ],
+      "priority": "backlog",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    },
+    {
+      "id": "tint.form.Typeahead",
+      "source": "src/svelte/form/Typeahead.svelte",
+      "sourceSha256": "39344f3230ce2ea07f11fa144942635ecf05c889b8fe76799813112fb945c449",
+      "exports": [
+        {
+          "entrypoint": "@nebula/tint/form",
+          "name": "Typeahead"
+        }
+      ],
+      "priority": "voice-client",
+      "penpot": {
+        "fileId": null,
+        "componentId": null,
+        "validatedSourceSha256": null
+      },
+      "status": "pending-import"
+    }
+  ]
+}

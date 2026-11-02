@@ -2,7 +2,7 @@
   "name": "@nebula/tint",
   "version": "0.2.0",
   "type": "module",
-  "description": "Tint \u2014 controlled Svelte 5 components and plain TypeScript engines.",
+  "description": "Tint — controlled Svelte 5 components and plain TypeScript engines.",
   "license": "UNLICENSED",
   "publishConfig": {
     "registry": "https://git.nebula-1.com/api/packages/nebula/npm/"
@@ -11,7 +11,8 @@
     "src",
     "!src/docs",
     "!src/test",
-    "!src/**/*.test.ts"
+    "!src/**/*.test.ts",
+    "design"
   ],
   "scripts": {
     "dev": "vite",
@@ -24,7 +25,11 @@
     "check": "npm run check:names && npm run check:migration && tsc -b && npm run check:svelte && npm run lint && npm test",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "design:export": "node scripts/export-tokens.mjs && node scripts/design-inventory.mjs --write",
+    "design:check": "node scripts/export-tokens.mjs --check && node scripts/design-inventory.mjs --check",
+    "design:test": "node --test scripts/design-system.test.mjs",
+    "design:report": "node scripts/design-inventory.mjs --report"
   },
   "exports": {
     ".": "./src/svelte/index.ts",
@@ -101,7 +106,8 @@
     "./audio-workspace": "./src/svelte/components/audio-workspace/index.ts",
     "./timeline": "./src/svelte/components/timeline/index.ts",
     "./popover": "./src/svelte/components/popover/index.ts",
-    "./tabs": "./src/svelte/components/tabs/index.ts"
+    "./tabs": "./src/svelte/components/tabs/index.ts",
+    "./design/*": "./design/*"
   },
   "dependencies": {
     "@codemirror/commands": "^6.11.0",
@@ -150,6 +156,7 @@
     "@webgpu/types": "^0.1.72",
     "jsdom": "^30.0.1",
     "oxlint": "^1.75.0",
+    "postcss": "8.5.25",
     "svelte": "^5.57.1",
     "svelte-check": "^4.7.6",
     "tailwindcss": "^4.3.3",

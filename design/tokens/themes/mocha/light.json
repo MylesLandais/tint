@@ -1,0 +1,844 @@
+{
+  "tint": {
+    "accent": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.796078431372549,
+          0.6509803921568628,
+          0.9686274509803922
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-accent",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-accent",
+          "cssValue": "#cba6f7",
+          "source": "src/styles/themes/mocha.css",
+          "line": 43
+        }
+      }
+    },
+    "accent-hover": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8,
+          0.6980392156862745,
+          0.9647058823529412
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-accent-hover",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-accent-hover",
+          "cssValue": "#ccb2f6",
+          "source": "src/styles/themes/mocha.css",
+          "line": 44
+        }
+      }
+    },
+    "accent-soft": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.16862745098039217,
+          0.14901960784313725,
+          0.22745098039215686
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-accent-soft",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-accent-soft",
+          "cssValue": "#2b263a",
+          "source": "src/styles/themes/mocha.css",
+          "line": 45
+        }
+      }
+    },
+    "bg": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.11764705882352941,
+          0.11764705882352941,
+          0.1803921568627451
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-bg",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-bg",
+          "cssValue": "#1e1e2e",
+          "source": "src/styles/themes/mocha.css",
+          "line": 27
+        }
+      }
+    },
+    "border": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.27058823529411763,
+          0.2784313725490196,
+          0.35294117647058826
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-border",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-border",
+          "cssValue": "#45475a",
+          "source": "src/styles/themes/mocha.css",
+          "line": 32
+        }
+      }
+    },
+    "border-strong": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.34509803921568627,
+          0.3568627450980392,
+          0.4392156862745098
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-border-strong",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-border-strong",
+          "cssValue": "#585b70",
+          "source": "src/styles/themes/mocha.css",
+          "line": 33
+        }
+      }
+    },
+    "chrome": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.06666666666666667,
+          0.06666666666666667,
+          0.10588235294117647
+        ],
+        "alpha": 0.9333333333333333
+      },
+      "$description": "--tint-chrome",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-chrome",
+          "cssValue": "#11111bee",
+          "source": "src/styles/themes/mocha.css",
+          "line": 79
+        }
+      }
+    },
+    "chrome-border": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.803921568627451,
+          0.8392156862745098,
+          0.9568627450980393
+        ],
+        "alpha": 0.1607843137254902
+      },
+      "$description": "--tint-chrome-border",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-chrome-border",
+          "cssValue": "#cdd6f429",
+          "source": "src/styles/themes/mocha.css",
+          "line": 81
+        }
+      }
+    },
+    "chrome-ink": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.803921568627451,
+          0.8392156862745098,
+          0.9568627450980393
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-chrome-ink",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-chrome-ink",
+          "cssValue": "#cdd6f4",
+          "source": "src/styles/themes/mocha.css",
+          "line": 80
+        }
+      }
+    },
+    "code": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.06666666666666667,
+          0.06666666666666667,
+          0.10588235294117647
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code",
+          "cssValue": "#11111b",
+          "source": "src/styles/themes/mocha.css",
+          "line": 64
+        }
+      }
+    },
+    "code-border": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.19215686274509805,
+          0.19607843137254902,
+          0.26666666666666666
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-border",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-border",
+          "cssValue": "#313244",
+          "source": "src/styles/themes/mocha.css",
+          "line": 67
+        }
+      }
+    },
+    "code-comment": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.4235294117647059,
+          0.4392156862745098,
+          0.5254901960784314
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-comment",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-comment",
+          "cssValue": "#6c7086",
+          "source": "src/styles/themes/mocha.css",
+          "line": 74
+        }
+      }
+    },
+    "code-function": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5372549019607843,
+          0.7058823529411765,
+          0.9803921568627451
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-function",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-function",
+          "cssValue": "#89b4fa",
+          "source": "src/styles/themes/mocha.css",
+          "line": 75
+        }
+      }
+    },
+    "code-ink": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.803921568627451,
+          0.8392156862745098,
+          0.9568627450980393
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-ink",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-ink",
+          "cssValue": "#cdd6f4",
+          "source": "src/styles/themes/mocha.css",
+          "line": 65
+        }
+      }
+    },
+    "code-keyword": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.796078431372549,
+          0.6509803921568628,
+          0.9686274509803922
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-keyword",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-keyword",
+          "cssValue": "#cba6f7",
+          "source": "src/styles/themes/mocha.css",
+          "line": 71
+        }
+      }
+    },
+    "code-muted": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.4980392156862745,
+          0.5176470588235295,
+          0.611764705882353
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-muted",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-muted",
+          "cssValue": "#7f849c",
+          "source": "src/styles/themes/mocha.css",
+          "line": 66
+        }
+      }
+    },
+    "code-number": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9803921568627451,
+          0.7019607843137254,
+          0.5294117647058824
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-number",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-number",
+          "cssValue": "#fab387",
+          "source": "src/styles/themes/mocha.css",
+          "line": 73
+        }
+      }
+    },
+    "code-punctuation": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5764705882352941,
+          0.6,
+          0.6980392156862745
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-punctuation",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-punctuation",
+          "cssValue": "#9399b2",
+          "source": "src/styles/themes/mocha.css",
+          "line": 76
+        }
+      }
+    },
+    "code-string": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6509803921568628,
+          0.8901960784313725,
+          0.6313725490196078
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-string",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-string",
+          "cssValue": "#a6e3a1",
+          "source": "src/styles/themes/mocha.css",
+          "line": 72
+        }
+      }
+    },
+    "danger": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9529411764705882,
+          0.5450980392156862,
+          0.6588235294117647
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-danger",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-danger",
+          "cssValue": "#f38ba8",
+          "source": "src/styles/themes/mocha.css",
+          "line": 50
+        }
+      }
+    },
+    "danger-ink": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9529411764705882,
+          0.5450980392156862,
+          0.6588235294117647
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-danger-ink",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-danger-ink",
+          "cssValue": "#f38ba8",
+          "source": "src/styles/themes/mocha.css",
+          "line": 52
+        }
+      }
+    },
+    "danger-soft": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.19215686274509805,
+          0.13333333333333333,
+          0.1843137254901961
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-danger-soft",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-danger-soft",
+          "cssValue": "#31222f",
+          "source": "src/styles/themes/mocha.css",
+          "line": 51
+        }
+      }
+    },
+    "field": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.11764705882352941,
+          0.11764705882352941,
+          0.1803921568627451
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-field",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-field",
+          "cssValue": "#1e1e2e",
+          "source": "src/styles/themes/mocha.css",
+          "line": 37
+        }
+      }
+    },
+    "focus": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.796078431372549,
+          0.6509803921568628,
+          0.9686274509803922
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-focus",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-focus",
+          "cssValue": "#cba6f7",
+          "source": "src/styles/themes/mocha.css",
+          "line": 38
+        }
+      }
+    },
+    "info": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5372549019607843,
+          0.7058823529411765,
+          0.9803921568627451
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-info",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-info",
+          "cssValue": "#89b4fa",
+          "source": "src/styles/themes/mocha.css",
+          "line": 59
+        }
+      }
+    },
+    "info-ink": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5372549019607843,
+          0.7058823529411765,
+          0.9803921568627451
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-info-ink",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-info-ink",
+          "cssValue": "#89b4fa",
+          "source": "src/styles/themes/mocha.css",
+          "line": 61
+        }
+      }
+    },
+    "info-soft": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.13333333333333333,
+          0.1568627450980392,
+          0.22745098039215686
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-info-soft",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-info-soft",
+          "cssValue": "#22283a",
+          "source": "src/styles/themes/mocha.css",
+          "line": 60
+        }
+      }
+    },
+    "ink": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.803921568627451,
+          0.8392156862745098,
+          0.9568627450980393
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-ink",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-ink",
+          "cssValue": "#cdd6f4",
+          "source": "src/styles/themes/mocha.css",
+          "line": 30
+        }
+      }
+    },
+    "muted": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6509803921568628,
+          0.6784313725490196,
+          0.7843137254901961
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-muted",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-muted",
+          "cssValue": "#a6adc8",
+          "source": "src/styles/themes/mocha.css",
+          "line": 31
+        }
+      }
+    },
+    "on-accent": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.06666666666666667,
+          0.06666666666666667,
+          0.10588235294117647
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-on-accent",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-on-accent",
+          "cssValue": "#11111b",
+          "source": "src/styles/themes/mocha.css",
+          "line": 46
+        }
+      }
+    },
+    "panel": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.19215686274509805,
+          0.19607843137254902,
+          0.26666666666666666
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-panel",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-panel",
+          "cssValue": "#313244",
+          "source": "src/styles/themes/mocha.css",
+          "line": 29
+        }
+      }
+    },
+    "selection": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.16862745098039217,
+          0.14901960784313725,
+          0.22745098039215686
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-selection",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-selection",
+          "cssValue": "#2b263a",
+          "source": "src/styles/themes/mocha.css",
+          "line": 39
+        }
+      }
+    },
+    "shadow-color": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.06666666666666667,
+          0.06666666666666667,
+          0.10588235294117647
+        ],
+        "alpha": 0.5
+      },
+      "$description": "--tint-shadow-color",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-shadow-color",
+          "cssValue": "rgb(17 17 27 / 0.5)",
+          "source": "src/styles/themes/mocha.css",
+          "line": 83
+        }
+      }
+    },
+    "success": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6509803921568628,
+          0.8901960784313725,
+          0.6313725490196078
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-success",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-success",
+          "cssValue": "#a6e3a1",
+          "source": "src/styles/themes/mocha.css",
+          "line": 56
+        }
+      }
+    },
+    "success-ink": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6509803921568628,
+          0.8901960784313725,
+          0.6313725490196078
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-success-ink",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-success-ink",
+          "cssValue": "#a6e3a1",
+          "source": "src/styles/themes/mocha.css",
+          "line": 58
+        }
+      }
+    },
+    "success-soft": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.14901960784313725,
+          0.1803921568627451,
+          0.1803921568627451
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-success-soft",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-success-soft",
+          "cssValue": "#262e2e",
+          "source": "src/styles/themes/mocha.css",
+          "line": 57
+        }
+      }
+    },
+    "surface": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.09411764705882353,
+          0.09411764705882353,
+          0.1450980392156863
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-surface",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-surface",
+          "cssValue": "#181825",
+          "source": "src/styles/themes/mocha.css",
+          "line": 28
+        }
+      }
+    },
+    "warning": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9764705882352941,
+          0.8862745098039215,
+          0.6862745098039216
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-warning",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-warning",
+          "cssValue": "#f9e2af",
+          "source": "src/styles/themes/mocha.css",
+          "line": 53
+        }
+      }
+    },
+    "warning-ink": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9764705882352941,
+          0.8862745098039215,
+          0.6862745098039216
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-warning-ink",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-warning-ink",
+          "cssValue": "#f9e2af",
+          "source": "src/styles/themes/mocha.css",
+          "line": 55
+        }
+      }
+    },
+    "warning-soft": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.19215686274509805,
+          0.1803921568627451,
+          0.18823529411764706
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-warning-soft",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-warning-soft",
+          "cssValue": "#312e30",
+          "source": "src/styles/themes/mocha.css",
+          "line": 54
+        }
+      }
+    }
+  }
+}

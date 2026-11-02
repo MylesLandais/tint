@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "library": "Tint UI Kit",
+  "direction": "tint-to-penpot",
+  "inputSha256": "7febce5ae634dd5c5a3bb6b3f148db931282bc065c3705c2453ed9e17b75ac19",
+  "paletteCount": 8,
+  "schemes": [
+    "light",
+    "dark"
+  ],
+  "tokenSets": [
+    "global",
+    "motion/reduced",
+    "themes/carbon/light",
+    "themes/carbon/dark",
+    "themes/frappe/light",
+    "themes/frappe/dark",
+    "themes/gruvbox/light",
+    "themes/gruvbox/dark",
+    "themes/latte/light",
+    "themes/latte/dark",
+    "themes/macchiato/light",
+    "themes/macchiato/dark",
+    "themes/mocha/light",
+    "themes/mocha/dark",
+    "themes/solarized/light",
+    "themes/solarized/dark",
+    "themes/tint/light",
+    "themes/tint/dark"
+  ],
+  "penpotImport": "design/penpot/tokens.json",
+  "dtcgProfile": "2025.10",
+  "penpotProfile": "CSS-valued Tokens Studio sets/themes",
+  "rootFontSizePx": 16,
+  "penpotExcludedTokens": [
+    {
+      "set": "global",
+      "token": "tint.ease",
+      "type": "cubicBezier"
+    },
+    {
+      "set": "global",
+      "token": "tint.motion-base",
+      "type": "duration"
+    },
+    {
+      "set": "global",
+      "token": "tint.motion-fast",
+      "type": "duration"
+    },
+    {
+      "set": "motion/reduced",
+      "token": "tint.motion-base",
+      "type": "duration"
+    },
+    {
+      "set": "motion/reduced",
+      "token": "tint.motion-fast",
+      "type": "duration"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "src/index.css",
+      "sha256": "ef7ac07de6d941852c467388896e905cdb77943a301b8a61f880462033667a5f"
+    },
+    {
+      "path": "src/styles/contract.css",
+      "sha256": "bdb68c6d8d833a7f48edd1beb5c3cd3e4efd77b5faf2adc1ed6ee129bf4b5a60"
+    },
+    {
+      "path": "src/styles/layout-scale.css",
+      "sha256": "caa7e4a18c9dab77edfcbd4f2c14884d7db8c18c4e89c3a92f3af51e71f58669"
+    },
+    {
+      "path": "src/styles/themes/carbon.css",
+      "sha256": "643b68e15b2c7768febad7c9dbf9654b08da4af9d820c94a4df85ad6978f5df8"
+    },
+    {
+      "path": "src/styles/themes/frappe.css",
+      "sha256": "c82a6abc540575a9834fe9b6f9c5b662ac03aedd9f73131e86a64afc6d3cd473"
+    },
+    {
+      "path": "src/styles/themes/gruvbox.css",
+      "sha256": "b67131cd374b91132eb4b94eccd0987c5627a363463226b071cb984b7a4e3144"
+    },
+    {
+      "path": "src/styles/themes/latte.css",
+      "sha256": "b837cff9ab877d792d96b00ed387d5d356dec44fe020e4b4bbfd8c27142f416a"
+    },
+    {
+      "path": "src/styles/themes/macchiato.css",
+      "sha256": "fd1b99d412f6128a28b203654f4383a382547428334e659845e38b95eebeffc0"
+    },
+    {
+      "path": "src/styles/themes/mocha.css",
+      "sha256": "32402b69dfdaf3c0b697b4576e9a01f4b1f89e67d95de8ce3bd1e5f2998e8226"
+    },
+    {
+      "path": "src/styles/themes/solarized.css",
+      "sha256": "8a86095b60a926cd8af24b087d7b577df536174bf21573971200857b8ec752d0"
+    },
+    {
+      "path": "src/styles/themes/tint.css",
+      "sha256": "25cbce8bcc4cb3f43186330821c57df2f4457bea527a18d49e153b591c6dbd8a"
+    }
+  ]
+}

@@ -1,0 +1,844 @@
+{
+  "tint": {
+    "accent": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7764705882352941,
+          0.6274509803921569,
+          0.9647058823529412
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-accent",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-accent",
+          "cssValue": "#c6a0f6",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 43
+        }
+      }
+    },
+    "accent-hover": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7803921568627451,
+          0.6784313725490196,
+          0.9647058823529412
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-accent-hover",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-accent-hover",
+          "cssValue": "#c7adf6",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 44
+        }
+      }
+    },
+    "accent-soft": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.18823529411764706,
+          0.17254901960784313,
+          0.2627450980392157
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-accent-soft",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-accent-soft",
+          "cssValue": "#302c43",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 45
+        }
+      }
+    },
+    "bg": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1411764705882353,
+          0.15294117647058825,
+          0.22745098039215686
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-bg",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-bg",
+          "cssValue": "#24273a",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 27
+        }
+      }
+    },
+    "border": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.28627450980392155,
+          0.30196078431372547,
+          0.39215686274509803
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-border",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-border",
+          "cssValue": "#494d64",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 32
+        }
+      }
+    },
+    "border-strong": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.3568627450980392,
+          0.3764705882352941,
+          0.47058823529411764
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-border-strong",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-border-strong",
+          "cssValue": "#5b6078",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 33
+        }
+      }
+    },
+    "chrome": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.06666666666666667,
+          0.06666666666666667,
+          0.10588235294117647
+        ],
+        "alpha": 0.9333333333333333
+      },
+      "$description": "--tint-chrome",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-chrome",
+          "cssValue": "#11111bee",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 79
+        }
+      }
+    },
+    "chrome-border": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.803921568627451,
+          0.8392156862745098,
+          0.9568627450980393
+        ],
+        "alpha": 0.1607843137254902
+      },
+      "$description": "--tint-chrome-border",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-chrome-border",
+          "cssValue": "#cdd6f429",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 81
+        }
+      }
+    },
+    "chrome-ink": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.803921568627451,
+          0.8392156862745098,
+          0.9568627450980393
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-chrome-ink",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-chrome-ink",
+          "cssValue": "#cdd6f4",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 80
+        }
+      }
+    },
+    "code": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.09411764705882353,
+          0.09803921568627451,
+          0.14901960784313725
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code",
+          "cssValue": "#181926",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 64
+        }
+      }
+    },
+    "code-border": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.21176470588235294,
+          0.22745098039215686,
+          0.30980392156862746
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-border",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-border",
+          "cssValue": "#363a4f",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 67
+        }
+      }
+    },
+    "code-comment": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.43137254901960786,
+          0.45098039215686275,
+          0.5529411764705883
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-comment",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-comment",
+          "cssValue": "#6e738d",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 74
+        }
+      }
+    },
+    "code-function": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5411764705882353,
+          0.6784313725490196,
+          0.9568627450980393
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-function",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-function",
+          "cssValue": "#8aadf4",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 75
+        }
+      }
+    },
+    "code-ink": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.792156862745098,
+          0.8274509803921568,
+          0.9607843137254902
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-ink",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-ink",
+          "cssValue": "#cad3f5",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 65
+        }
+      }
+    },
+    "code-keyword": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7764705882352941,
+          0.6274509803921569,
+          0.9647058823529412
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-keyword",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-keyword",
+          "cssValue": "#c6a0f6",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 71
+        }
+      }
+    },
+    "code-muted": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5019607843137255,
+          0.5294117647058824,
+          0.6352941176470588
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-muted",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-muted",
+          "cssValue": "#8087a2",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 66
+        }
+      }
+    },
+    "code-number": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9607843137254902,
+          0.6627450980392157,
+          0.4980392156862745
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-number",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-number",
+          "cssValue": "#f5a97f",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 73
+        }
+      }
+    },
+    "code-punctuation": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5764705882352941,
+          0.6039215686274509,
+          0.7176470588235294
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-punctuation",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-punctuation",
+          "cssValue": "#939ab7",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 76
+        }
+      }
+    },
+    "code-string": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6509803921568628,
+          0.8549019607843137,
+          0.5843137254901961
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-code-string",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-code-string",
+          "cssValue": "#a6da95",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 72
+        }
+      }
+    },
+    "danger": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9294117647058824,
+          0.5294117647058824,
+          0.5882352941176471
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-danger",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-danger",
+          "cssValue": "#ed8796",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 50
+        }
+      }
+    },
+    "danger-ink": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9294117647058824,
+          0.5294117647058824,
+          0.5882352941176471
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-danger-ink",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-danger-ink",
+          "cssValue": "#ed8796",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 52
+        }
+      }
+    },
+    "danger-soft": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.21176470588235294,
+          0.1568627450980392,
+          0.21176470588235294
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-danger-soft",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-danger-soft",
+          "cssValue": "#362836",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 51
+        }
+      }
+    },
+    "field": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1411764705882353,
+          0.15294117647058825,
+          0.22745098039215686
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-field",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-field",
+          "cssValue": "#24273a",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 37
+        }
+      }
+    },
+    "focus": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7764705882352941,
+          0.6274509803921569,
+          0.9647058823529412
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-focus",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-focus",
+          "cssValue": "#c6a0f6",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 38
+        }
+      }
+    },
+    "info": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5411764705882353,
+          0.6784313725490196,
+          0.9568627450980393
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-info",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-info",
+          "cssValue": "#8aadf4",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 59
+        }
+      }
+    },
+    "info-ink": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5411764705882353,
+          0.6784313725490196,
+          0.9568627450980393
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-info-ink",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-info-ink",
+          "cssValue": "#8aadf4",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 61
+        }
+      }
+    },
+    "info-soft": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1568627450980392,
+          0.1803921568627451,
+          0.2627450980392157
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-info-soft",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-info-soft",
+          "cssValue": "#282e43",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 60
+        }
+      }
+    },
+    "ink": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.792156862745098,
+          0.8274509803921568,
+          0.9607843137254902
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-ink",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-ink",
+          "cssValue": "#cad3f5",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 30
+        }
+      }
+    },
+    "muted": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6470588235294118,
+          0.6784313725490196,
+          0.796078431372549
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-muted",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-muted",
+          "cssValue": "#a5adcb",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 31
+        }
+      }
+    },
+    "on-accent": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.09411764705882353,
+          0.09803921568627451,
+          0.14901960784313725
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-on-accent",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-on-accent",
+          "cssValue": "#181926",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 46
+        }
+      }
+    },
+    "panel": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.21176470588235294,
+          0.22745098039215686,
+          0.30980392156862746
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-panel",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-panel",
+          "cssValue": "#363a4f",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 29
+        }
+      }
+    },
+    "selection": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.18823529411764706,
+          0.17254901960784313,
+          0.2627450980392157
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-selection",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-selection",
+          "cssValue": "#302c43",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 39
+        }
+      }
+    },
+    "shadow-color": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.06666666666666667,
+          0.06666666666666667,
+          0.10588235294117647
+        ],
+        "alpha": 0.5
+      },
+      "$description": "--tint-shadow-color",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-shadow-color",
+          "cssValue": "rgb(17 17 27 / 0.5)",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 83
+        }
+      }
+    },
+    "success": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6509803921568628,
+          0.8549019607843137,
+          0.5843137254901961
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-success",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-success",
+          "cssValue": "#a6da95",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 56
+        }
+      }
+    },
+    "success-ink": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6509803921568628,
+          0.8549019607843137,
+          0.5843137254901961
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-success-ink",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-success-ink",
+          "cssValue": "#a6da95",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 58
+        }
+      }
+    },
+    "success-soft": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.17254901960784313,
+          0.20392156862745098,
+          0.21176470588235294
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-success-soft",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-success-soft",
+          "cssValue": "#2c3436",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 57
+        }
+      }
+    },
+    "surface": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.11764705882352941,
+          0.12549019607843137,
+          0.18823529411764706
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-surface",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-surface",
+          "cssValue": "#1e2030",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 28
+        }
+      }
+    },
+    "warning": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9333333333333333,
+          0.8313725490196079,
+          0.6235294117647059
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-warning",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-warning",
+          "cssValue": "#eed49f",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 53
+        }
+      }
+    },
+    "warning-ink": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9333333333333333,
+          0.8313725490196079,
+          0.6235294117647059
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-warning-ink",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-warning-ink",
+          "cssValue": "#eed49f",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 55
+        }
+      }
+    },
+    "warning-soft": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.21176470588235294,
+          0.2,
+          0.21568627450980393
+        ],
+        "alpha": 1
+      },
+      "$description": "--tint-warning-soft",
+      "$extensions": {
+        "app.nebula.tint": {
+          "cssVariable": "--tint-warning-soft",
+          "cssValue": "#363337",
+          "source": "src/styles/themes/macchiato.css",
+          "line": 54
+        }
+      }
+    }
+  }
+}

@@ -1,5 +1,9 @@
 # Tint tokens and the Carbon bridge
 
+For deterministic DTCG exports and the separate Penpot import profile, see
+[Tint in Penpot](../../design/penpot/README.md). CSS remains authoritative;
+`npm run design:check` detects stale generated values.
+
 Tint's `--tint-*` tokens are the public vocabulary and the only thing themes
 declare. `src/styles/carbon-bridge.css` derives Carbon's `--cds-*` names from
 them, one way:

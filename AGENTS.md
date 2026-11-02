@@ -1,5 +1,24 @@
 # AGENTS.md
 
+## Penpot
+
+- Tint's CSS is the source of truth for tokens. Generate `design/tokens/` and
+  the Penpot import with `npm run design:export`; validate with
+  `npm run design:check` and `npm run design:test`. Do not hand-edit token values.
+- `design/penpot/component-map.json` owns component identities, source hashes,
+  and verified Penpot file/component IDs. Keep unknown IDs null; record real
+  IDs only after import and review. Public Svelte props remain authoritative.
+- Agents may edit only dedicated sandbox files. The published Tint library is
+  a reference; promotion requires an authorized review. Only one agent writes
+  a file at a time, against a recorded starting revision.
+- MCP needs an open browser tab with the plugin connected. Do not assume that
+  several MCP clients provide isolated canvas sessions.
+- Adapt community templates to Tint tokens in the sandbox, retaining their
+  source, author, license and revision. Use editable components, with screenshots
+  as visual references. See [the Penpot workflow](design/penpot/README.md).
+- Keep library code and design changes upstream in Tint. Consumers update their
+  package or submodule pin after the Forgejo change merges.
+
 ## Cursor Cloud specific instructions
 
 `tint` is a Svelte 5 component library. Framework-neutral behavior lives in TypeScript under `src/core`; the Svelte presentation layer is under `src/svelte`, and the existing docs/preview site is under `src/docs`. There is no backend or database in this repository.
