@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict'
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
 import { dirname, join, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import ts from 'typescript'
@@ -18,7 +18,7 @@ const UUID = /^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/i
 function resolveSource(root, from, specifier) {
   if (!specifier.startsWith('.')) return null
   const base = relative(root, resolve(root, dirname(from), specifier))
-  return [base, `${base}.ts`, `${base}/index.ts`].find((path) => existsSync(join(root, path))) ?? null
+  return [base, `${base}.ts`, `${base}/index.ts`].find((path) => existsSync(join(root, path)) && statSync(join(root, path)).isFile()) ?? null
 }
 
 // Follow the public package barrels so internal wrappers remain distinguishable

@@ -51,6 +51,7 @@ test('public aliases and existing Penpot identities survive an inventory refresh
   const inventory = buildInventory()
   const audio = inventory.components.find((component) => component.source.endsWith('/ChatAudio.svelte'))
   assert(audio.exports.some((item) => item.entrypoint === '@nebula/tint/chat' && item.name === 'ChatAudio'))
+  assert(audio.exports.some((item) => item.entrypoint === '@nebula/tint' && item.name === 'ChatAudio'))
   assert.equal(audio.priority, 'voice-client')
   const id = '00000000-0000-4000-8000-000000000001'
   audio.penpot = { fileId: id, componentId: id, validatedSourceSha256: audio.sourceSha256 }
