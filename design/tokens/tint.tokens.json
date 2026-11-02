@@ -1,0 +1,2623 @@
+{
+  "global": {
+    "space": {
+      "1": {
+        "$type": "spacing",
+        "$value": "4"
+      },
+      "2": {
+        "$type": "spacing",
+        "$value": "8"
+      },
+      "3": {
+        "$type": "spacing",
+        "$value": "12"
+      },
+      "4": {
+        "$type": "spacing",
+        "$value": "16"
+      },
+      "5": {
+        "$type": "spacing",
+        "$value": "24"
+      },
+      "6": {
+        "$type": "spacing",
+        "$value": "32"
+      },
+      "7": {
+        "$type": "spacing",
+        "$value": "48"
+      }
+    },
+    "radius": {
+      "sm": {
+        "$type": "borderRadius",
+        "$value": "4"
+      },
+      "md": {
+        "$type": "borderRadius",
+        "$value": "7.2"
+      },
+      "lg": {
+        "$type": "borderRadius",
+        "$value": "12"
+      },
+      "full": {
+        "$type": "borderRadius",
+        "$value": "9999"
+      }
+    },
+    "control": {
+      "sm": {
+        "$type": "sizing",
+        "$value": "28"
+      },
+      "md": {
+        "$type": "sizing",
+        "$value": "36"
+      },
+      "lg": {
+        "$type": "sizing",
+        "$value": "44"
+      }
+    },
+    "font-size": {
+      "xs": {
+        "$type": "fontSizes",
+        "$value": "12"
+      },
+      "sm": {
+        "$type": "fontSizes",
+        "$value": "14"
+      },
+      "md": {
+        "$type": "fontSizes",
+        "$value": "16"
+      },
+      "lg": {
+        "$type": "fontSizes",
+        "$value": "20"
+      },
+      "xl": {
+        "$type": "fontSizes",
+        "$value": "28"
+      }
+    },
+    "leading": {
+      "tight": {
+        "$type": "number",
+        "$value": "1.25"
+      },
+      "normal": {
+        "$type": "number",
+        "$value": "1.5"
+      }
+    },
+    "focus": {
+      "width": {
+        "$type": "borderWidth",
+        "$value": "2"
+      },
+      "offset": {
+        "$type": "borderWidth",
+        "$value": "2"
+      }
+    }
+  },
+  "tint/light": {
+    "color": {
+      "bg": {
+        "default": {
+          "$type": "color",
+          "$value": "#fbfbfc"
+        }
+      },
+      "surface": {
+        "default": {
+          "$type": "color",
+          "$value": "#f6f7fa"
+        }
+      },
+      "panel": {
+        "default": {
+          "$type": "color",
+          "$value": "#ffffff"
+        }
+      },
+      "ink": {
+        "default": {
+          "$type": "color",
+          "$value": "#12141a"
+        }
+      },
+      "muted": {
+        "default": {
+          "$type": "color",
+          "$value": "#5c6578"
+        }
+      },
+      "border": {
+        "default": {
+          "$type": "color",
+          "$value": "#d8dde8"
+        },
+        "strong": {
+          "$type": "color",
+          "$value": "#b9c1d1"
+        }
+      },
+      "field": {
+        "default": {
+          "$type": "color",
+          "$value": "#f2f4f8"
+        }
+      },
+      "focus": {
+        "default": {
+          "$type": "color",
+          "$value": "#865711"
+        }
+      },
+      "selection": {
+        "default": {
+          "$type": "color",
+          "$value": "#fff3dd"
+        }
+      },
+      "accent": {
+        "default": {
+          "$type": "color",
+          "$value": "#865711"
+        },
+        "hover": {
+          "$type": "color",
+          "$value": "#704708"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#fff3dd"
+        }
+      },
+      "on": {
+        "accent": {
+          "$type": "color",
+          "$value": "#ffffff"
+        }
+      },
+      "danger": {
+        "default": {
+          "$type": "color",
+          "$value": "#b42318"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#fef3f2"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#912018"
+        }
+      },
+      "warning": {
+        "default": {
+          "$type": "color",
+          "$value": "#b54708"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#fffaeb"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#93370d"
+        }
+      },
+      "success": {
+        "default": {
+          "$type": "color",
+          "$value": "#067647"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#ecfdf3"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#085d3a"
+        }
+      },
+      "info": {
+        "default": {
+          "$type": "color",
+          "$value": "#175cd3"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#eff8ff"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#1849a9"
+        }
+      },
+      "code": {
+        "default": {
+          "$type": "color",
+          "$value": "#0f172a"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#e2e8f0"
+        },
+        "muted": {
+          "$type": "color",
+          "$value": "#94a3b8"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "#334155"
+        },
+        "keyword": {
+          "$type": "color",
+          "$value": "#c792ea"
+        },
+        "string": {
+          "$type": "color",
+          "$value": "#7ee787"
+        },
+        "number": {
+          "$type": "color",
+          "$value": "#f78c6c"
+        },
+        "comment": {
+          "$type": "color",
+          "$value": "#7d8799"
+        },
+        "function": {
+          "$type": "color",
+          "$value": "#82aaff"
+        },
+        "punctuation": {
+          "$type": "color",
+          "$value": "#a6accd"
+        }
+      },
+      "chrome": {
+        "default": {
+          "$type": "color",
+          "$value": "#14161ccc"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#ffffff"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "#ffffff1a"
+        }
+      },
+      "shadow": {
+        "color": {
+          "$type": "color",
+          "$value": "#1e2a3a1a"
+        }
+      }
+    }
+  },
+  "tint/dark": {
+    "color": {
+      "bg": {
+        "default": {
+          "$type": "color",
+          "$value": "#191b1e"
+        }
+      },
+      "surface": {
+        "default": {
+          "$type": "color",
+          "$value": "#191b1e"
+        }
+      },
+      "panel": {
+        "default": {
+          "$type": "color",
+          "$value": "#222529"
+        }
+      },
+      "ink": {
+        "default": {
+          "$type": "color",
+          "$value": "#dfe2e7"
+        }
+      },
+      "muted": {
+        "default": {
+          "$type": "color",
+          "$value": "#9da3ad"
+        }
+      },
+      "border": {
+        "default": {
+          "$type": "color",
+          "$value": "#34373c"
+        },
+        "strong": {
+          "$type": "color",
+          "$value": "#454a52"
+        }
+      },
+      "field": {
+        "default": {
+          "$type": "color",
+          "$value": "#1c1e22"
+        }
+      },
+      "focus": {
+        "default": {
+          "$type": "color",
+          "$value": "#e6ad57"
+        }
+      },
+      "selection": {
+        "default": {
+          "$type": "color",
+          "$value": "#353026"
+        }
+      },
+      "accent": {
+        "default": {
+          "$type": "color",
+          "$value": "#e6ad57"
+        },
+        "hover": {
+          "$type": "color",
+          "$value": "#efbe79"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#353026"
+        }
+      },
+      "on": {
+        "accent": {
+          "$type": "color",
+          "$value": "#201d17"
+        }
+      },
+      "danger": {
+        "default": {
+          "$type": "color",
+          "$value": "#f97066"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#3a1613"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#fda29b"
+        }
+      },
+      "warning": {
+        "default": {
+          "$type": "color",
+          "$value": "#fdb022"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#3a2411"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#fec84b"
+        }
+      },
+      "success": {
+        "default": {
+          "$type": "color",
+          "$value": "#47cd89"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#0d2f1f"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#75e0a7"
+        }
+      },
+      "info": {
+        "default": {
+          "$type": "color",
+          "$value": "#6aa9ff"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#12233d"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#9cc6ff"
+        }
+      },
+      "code": {
+        "default": {
+          "$type": "color",
+          "$value": "#0d1017"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#dfe5ee"
+        },
+        "muted": {
+          "$type": "color",
+          "$value": "#8b93a3"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "#262c38"
+        },
+        "keyword": {
+          "$type": "color",
+          "$value": "#cba6f7"
+        },
+        "string": {
+          "$type": "color",
+          "$value": "#a6e3a1"
+        },
+        "number": {
+          "$type": "color",
+          "$value": "#fab387"
+        },
+        "comment": {
+          "$type": "color",
+          "$value": "#6c7689"
+        },
+        "function": {
+          "$type": "color",
+          "$value": "#89b4fa"
+        },
+        "punctuation": {
+          "$type": "color",
+          "$value": "#9aa2bd"
+        }
+      },
+      "chrome": {
+        "default": {
+          "$type": "color",
+          "$value": "#14161ccc"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#ffffff"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "#ffffff1a"
+        }
+      },
+      "shadow": {
+        "color": {
+          "$type": "color",
+          "$value": "#00000080"
+        }
+      }
+    }
+  },
+  "carbon/light": {
+    "color": {
+      "bg": {
+        "default": {
+          "$type": "color",
+          "$value": "#f4f4f4"
+        }
+      },
+      "surface": {
+        "default": {
+          "$type": "color",
+          "$value": "#f4f4f4"
+        }
+      },
+      "panel": {
+        "default": {
+          "$type": "color",
+          "$value": "#ffffff"
+        }
+      },
+      "field": {
+        "default": {
+          "$type": "color",
+          "$value": "#ffffff"
+        }
+      },
+      "ink": {
+        "default": {
+          "$type": "color",
+          "$value": "#161616"
+        }
+      },
+      "muted": {
+        "default": {
+          "$type": "color",
+          "$value": "#525252"
+        }
+      },
+      "border": {
+        "default": {
+          "$type": "color",
+          "$value": "#e0e0e0"
+        },
+        "strong": {
+          "$type": "color",
+          "$value": "#a8a8a8"
+        }
+      },
+      "accent": {
+        "default": {
+          "$type": "color",
+          "$value": "#0f62fe"
+        },
+        "hover": {
+          "$type": "color",
+          "$value": "#0353e9"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#edf5ff"
+        }
+      },
+      "on": {
+        "accent": {
+          "$type": "color",
+          "$value": "#ffffff"
+        }
+      },
+      "focus": {
+        "default": {
+          "$type": "color",
+          "$value": "#0f62fe"
+        }
+      },
+      "selection": {
+        "default": {
+          "$type": "color",
+          "$value": "#d0e2ff"
+        }
+      },
+      "warning": {
+        "default": {
+          "$type": "color",
+          "$value": "#b28600"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#fff1c7"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#684e00"
+        }
+      },
+      "success": {
+        "default": {
+          "$type": "color",
+          "$value": "#198038"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#defbe6"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#0e6027"
+        }
+      },
+      "danger": {
+        "default": {
+          "$type": "color",
+          "$value": "#da1e28"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#fff1f1"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#a2191f"
+        }
+      },
+      "info": {
+        "default": {
+          "$type": "color",
+          "$value": "#0f62fe"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#edf5ff"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#0043ce"
+        }
+      },
+      "code": {
+        "default": {
+          "$type": "color",
+          "$value": "#262626"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#f4f4f4"
+        },
+        "muted": {
+          "$type": "color",
+          "$value": "#a8a8a8"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "#393939"
+        },
+        "keyword": {
+          "$type": "color",
+          "$value": "#be95ff"
+        },
+        "string": {
+          "$type": "color",
+          "$value": "#a7f0ba"
+        },
+        "number": {
+          "$type": "color",
+          "$value": "#ffb784"
+        },
+        "comment": {
+          "$type": "color",
+          "$value": "#a8a8a8"
+        },
+        "function": {
+          "$type": "color",
+          "$value": "#78a9ff"
+        },
+        "punctuation": {
+          "$type": "color",
+          "$value": "#c6c6c6"
+        }
+      },
+      "chrome": {
+        "default": {
+          "$type": "color",
+          "$value": "#161616cc"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#ffffff"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "#ffffff1a"
+        }
+      },
+      "shadow": {
+        "color": {
+          "$type": "color",
+          "$value": "#1616161f"
+        }
+      }
+    }
+  },
+  "carbon/dark": {
+    "color": {
+      "bg": {
+        "default": {
+          "$type": "color",
+          "$value": "#101010"
+        }
+      },
+      "surface": {
+        "default": {
+          "$type": "color",
+          "$value": "#161616"
+        }
+      },
+      "panel": {
+        "default": {
+          "$type": "color",
+          "$value": "#262626"
+        }
+      },
+      "field": {
+        "default": {
+          "$type": "color",
+          "$value": "#262626"
+        }
+      },
+      "ink": {
+        "default": {
+          "$type": "color",
+          "$value": "#f4f4f4"
+        }
+      },
+      "muted": {
+        "default": {
+          "$type": "color",
+          "$value": "#c6c6c6"
+        }
+      },
+      "border": {
+        "default": {
+          "$type": "color",
+          "$value": "#393939"
+        },
+        "strong": {
+          "$type": "color",
+          "$value": "#6f6f6f"
+        }
+      },
+      "accent": {
+        "default": {
+          "$type": "color",
+          "$value": "#4589ff"
+        },
+        "hover": {
+          "$type": "color",
+          "$value": "#78a9ff"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#1b3157"
+        }
+      },
+      "on": {
+        "accent": {
+          "$type": "color",
+          "$value": "#161616"
+        }
+      },
+      "focus": {
+        "default": {
+          "$type": "color",
+          "$value": "#ffffff"
+        }
+      },
+      "selection": {
+        "default": {
+          "$type": "color",
+          "$value": "#1b3157"
+        }
+      },
+      "warning": {
+        "default": {
+          "$type": "color",
+          "$value": "#f1c21b"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#332900"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#f1c21b"
+        }
+      },
+      "success": {
+        "default": {
+          "$type": "color",
+          "$value": "#42be65"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#10391e"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#6fdc8c"
+        }
+      },
+      "danger": {
+        "default": {
+          "$type": "color",
+          "$value": "#fa4d56"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#3c1418"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#ffb3b8"
+        }
+      },
+      "info": {
+        "default": {
+          "$type": "color",
+          "$value": "#4589ff"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#1b3157"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#78a9ff"
+        }
+      },
+      "code": {
+        "default": {
+          "$type": "color",
+          "$value": "#161616"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#f4f4f4"
+        },
+        "muted": {
+          "$type": "color",
+          "$value": "#a8a8a8"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "#525252"
+        },
+        "keyword": {
+          "$type": "color",
+          "$value": "#be95ff"
+        },
+        "string": {
+          "$type": "color",
+          "$value": "#a7f0ba"
+        },
+        "number": {
+          "$type": "color",
+          "$value": "#ffb784"
+        },
+        "comment": {
+          "$type": "color",
+          "$value": "#a8a8a8"
+        },
+        "function": {
+          "$type": "color",
+          "$value": "#78a9ff"
+        },
+        "punctuation": {
+          "$type": "color",
+          "$value": "#c6c6c6"
+        }
+      },
+      "chrome": {
+        "default": {
+          "$type": "color",
+          "$value": "#161616cc"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#ffffff"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "#ffffff1a"
+        }
+      },
+      "shadow": {
+        "color": {
+          "$type": "color",
+          "$value": "#00000080"
+        }
+      }
+    }
+  },
+  "frappe/dark": {
+    "color": {
+      "bg": {
+        "default": {
+          "$type": "color",
+          "$value": "#303446"
+        }
+      },
+      "surface": {
+        "default": {
+          "$type": "color",
+          "$value": "#292c3c"
+        }
+      },
+      "panel": {
+        "default": {
+          "$type": "color",
+          "$value": "#414559"
+        }
+      },
+      "ink": {
+        "default": {
+          "$type": "color",
+          "$value": "#c6d0f5"
+        }
+      },
+      "muted": {
+        "default": {
+          "$type": "color",
+          "$value": "#acb4d5"
+        }
+      },
+      "border": {
+        "default": {
+          "$type": "color",
+          "$value": "#51576d"
+        },
+        "strong": {
+          "$type": "color",
+          "$value": "#626880"
+        }
+      },
+      "field": {
+        "default": {
+          "$type": "color",
+          "$value": "#303446"
+        }
+      },
+      "focus": {
+        "default": {
+          "$type": "color",
+          "$value": "#ca9ee6"
+        }
+      },
+      "selection": {
+        "default": {
+          "$type": "color",
+          "$value": "#3a374d"
+        }
+      },
+      "accent": {
+        "default": {
+          "$type": "color",
+          "$value": "#ca9ee6"
+        },
+        "hover": {
+          "$type": "color",
+          "$value": "#c9aaea"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#3a374d"
+        }
+      },
+      "on": {
+        "accent": {
+          "$type": "color",
+          "$value": "#232634"
+        }
+      },
+      "danger": {
+        "default": {
+          "$type": "color",
+          "$value": "#e78284"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#3e333f"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#e78284"
+        }
+      },
+      "warning": {
+        "default": {
+          "$type": "color",
+          "$value": "#e5c890"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#3e3d41"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#e5c890"
+        }
+      },
+      "success": {
+        "default": {
+          "$type": "color",
+          "$value": "#a6d189"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#353e40"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#a6d189"
+        }
+      },
+      "info": {
+        "default": {
+          "$type": "color",
+          "$value": "#8caaee"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#32384e"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#8caaee"
+        }
+      },
+      "code": {
+        "default": {
+          "$type": "color",
+          "$value": "#232634"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#c6d0f5"
+        },
+        "muted": {
+          "$type": "color",
+          "$value": "#858daa"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "#414559"
+        },
+        "keyword": {
+          "$type": "color",
+          "$value": "#ca9ee6"
+        },
+        "string": {
+          "$type": "color",
+          "$value": "#a6d189"
+        },
+        "number": {
+          "$type": "color",
+          "$value": "#ef9f76"
+        },
+        "comment": {
+          "$type": "color",
+          "$value": "#737994"
+        },
+        "function": {
+          "$type": "color",
+          "$value": "#8caaee"
+        },
+        "punctuation": {
+          "$type": "color",
+          "$value": "#949cbb"
+        }
+      },
+      "chrome": {
+        "default": {
+          "$type": "color",
+          "$value": "#11111bee"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#cdd6f4"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "#cdd6f429"
+        }
+      },
+      "shadow": {
+        "color": {
+          "$type": "color",
+          "$value": "#11111b80"
+        }
+      }
+    }
+  },
+  "gruvbox/light": {
+    "color": {
+      "bg": {
+        "default": {
+          "$type": "color",
+          "$value": "#fbf1c7"
+        }
+      },
+      "surface": {
+        "default": {
+          "$type": "color",
+          "$value": "#ebdbb2"
+        }
+      },
+      "panel": {
+        "default": {
+          "$type": "color",
+          "$value": "#f9f5d7"
+        }
+      },
+      "ink": {
+        "default": {
+          "$type": "color",
+          "$value": "#3c3836"
+        }
+      },
+      "muted": {
+        "default": {
+          "$type": "color",
+          "$value": "#665c54"
+        }
+      },
+      "border": {
+        "default": {
+          "$type": "color",
+          "$value": "#d5c4a1"
+        },
+        "strong": {
+          "$type": "color",
+          "$value": "#bdae93"
+        }
+      },
+      "field": {
+        "default": {
+          "$type": "color",
+          "$value": "#ebdbb2"
+        }
+      },
+      "focus": {
+        "default": {
+          "$type": "color",
+          "$value": "#417956"
+        }
+      },
+      "selection": {
+        "default": {
+          "$type": "color",
+          "$value": "#e8e0bd"
+        }
+      },
+      "accent": {
+        "default": {
+          "$type": "color",
+          "$value": "#417956"
+        },
+        "hover": {
+          "$type": "color",
+          "$value": "#356047"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#e8e0bd"
+        }
+      },
+      "on": {
+        "accent": {
+          "$type": "color",
+          "$value": "#fbf1c7"
+        }
+      },
+      "danger": {
+        "default": {
+          "$type": "color",
+          "$value": "#9d0006"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#f2dcc4"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#9d0006"
+        }
+      },
+      "warning": {
+        "default": {
+          "$type": "color",
+          "$value": "#b57614"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#f4e4b8"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#af3a03"
+        }
+      },
+      "success": {
+        "default": {
+          "$type": "color",
+          "$value": "#79740e"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#eae5b0"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#6c670c"
+        }
+      },
+      "info": {
+        "default": {
+          "$type": "color",
+          "$value": "#076678"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#dbe6e0"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#076678"
+        }
+      },
+      "code": {
+        "default": {
+          "$type": "color",
+          "$value": "#f9f5d7"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#3c3836"
+        },
+        "muted": {
+          "$type": "color",
+          "$value": "#7a6d62"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "#d5c4a1"
+        },
+        "keyword": {
+          "$type": "color",
+          "$value": "#9d0006"
+        },
+        "string": {
+          "$type": "color",
+          "$value": "#79740e"
+        },
+        "number": {
+          "$type": "color",
+          "$value": "#8f3f71"
+        },
+        "comment": {
+          "$type": "color",
+          "$value": "#928374"
+        },
+        "function": {
+          "$type": "color",
+          "$value": "#427b58"
+        },
+        "punctuation": {
+          "$type": "color",
+          "$value": "#7c6f64"
+        }
+      },
+      "chrome": {
+        "default": {
+          "$type": "color",
+          "$value": "#1d2021ee"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#ebdbb2"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "#ebdbb229"
+        }
+      },
+      "shadow": {
+        "color": {
+          "$type": "color",
+          "$value": "#3c38362e"
+        }
+      }
+    }
+  },
+  "gruvbox/dark": {
+    "color": {
+      "bg": {
+        "default": {
+          "$type": "color",
+          "$value": "#282828"
+        }
+      },
+      "surface": {
+        "default": {
+          "$type": "color",
+          "$value": "#1d2021"
+        }
+      },
+      "panel": {
+        "default": {
+          "$type": "color",
+          "$value": "#32302f"
+        }
+      },
+      "ink": {
+        "default": {
+          "$type": "color",
+          "$value": "#ebdbb2"
+        }
+      },
+      "muted": {
+        "default": {
+          "$type": "color",
+          "$value": "#a89984"
+        }
+      },
+      "border": {
+        "default": {
+          "$type": "color",
+          "$value": "#484442"
+        },
+        "strong": {
+          "$type": "color",
+          "$value": "#5c5754"
+        }
+      },
+      "field": {
+        "default": {
+          "$type": "color",
+          "$value": "#282828"
+        }
+      },
+      "focus": {
+        "default": {
+          "$type": "color",
+          "$value": "#8ec07c"
+        }
+      },
+      "selection": {
+        "default": {
+          "$type": "color",
+          "$value": "#2f3a2c"
+        }
+      },
+      "accent": {
+        "default": {
+          "$type": "color",
+          "$value": "#8ec07c"
+        },
+        "hover": {
+          "$type": "color",
+          "$value": "#a9d18f"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#2f3a2c"
+        }
+      },
+      "on": {
+        "accent": {
+          "$type": "color",
+          "$value": "#1d2021"
+        }
+      },
+      "danger": {
+        "default": {
+          "$type": "color",
+          "$value": "#fb4934"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#3c2222"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#fb5642"
+        }
+      },
+      "warning": {
+        "default": {
+          "$type": "color",
+          "$value": "#fabd2f"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#3a3020"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#fabd2f"
+        }
+      },
+      "success": {
+        "default": {
+          "$type": "color",
+          "$value": "#b8bb26"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#2f3220"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#b8bb26"
+        }
+      },
+      "info": {
+        "default": {
+          "$type": "color",
+          "$value": "#83a598"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#23343a"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#83a598"
+        }
+      },
+      "code": {
+        "default": {
+          "$type": "color",
+          "$value": "#1d2021"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#ebdbb2"
+        },
+        "muted": {
+          "$type": "color",
+          "$value": "#a89984"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "#3c3836"
+        },
+        "keyword": {
+          "$type": "color",
+          "$value": "#fb4934"
+        },
+        "string": {
+          "$type": "color",
+          "$value": "#b8bb26"
+        },
+        "number": {
+          "$type": "color",
+          "$value": "#d3869b"
+        },
+        "comment": {
+          "$type": "color",
+          "$value": "#928374"
+        },
+        "function": {
+          "$type": "color",
+          "$value": "#8ec07c"
+        },
+        "punctuation": {
+          "$type": "color",
+          "$value": "#a89984"
+        }
+      },
+      "chrome": {
+        "default": {
+          "$type": "color",
+          "$value": "#1d2021ee"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#ebdbb2"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "#ebdbb229"
+        }
+      },
+      "shadow": {
+        "color": {
+          "$type": "color",
+          "$value": "#0000008c"
+        }
+      }
+    }
+  },
+  "latte/light": {
+    "color": {
+      "bg": {
+        "default": {
+          "$type": "color",
+          "$value": "#e6e9ef"
+        }
+      },
+      "surface": {
+        "default": {
+          "$type": "color",
+          "$value": "#dce0e8"
+        }
+      },
+      "panel": {
+        "default": {
+          "$type": "color",
+          "$value": "#eff1f5"
+        }
+      },
+      "ink": {
+        "default": {
+          "$type": "color",
+          "$value": "#4c4f69"
+        }
+      },
+      "muted": {
+        "default": {
+          "$type": "color",
+          "$value": "#5e6176"
+        }
+      },
+      "border": {
+        "default": {
+          "$type": "color",
+          "$value": "#ccd0da"
+        },
+        "strong": {
+          "$type": "color",
+          "$value": "#bcc0cc"
+        }
+      },
+      "field": {
+        "default": {
+          "$type": "color",
+          "$value": "#e6e9ef"
+        }
+      },
+      "focus": {
+        "default": {
+          "$type": "color",
+          "$value": "#8136e3"
+        }
+      },
+      "selection": {
+        "default": {
+          "$type": "color",
+          "$value": "#e5dff4"
+        }
+      },
+      "accent": {
+        "default": {
+          "$type": "color",
+          "$value": "#8136e3"
+        },
+        "hover": {
+          "$type": "color",
+          "$value": "#6f2ec3"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#e5dff4"
+        }
+      },
+      "on": {
+        "accent": {
+          "$type": "color",
+          "$value": "#eff1f5"
+        }
+      },
+      "danger": {
+        "default": {
+          "$type": "color",
+          "$value": "#d20f39"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#ebd1db"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#bb0d33"
+        }
+      },
+      "warning": {
+        "default": {
+          "$type": "color",
+          "$value": "#c07a19"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#ede3d7"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#8f5b13"
+        }
+      },
+      "success": {
+        "default": {
+          "$type": "color",
+          "$value": "#3f9e2b"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#d6e6d9"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#2e731f"
+        }
+      },
+      "info": {
+        "default": {
+          "$type": "color",
+          "$value": "#1e66f5"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#d2def5"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#1a59d5"
+        }
+      },
+      "code": {
+        "default": {
+          "$type": "color",
+          "$value": "#dce0e8"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#4c4f69"
+        },
+        "muted": {
+          "$type": "color",
+          "$value": "#5c5f77"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "#ccd0da"
+        },
+        "keyword": {
+          "$type": "color",
+          "$value": "#7e35de"
+        },
+        "string": {
+          "$type": "color",
+          "$value": "#2d701e"
+        },
+        "number": {
+          "$type": "color",
+          "$value": "#aa4307"
+        },
+        "comment": {
+          "$type": "color",
+          "$value": "#7b7e8b"
+        },
+        "function": {
+          "$type": "color",
+          "$value": "#1a5ad8"
+        },
+        "punctuation": {
+          "$type": "color",
+          "$value": "#5f6271"
+        }
+      },
+      "chrome": {
+        "default": {
+          "$type": "color",
+          "$value": "#11111bee"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#cdd6f4"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "#cdd6f429"
+        }
+      },
+      "shadow": {
+        "color": {
+          "$type": "color",
+          "$value": "#4c4f6929"
+        }
+      }
+    }
+  },
+  "macchiato/dark": {
+    "color": {
+      "bg": {
+        "default": {
+          "$type": "color",
+          "$value": "#24273a"
+        }
+      },
+      "surface": {
+        "default": {
+          "$type": "color",
+          "$value": "#1e2030"
+        }
+      },
+      "panel": {
+        "default": {
+          "$type": "color",
+          "$value": "#363a4f"
+        }
+      },
+      "ink": {
+        "default": {
+          "$type": "color",
+          "$value": "#cad3f5"
+        }
+      },
+      "muted": {
+        "default": {
+          "$type": "color",
+          "$value": "#a5adcb"
+        }
+      },
+      "border": {
+        "default": {
+          "$type": "color",
+          "$value": "#494d64"
+        },
+        "strong": {
+          "$type": "color",
+          "$value": "#5b6078"
+        }
+      },
+      "field": {
+        "default": {
+          "$type": "color",
+          "$value": "#24273a"
+        }
+      },
+      "focus": {
+        "default": {
+          "$type": "color",
+          "$value": "#c6a0f6"
+        }
+      },
+      "selection": {
+        "default": {
+          "$type": "color",
+          "$value": "#302c43"
+        }
+      },
+      "accent": {
+        "default": {
+          "$type": "color",
+          "$value": "#c6a0f6"
+        },
+        "hover": {
+          "$type": "color",
+          "$value": "#c7adf6"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#302c43"
+        }
+      },
+      "on": {
+        "accent": {
+          "$type": "color",
+          "$value": "#181926"
+        }
+      },
+      "danger": {
+        "default": {
+          "$type": "color",
+          "$value": "#ed8796"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#362836"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#ed8796"
+        }
+      },
+      "warning": {
+        "default": {
+          "$type": "color",
+          "$value": "#eed49f"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#363337"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#eed49f"
+        }
+      },
+      "success": {
+        "default": {
+          "$type": "color",
+          "$value": "#a6da95"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#2c3436"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#a6da95"
+        }
+      },
+      "info": {
+        "default": {
+          "$type": "color",
+          "$value": "#8aadf4"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#282e43"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#8aadf4"
+        }
+      },
+      "code": {
+        "default": {
+          "$type": "color",
+          "$value": "#181926"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#cad3f5"
+        },
+        "muted": {
+          "$type": "color",
+          "$value": "#8087a2"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "#363a4f"
+        },
+        "keyword": {
+          "$type": "color",
+          "$value": "#c6a0f6"
+        },
+        "string": {
+          "$type": "color",
+          "$value": "#a6da95"
+        },
+        "number": {
+          "$type": "color",
+          "$value": "#f5a97f"
+        },
+        "comment": {
+          "$type": "color",
+          "$value": "#6e738d"
+        },
+        "function": {
+          "$type": "color",
+          "$value": "#8aadf4"
+        },
+        "punctuation": {
+          "$type": "color",
+          "$value": "#939ab7"
+        }
+      },
+      "chrome": {
+        "default": {
+          "$type": "color",
+          "$value": "#11111bee"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#cdd6f4"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "#cdd6f429"
+        }
+      },
+      "shadow": {
+        "color": {
+          "$type": "color",
+          "$value": "#11111b80"
+        }
+      }
+    }
+  },
+  "mocha/dark": {
+    "color": {
+      "bg": {
+        "default": {
+          "$type": "color",
+          "$value": "#1e1e2e"
+        }
+      },
+      "surface": {
+        "default": {
+          "$type": "color",
+          "$value": "#181825"
+        }
+      },
+      "panel": {
+        "default": {
+          "$type": "color",
+          "$value": "#313244"
+        }
+      },
+      "ink": {
+        "default": {
+          "$type": "color",
+          "$value": "#cdd6f4"
+        }
+      },
+      "muted": {
+        "default": {
+          "$type": "color",
+          "$value": "#a6adc8"
+        }
+      },
+      "border": {
+        "default": {
+          "$type": "color",
+          "$value": "#45475a"
+        },
+        "strong": {
+          "$type": "color",
+          "$value": "#585b70"
+        }
+      },
+      "field": {
+        "default": {
+          "$type": "color",
+          "$value": "#1e1e2e"
+        }
+      },
+      "focus": {
+        "default": {
+          "$type": "color",
+          "$value": "#cba6f7"
+        }
+      },
+      "selection": {
+        "default": {
+          "$type": "color",
+          "$value": "#2b263a"
+        }
+      },
+      "accent": {
+        "default": {
+          "$type": "color",
+          "$value": "#cba6f7"
+        },
+        "hover": {
+          "$type": "color",
+          "$value": "#ccb2f6"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#2b263a"
+        }
+      },
+      "on": {
+        "accent": {
+          "$type": "color",
+          "$value": "#11111b"
+        }
+      },
+      "danger": {
+        "default": {
+          "$type": "color",
+          "$value": "#f38ba8"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#31222f"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#f38ba8"
+        }
+      },
+      "warning": {
+        "default": {
+          "$type": "color",
+          "$value": "#f9e2af"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#312e30"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#f9e2af"
+        }
+      },
+      "success": {
+        "default": {
+          "$type": "color",
+          "$value": "#a6e3a1"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#262e2e"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#a6e3a1"
+        }
+      },
+      "info": {
+        "default": {
+          "$type": "color",
+          "$value": "#89b4fa"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#22283a"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#89b4fa"
+        }
+      },
+      "code": {
+        "default": {
+          "$type": "color",
+          "$value": "#11111b"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#cdd6f4"
+        },
+        "muted": {
+          "$type": "color",
+          "$value": "#7f849c"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "#313244"
+        },
+        "keyword": {
+          "$type": "color",
+          "$value": "#cba6f7"
+        },
+        "string": {
+          "$type": "color",
+          "$value": "#a6e3a1"
+        },
+        "number": {
+          "$type": "color",
+          "$value": "#fab387"
+        },
+        "comment": {
+          "$type": "color",
+          "$value": "#6c7086"
+        },
+        "function": {
+          "$type": "color",
+          "$value": "#89b4fa"
+        },
+        "punctuation": {
+          "$type": "color",
+          "$value": "#9399b2"
+        }
+      },
+      "chrome": {
+        "default": {
+          "$type": "color",
+          "$value": "#11111bee"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#cdd6f4"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "#cdd6f429"
+        }
+      },
+      "shadow": {
+        "color": {
+          "$type": "color",
+          "$value": "#11111b80"
+        }
+      }
+    }
+  },
+  "solarized/light": {
+    "color": {
+      "bg": {
+        "default": {
+          "$type": "color",
+          "$value": "#fdf6e3"
+        }
+      },
+      "surface": {
+        "default": {
+          "$type": "color",
+          "$value": "#eee8d5"
+        }
+      },
+      "panel": {
+        "default": {
+          "$type": "color",
+          "$value": "#fdf6e3"
+        }
+      },
+      "ink": {
+        "default": {
+          "$type": "color",
+          "$value": "#566c73"
+        }
+      },
+      "muted": {
+        "default": {
+          "$type": "color",
+          "$value": "#586c72"
+        }
+      },
+      "border": {
+        "default": {
+          "$type": "color",
+          "$value": "#ddd6c3"
+        },
+        "strong": {
+          "$type": "color",
+          "$value": "#c9c0a8"
+        }
+      },
+      "field": {
+        "default": {
+          "$type": "color",
+          "$value": "#eee8d5"
+        }
+      },
+      "focus": {
+        "default": {
+          "$type": "color",
+          "$value": "#2076b3"
+        }
+      },
+      "selection": {
+        "default": {
+          "$type": "color",
+          "$value": "#dfe9f2"
+        }
+      },
+      "accent": {
+        "default": {
+          "$type": "color",
+          "$value": "#2076b3"
+        },
+        "hover": {
+          "$type": "color",
+          "$value": "#1a6396"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#dfe9f2"
+        }
+      },
+      "on": {
+        "accent": {
+          "$type": "color",
+          "$value": "#fdf6e3"
+        }
+      },
+      "danger": {
+        "default": {
+          "$type": "color",
+          "$value": "#dc322f"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#f7e0df"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#a52521"
+        }
+      },
+      "warning": {
+        "default": {
+          "$type": "color",
+          "$value": "#cb4b16"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#f7e6db"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#9c3a11"
+        }
+      },
+      "success": {
+        "default": {
+          "$type": "color",
+          "$value": "#849700"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#eef0da"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#5f6d00"
+        }
+      },
+      "info": {
+        "default": {
+          "$type": "color",
+          "$value": "#299e95"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#dcefed"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#1e7670"
+        }
+      },
+      "code": {
+        "default": {
+          "$type": "color",
+          "$value": "#eee8d5"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#566c73"
+        },
+        "muted": {
+          "$type": "color",
+          "$value": "#586b72"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "#ddd6c3"
+        },
+        "keyword": {
+          "$type": "color",
+          "$value": "#859900"
+        },
+        "string": {
+          "$type": "color",
+          "$value": "#2aa198"
+        },
+        "number": {
+          "$type": "color",
+          "$value": "#d33682"
+        },
+        "comment": {
+          "$type": "color",
+          "$value": "#93a1a1"
+        },
+        "function": {
+          "$type": "color",
+          "$value": "#268bd2"
+        },
+        "punctuation": {
+          "$type": "color",
+          "$value": "#657b83"
+        }
+      },
+      "chrome": {
+        "default": {
+          "$type": "color",
+          "$value": "#002b36ee"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#93a1a1"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "#93a1a129"
+        }
+      },
+      "shadow": {
+        "color": {
+          "$type": "color",
+          "$value": "#586e7529"
+        }
+      }
+    }
+  },
+  "solarized/dark": {
+    "color": {
+      "bg": {
+        "default": {
+          "$type": "color",
+          "$value": "#002b36"
+        }
+      },
+      "surface": {
+        "default": {
+          "$type": "color",
+          "$value": "#00212b"
+        }
+      },
+      "panel": {
+        "default": {
+          "$type": "color",
+          "$value": "#073642"
+        }
+      },
+      "ink": {
+        "default": {
+          "$type": "color",
+          "$value": "#93a1a1"
+        }
+      },
+      "muted": {
+        "default": {
+          "$type": "color",
+          "$value": "#8c9b9d"
+        }
+      },
+      "border": {
+        "default": {
+          "$type": "color",
+          "$value": "#254b55"
+        },
+        "strong": {
+          "$type": "color",
+          "$value": "#37626e"
+        }
+      },
+      "field": {
+        "default": {
+          "$type": "color",
+          "$value": "#00212b"
+        }
+      },
+      "focus": {
+        "default": {
+          "$type": "color",
+          "$value": "#4b9fda"
+        }
+      },
+      "selection": {
+        "default": {
+          "$type": "color",
+          "$value": "#0a3348"
+        }
+      },
+      "accent": {
+        "default": {
+          "$type": "color",
+          "$value": "#4b9fda"
+        },
+        "hover": {
+          "$type": "color",
+          "$value": "#6fb4e4"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#0a3348"
+        }
+      },
+      "on": {
+        "accent": {
+          "$type": "color",
+          "$value": "#002b36"
+        }
+      },
+      "danger": {
+        "default": {
+          "$type": "color",
+          "$value": "#de3e3b"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#3a1210"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#f07a78"
+        }
+      },
+      "warning": {
+        "default": {
+          "$type": "color",
+          "$value": "#ce5422"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#3a1e0d"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#e08a5c"
+        }
+      },
+      "success": {
+        "default": {
+          "$type": "color",
+          "$value": "#859900"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#2a2f08"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#b3c43c"
+        }
+      },
+      "info": {
+        "default": {
+          "$type": "color",
+          "$value": "#2aa198"
+        },
+        "soft": {
+          "$type": "color",
+          "$value": "#0a302e"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#5fc4bc"
+        }
+      },
+      "code": {
+        "default": {
+          "$type": "color",
+          "$value": "#073642"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#93a1a1"
+        },
+        "muted": {
+          "$type": "color",
+          "$value": "#8c9b9d"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "#254b55"
+        },
+        "keyword": {
+          "$type": "color",
+          "$value": "#859900"
+        },
+        "string": {
+          "$type": "color",
+          "$value": "#2aa198"
+        },
+        "number": {
+          "$type": "color",
+          "$value": "#d33682"
+        },
+        "comment": {
+          "$type": "color",
+          "$value": "#586e75"
+        },
+        "function": {
+          "$type": "color",
+          "$value": "#268bd2"
+        },
+        "punctuation": {
+          "$type": "color",
+          "$value": "#839496"
+        }
+      },
+      "chrome": {
+        "default": {
+          "$type": "color",
+          "$value": "#002b36ee"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#93a1a1"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "#93a1a129"
+        }
+      },
+      "shadow": {
+        "color": {
+          "$type": "color",
+          "$value": "#0000008c"
+        }
+      }
+    }
+  },
+  "$themes": [
+    {
+      "name": "light",
+      "group": "tint",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "tint/light": "enabled"
+      }
+    },
+    {
+      "name": "dark",
+      "group": "tint",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "tint/dark": "enabled"
+      }
+    },
+    {
+      "name": "light",
+      "group": "carbon",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "carbon/light": "enabled"
+      }
+    },
+    {
+      "name": "dark",
+      "group": "carbon",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "carbon/dark": "enabled"
+      }
+    },
+    {
+      "name": "dark",
+      "group": "frappe",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "frappe/dark": "enabled"
+      }
+    },
+    {
+      "name": "light",
+      "group": "gruvbox",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "gruvbox/light": "enabled"
+      }
+    },
+    {
+      "name": "dark",
+      "group": "gruvbox",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "gruvbox/dark": "enabled"
+      }
+    },
+    {
+      "name": "light",
+      "group": "latte",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "latte/light": "enabled"
+      }
+    },
+    {
+      "name": "dark",
+      "group": "macchiato",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "macchiato/dark": "enabled"
+      }
+    },
+    {
+      "name": "dark",
+      "group": "mocha",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "mocha/dark": "enabled"
+      }
+    },
+    {
+      "name": "light",
+      "group": "solarized",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "solarized/light": "enabled"
+      }
+    },
+    {
+      "name": "dark",
+      "group": "solarized",
+      "selectedTokenSets": {
+        "global": "enabled",
+        "solarized/dark": "enabled"
+      }
+    }
+  ],
+  "$metadata": {
+    "tokenSetOrder": [
+      "global",
+      "tint/light",
+      "tint/dark",
+      "carbon/light",
+      "carbon/dark",
+      "frappe/dark",
+      "gruvbox/light",
+      "gruvbox/dark",
+      "latte/light",
+      "macchiato/dark",
+      "mocha/dark",
+      "solarized/light",
+      "solarized/dark"
+    ]
+  }
+}
