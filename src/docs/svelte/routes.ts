@@ -1,3 +1,4 @@
+import WatchTogetherDoc from '../WatchTogetherDoc.svelte'
 import type { Component } from 'svelte'
 import ButtonDoc from '../ButtonDoc.svelte'
 import BadgeDoc from '../BadgeDoc.svelte'
@@ -73,6 +74,7 @@ export const SVELTE_DOC_PAGES: ReadonlyArray<SvelteDocRoute & { component: Compo
   { path: 'components/code', label: 'Code', group: 'Data', description: 'Safe syntax highlighting and accessible code tabs.', component: CodeDoc },
   { path: 'components/calendar', label: 'Calendar', group: 'Data', description: 'Controlled month grid over plain TypeScript event models.', component: CalendarDoc },
   { path: 'components/board', label: 'Board', group: 'Data', description: 'Controlled masonry and kanban board with a selected detail.', component: BoardDoc },
+  { path: 'components/watch-together', label: 'Watch together', group: 'Data', description: 'Controlled channel session, participation, FIFO queue and sync status.', component: WatchTogetherDoc },
   { path: 'components/media', label: 'Media', group: 'Data', description: 'Unified audio and video player with queue and settings.', component: MediaDoc },
   { path: 'components/media-assets', label: 'Media Assets', group: 'Data', description: 'Responsive gallery, lightbox, file intake, and upload queue.', component: MediaAssetsDoc },
   { path: 'components/release-chart', label: 'Charts', group: 'Data', description: 'Accessible SVG scatter and release score charts.', component: ReleaseChartDoc },

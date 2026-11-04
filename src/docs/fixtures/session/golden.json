@@ -1,0 +1,887 @@
+{
+  "initial": {
+    "channel_id": "00000000-0000-0000-0000-000000000002",
+    "connections": [],
+    "ended_at_ms": null,
+    "ended_reason": null,
+    "idle_deadline_ms": 86400000,
+    "items": [],
+    "lifecycle": "active",
+    "media_mode": "watch",
+    "next_sequence": 1,
+    "participants": [],
+    "playback": {
+      "at_server_ms": 0,
+      "item_id": null,
+      "last_progress_at_ms": 0,
+      "pause_reason": null,
+      "playback_instance_id": null,
+      "position_ms": 0,
+      "state": "idle"
+    },
+    "session_id": "00000000-0000-0000-0000-000000000001",
+    "session_revision": 0,
+    "started_at_ms": 0,
+    "started_by": "00000000-0000-0000-0000-000000000003",
+    "title": "Film",
+    "unattended_since_ms": 0
+  },
+  "steps": [
+    {
+      "command": {
+        "action": "join",
+        "connection_id": "00000000-0000-0000-0000-000000000004",
+        "principal_id": "00000000-0000-0000-0000-000000000003"
+      },
+      "expected": {
+        "channel_id": "00000000-0000-0000-0000-000000000002",
+        "connections": [
+          {
+            "attached": true,
+            "attachment_deadline_ms": 15000,
+            "buffering": false,
+            "connection_id": "00000000-0000-0000-0000-000000000004",
+            "last_seen_at_ms": 0,
+            "observation_sequence": 0,
+            "playback_instance_id": null,
+            "position_ms": 0,
+            "principal_id": "00000000-0000-0000-0000-000000000003",
+            "progress_at_ms": 0,
+            "ready": false
+          }
+        ],
+        "ended_at_ms": null,
+        "ended_reason": null,
+        "idle_deadline_ms": null,
+        "items": [],
+        "lifecycle": "active",
+        "media_mode": "watch",
+        "next_sequence": 1,
+        "participants": [
+          {
+            "identity_deadline_ms": null,
+            "principal_id": "00000000-0000-0000-0000-000000000003",
+            "readiness_deadline_ms": null,
+            "state": "participating",
+            "suspended_at_ms": null
+          }
+        ],
+        "playback": {
+          "at_server_ms": 0,
+          "item_id": null,
+          "last_progress_at_ms": 0,
+          "pause_reason": null,
+          "playback_instance_id": null,
+          "position_ms": 0,
+          "state": "idle"
+        },
+        "session_id": "00000000-0000-0000-0000-000000000001",
+        "session_revision": 1,
+        "started_at_ms": 0,
+        "started_by": "00000000-0000-0000-0000-000000000003",
+        "title": "Film",
+        "unattended_since_ms": null
+      },
+      "instance": "00000000-0000-0000-0000-000000000064",
+      "now_ms": 0,
+      "observation": null
+    },
+    {
+      "command": {
+        "action": "request",
+        "item_id": "00000000-0000-0000-0000-000000000005",
+        "request_id": "00000000-0000-0000-0000-000000000006",
+        "requested_by": "00000000-0000-0000-0000-000000000003",
+        "source": {
+          "kind": "video",
+          "title": "Film",
+          "url": "https://example.com/film.mp4"
+        }
+      },
+      "expected": {
+        "channel_id": "00000000-0000-0000-0000-000000000002",
+        "connections": [
+          {
+            "attached": true,
+            "attachment_deadline_ms": 15000,
+            "buffering": false,
+            "connection_id": "00000000-0000-0000-0000-000000000004",
+            "last_seen_at_ms": 0,
+            "observation_sequence": 0,
+            "playback_instance_id": null,
+            "position_ms": 0,
+            "principal_id": "00000000-0000-0000-0000-000000000003",
+            "progress_at_ms": 0,
+            "ready": false
+          }
+        ],
+        "ended_at_ms": null,
+        "ended_reason": null,
+        "idle_deadline_ms": null,
+        "items": [
+          {
+            "item_id": "00000000-0000-0000-0000-000000000005",
+            "request_id": "00000000-0000-0000-0000-000000000006",
+            "requested_by": "00000000-0000-0000-0000-000000000003",
+            "sequence": 1,
+            "source": {
+              "kind": "video",
+              "title": "Film",
+              "url": "https://example.com/film.mp4"
+            },
+            "state": "playing"
+          }
+        ],
+        "lifecycle": "active",
+        "media_mode": "watch",
+        "next_sequence": 2,
+        "participants": [
+          {
+            "identity_deadline_ms": null,
+            "principal_id": "00000000-0000-0000-0000-000000000003",
+            "readiness_deadline_ms": null,
+            "state": "participating",
+            "suspended_at_ms": null
+          }
+        ],
+        "playback": {
+          "at_server_ms": 0,
+          "item_id": "00000000-0000-0000-0000-000000000005",
+          "last_progress_at_ms": 0,
+          "pause_reason": null,
+          "playback_instance_id": "00000000-0000-0000-0000-000000000065",
+          "position_ms": 0,
+          "state": "waiting"
+        },
+        "session_id": "00000000-0000-0000-0000-000000000001",
+        "session_revision": 2,
+        "started_at_ms": 0,
+        "started_by": "00000000-0000-0000-0000-000000000003",
+        "title": "Film",
+        "unattended_since_ms": null
+      },
+      "instance": "00000000-0000-0000-0000-000000000065",
+      "now_ms": 0,
+      "observation": null
+    },
+    {
+      "command": {
+        "action": "tick"
+      },
+      "expected": {
+        "channel_id": "00000000-0000-0000-0000-000000000002",
+        "connections": [
+          {
+            "attached": true,
+            "attachment_deadline_ms": 15001,
+            "buffering": false,
+            "connection_id": "00000000-0000-0000-0000-000000000004",
+            "last_seen_at_ms": 1,
+            "observation_sequence": 0,
+            "playback_instance_id": "00000000-0000-0000-0000-000000000065",
+            "position_ms": 0,
+            "principal_id": "00000000-0000-0000-0000-000000000003",
+            "progress_at_ms": 0,
+            "ready": true
+          }
+        ],
+        "ended_at_ms": null,
+        "ended_reason": null,
+        "idle_deadline_ms": null,
+        "items": [
+          {
+            "item_id": "00000000-0000-0000-0000-000000000005",
+            "request_id": "00000000-0000-0000-0000-000000000006",
+            "requested_by": "00000000-0000-0000-0000-000000000003",
+            "sequence": 1,
+            "source": {
+              "kind": "video",
+              "title": "Film",
+              "url": "https://example.com/film.mp4"
+            },
+            "state": "playing"
+          }
+        ],
+        "lifecycle": "active",
+        "media_mode": "watch",
+        "next_sequence": 2,
+        "participants": [
+          {
+            "identity_deadline_ms": null,
+            "principal_id": "00000000-0000-0000-0000-000000000003",
+            "readiness_deadline_ms": null,
+            "state": "participating",
+            "suspended_at_ms": null
+          }
+        ],
+        "playback": {
+          "at_server_ms": 1,
+          "item_id": "00000000-0000-0000-0000-000000000005",
+          "last_progress_at_ms": 1,
+          "pause_reason": null,
+          "playback_instance_id": "00000000-0000-0000-0000-000000000065",
+          "position_ms": 0,
+          "state": "playing"
+        },
+        "session_id": "00000000-0000-0000-0000-000000000001",
+        "session_revision": 3,
+        "started_at_ms": 0,
+        "started_by": "00000000-0000-0000-0000-000000000003",
+        "title": "Film",
+        "unattended_since_ms": null
+      },
+      "instance": "00000000-0000-0000-0000-000000000066",
+      "now_ms": 1,
+      "observation": {
+        "attached": true,
+        "attachment_deadline_ms": 15001,
+        "buffering": false,
+        "connection_id": "00000000-0000-0000-0000-000000000004",
+        "last_seen_at_ms": 1,
+        "observation_sequence": 0,
+        "playback_instance_id": "00000000-0000-0000-0000-000000000065",
+        "position_ms": 0,
+        "principal_id": "00000000-0000-0000-0000-000000000003",
+        "progress_at_ms": 0,
+        "ready": true
+      }
+    },
+    {
+      "command": {
+        "action": "play"
+      },
+      "expected": {
+        "channel_id": "00000000-0000-0000-0000-000000000002",
+        "connections": [
+          {
+            "attached": true,
+            "attachment_deadline_ms": 15001,
+            "buffering": false,
+            "connection_id": "00000000-0000-0000-0000-000000000004",
+            "last_seen_at_ms": 1,
+            "observation_sequence": 0,
+            "playback_instance_id": "00000000-0000-0000-0000-000000000065",
+            "position_ms": 0,
+            "principal_id": "00000000-0000-0000-0000-000000000003",
+            "progress_at_ms": 0,
+            "ready": true
+          }
+        ],
+        "ended_at_ms": null,
+        "ended_reason": null,
+        "idle_deadline_ms": null,
+        "items": [
+          {
+            "item_id": "00000000-0000-0000-0000-000000000005",
+            "request_id": "00000000-0000-0000-0000-000000000006",
+            "requested_by": "00000000-0000-0000-0000-000000000003",
+            "sequence": 1,
+            "source": {
+              "kind": "video",
+              "title": "Film",
+              "url": "https://example.com/film.mp4"
+            },
+            "state": "playing"
+          }
+        ],
+        "lifecycle": "active",
+        "media_mode": "watch",
+        "next_sequence": 2,
+        "participants": [
+          {
+            "identity_deadline_ms": null,
+            "principal_id": "00000000-0000-0000-0000-000000000003",
+            "readiness_deadline_ms": null,
+            "state": "participating",
+            "suspended_at_ms": null
+          }
+        ],
+        "playback": {
+          "at_server_ms": 1,
+          "item_id": "00000000-0000-0000-0000-000000000005",
+          "last_progress_at_ms": 1,
+          "pause_reason": null,
+          "playback_instance_id": "00000000-0000-0000-0000-000000000065",
+          "position_ms": 0,
+          "state": "playing"
+        },
+        "session_id": "00000000-0000-0000-0000-000000000001",
+        "session_revision": 3,
+        "started_at_ms": 0,
+        "started_by": "00000000-0000-0000-0000-000000000003",
+        "title": "Film",
+        "unattended_since_ms": null
+      },
+      "instance": "00000000-0000-0000-0000-000000000067",
+      "now_ms": 5000,
+      "observation": null
+    },
+    {
+      "command": {
+        "action": "seek",
+        "position_ms": 2000
+      },
+      "expected": {
+        "channel_id": "00000000-0000-0000-0000-000000000002",
+        "connections": [
+          {
+            "attached": true,
+            "attachment_deadline_ms": 15001,
+            "buffering": false,
+            "connection_id": "00000000-0000-0000-0000-000000000004",
+            "last_seen_at_ms": 1,
+            "observation_sequence": 0,
+            "playback_instance_id": "00000000-0000-0000-0000-000000000065",
+            "position_ms": 0,
+            "principal_id": "00000000-0000-0000-0000-000000000003",
+            "progress_at_ms": 0,
+            "ready": true
+          }
+        ],
+        "ended_at_ms": null,
+        "ended_reason": null,
+        "idle_deadline_ms": null,
+        "items": [
+          {
+            "item_id": "00000000-0000-0000-0000-000000000005",
+            "request_id": "00000000-0000-0000-0000-000000000006",
+            "requested_by": "00000000-0000-0000-0000-000000000003",
+            "sequence": 1,
+            "source": {
+              "kind": "video",
+              "title": "Film",
+              "url": "https://example.com/film.mp4"
+            },
+            "state": "playing"
+          }
+        ],
+        "lifecycle": "active",
+        "media_mode": "watch",
+        "next_sequence": 2,
+        "participants": [
+          {
+            "identity_deadline_ms": null,
+            "principal_id": "00000000-0000-0000-0000-000000000003",
+            "readiness_deadline_ms": null,
+            "state": "participating",
+            "suspended_at_ms": null
+          }
+        ],
+        "playback": {
+          "at_server_ms": 5000,
+          "item_id": "00000000-0000-0000-0000-000000000005",
+          "last_progress_at_ms": 5000,
+          "pause_reason": null,
+          "playback_instance_id": "00000000-0000-0000-0000-000000000068",
+          "position_ms": 2000,
+          "state": "waiting"
+        },
+        "session_id": "00000000-0000-0000-0000-000000000001",
+        "session_revision": 4,
+        "started_at_ms": 0,
+        "started_by": "00000000-0000-0000-0000-000000000003",
+        "title": "Film",
+        "unattended_since_ms": null
+      },
+      "instance": "00000000-0000-0000-0000-000000000068",
+      "now_ms": 5000,
+      "observation": null
+    },
+    {
+      "command": {
+        "action": "ended_report",
+        "playback_instance_id": "00000000-0000-0000-0000-000000000065"
+      },
+      "expected": {
+        "channel_id": "00000000-0000-0000-0000-000000000002",
+        "connections": [
+          {
+            "attached": true,
+            "attachment_deadline_ms": 15001,
+            "buffering": false,
+            "connection_id": "00000000-0000-0000-0000-000000000004",
+            "last_seen_at_ms": 1,
+            "observation_sequence": 0,
+            "playback_instance_id": "00000000-0000-0000-0000-000000000065",
+            "position_ms": 0,
+            "principal_id": "00000000-0000-0000-0000-000000000003",
+            "progress_at_ms": 0,
+            "ready": true
+          }
+        ],
+        "ended_at_ms": null,
+        "ended_reason": null,
+        "idle_deadline_ms": null,
+        "items": [
+          {
+            "item_id": "00000000-0000-0000-0000-000000000005",
+            "request_id": "00000000-0000-0000-0000-000000000006",
+            "requested_by": "00000000-0000-0000-0000-000000000003",
+            "sequence": 1,
+            "source": {
+              "kind": "video",
+              "title": "Film",
+              "url": "https://example.com/film.mp4"
+            },
+            "state": "playing"
+          }
+        ],
+        "lifecycle": "active",
+        "media_mode": "watch",
+        "next_sequence": 2,
+        "participants": [
+          {
+            "identity_deadline_ms": null,
+            "principal_id": "00000000-0000-0000-0000-000000000003",
+            "readiness_deadline_ms": null,
+            "state": "participating",
+            "suspended_at_ms": null
+          }
+        ],
+        "playback": {
+          "at_server_ms": 5000,
+          "item_id": "00000000-0000-0000-0000-000000000005",
+          "last_progress_at_ms": 5000,
+          "pause_reason": null,
+          "playback_instance_id": "00000000-0000-0000-0000-000000000068",
+          "position_ms": 2000,
+          "state": "waiting"
+        },
+        "session_id": "00000000-0000-0000-0000-000000000001",
+        "session_revision": 4,
+        "started_at_ms": 0,
+        "started_by": "00000000-0000-0000-0000-000000000003",
+        "title": "Film",
+        "unattended_since_ms": null
+      },
+      "instance": "00000000-0000-0000-0000-000000000069",
+      "now_ms": 5001,
+      "observation": null
+    },
+    {
+      "command": {
+        "action": "pause"
+      },
+      "expected": {
+        "channel_id": "00000000-0000-0000-0000-000000000002",
+        "connections": [
+          {
+            "attached": true,
+            "attachment_deadline_ms": 15001,
+            "buffering": false,
+            "connection_id": "00000000-0000-0000-0000-000000000004",
+            "last_seen_at_ms": 1,
+            "observation_sequence": 0,
+            "playback_instance_id": "00000000-0000-0000-0000-000000000065",
+            "position_ms": 0,
+            "principal_id": "00000000-0000-0000-0000-000000000003",
+            "progress_at_ms": 0,
+            "ready": true
+          }
+        ],
+        "ended_at_ms": null,
+        "ended_reason": null,
+        "idle_deadline_ms": null,
+        "items": [
+          {
+            "item_id": "00000000-0000-0000-0000-000000000005",
+            "request_id": "00000000-0000-0000-0000-000000000006",
+            "requested_by": "00000000-0000-0000-0000-000000000003",
+            "sequence": 1,
+            "source": {
+              "kind": "video",
+              "title": "Film",
+              "url": "https://example.com/film.mp4"
+            },
+            "state": "playing"
+          }
+        ],
+        "lifecycle": "active",
+        "media_mode": "watch",
+        "next_sequence": 2,
+        "participants": [
+          {
+            "identity_deadline_ms": null,
+            "principal_id": "00000000-0000-0000-0000-000000000003",
+            "readiness_deadline_ms": null,
+            "state": "participating",
+            "suspended_at_ms": null
+          }
+        ],
+        "playback": {
+          "at_server_ms": 6000,
+          "item_id": "00000000-0000-0000-0000-000000000005",
+          "last_progress_at_ms": 5000,
+          "pause_reason": "user",
+          "playback_instance_id": "00000000-0000-0000-0000-000000000068",
+          "position_ms": 2000,
+          "state": "paused"
+        },
+        "session_id": "00000000-0000-0000-0000-000000000001",
+        "session_revision": 5,
+        "started_at_ms": 0,
+        "started_by": "00000000-0000-0000-0000-000000000003",
+        "title": "Film",
+        "unattended_since_ms": null
+      },
+      "instance": "00000000-0000-0000-0000-00000000006a",
+      "now_ms": 6000,
+      "observation": null
+    },
+    {
+      "command": {
+        "action": "detach",
+        "connection_id": "00000000-0000-0000-0000-000000000004",
+        "principal_id": "00000000-0000-0000-0000-000000000003"
+      },
+      "expected": {
+        "channel_id": "00000000-0000-0000-0000-000000000002",
+        "connections": [
+          {
+            "attached": false,
+            "attachment_deadline_ms": 15001,
+            "buffering": false,
+            "connection_id": "00000000-0000-0000-0000-000000000004",
+            "last_seen_at_ms": 7000,
+            "observation_sequence": 0,
+            "playback_instance_id": "00000000-0000-0000-0000-000000000065",
+            "position_ms": 0,
+            "principal_id": "00000000-0000-0000-0000-000000000003",
+            "progress_at_ms": 0,
+            "ready": true
+          }
+        ],
+        "ended_at_ms": null,
+        "ended_reason": null,
+        "idle_deadline_ms": 86407000,
+        "items": [
+          {
+            "item_id": "00000000-0000-0000-0000-000000000005",
+            "request_id": "00000000-0000-0000-0000-000000000006",
+            "requested_by": "00000000-0000-0000-0000-000000000003",
+            "sequence": 1,
+            "source": {
+              "kind": "video",
+              "title": "Film",
+              "url": "https://example.com/film.mp4"
+            },
+            "state": "playing"
+          }
+        ],
+        "lifecycle": "active",
+        "media_mode": "watch",
+        "next_sequence": 2,
+        "participants": [
+          {
+            "identity_deadline_ms": 1507000,
+            "principal_id": "00000000-0000-0000-0000-000000000003",
+            "readiness_deadline_ms": 12000,
+            "state": "suspended",
+            "suspended_at_ms": 7000
+          }
+        ],
+        "playback": {
+          "at_server_ms": 6000,
+          "item_id": "00000000-0000-0000-0000-000000000005",
+          "last_progress_at_ms": 5000,
+          "pause_reason": "user",
+          "playback_instance_id": "00000000-0000-0000-0000-000000000068",
+          "position_ms": 2000,
+          "state": "paused"
+        },
+        "session_id": "00000000-0000-0000-0000-000000000001",
+        "session_revision": 6,
+        "started_at_ms": 0,
+        "started_by": "00000000-0000-0000-0000-000000000003",
+        "title": "Film",
+        "unattended_since_ms": 7000
+      },
+      "instance": "00000000-0000-0000-0000-00000000006b",
+      "now_ms": 7000,
+      "observation": null
+    },
+    {
+      "command": {
+        "action": "join",
+        "connection_id": "00000000-0000-0000-0000-000000000004",
+        "principal_id": "00000000-0000-0000-0000-000000000003"
+      },
+      "expected": {
+        "channel_id": "00000000-0000-0000-0000-000000000002",
+        "connections": [
+          {
+            "attached": true,
+            "attachment_deadline_ms": 24000,
+            "buffering": false,
+            "connection_id": "00000000-0000-0000-0000-000000000004",
+            "last_seen_at_ms": 9000,
+            "observation_sequence": 0,
+            "playback_instance_id": null,
+            "position_ms": 0,
+            "principal_id": "00000000-0000-0000-0000-000000000003",
+            "progress_at_ms": 0,
+            "ready": false
+          }
+        ],
+        "ended_at_ms": null,
+        "ended_reason": null,
+        "idle_deadline_ms": null,
+        "items": [
+          {
+            "item_id": "00000000-0000-0000-0000-000000000005",
+            "request_id": "00000000-0000-0000-0000-000000000006",
+            "requested_by": "00000000-0000-0000-0000-000000000003",
+            "sequence": 1,
+            "source": {
+              "kind": "video",
+              "title": "Film",
+              "url": "https://example.com/film.mp4"
+            },
+            "state": "playing"
+          }
+        ],
+        "lifecycle": "active",
+        "media_mode": "watch",
+        "next_sequence": 2,
+        "participants": [
+          {
+            "identity_deadline_ms": null,
+            "principal_id": "00000000-0000-0000-0000-000000000003",
+            "readiness_deadline_ms": null,
+            "state": "participating",
+            "suspended_at_ms": null
+          }
+        ],
+        "playback": {
+          "at_server_ms": 6000,
+          "item_id": "00000000-0000-0000-0000-000000000005",
+          "last_progress_at_ms": 5000,
+          "pause_reason": "user",
+          "playback_instance_id": "00000000-0000-0000-0000-000000000068",
+          "position_ms": 2000,
+          "state": "paused"
+        },
+        "session_id": "00000000-0000-0000-0000-000000000001",
+        "session_revision": 7,
+        "started_at_ms": 0,
+        "started_by": "00000000-0000-0000-0000-000000000003",
+        "title": "Film",
+        "unattended_since_ms": null
+      },
+      "instance": "00000000-0000-0000-0000-00000000006c",
+      "now_ms": 9000,
+      "observation": null
+    },
+    {
+      "command": {
+        "action": "play"
+      },
+      "expected": {
+        "channel_id": "00000000-0000-0000-0000-000000000002",
+        "connections": [
+          {
+            "attached": true,
+            "attachment_deadline_ms": 24000,
+            "buffering": false,
+            "connection_id": "00000000-0000-0000-0000-000000000004",
+            "last_seen_at_ms": 9000,
+            "observation_sequence": 0,
+            "playback_instance_id": null,
+            "position_ms": 0,
+            "principal_id": "00000000-0000-0000-0000-000000000003",
+            "progress_at_ms": 0,
+            "ready": false
+          }
+        ],
+        "ended_at_ms": null,
+        "ended_reason": null,
+        "idle_deadline_ms": null,
+        "items": [
+          {
+            "item_id": "00000000-0000-0000-0000-000000000005",
+            "request_id": "00000000-0000-0000-0000-000000000006",
+            "requested_by": "00000000-0000-0000-0000-000000000003",
+            "sequence": 1,
+            "source": {
+              "kind": "video",
+              "title": "Film",
+              "url": "https://example.com/film.mp4"
+            },
+            "state": "playing"
+          }
+        ],
+        "lifecycle": "active",
+        "media_mode": "watch",
+        "next_sequence": 2,
+        "participants": [
+          {
+            "identity_deadline_ms": null,
+            "principal_id": "00000000-0000-0000-0000-000000000003",
+            "readiness_deadline_ms": null,
+            "state": "participating",
+            "suspended_at_ms": null
+          }
+        ],
+        "playback": {
+          "at_server_ms": 6000,
+          "item_id": "00000000-0000-0000-0000-000000000005",
+          "last_progress_at_ms": 9001,
+          "pause_reason": null,
+          "playback_instance_id": "00000000-0000-0000-0000-000000000068",
+          "position_ms": 2000,
+          "state": "waiting"
+        },
+        "session_id": "00000000-0000-0000-0000-000000000001",
+        "session_revision": 8,
+        "started_at_ms": 0,
+        "started_by": "00000000-0000-0000-0000-000000000003",
+        "title": "Film",
+        "unattended_since_ms": null
+      },
+      "instance": "00000000-0000-0000-0000-00000000006d",
+      "now_ms": 9001,
+      "observation": null
+    },
+    {
+      "command": {
+        "action": "tick"
+      },
+      "expected": {
+        "channel_id": "00000000-0000-0000-0000-000000000002",
+        "connections": [
+          {
+            "attached": true,
+            "attachment_deadline_ms": 24000,
+            "buffering": false,
+            "connection_id": "00000000-0000-0000-0000-000000000004",
+            "last_seen_at_ms": 9000,
+            "observation_sequence": 0,
+            "playback_instance_id": null,
+            "position_ms": 0,
+            "principal_id": "00000000-0000-0000-0000-000000000003",
+            "progress_at_ms": 0,
+            "ready": false
+          }
+        ],
+        "ended_at_ms": null,
+        "ended_reason": null,
+        "idle_deadline_ms": 86424000,
+        "items": [
+          {
+            "item_id": "00000000-0000-0000-0000-000000000005",
+            "request_id": "00000000-0000-0000-0000-000000000006",
+            "requested_by": "00000000-0000-0000-0000-000000000003",
+            "sequence": 1,
+            "source": {
+              "kind": "video",
+              "title": "Film",
+              "url": "https://example.com/film.mp4"
+            },
+            "state": "playing"
+          }
+        ],
+        "lifecycle": "active",
+        "media_mode": "watch",
+        "next_sequence": 2,
+        "participants": [
+          {
+            "identity_deadline_ms": 1524000,
+            "principal_id": "00000000-0000-0000-0000-000000000003",
+            "readiness_deadline_ms": 29000,
+            "state": "suspended",
+            "suspended_at_ms": 24000
+          }
+        ],
+        "playback": {
+          "at_server_ms": 24000,
+          "item_id": "00000000-0000-0000-0000-000000000005",
+          "last_progress_at_ms": 9001,
+          "pause_reason": "absence",
+          "playback_instance_id": "00000000-0000-0000-0000-000000000068",
+          "position_ms": 2000,
+          "state": "paused"
+        },
+        "session_id": "00000000-0000-0000-0000-000000000001",
+        "session_revision": 9,
+        "started_at_ms": 0,
+        "started_by": "00000000-0000-0000-0000-000000000003",
+        "title": "Film",
+        "unattended_since_ms": 24000
+      },
+      "instance": "00000000-0000-0000-0000-00000000006e",
+      "now_ms": 24000,
+      "observation": null
+    },
+    {
+      "command": {
+        "action": "tick"
+      },
+      "expected": {
+        "channel_id": "00000000-0000-0000-0000-000000000002",
+        "connections": [
+          {
+            "attached": false,
+            "attachment_deadline_ms": 24000,
+            "buffering": false,
+            "connection_id": "00000000-0000-0000-0000-000000000004",
+            "last_seen_at_ms": 9000,
+            "observation_sequence": 0,
+            "playback_instance_id": null,
+            "position_ms": 0,
+            "principal_id": "00000000-0000-0000-0000-000000000003",
+            "progress_at_ms": 0,
+            "ready": false
+          }
+        ],
+        "ended_at_ms": 86424000,
+        "ended_reason": "idle_expiry",
+        "idle_deadline_ms": 86424000,
+        "items": [
+          {
+            "item_id": "00000000-0000-0000-0000-000000000005",
+            "request_id": "00000000-0000-0000-0000-000000000006",
+            "requested_by": "00000000-0000-0000-0000-000000000003",
+            "sequence": 1,
+            "source": {
+              "kind": "video",
+              "title": "Film",
+              "url": "https://example.com/film.mp4"
+            },
+            "state": "retired"
+          }
+        ],
+        "lifecycle": "ended",
+        "media_mode": "watch",
+        "next_sequence": 2,
+        "participants": [
+          {
+            "identity_deadline_ms": 1524000,
+            "principal_id": "00000000-0000-0000-0000-000000000003",
+            "readiness_deadline_ms": 29000,
+            "state": "departed",
+            "suspended_at_ms": 24000
+          }
+        ],
+        "playback": {
+          "at_server_ms": 24000,
+          "item_id": null,
+          "last_progress_at_ms": 9001,
+          "pause_reason": "absence",
+          "playback_instance_id": null,
+          "position_ms": 2000,
+          "state": "idle"
+        },
+        "session_id": "00000000-0000-0000-0000-000000000001",
+        "session_revision": 10,
+        "started_at_ms": 0,
+        "started_by": "00000000-0000-0000-0000-000000000003",
+        "title": "Film",
+        "unattended_since_ms": 24000
+      },
+      "instance": "00000000-0000-0000-0000-00000000006f",
+      "now_ms": 86424000,
+      "observation": null
+    }
+  ],
+  "version": 1
+}

@@ -101,7 +101,8 @@
     "./audio-workspace": "./src/svelte/components/audio-workspace/index.ts",
     "./timeline": "./src/svelte/components/timeline/index.ts",
     "./popover": "./src/svelte/components/popover/index.ts",
-    "./tabs": "./src/svelte/components/tabs/index.ts"
+    "./tabs": "./src/svelte/components/tabs/index.ts",
+    "./session": "./src/svelte/components/session/index.ts"
   },
   "dependencies": {
     "@codemirror/commands": "^6.11.0",

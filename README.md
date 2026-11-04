@@ -216,3 +216,11 @@ until the last dialog closes. Late focus restoration cannot steal focus from a n
 values unchanged. See `#/components/form-fields` for the bounded search example.
 
 Route navigation reuses `NavigationList orientation="horizontal"` with wrapped native links. Graph runtime summaries distinguish `unknown` and `cancelled` from ready, queued, success and failure; hosts own reconciliation and execution policy. See the [navigation](src/docs/NavigationDoc.svelte) and [graph](src/docs/graph/GraphDoc.svelte) examples.
+
+### Channel session presentation
+
+`@nebula/tint/session` exposes controlled `SessionHeader`, `ParticipantList`,
+`RequestQueue`, `StageView` and `SyncStatus` components. The host owns grants,
+connections, FIFO order and playback. No controller lease is implied. The live
+`#/components/watch-together` page replays Rust-validated command/time snapshots;
+`src/docs/fixtures/session/golden.json` must match the host's contract fixture.

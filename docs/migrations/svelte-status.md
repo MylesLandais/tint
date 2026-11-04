@@ -10,11 +10,11 @@ Rows reflect source files and local migration gates; behavior parity and consume
 - Imports from react-dom: **0**
 - React-specific direct dependency entries: **0**
 - React findings: **0**
-- Svelte files (excluding the retired smoke fixture): **331**
+- Svelte files (excluding the retired smoke fixture): **337**
 - Packages with extracted core modules: **42**
 - Carbon imports outside approved Tint implementation paths: **0**
 - Public component packages still React-backed: **0**
-- Public UI packages with local gates met: **50/50 (100%)**
+- Public UI packages with local gates met: **50/51 (98%)**
 
 | Package | Core extracted | Svelte component | Tests | Docs | A11y | React removed | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -68,6 +68,7 @@ Rows reflect source files and local migration gates; behavior parity and consume
 | release-chart | Yes | Yes | Yes | Yes | Reviewed | Yes | Local gates met |
 | scatter-plot | Yes | Yes | Yes | Yes | Reviewed | Yes | Local gates met |
 | scrolling-label | Yes | Yes | Yes | Yes | Reviewed | Yes | Local gates met |
+| session | — | Yes | — | — | Pending | Yes | Needs gates |
 | settings-popout | — | — | — | — | — | Yes | Svelte alias → media |
 | shell | Yes | Yes | Yes | Yes | Reviewed | Yes | Local gates met |
 | socket | — | — | — | — | — | Yes | Plain TS |

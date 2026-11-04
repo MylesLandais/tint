@@ -47,6 +47,7 @@ function svelteComponents(file: string): Set<string> {
 }
 
 const GROUPED_DOCS: Record<string, string> = {
+  session: 'watch-together',
   'media-player': 'media', 'video-player': 'media', 'settings-popout': 'media',
   'workspace-grid': 'workspace', 'media-workspace': 'workspace',
   'scatter-plot': 'release-chart', 'audio-engine': 'dj',

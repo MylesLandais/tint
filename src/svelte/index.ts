@@ -173,3 +173,5 @@ export {
 } from './client'
 export type { ReactiveSnapshot, ReactiveCapability } from './client'
 export * from '../core/collab'
+
+export * from './components/session'
