@@ -4,6 +4,8 @@
   type Props = {
     value: number
     onChange: (value: number) => void
+    /** Commit one completed gesture; intermediate changes remain local to the host. */
+    onCommit?: (value: number) => void
     'aria-label': string
     orientation?: 'horizontal' | 'vertical'
     showThumb?: boolean
@@ -13,42 +15,58 @@
   }
 
   let {
-    value, onChange, 'aria-label': ariaLabel, orientation = 'horizontal',
+    value, onChange, onCommit, 'aria-label': ariaLabel, orientation = 'horizontal',
     showThumb = false, class: className, fillClassName, thumbClassName,
   }: Props = $props()
   let track = $state<HTMLDivElement>(null!)
-  let safeValue = $derived(clampPercent(value))
+  let draft = $state<number | null>(null)
+  let origin = 0
+  let active = false
+  const held = new Set<string>()
+  let safeValue = $derived(draft ?? clampPercent(value))
 
+  function begin() {
+    if (!active) { origin = clampPercent(value); active = true; draft = origin }
+  }
+  function update(next: number) { draft = clampPercent(next); onChange(draft) }
+  function finish() {
+    if (!active) return
+    const next = draft ?? origin
+    active = false; held.clear(); draft = null
+    if (next !== origin) onCommit?.(next)
+  }
+  function cancel() {
+    if (!active) return
+    active = false; held.clear(); draft = null; onChange(origin)
+  }
   function updateFromPointer(event: PointerEvent) {
     const rect = track.getBoundingClientRect()
-    onChange(orientation === 'vertical'
+    update(orientation === 'vertical'
       ? pointerPercent(event.clientY, rect.top, rect.height, 'vertical')
       : pointerPercent(event.clientX, rect.left, rect.width))
   }
-
   function onPointerDown(event: PointerEvent) {
-    event.preventDefault()
-    track.focus()
-    track.setPointerCapture(event.pointerId)
-    updateFromPointer(event)
+    event.preventDefault(); track.focus(); begin()
+    track.setPointerCapture(event.pointerId); updateFromPointer(event)
   }
-
   function onPointerMove(event: PointerEvent) {
     if (track.hasPointerCapture(event.pointerId)) updateFromPointer(event)
   }
-
   function onKeydown(event: KeyboardEvent) {
+    if (event.key === 'Escape') { event.preventDefault(); cancel(); return }
     const delta = event.key === 'ArrowRight' || event.key === 'ArrowUp' ? 5
-      : event.key === 'ArrowLeft' || event.key === 'ArrowDown' ? -5
-      : event.key === 'PageUp' ? 5 : event.key === 'PageDown' ? -5 : 0
+      : event.key === 'ArrowLeft' || event.key === 'ArrowDown' ? -5 : 0
     if (delta) {
+      event.preventDefault(); begin(); held.add(event.key); update(safeValue + delta)
+    } else if (['Home', 'End', 'PageUp', 'PageDown'].includes(event.key)) {
       event.preventDefault()
-      onChange(clampPercent(safeValue + delta))
-    } else if (event.key === 'Home' || event.key === 'End') {
-      event.preventDefault()
-      onChange(event.key === 'Home' ? 0 : 100)
+      if (event.repeat) return
+      begin()
+      update(event.key === 'Home' ? 0 : event.key === 'End' ? 100 : safeValue + (event.key === 'PageUp' ? 5 : -5))
+      finish()
     }
   }
+
 </script>
 
 <div
@@ -64,8 +82,11 @@
   class={['tint-media-slider', className].filter(Boolean).join(' ')}
   onpointerdown={onPointerDown}
   onpointermove={onPointerMove}
-  onpointerup={(event) => { if (track.hasPointerCapture(event.pointerId)) track.releasePointerCapture(event.pointerId) }}
-  onpointercancel={(event) => { if (track.hasPointerCapture(event.pointerId)) track.releasePointerCapture(event.pointerId) }}
+  onpointerup={(event) => { finish(); if (track.hasPointerCapture(event.pointerId)) track.releasePointerCapture(event.pointerId) }}
+  onpointercancel={(event) => { cancel(); if (track.hasPointerCapture(event.pointerId)) track.releasePointerCapture(event.pointerId) }}
+  onlostpointercapture={cancel}
+  onblur={cancel}
+  onkeyup={(event) => { if (held.delete(event.key) && held.size === 0) finish() }}
   onkeydown={onKeydown}
 >
   <span class={['fill', fillClassName].filter(Boolean).join(' ')} style={orientation === 'vertical' ? `height:${safeValue}%` : `width:${safeValue}%`}></span>

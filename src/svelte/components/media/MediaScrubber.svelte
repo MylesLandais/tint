@@ -6,6 +6,7 @@
   type Props = {
     progress: number
     onSeek: (percentage: number) => void
+    onSeekCommit?: (percentage: number) => void
     waveform?: readonly number[]
     /** Canvas-parseable, resolved color. */
     color: string
@@ -13,7 +14,7 @@
     tone?: 'surface' | 'chrome'
     class?: string
   }
-  let { progress, onSeek, waveform, color, label, tone = 'surface', class: className }: Props = $props()
+  let { progress, onSeek, onSeekCommit, waveform, color, label, tone = 'surface', class: className }: Props = $props()
   let peaks = $derived(waveform?.length ? normalizePeaks(waveform) : undefined)
   let hoverProgress = $state<number | null>(null)
 
@@ -28,10 +29,10 @@
     <!-- The canvas adds pointer seeking without a second keyboard stop. -->
     <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
     <div class="waveform" role="presentation" onpointermove={move} onpointerleave={() => hoverProgress = null}>
-      <Waveform {peaks} progress={progress / 100} {hoverProgress} {color} onSeek={(p) => onSeek(p * 100)} />
+      <Waveform {peaks} progress={progress / 100} {hoverProgress} {color} onSeek={(p) => { const value=p*100; onSeek(value); if (value!==progress) onSeekCommit?.(value) }} />
     </div>
   {/if}
-  <Slider value={progress} onChange={onSeek} aria-label={`Seek ${label}`} showThumb class="slider" />
+  <Slider value={progress} onChange={onSeek} onCommit={onSeekCommit} aria-label={`Seek ${label}`} showThumb class="slider" />
 </div>
 
 <style>

@@ -224,3 +224,8 @@ Route navigation reuses `NavigationList orientation="horizontal"` with wrapped n
 connections, FIFO order and playback. No controller lease is implied. The live
 `#/components/watch-together` page replays Rust-validated command/time snapshots;
 `src/docs/fixtures/session/golden.json` must match the host's contract fixture.
+
+Nebula Beta hosts may import `@nebula/tint/themes/nebula-beta.css`. The palette
+is scoped by `data-theme="nebula-beta"`; typography and compact product recipes
+remain host-owned. Media Slider `onCommit` / MediaScrubber `onSeekCommit` separate
+completed gestures from `onChange` previews for shared playback.

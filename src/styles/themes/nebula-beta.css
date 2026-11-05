@@ -1,0 +1,50 @@
+/* Authored Nebula Beta palette; framework and typography stay host-owned. */
+[data-theme='nebula-beta'] {
+  color-scheme: dark;
+  --tint-bg: #101219;
+  --tint-surface: #12151d;
+  --tint-panel: #191c25;
+  --tint-field: #191c25;
+  --tint-ink: #e8eaf3;
+  --tint-muted: #9ba3b4;
+  --tint-border: #2d3340;
+  --tint-border-strong: #3d4352;
+
+  --tint-accent: #aaa3ec;
+  --tint-accent-hover: #c7bef5;
+  --tint-accent-soft: #302e43;
+  --tint-on-accent: #12151d;
+  --accent-strong: #aaa3ec;
+  --on-accent-strong: #e8eaf3;
+  --tint-focus: #e8eaf3;
+  --tint-selection: #302e43;
+
+  --tint-warning: #f1c21b;
+  --tint-warning-soft: #332900;
+  --tint-warning-ink: #f1c21b;
+  --tint-success: #42be65;
+  --tint-success-soft: #10391e;
+  --tint-success-ink: #6fdc8c;
+  --tint-danger: #fa4d56;
+  --tint-danger-soft: #3c1418;
+  --tint-danger-ink: #ffb3b8;
+  --tint-info: #aaa3ec;
+  --tint-info-soft: #302e43;
+  --tint-info-ink: #c7bef5;
+
+  --tint-code: #12151d;
+  --tint-code-ink: #e8eaf3;
+  --tint-code-muted: #a8a8a8;
+  --tint-code-border: #525252;
+  --tint-code-keyword: #be95ff;
+  --tint-code-string: #a7f0ba;
+  --tint-code-number: #ffb784;
+  --tint-code-comment: #a8a8a8;
+  --tint-code-function: #c7bef5;
+  --tint-code-punctuation: #9ba3b4;
+
+  --tint-chrome: #12151dcc;
+  --tint-chrome-ink: #e8eaf3;
+  --tint-chrome-border: #e8eaf31a;
+  --tint-shadow-color: light-dark(rgb(22 22 22 / 0.12), rgb(0 0 0 / 0.5));
+}
