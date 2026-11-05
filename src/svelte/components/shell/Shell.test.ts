@@ -153,6 +153,29 @@ describe('Svelte shell', () => {
     expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument()
   })
 
+  it('controls a named group disclosure without hiding links in the icon rail', async () => {
+    const onExpandedChange = vi.fn()
+    const props = {
+      groups: [{ id: 'channels', label: 'Channels', items: [{ id: 'general', label: 'General', href: '#general' }] }],
+      groupDisclosure: { expanded: () => true, onExpandedChange },
+    }
+    const view = render(NavRail, props)
+    const toggle = screen.getByRole('button', { name: 'Channels' })
+    const link = screen.getByRole('link', { name: 'General' })
+    expect(toggle).toHaveAttribute('aria-controls', link.closest('ul')?.id)
+    expect(toggle).toHaveAttribute('aria-expanded', 'true')
+    await fireEvent.click(toggle)
+    expect(onExpandedChange).toHaveBeenCalledWith('channels', false)
+    expect(link).toBeVisible()
+    const collapsedGroup = { ...props, groupDisclosure: { expanded: () => false, onExpandedChange } }
+    await view.rerender(collapsedGroup)
+    expect(toggle).toHaveAttribute('aria-expanded', 'false')
+    expect(link).not.toBeVisible()
+    await view.rerender({ ...collapsedGroup, collapsed: true })
+    expect(screen.queryByRole('button', { name: 'Channels' })).not.toBeInTheDocument()
+    expect(link).toBeVisible()
+  })
+
   it('keeps palette query and open state controlled and skips disabled commands', async () => {
     const onOpenChange = vi.fn()
     const onQueryChange = vi.fn()

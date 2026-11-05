@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
+  import { ChevronDown } from '@lucide/svelte'
   import type { NavGroup, NavRailItem } from './types'
 
   type Props = Omit<HTMLAttributes<HTMLElement>, 'children'> & {
@@ -10,6 +11,11 @@
     onCollapsedChange?: (collapsed: boolean) => void
     onNavigate?: (id: string, href: string) => void
     onLinkClick?: (event: MouseEvent, item: NavRailItem) => void
+    /** A boolean makes the named group a controlled disclosure. Undefined keeps a plain heading. */
+    groupDisclosure?: {
+      expanded: (groupId: string) => boolean | undefined
+      onExpandedChange: (groupId: string, expanded: boolean) => void
+    }
     header?: Snippet
     /**
      * A contextual view (for example a page's thread list) shown in place of
@@ -20,8 +26,9 @@
   }
   let {
     groups, activeId, collapsed = false, onCollapsedChange, onNavigate, onLinkClick,
-    header, context, footer, class: className, 'aria-label': ariaLabel = 'Primary navigation', ...rest
+    groupDisclosure, header, context, footer, class: className, 'aria-label': ariaLabel = 'Primary navigation', ...rest
   }: Props = $props()
+  const railId = $props.id()
 
   function clickItem(event: MouseEvent, item: NavRailItem) {
     if (item.disabled) { event.preventDefault(); return }
@@ -38,9 +45,23 @@
   {:else}
   <div data-tint-nav-rail-groups class="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto">
     {#each groups as group (group.id)}
-      <section role="group" aria-label={group.label} data-tint-nav-group>
-        {#if group.label}<h2 class={['mb-1 px-2 text-xs font-medium text-tint-muted', collapsed && 'sr-only']}>{group.label}</h2>{/if}
-        <ul class="m-0 list-none space-y-1 p-0">
+      {@const expanded = !collapsed && group.label ? groupDisclosure?.expanded(group.id) : undefined}
+      {@const listId = expanded === undefined ? undefined : `${railId}-${encodeURIComponent(group.id)}`}
+      <section role="group" aria-label={group.label} data-tint-nav-group data-tint-nav-disclosure={expanded !== undefined || undefined}>
+        {#if group.label}
+          <h2 class={['mb-1 px-2 text-xs font-medium text-tint-muted', collapsed && 'sr-only']}>
+            {#if expanded !== undefined}
+              <button type="button" aria-expanded={expanded} aria-controls={listId}
+                class="flex w-full items-center gap-1.5 rounded text-left hover:text-tint-ink focus-visible:outline-2 focus-visible:outline-tint-focus"
+                onclick={() => groupDisclosure?.onExpandedChange(group.id, !expanded)}>
+                <ChevronDown size={12} class={expanded ? '' : '-rotate-90'} aria-hidden="true" />
+                <span class="min-w-0 flex-1 truncate">{group.label}</span>
+                <span aria-hidden="true" class="tabular-nums" data-tint-nav-group-count>{group.items.length}</span>
+              </button>
+            {:else}{group.label}{/if}
+          </h2>
+        {/if}
+        <ul id={listId} hidden={expanded === false} class="m-0 list-none space-y-1 p-0">
           {#each group.items as item (item.id)}
             <li>
               <a href={item.href} aria-current={item.id === activeId ? 'page' : undefined} aria-disabled={item.disabled || undefined}
