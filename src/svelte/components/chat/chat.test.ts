@@ -20,6 +20,24 @@ function message(id: string, overrides: Partial<ChatMessageData> = {}): ChatMess
 afterEach(() => vi.restoreAllMocks())
 
 describe('Svelte chat composer', () => {
+  it('marks highlighted spans behind the text without changing what is submitted', async () => {
+    const onSubmit = vi.fn()
+    const { container } = render(ChatComposer, { value: '/imagine a lighthouse', onValueChange: vi.fn(), onSubmit,
+      inputHighlights: [{ start: 0, end: 8, tone: 'command' }, { start: 50, end: 60 }] })
+    const mark = container.querySelector('[data-chat-composer-mirror] mark')
+    expect(mark?.textContent).toBe('/imagine')
+    expect(mark?.getAttribute('data-tone')).toBe('command')
+    expect(container.querySelectorAll('[data-chat-composer-mirror] mark')).toHaveLength(1)
+    expect(container.querySelector('[data-chat-composer-mirror]')?.getAttribute('aria-hidden')).toBe('true')
+    await fireEvent.click(screen.getByRole('button', { name: 'Send message' }))
+    expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining({ text: '/imagine a lighthouse' }))
+  })
+
+  it('draws no mirror when nothing is highlighted', () => {
+    const { container } = render(ChatComposer, { value: 'plain text', onValueChange: vi.fn(), onSubmit: vi.fn() })
+    expect(container.querySelector('[data-chat-composer-mirror]')).toBeNull()
+  })
+
   it('keeps model controls separate from submission and retains the host payload', async () => {
     const onSubmit = vi.fn()
     const chooseModel = vi.fn()

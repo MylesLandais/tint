@@ -11,7 +11,7 @@
     submitLabel = 'Send message', submitDisabled = false, submitDisabledReason,
     stopLabel = 'Stop response', maxLength,
     submitOnEnter = true, accept, multiple = true, metadata, appearance = 'standard', controls, actions, inputRef,
-    onInputKeydown, inputListboxId, inputExpanded = true, inputActiveOptionId,
+    onInputKeydown, inputListboxId, inputExpanded = true, inputActiveOptionId, inputHighlights,
     onValueChange, onSubmit, onStop, onAttachmentAdd, onAttachmentRemove,
     class: className, className: legacyClassName, ...rest
   }: ChatComposerProps = $props()
@@ -86,7 +86,7 @@
       </div>
     {/if}
     <div data-chat-composer-input="" class="px-2 pt-1">
-      <ChatComposerInput {value} {onValueChange} {onInputKeydown} submitOnEnter={submitOnEnter && !readonly} inputRef={(node) => { textarea = node; inputRef?.(node) }}
+      <ChatComposerInput {value} {onValueChange} {onInputKeydown} highlights={inputHighlights} submitOnEnter={submitOnEnter && !readonly} inputRef={(node) => { textarea = node; inputRef?.(node) }}
         role={inputListboxId ? 'combobox' : undefined} aria-autocomplete={inputListboxId ? 'list' : undefined}
         aria-expanded={inputListboxId ? inputExpanded : undefined} aria-controls={inputListboxId} aria-activedescendant={inputActiveOptionId}
         aria-label={inputLabel} {placeholder} maxlength={maxLength} {readonly} aria-disabled={readonly || undefined} aria-describedby={error ? errorId : undefined} />
@@ -116,6 +116,7 @@
   [data-appearance='agent'] > div:first-child { border-radius: 1rem; padding: .75rem; background: var(--tint-panel); }
   [data-appearance='agent'] [data-chat-composer-input] { padding: .25rem .35rem .75rem; }
   [data-appearance='agent'] :global(textarea) { min-height: 5rem; font-size: .9375rem; line-height: 1.65; }
+  [data-appearance='agent'] :global([data-chat-composer-mirror]) { font-size: .9375rem; line-height: 1.65; }
   [data-appearance='agent'] [data-chat-composer-footer] { border-top: 1px solid var(--tint-border); padding-top: .65rem; gap: .5rem; }
   @media (max-width: 600px) {
     [data-chat-composer-controls] { max-width: 55%; }

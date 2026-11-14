@@ -118,6 +118,7 @@ export type ChatComposerProps = Omit<HTMLFormAttributes, 'children' | 'onsubmit'
   /** Expanded state of a controlled suggestion list; defaults to true when its ID is supplied. */
   inputExpanded?: boolean
   inputActiveOptionId?: string
+  inputHighlights?: readonly ChatInputHighlight[]
   onValueChange: (value: string) => void
   onSubmit: (payload: ChatSubmitPayload) => void
   onStop?: () => void
@@ -126,12 +127,22 @@ export type ChatComposerProps = Omit<HTMLFormAttributes, 'children' | 'onsubmit'
   className?: string
 }
 
+/** A span of the composer's text to mark, such as a recognized command token. Offsets are UTF-16 indexes into the value. */
+export type ChatInputHighlight = {
+  start: number
+  end: number
+  /** Exposed as `data-tone` on the mark so hosts can style kinds of token. */
+  tone?: string
+}
+
 export type ChatComposerInputProps = Omit<HTMLTextareaAttributes, 'value' | 'oninput'> & {
   value: string
   onValueChange: (value: string) => void
   submitOnEnter?: boolean
   inputRef?: (node: HTMLTextAreaElement | null) => void
   onInputKeydown?: (event: KeyboardEvent) => void
+  /** Marks drawn behind the text; the textarea stays the only editable surface. */
+  highlights?: readonly ChatInputHighlight[]
 }
 
 export type ChatActionButtonProps = HTMLButtonAttributes & {
