@@ -51,4 +51,14 @@
     --tint-motion-fast: 0ms;
     --tint-motion-base: 0ms;
   }
+
+  /* Colour/opacity transitions snap instead of animating. Scoped to
+     colour-ish properties so structural (transform/width) transitions that
+     individual components opt out of separately stay per-component decisions. */
+  *,
+  *::before,
+  *::after {
+    transition-property: color, background-color, border-color, outline-color, opacity, fill, stroke !important;
+    transition-duration: 0s !important;
+  }
 }

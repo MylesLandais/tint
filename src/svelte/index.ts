@@ -82,7 +82,14 @@ export type {
   MediaPlayerAudioProps, MediaPlayerVideoProps, MediaTextTrack, RemoteMediaController,
   MediaSize, SettingsPopoutItem,
 } from './components/media'
-export { GalleryGrid, MediaLightbox, UploadDropzone, UploadQueue } from './components/media-assets'
+export {
+  MediaAvatar, BoxOverlay, FaceCrop, FirstFrame, HoverPreview, JustifiedGrid,
+  GalleryGrid, MediaLightbox, MediaTile, UploadDropzone, UploadPreview, UploadQueue,
+} from './components/media-assets'
+export {
+  parseQuery, joinTokens, hasToken, toggleToken, removeToken, negateToken,
+  justify, createFrameQueue, frameQueue,
+} from './components/media-assets'
 export type { MediaAsset, FileRejection } from './components/media-assets'
 export { TerminalConsole } from './components/terminal'
 export type {
@@ -155,6 +162,7 @@ export {
   CommandPalette, CommandMenu, StatusBar, ErrorBanner, EmptyState as ShellEmptyState,
   LoadingState, WorkspaceLayout, WorkspaceSplit, WorkspaceTabs, ResizeHandle,
   MetadataPanel, DetailSheet, FilterBar,
+  QueryField, DateScrubber, IconButton, ListButton, PropertyList, SectionToggle,
 } from './components/shell'
 export type {
   NavRailItem, NavGroup, CommandPaletteItem, WorkspaceBreadcrumb,

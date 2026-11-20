@@ -33,6 +33,7 @@
   // project deliberately has no Node types so browser code cannot reach for them.
   "exclude": [
     "src/styles/themes.test.ts",
+    "src/styles/house-rules.test.ts",
     "src/components/scrolling-label/contract.test.ts",
     "src/exports.test.ts",
     "src/core/architecture.test.ts",

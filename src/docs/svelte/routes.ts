@@ -28,6 +28,7 @@ import CodeDoc from '../CodeDoc.svelte'
 import CalendarDoc from '../CalendarDoc.svelte'
 import NavigationDoc from '../NavigationDoc.svelte'
 import ShellDoc from '../ShellDoc.svelte'
+import BooruMediaShellDoc from './BooruMediaShellDoc.svelte'
 import BoardDoc from '../BoardDoc.svelte'
 import MediaDoc from '../MediaDoc.svelte'
 import TerminalDoc from '../terminal/TerminalDoc.svelte'
@@ -101,6 +102,7 @@ export const SVELTE_DOC_PAGES: ReadonlyArray<SvelteDocRoute & { component: Compo
   { path: 'components/editor', label: 'Editor', group: 'Data', description: 'Controlled Tiptap rich text editing with block commands and tabbed code.', component: EditorDoc },
   { path: 'components/navigation', label: 'Navigation', group: 'Interaction', description: 'Links, breadcrumbs, and a responsive controlled sidebar.', component: NavigationDoc },
   { path: 'components/shell', label: 'Shell and Workspace', group: 'Interaction', description: 'Workspace header, tabs, split panes, status, and commands.', component: ShellDoc },
+  { path: 'components/booru-media-shell', label: 'Booru Media Shell', group: 'Interaction', description: 'Query-string search field, date scrubber, list chrome, and media-grid helpers.', component: BooruMediaShellDoc },
   { path: 'components/form', label: 'Fluid Form', group: 'Forms', description: 'Controlled fields, validation, and selection.', component: FormDoc },
   { path: 'components/form-fields', label: 'Form Fields', group: 'Forms', description: 'Controlled text, number, password, select, toggle, slider, file, and tags.', component: FormFieldsDoc },
   { path: 'components/roleplay-forms', label: 'Roleplay Forms', group: 'Forms', description: 'Controlled group, persona, regex, and import review editors.', component: RoleplayFormsDoc },
