@@ -25,16 +25,17 @@ Software architecture and extensibility references are kept separate from
 these visual influences. Vercel UI SDK, Vercel AI SDK, AI Elements and Roblox
 are described in [architecture/overview.md](architecture/overview.md#references).
 
-## Four independent axes
+## Five independent axes
 
-Every surface is configured on four axes. They are orthogonal, so any
+Every surface is configured on five axes. They are orthogonal, so any
 combination is valid. For example, an operational surface can be shown at
 comfortable density in a dark theme with touch input.
 
 | Axis | Values | Mechanism |
 |---|---|---|
 | Composition mode | operational, editorial, immersive | Choice of layout and components (below) |
-| Density | compact, default, comfortable | **Proposed** token set; not implemented ([open decisions](#open-decisions)) |
+| Density | compact, default, comfortable | **Proposed** token set; not implemented ([decisions](#decisions-and-open-items)) |
+| Display scale | compact, default, large, larger | User setting: `data-display-scale` on the root, `--tint-display-scale` ([Display scale](#display-scale)) |
 | Theme | `tint` (default), `solarized`, `gruvbox`, `latte`, `frappe`, `macchiato`, `mocha`, `carbon`, `nebula-beta`; each `light`, `dark` or system | `[data-theme]` and `[data-scheme]`, see `src/styles/contract.css` |
 | Input modality | pointer, keyboard, touch, assistive technology | Media queries (`pointer: coarse`, `prefers-reduced-motion`) and required behaviour ([accessibility.md](accessibility.md)) |
 
@@ -93,6 +94,34 @@ are not adopted values.
 
 IBM Plex Sans and Plex Mono, declared in Tailwind `@theme`. Roles map onto the
 existing scale (R6). Never introduce an intermediate size.
+
+The shipped scale is deliberately a little larger than many tools (28px page
+titles, 36px default controls). Small text is tiring to read, and the default
+favours comfort. Users who want more or less use the display scale.
+
+### Display scale
+
+`--tint-display-scale` multiplies the root font size. Set it per user through
+`data-display-scale` on the root element. `displayScaleStore` (in
+`@nebula/tint/theme`) does this and persists the choice. The
+[Theme docs page](../src/docs/ThemeDoc.svelte) shows the control.
+
+| Value | Scale | Root size at a 16px browser default |
+|---|---|---|
+| `compact` | 0.9375 | 15px |
+| `default` (attribute absent) | 1 | 16px |
+| `large` | 1.125 | 18px |
+| `larger` | 1.25 | 20px |
+
+- Text, spacing and controls are rem-based, so they grow together and the
+  layout keeps its proportions.
+- The base is `100%`, so the browser's own text-size setting still applies
+  underneath.
+- **Use rem.** A size written in `px` does not follow the scale, so new
+  component sizes must use rem or a token.
+- A theme may set its own default in `src/styles/layout-scale.css` with
+  `:root[data-theme='x']:not([data-display-scale])`. The user's choice always
+  wins.
 
 | Role | Token | Current value | Weight |
 |---|---|---|---|
@@ -201,19 +230,21 @@ Use `--tint-motion-fast` (110ms) and `--tint-motion-base` (180ms) with
 - No generic AI illustration or stock decoration in empty states. Explain the
   state in words instead ([patterns.md](patterns.md#operational-state)).
 
-## Open decisions
+## Decisions and open items
 
-These approved reconciliation decisions (2026-11-28) conflict with what Tint
-ships. Under R7 the shipped values stay in force until a decision changes them.
-None of them is resolved silently here.
+On 2026-11-28 the shipped layout scale was **adopted** over the 2026-11-03
+component-docs proposals. Its slightly larger defaults are intentional, and
+users adjust size through the [display scale](#display-scale).
 
-| Row | Approved decision | What `src/styles/layout-scale.css` ships | Needed |
-|---|---|---|---|
-| R3 radius | Keep 0/2/4/8 plus round (from the 2026-11-03 component docs) | sm 4, md 7.2, lg 12, full | Adopt the shipped scale, or migrate the components to 2/4/8 |
-| R4 density | Density tokens 24/32/40, plus a 44 touch target | Control heights 28/36/44; no density token set | Define density as a token set, or keep three control sizes. Nebula's declarative view contract already names `compact`, `normal` and `comfortable`; align with it |
-| R6 type | Page title = xl 24 | xl is 28 | Accept 28 or change the token |
-| Layers | Semantic z-index layer tokens | None (no `--tint-layer-*`) | Add layer tokens; consumer z-index literals stay warnings until then |
-| Motion | 100/160/240ms (component docs) | 110/180ms | Confirm the shipped values |
+| Row | Decision |
+|---|---|
+| R3 radius | **Adopted as shipped:** sm 4, md 7.2, lg 12, full (avatars and status dots only) |
+| R4 controls | **Adopted as shipped:** 28/36/44, with 44 as the touch size. Visual height and hit target stay separate |
+| R6 type | **Adopted as shipped:** page title xl is 28px |
+| Display scale | **Added:** `--tint-display-scale`, a user setting |
+| Density | **Open.** Define compact, default and comfortable as a token set for row height and padding (not text size), aligned with Nebula's declarative view contract (`compact`, `normal`, `comfortable`) |
+| Layers | **Open.** Add `--tint-layer-*` tokens. Consumer z-index literals stay warnings until then |
+| Motion | **Open.** Confirm 110/180ms |
 
-The component-docs proposals are preserved in
+The component-docs proposals are preserved as history in
 [plans/2026-11-03-tint-component-docs.md](plans/2026-11-03-tint-component-docs.md).

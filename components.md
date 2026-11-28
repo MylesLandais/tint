@@ -66,7 +66,7 @@ How to add a component: [CONTRIBUTING.md](CONTRIBUTING.md). Design rules:
 | `@nebula/tint/collab` | — | Collaboration (`#/components/collab`) | Host-owned Yjs documents and transport with Svelte text editors. |
 | `@nebula/tint/dj` | `AnalysisQueue`, `DualWaveform`, `ImportTracksDialog`, `TransitionAuditionControls`, `TransitionPresetPicker` | DJ and Audio Controls (`#/components/dj`) | Waveforms, presets, audition intent, and analysis queue. |
 | `@nebula/tint/editor` | `Editor` | Editor (`#/components/editor`) | Controlled Tiptap rich text editing with block commands and tabbed code. |
-| `@nebula/tint/feed` | `AutomationQueuePanel`, `FeedEntryCard`, `FeedEntryRow`, `FeedLayout`, `HighlightLayer`, `NarrationTransport`, `ReaderPane`, `SelectionToolbar`, `SourceHealthBadge`, `SplitPane`, `ViewModeToggle` | Feed and Reader (`#/components/feed`) | Controlled entry layouts and article reading surface. |
+| `@nebula/tint/feed` | `AutomationQueuePanel`, `EmbedStack`, `FeedEntryCard`, `FeedEntryRow`, `FeedLayout`, `HighlightLayer`, `NarrationTransport`, `ReaderPane`, `SelectionToolbar`, `SourceHealthBadge`, `SplitPane`, `ViewModeToggle` | Feed and Reader (`#/components/feed`) | Controlled entry layouts and article reading surface. |
 | `@nebula/tint/framebuffer` | `Framebuffer` | Framebuffer (`#/components/framebuffer`) | Account-bound game frames over a shared TypeScript stream. |
 | `@nebula/tint/graph` | `ForceGraphView`, `InteractiveGraphView`, `TimelineView`, `VectorDiagramView` | Graph and Timeline (`#/components/graph`) | Interactive graph, force network, and runtime timeline. |
 | `@nebula/tint/media` | `MediaPlaceholder`, `MediaPlayer`, `MediaScrubber`, `PlaybackQueue`, `SettingsPopout`, `Slider`, `VideoPlayer`, `VolumeControl`, `Waveform` | Media (`#/components/media`) | Unified audio and video player with queue and settings. |
@@ -133,4 +133,4 @@ How to add a component: [CONTRIBUTING.md](CONTRIBUTING.md). Design rules:
 - `#/components/form-fields`: Form Fields
 - `#/components/roleplay-forms`: Roleplay Forms
 
-Totals: 62 module subpaths, 15 stylesheets, 272 component exports across subpaths (a component exported from two subpaths counts twice).
+Totals: 62 module subpaths, 15 stylesheets, 273 component exports across subpaths (a component exported from two subpaths counts twice).

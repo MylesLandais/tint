@@ -71,28 +71,33 @@ A message that responds to another message.
 
 - **Evidence:** `ChannelMessage.reply_to_message_id`.
 
-### Thread: active (message-rooted), with a conflicting proposal
+### Thread: active (decided 2026-11-28)
 
-**Active meaning:** a reply chain rooted at one message inside a channel.
+A conversation: a durable chain of messages or posts, with its participants
+(human and agent), attachments, tool activity and the artifacts produced in it.
+
+A Thread can start in three ways:
+- **from a channel message**, as a reply thread
+- **as a forum post**, the forum presentation
+- **standalone**, as a conversation with an agent
+
+Starting a thread from a message is one way to create a Thread. It is not a
+separate entity.
 
 - **Evidence:**
-  - `ChannelMessage.thread_root_message_id`
-  - `ThreadSummary { reply_count, last_activity_seq }`
-  - `GET /channels/{id}/threads/{root}/messages`
-  - Tint `core/activity` `ForumThread` (mock), the forum presentation of the same idea
-- **Use:** "Open thread", "Reply in thread".
-
-**Conflict:** the 2026-11 design draft proposes Thread as a top-level durable
-interaction context that holds messages, participants, agents and artifacts,
-like a conversation. That is a different entity from a message-rooted reply
-chain. Do not use the broader meaning until RFC 0044 decides between three
-options:
-- widen the existing Thread
-- keep both under different names
-- call the broader one something else
-
-"Conversation" stays a contextual label for a conversational *presentation*. It
-is not a separate entity.
+  - `channel-v1` message-rooted threads: `ChannelMessage.thread_root_message_id`,
+    `ThreadSummary { reply_count, last_activity_seq }` and
+    `GET /channels/{id}/threads/{root}/messages`
+  - Tint `core/activity` `ForumThread` (mock), the forum presentation
+  - the gateway's saved threads and Maya conversations, the standalone
+    conversations
+- **Contracts today:** the message-rooted thread is the only Gateway contract.
+  Standalone conversations have their own types until a shared Thread contract
+  lands (RFC 0044).
+- **Use:** "thread" in code and copy. "Conversation" is fine as a contextual
+  label in conversational views, and "post" in forum views.
+- **Use:** "Open thread", "Reply in thread", "New thread".
+- **Avoid:** "chat session", "room".
 
 ### Participant: active
 
@@ -191,20 +196,45 @@ A non-human principal that authors messages and runs tools. Its activity is
 shown as execution state (pending, running, waiting for approval, failed,
 cancelled), never as a person "typing" while nothing is executing.
 
-### Workspace: conflict
+### Workspace: decided meaning (2026-11-28), no domain type yet
 
-**Active meanings in code:**
-- Tint's `CollectionWorkspace`, a collection layout with an inspector, renamed
-  from the old name in `docs/migrations/workspace-names.md`
-- Tint `framebuffer` workspace sessions
-- Gateway workspace runtimes (sandboxes)
+The modular root container. It is a project-like space that holds a set of
+channels and resources, with a layout for its viewports. Think of a Notion
+teamspace or a Discord guild, with Slack-style channels inside.
 
-**Proposed meaning:** a durable collaboration boundary like a Discord guild. It
-would contain channels, members, permissions and shared state.
+What a workspace might be:
+- a game-hacking interface
+- a live production space with streaming channels (Twitch, Zoom, FaceTime)
+- an asset collection
+- a set of shared tables (like Notion databases)
+- any other arrangement of components
 
-That proposed meaning collides with three shipped uses. Do not introduce a
-`Workspace` domain type until RFC 0044 resolves the name. Where you mean the
-proposed boundary, write "workspace (proposed boundary)".
+A workspace contains:
+
+| Part | Meaning | Status |
+|---|---|---|
+| Channels | Persistent interaction contexts: discussion, live stream, feed discussion | Channel is active (`channel-v1`). Channel *kinds* are proposed |
+| Resources | Asset collections, shared tables, documents, diagrams | Assets are active. Collections and tables as workspace resources are proposed |
+| Layouts | The arrangement of components for the workspace and channel viewports | Proposed. No workspace layout contract exists. Tint's `CollectionWorkspaceLayout` (alias `WorkspaceLayout`) is the collection layout's state, not this. The nearest precedent is Nebula's declarative `ViewSpec` |
+| Members and permissions | Who can see and do what | Channel membership is active. Workspace membership is proposed |
+| Sessions and runtimes | Running activity inside the workspace (watch sessions, game sessions, sandboxes) | Active, as the qualified terms below |
+
+**Deconflicting the shipped uses.** "Workspace" alone always means the root
+container. Every shipped use is a qualified compound that names something
+*inside or about* a workspace:
+
+| Shipped name | Read it as | Change |
+|---|---|---|
+| Tint `framebuffer` workspace sessions | A **workspace session**: a running session, such as a game client, inside a workspace | None. Always say "workspace session" |
+| Gateway `workspace_runtime`, workspace sandboxes | A **workspace runtime**: execution capacity attached to a workspace | None. Always say "workspace runtime" |
+| Tint `CollectionWorkspace` | A **collection layout**: one layout for a collection resource | Rename candidate (`CollectionView`) in a separate, breaking change. It needs the compatibility pattern in `docs/migrations/workspace-names.md` |
+
+Open decisions (RFC 0044):
+- Are collections and tables channel kinds, or sibling resources?
+- How are workspace membership and channel membership related?
+- What is the layout contract (the declarative `ViewSpec` precedent)?
+
+There is no `Workspace` domain type yet. Do not create one without the RFC.
 
 ## Cross-product correspondences
 
@@ -214,12 +244,12 @@ products.
 
 | Nebula | Discord | Slack | Notion | Claude / ChatGPT |
 |---|---|---|---|---|
-| Channel | Channel | Channel | Page or teamspace, partially | Project, partially |
-| Thread (message-rooted) | Thread, or forum post | Thread | Discussion | (none) |
+| Channel | Channel | Channel | Page, partially | (none) |
+| Thread | Thread, or forum post | Thread | Discussion or comments | Conversation |
 | Message | Message | Message | Comment | Message |
 | Asset | Attachment | File | File | File |
 | Agent | Bot or app | App | AI or agent | Assistant |
-| Workspace (proposed boundary) | Server (guild) | Workspace | Workspace | Project, partially |
+| Workspace | Server (guild) | Workspace | Teamspace | Project, partially |
 
 Imported records keep their source term as provenance, so a ChatGPT
 "conversation" stays labelled as a conversation. It maps to a Nebula concept only

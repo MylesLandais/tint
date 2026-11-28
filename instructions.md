@@ -14,7 +14,7 @@ interfaces, not demos, landing pages or generic dashboards.
 |---|---|
 | [docs/vocabulary.md](docs/vocabulary.md) | Entity names and their status (active, proposed, conflict) |
 | [docs/philosophy.md](docs/philosophy.md) | What we value |
-| [docs/style-guide.md](docs/style-guide.md) | Tokens, type, spacing, surfaces, the four axes, open decisions |
+| [docs/style-guide.md](docs/style-guide.md) | Tokens, type, spacing, surfaces, the five axes (including the user display scale), decisions |
 | [docs/anti-patterns.md](docs/anti-patterns.md) | Defaults you must not produce |
 | [docs/patterns.md](docs/patterns.md) | Shell anatomy, states, operational honesty, human vs agent content |
 | [docs/accessibility.md](docs/accessibility.md) | WCAG 2.2 AA baseline, and what automation does not prove |
