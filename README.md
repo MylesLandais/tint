@@ -4,6 +4,26 @@ Tint is a Svelte 5 component library for media, chat, editing, data, and Workspa
 
 The [live docs](src/docs/svelte/routes.ts) cover component APIs and examples. The root package export and component subpaths expose Svelte components; `@nebula/tint/client` and `@nebula/tint/collab` expose plain TypeScript contracts and runtimes.
 
+## Design system
+
+Tint is the authoritative home of the Nebula frontend design system. Consumers
+reference these files and do not copy them.
+
+| Resource | What it covers |
+|---|---|
+| [docs/philosophy.md](docs/philosophy.md) | What we value |
+| [docs/vocabulary.md](docs/vocabulary.md) | What things mean (a projection of the ontology) |
+| [docs/brand/identity.md](docs/brand/identity.md), [docs/brand/voice.md](docs/brand/voice.md) | Who we are, and how we write |
+| [docs/style-guide.md](docs/style-guide.md) | How things look |
+| [docs/anti-patterns.md](docs/anti-patterns.md) | What not to build |
+| [docs/patterns.md](docs/patterns.md) | How things behave |
+| [docs/accessibility.md](docs/accessibility.md) | How everyone takes part |
+| [components.md](components.md) | What we build with (generated) |
+| [docs/architecture/overview.md](docs/architecture/overview.md) | Layers, contracts, extensibility |
+| [instructions.md](instructions.md) | How agents implement |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | How the system evolves |
+| [eval/README.md](eval/README.md) | How we measure quality |
+
 ## Install
 
 Tint is published privately as `@nebula/tint` in the nebula Forgejo registry. Configure only the `@nebula` scope in your app's `.npmrc`:

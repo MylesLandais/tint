@@ -1,5 +1,20 @@
 # AGENTS.md
 
+## Design system
+
+Before any UI change, read [instructions.md](instructions.md). It points to the
+vocabulary, style guide, anti-patterns, patterns, accessibility guidelines and the
+generated [components.md](components.md). The short version:
+- `--tint-*` semantic tokens only: no raw colours, `var()` fallbacks or literal z-index
+- reuse what `components.md` lists
+- canonical terms from `docs/vocabulary.md`
+- real states only
+- verify in a browser and by keyboard before claiming it works
+
+Run `npm run docs:components` after changing exports or docs routes.
+Documentation links must stay inside this repository
+(`src/docLinks.test.ts`); link other projects by `https://` URL.
+
 ## Cursor Cloud specific instructions
 
 `tint` is a Svelte 5 component library. Framework-neutral behavior lives in TypeScript under `src/core`; the Svelte presentation layer is under `src/svelte`, and the existing docs/preview site is under `src/docs`. There is no backend or database in this repository.

@@ -21,6 +21,8 @@
     "check:migration": "node scripts/check-react-migration.mjs",
     "migration:refresh": "node scripts/check-react-migration.mjs --refresh",
     "check:names": "node scripts/check-workspace-names.mjs",
+    "docs:components": "node scripts/component-index.mjs",
+    "check:doc-links": "node scripts/check-doc-links.mjs",
     "check": "npm run check:names && npm run check:migration && tsc -b && npm run check:svelte && npm run lint && npm test",
     "test": "vitest run",
     "test:e2e": "playwright test",

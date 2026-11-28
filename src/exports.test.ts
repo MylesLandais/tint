@@ -1,6 +1,8 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
+// @ts-expect-error -- plain ESM script shared with scripts/component-index.mjs; no declaration file.
+import { DOC_EXEMPT, GROUPED_DOCS } from '../scripts/component-docs-map.mjs'
 
 /** Keep the Svelte package map, root UI exports, and docs routes coherent. */
 const ROOT = path.resolve(import.meta.dirname, '..')
@@ -46,14 +48,6 @@ function svelteComponents(file: string): Set<string> {
   return names
 }
 
-const GROUPED_DOCS: Record<string, string> = {
-  session: 'watch-together',
-  'media-player': 'media', 'video-player': 'media', 'settings-popout': 'media',
-  'workspace-grid': 'workspace', 'media-workspace': 'workspace',
-  'scatter-plot': 'release-chart', 'audio-engine': 'dj',
-  'audio-workspace': 'midnight-128', 'timeline': 'graph',
-}
-const DOC_EXEMPT = new Set(['svelte', 'client/svelte', 'auth-client', 'socket'])
 
 const SVELTE_COMPONENT_ROOT = path.join(ROOT, 'src/svelte/components')
 
@@ -89,7 +83,7 @@ describe('Svelte public package exports', () => {
     const missing = entries
       .map(([subpath]) => subpath.slice(2))
       .filter((name) => name && !DOC_EXEMPT.has(name) && !name.includes('/'))
-      .filter((name) => !paths.has(GROUPED_DOCS[name] ?? name))
+      .filter((name) => !paths.has((GROUPED_DOCS as Record<string, string>)[name] ?? name))
     expect(missing).toEqual([])
   })
 })
