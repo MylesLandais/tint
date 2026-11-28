@@ -95,7 +95,8 @@
       <div class="flex min-w-0 flex-1 items-center gap-1">
         {#if controls}<div data-chat-composer-controls="">{@render controls()}</div>{/if}
         {#if onAttachmentAdd}
-          <input use:registerFileInput type="file" {accept} {multiple} onchange={attachFromPicker} class="sr-only" tabindex="-1" />
+          <!-- Driven by the labelled "Attach files" button; hidden from assistive technology so it is not a second, unlabelled control. -->
+          <input use:registerFileInput type="file" {accept} {multiple} onchange={attachFromPicker} class="sr-only" tabindex="-1" aria-hidden="true" />
           <ChatActionButton label="Attach files" onclick={() => fileInput?.click()} disabled={readonly || streaming} class="text-tint-muted hover:bg-tint-surface hover:text-tint-ink"><Paperclip size={18} /></ChatActionButton>
         {/if}
         {@render actions?.()}
