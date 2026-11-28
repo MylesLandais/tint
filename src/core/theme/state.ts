@@ -1,8 +1,9 @@
-import type { ColorSchemePreference, ResolvedColorScheme } from './types'
+import { isDisplayScale, type ColorSchemePreference, type DisplayScale, type ResolvedColorScheme } from './types'
 
 export const DEFAULT_THEME = 'tint'
 export const THEME_STORAGE_KEY = 'tint-theme'
 export const COLOR_SCHEME_STORAGE_KEY = 'tint-color-scheme'
+export const DISPLAY_SCALE_STORAGE_KEY = 'tint-display-scale'
 const DARK_QUERY = '(prefers-color-scheme: dark)'
 
 function storedValue(key: string): string | null {
@@ -28,6 +29,8 @@ export function createThemeState() {
   let preference: ColorSchemePreference | undefined
   const themeListeners = new Set<() => void>()
   const preferenceListeners = new Set<() => void>()
+  let scale: DisplayScale | undefined
+  const scaleListeners = new Set<() => void>()
 
   function getTheme() {
     if (theme !== undefined) return theme
@@ -71,6 +74,28 @@ export function createThemeState() {
     for (const listener of preferenceListeners) listener()
   }
 
+  function getScale(): DisplayScale {
+    if (scale !== undefined) return scale
+    if (typeof document === 'undefined') return 'default'
+    const attribute = document.documentElement.dataset.displayScale
+    const stored = storedValue(DISPLAY_SCALE_STORAGE_KEY)
+    scale = isDisplayScale(attribute) ? attribute : (isDisplayScale(stored) ? stored : 'default')
+    return scale
+  }
+
+  function applyScale(next: DisplayScale) {
+    if (typeof document === 'undefined') return
+    if (next === 'default') delete document.documentElement.dataset.displayScale
+    else document.documentElement.dataset.displayScale = next
+  }
+
+  function setScale(next: DisplayScale) {
+    scale = next
+    applyScale(next)
+    persist(DISPLAY_SCALE_STORAGE_KEY, next === 'default' ? null : next)
+    for (const listener of scaleListeners) listener()
+  }
+
   function getSystemScheme(): ResolvedColorScheme {
     if (typeof window === 'undefined' || !window.matchMedia) return 'light'
     return window.matchMedia(DARK_QUERY).matches ? 'dark' : 'light'
@@ -88,6 +113,8 @@ export function createThemeState() {
     subscribeTheme(listener: () => void) { themeListeners.add(listener); return () => { themeListeners.delete(listener) } },
     getPreference, setPreference, applyPreference,
     subscribePreference(listener: () => void) { preferenceListeners.add(listener); return () => { preferenceListeners.delete(listener) } },
+    getScale, setScale, applyScale,
+    subscribeScale(listener: () => void) { scaleListeners.add(listener); return () => { scaleListeners.delete(listener) } },
     getSystemScheme, subscribeSystem,
   }
 }

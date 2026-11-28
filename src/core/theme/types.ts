@@ -12,6 +12,28 @@ export type ThemeNameState = {
 }
 export type ThemeOption = { value: string; label: string }
 
+/**
+ * User display scale. It multiplies the root font size, so every rem-based
+ * size (text, spacing, control heights) grows together, like a "larger text"
+ * system setting. `default` leaves `data-display-scale` unset.
+ */
+export type DisplayScale = 'compact' | 'default' | 'large' | 'larger'
+export type DisplayScaleState = {
+  scale: DisplayScale
+  setScale: (scale: DisplayScale) => void
+}
+
+export const DISPLAY_SCALE_OPTIONS = [
+  { value: 'compact', label: 'Compact' },
+  { value: 'default', label: 'Default' },
+  { value: 'large', label: 'Large' },
+  { value: 'larger', label: 'Larger' },
+] as const satisfies readonly { value: DisplayScale; label: string }[]
+
+export function isDisplayScale(value: unknown): value is DisplayScale {
+  return DISPLAY_SCALE_OPTIONS.some((option) => option.value === value)
+}
+
 export const SCHEME_OPTIONS = [
   { value: 'light', label: 'Light' },
   { value: 'system', label: 'System' },

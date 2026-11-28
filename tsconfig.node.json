@@ -35,6 +35,7 @@
     "src/docs/svelte/propsTable.test.ts",
     "src/docs/fixturesHygiene.test.ts",
     "src/docLinks.test.ts",
-    "src/componentIndex.test.ts"
+    "src/componentIndex.test.ts",
+    "src/styles/displayScale.test.ts"
   ]
 }

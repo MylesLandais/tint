@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ThemePicker, ThemeToggle, colorSchemeStore, themeNameStore, type ThemeOption } from '../svelte/components/theme'
+  import { DISPLAY_SCALE_OPTIONS, ThemePicker, ThemeToggle, colorSchemeStore, displayScaleStore, themeNameStore, type DisplayScale, type ThemeOption } from '../svelte/components/theme'
   import DocPage from './svelte/DocPage.svelte'
   import type { ApiRow } from './svelte/types'
 
@@ -17,15 +17,17 @@
     { prop: 'ThemePicker value / onChange / themes', type: 'string / callback / ThemeOption[]', description: 'Controlled native palette select. The host supplies the themes whose stylesheets it loaded.' },
     { prop: 'ThemeToggle value / onChange', type: 'system | light | dark / callback', description: 'Controlled three-state radiogroup; an unset scheme follows the system.' },
     { prop: 'themeNameStore / colorSchemeStore', type: 'Svelte readable stores with set()', description: 'Optional shared browser state that persists the choice and stamps the document root.' },
+    { prop: 'displayScaleStore / DISPLAY_SCALE_OPTIONS', type: "store with set() / { value: 'compact' | 'default' | 'large' | 'larger' }[]", description: 'User text size. Stamps data-display-scale on the root, which multiplies the root font size so rem-based text, spacing and controls grow together. Render it with ThemePicker and a "Text size" label.' },
     { prop: 'data-theme', type: 'tint | solarized | gruvbox | latte | frappe | macchiato | mocha', description: 'Palette on the document root.' },
     { prop: 'data-scheme', type: 'light | dark | omitted', description: 'Color scheme; omission follows the system.' },
     { prop: '--tint-*', type: 'CSS custom properties', description: 'Semantic colors, spacing, typography, and motion.' },
   ]
   const usage = `import '@nebula/tint/styles.css'
 import '@nebula/tint/themes/gruvbox.css'
-import { ThemePicker, ThemeToggle, themeNameStore, colorSchemeStore } from '@nebula/tint/theme'
+import { DISPLAY_SCALE_OPTIONS, ThemePicker, ThemeToggle, colorSchemeStore, displayScaleStore, themeNameStore, type DisplayScale } from '@nebula/tint/theme'
 
 <ThemePicker value={$themeNameStore} onChange={themeNameStore.set} {themes} />
+<ThemePicker value={$displayScaleStore.scale} onChange={(value) => displayScaleStore.set(value as DisplayScale)} themes={[...DISPLAY_SCALE_OPTIONS]} label="Text size" />
 <ThemeToggle value={$colorSchemeStore.preference} onChange={colorSchemeStore.set} />`
 </script>
 
@@ -33,9 +35,10 @@ import { ThemePicker, ThemeToggle, themeNameStore, colorSchemeStore } from '@neb
   <div class="theme-demo">
     <div class="controls">
       <ThemePicker value={$themeNameStore} onChange={themeNameStore.set} {themes} label="Preview theme" />
+      <ThemePicker value={$displayScaleStore.scale} onChange={(value) => displayScaleStore.set(value as DisplayScale)} themes={[...DISPLAY_SCALE_OPTIONS]} label="Text size" />
       <ThemeToggle value={$colorSchemeStore.preference} onChange={colorSchemeStore.set} label="Preview color scheme" showLabels />
     </div>
-    <p class="state" aria-live="polite">Theme: {$themeNameStore} · Preference: {$colorSchemeStore.preference} · Resolved: {$colorSchemeStore.resolved}</p>
+    <p class="state" aria-live="polite">Theme: {$themeNameStore} · Preference: {$colorSchemeStore.preference} · Resolved: {$colorSchemeStore.resolved} · Text size: {$displayScaleStore.scale}</p>
     <div class="swatches">
       {#each tokens as [token, label] (token)}
         <div class="swatch"><span style:background={`var(${token})`} aria-hidden="true"></span><strong>{label}</strong><code>{token}</code></div>

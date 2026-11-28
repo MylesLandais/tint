@@ -45,6 +45,7 @@
     "src/docs/fixturesHygiene.test.ts",
     "src/docLinks.test.ts",
     "src/componentIndex.test.ts",
+    "src/styles/displayScale.test.ts",
     "src/components/tile-map/pokeforcePack.test.ts"
   ]
 }

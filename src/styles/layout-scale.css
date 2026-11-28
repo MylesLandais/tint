@@ -7,6 +7,12 @@
  */
 
 :root {
+  /* User display scale. Multiplies the root font size, so every rem-based
+     size (text, spacing, controls) grows together. Set by the user through
+     data-display-scale; a theme may set its own default with
+     :root[data-theme='x']:not([data-display-scale]) in this file. */
+  --tint-display-scale: 1;
+
   /* Spacing, 4px base */
   --tint-space-1: 0.25rem;
   --tint-space-2: 0.5rem;
@@ -52,3 +58,10 @@
     --tint-motion-base: 0ms;
   }
 }
+
+:root[data-display-scale='compact'] { --tint-display-scale: 0.9375; }
+:root[data-display-scale='large'] { --tint-display-scale: 1.125; }
+:root[data-display-scale='larger'] { --tint-display-scale: 1.25; }
+
+/* Percent keeps the browser's own text-size setting as the base. */
+html { font-size: calc(100% * var(--tint-display-scale)); }

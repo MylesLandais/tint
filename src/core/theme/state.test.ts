@@ -68,3 +68,31 @@ describe('theme preference state', () => {
     expect(nextColorSchemePreference('light', -1)).toBe('dark')
   })
 })
+
+describe('display scale state', () => {
+  beforeEach(() => { delete document.documentElement.dataset.displayScale })
+
+  it('reads the attribute, then storage, then defaults, and ignores unknown values', () => {
+    expect(createThemeState().getScale()).toBe('default')
+    localStorage.setItem('tint-display-scale', 'huge')
+    expect(createThemeState().getScale()).toBe('default')
+    localStorage.setItem('tint-display-scale', 'large')
+    expect(createThemeState().getScale()).toBe('large')
+    document.documentElement.dataset.displayScale = 'larger'
+    expect(createThemeState().getScale()).toBe('larger')
+  })
+
+  it('applies, persists and clears the choice and notifies subscribers', () => {
+    const state = createThemeState()
+    const listener = vi.fn()
+    const stop = state.subscribeScale(listener)
+    state.setScale('large')
+    expect(document.documentElement.dataset.displayScale).toBe('large')
+    expect(localStorage.getItem('tint-display-scale')).toBe('large')
+    state.setScale('default')
+    expect(document.documentElement.dataset.displayScale).toBeUndefined()
+    expect(localStorage.getItem('tint-display-scale')).toBeNull()
+    expect(listener).toHaveBeenCalledTimes(2)
+    stop()
+  })
+})
