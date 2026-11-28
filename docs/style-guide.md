@@ -210,7 +210,7 @@ None of them is resolved silently here.
 | Row | Approved decision | What `src/styles/layout-scale.css` ships | Needed |
 |---|---|---|---|
 | R3 radius | Keep 0/2/4/8 plus round (from the 2026-11-03 component docs) | sm 4, md 7.2, lg 12, full | Adopt the shipped scale, or migrate the components to 2/4/8 |
-| R4 density | Density tokens 24/32/40, plus a 44 touch target | Control heights 28/36/44; no density token set | Define density as a token set, or keep three control sizes |
+| R4 density | Density tokens 24/32/40, plus a 44 touch target | Control heights 28/36/44; no density token set | Define density as a token set, or keep three control sizes. Nebula's declarative view contract already names `compact`, `normal` and `comfortable`; align with it |
 | R6 type | Page title = xl 24 | xl is 28 | Accept 28 or change the token |
 | Layers | Semantic z-index layer tokens | None (no `--tint-layer-*`) | Add layer tokens; consumer z-index literals stay warnings until then |
 | Motion | 100/160/240ms (component docs) | 110/180ms | Confirm the shipped values |
