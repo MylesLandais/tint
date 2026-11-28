@@ -107,7 +107,7 @@ export * from './components/charts'
 export * from './components/telemetry'
 export {
   AutomationQueuePanel,
-  FeedEntryCard, FeedEntryRow, FeedLayout, HighlightLayer,
+  EmbedStack, FeedEntryCard, FeedEntryRow, FeedLayout, HighlightLayer,
   NarrationTransport, ReaderPane, SelectionToolbar, SourceHealthBadge,
   SplitPane, ViewModeToggle,
 } from './components/feed'

@@ -1,3 +1,4 @@
+export { default as EmbedStack } from './EmbedStack.svelte'
 export { default as AutomationQueuePanel } from './AutomationQueuePanel.svelte'
 export { default as FeedEntryCard } from './FeedEntryCard.svelte'
 export { default as FeedEntryRow } from './FeedEntryRow.svelte'

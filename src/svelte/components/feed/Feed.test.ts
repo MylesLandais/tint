@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/svelte'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { FeedEntry, FeedLayoutVariant } from '../../../core/feed'
 import FeedEntryCard from './FeedEntryCard.svelte'
+import EmbedStackFixture from './EmbedStackFixture.svelte'
 import FeedFixture from './FeedFixture.svelte'
 import FeedLayout from './FeedLayout.svelte'
 import NarrationTransport from './NarrationTransport.svelte'
@@ -22,6 +23,21 @@ afterEach(() => {
 })
 
 describe('Svelte feed presentation', () => {
+  it('keeps the selected embed across reordering and recovers when it disappears', async () => {
+    const view = render(EmbedStackFixture, { items: ['First', 'Second', 'Third'] })
+    expect(screen.getByRole('button', { name: 'Previous item' })).toBeDisabled()
+    await fireEvent.click(screen.getByRole('button', { name: 'Next item' }))
+    expect(screen.getByText('Second')).toBeVisible()
+    await view.rerender({ items: ['Third', 'First', 'Second'] })
+    expect(screen.getByRole('status')).toHaveTextContent('3 of 3')
+    expect(screen.getByRole('button', { name: 'Next item' })).toBeDisabled()
+    await view.rerender({ items: ['Third'] })
+    expect(screen.getByText('Third')).toBeVisible()
+    expect(screen.queryByRole('button')).toBeNull()
+    await view.rerender({ items: [] })
+    expect(screen.queryByRole('region')).toBeNull()
+  })
+
   it('keeps selection controlled and lets nested action buttons act independently', async () => {
     const onSelect = vi.fn()
     const onAction = vi.fn()

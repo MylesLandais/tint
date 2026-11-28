@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { FeedLayout, ReaderPane, SourceHealthBadge, ViewModeToggle, type FeedEntry, type FeedLayoutVariant } from '../svelte'
+  import { EmbedStack, FeedLayout, ReaderPane, SourceHealthBadge, ViewModeToggle, type FeedEntry, type FeedLayoutVariant } from '../svelte'
   import DocPage from './svelte/DocPage.svelte'
   import type { ApiRow } from './svelte/types'
 
@@ -12,6 +12,7 @@
   let selectedId = $state<string | null>('first')
   let selectedEntry = $derived(entries.find((entry) => entry.id === selectedId))
   const api: ApiRow[] = [
+    { prop: 'EmbedStack label / items / itemKey / children', type: 'string / readonly Item[] / key function / snippet', description: 'Show one item at a time. A stable unique key preserves the selected card when the feed is reordered.' },
     { prop: 'entries / variant', type: 'FeedEntry[] / FeedLayoutVariant', description: 'Host-owned entries and responsive feed, list, ticker, magazine, carousel, or wall layout.' },
     { prop: 'selectedId / onSelect', type: 'string | null / (id) => void', description: 'Controlled entry selection; the host updates its own document.' },
     { prop: 'renderActions / sourceLabels', type: 'Snippet / Record<string, string>', description: 'Optional entry actions and readable source attribution.' },
@@ -61,6 +62,9 @@ let selectedId = $state<string | null>(null)
 
 <DocPage title="Feed and Reader" description="Host-controlled entries, layout, and selection over a plain TypeScript feed document. Switch layouts and choose an entry to update the reader pane." importPath="@nebula/tint/feed" {usage} {api} accessibility="Card and row titles are native selection buttons with visible focus and pressed state. Nested actions remain independent, and unread entries have a text label. Layout buttons expose their selected state in text and ARIA. Source health uses a text badge; the reader remains a semantic article.">
   <div class="feed-demo">
+    <EmbedStack label="Recent updates" items={entries} itemKey={entry => entry.id}>
+      {#snippet children(entry)}<strong>{entry.title}</strong><p>{entry.excerpt}</p>{/snippet}
+    </EmbedStack>
     <div class="toolbar"><ViewModeToggle value={variant} onChange={(next) => variant = next} /><span>Source <SourceHealthBadge health="healthy" /></span></div>
     <div class="columns">
       <FeedLayout {entries} {variant} {selectedId} onSelect={(id) => selectedId = id} sourceLabels={{ updates: 'Studio updates · rss', forum: 'Community · forum' }} />
