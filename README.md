@@ -216,3 +216,5 @@ until the last dialog closes. Late focus restoration cannot steal focus from a n
 values unchanged. See `#/components/form-fields` for the bounded search example.
 
 Route navigation reuses `NavigationList orientation="horizontal"` with wrapped native links. Graph runtime summaries distinguish `unknown` and `cancelled` from ready, queued, success and failure; hosts own reconciliation and execution policy. See the [navigation](src/docs/NavigationDoc.svelte) and [graph](src/docs/graph/GraphDoc.svelte) examples.
+
+The `@nebula/tint/graph` entry point includes `VectorDiagramView` for read-only captured diagrams. Pass a validated `VectorDiagram` and its accessible label. Readers can enlarge the SVG, select its text, and highlight labeled nodes with the pointer, Enter, or Space. Escape clears the highlight. See [the diagram model](src/core/graph/vectorDiagram.ts).
