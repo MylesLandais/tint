@@ -41,7 +41,7 @@ export const docsGraphNodes: readonly DocsGraphNode[] = [
   { id: "feed", imports: ["badge", "progress", "shell"], position: {"x": 680, "y": -375} },
   { id: "form", imports: ["button"], position: {"x": 680, "y": -225} },
   { id: "framebuffer", imports: [], position: {"x": 0, "y": -675} },
-  { id: "graph", imports: ["form"], position: {"x": 1020, "y": 300} },
+  { id: "graph", imports: ["button", "form"], position: {"x": 1020, "y": 300} },
   { id: "icon", imports: [], position: {"x": 0, "y": -525} },
   { id: "identity", imports: [], position: {"x": 0, "y": -375} },
   { id: "media", imports: ["icon", "popover"], position: {"x": 340, "y": 225} },

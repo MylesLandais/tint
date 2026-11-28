@@ -229,3 +229,5 @@ Nebula Beta hosts may import `@nebula/tint/themes/nebula-beta.css`. The palette
 is scoped by `data-theme="nebula-beta"`; typography and compact product recipes
 remain host-owned. Media Slider `onCommit` / MediaScrubber `onSeekCommit` separate
 completed gestures from `onChange` previews for shared playback.
+
+The `@nebula/tint/graph` entry point includes `VectorDiagramView` for read-only captured diagrams. Pass a validated `VectorDiagram` and its accessible label. Readers can enlarge the SVG, select its text, and highlight labeled nodes with the pointer, Enter, or Space. Escape clears the highlight. See [the diagram model](src/core/graph/vectorDiagram.ts).
