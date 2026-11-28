@@ -70,7 +70,7 @@
             {/if}
           </div>
           {#if entry.downloadProgress}
-            <div class="download-track" role="progressbar" aria-valuenow={Math.round(entry.downloadProgress.percent)} aria-valuemin="0" aria-valuemax="100">
+            <div class="download-track" role="progressbar" aria-label="Download progress" aria-valuenow={Math.round(entry.downloadProgress.percent)} aria-valuemin="0" aria-valuemax="100">
               <div class="download-fill" style:width="{entry.downloadProgress.percent}%"></div>
             </div>
             <div class="download-meta">

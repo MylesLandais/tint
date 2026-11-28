@@ -108,7 +108,7 @@
 
             {#if item.progress && (item.status === 'downloading' || item.status === 'validating')}
               <div class="item-progress">
-                <div class="progress-track" role="progressbar" aria-valuenow={Math.round(item.progress.percent)} aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-track" role="progressbar" aria-label={`Progress: ${item.title}`} aria-valuenow={Math.round(item.progress.percent)} aria-valuemin="0" aria-valuemax="100">
                   <div class="progress-fill" style:width="{item.progress.percent}%"></div>
                 </div>
                 <div class="progress-meta">

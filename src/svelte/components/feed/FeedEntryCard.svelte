@@ -48,7 +48,7 @@
           <span class="progress-stage">{entry.downloadProgress.stageText ?? (entry.artifactStatus === 'validating' ? 'Verifying integrity...' : 'Downloading...')}</span>
           <span class="progress-percent">{Math.round(entry.downloadProgress.percent)}%</span>
         </div>
-        <div class="progress-bar-track" role="progressbar" aria-valuenow={Math.round(entry.downloadProgress.percent)} aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar-track" role="progressbar" aria-label="Download progress" aria-valuenow={Math.round(entry.downloadProgress.percent)} aria-valuemin="0" aria-valuemax="100">
           <div class="progress-bar-fill" style:width="{entry.downloadProgress.percent}%"></div>
         </div>
         {#if entry.downloadProgress.rateBytesPerSec}
