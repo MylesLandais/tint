@@ -355,7 +355,7 @@
   .pinned { position: sticky; z-index: 2; background: var(--tint-panel); box-shadow: inset -1px 0 var(--tint-border); }
   thead .pinned { z-index: 5; background: var(--tint-surface); }
   .end { text-align: right; }
-  .mono { font-family: var(--tint-font-mono, monospace); font-variant-numeric: tabular-nums; }
+  .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
   .sort, .expand, .open-row, .delete-row, .editable, .create-row button, .query-selection button { border: 0; background: transparent; color: inherit; cursor: pointer; font: inherit; }
   .sort { display: inline-flex; align-items: center; gap: var(--tint-space-1); min-height: 2rem; font-weight: inherit; }
   .sort:hover, .expand:hover, .open-row:hover { color: var(--tint-accent); }

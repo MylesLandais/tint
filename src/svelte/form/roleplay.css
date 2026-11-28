@@ -2,7 +2,7 @@
 .tint-regex-rules,
 .tint-import-review {
   display: grid;
-  gap: var(--tint-space-3, .75rem);
+  gap: var(--tint-space-3);
   min-width: 0;
   color: var(--tint-ink);
 }
@@ -10,8 +10,8 @@
 .tint-regex-rule,
 .tint-import-review {
   border: 1px solid var(--tint-border);
-  border-radius: var(--tint-radius-sm, .25rem);
-  padding: var(--tint-space-4, 1rem);
+  border-radius: var(--tint-radius-sm);
+  padding: var(--tint-space-4);
   background: var(--tint-panel);
 }
 .tint-roleplay-editor legend,
@@ -21,7 +21,7 @@
 .tint-roleplay-editor__members li,
 .tint-roleplay-editor__add { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; }
 .tint-roleplay-editor__member-name { min-width: 9rem; flex: 1; }
-.tint-roleplay-editor__member-name small { display: block; color: var(--tint-warning-ink, var(--tint-muted)); }
+.tint-roleplay-editor__member-name small { display: block; color: var(--tint-warning-ink); }
 .tint-roleplay-editor__actions,
 .tint-regex-actions,
 .tint-regex-options { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }

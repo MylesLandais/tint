@@ -2,10 +2,10 @@
 
 .tint-auth-form { display: grid; gap: 0.875rem; }
 .tint-auth-form .tint-form-title { display: none; }
-.tint-auth-submit, .tint-auth-oauth-link { display: inline-flex; min-height: 2.75rem; align-items: center; justify-content: center; gap: 0.5rem; border: 1px solid var(--tint-border-strong, currentColor); padding: 0.625rem 1rem; font: inherit; text-decoration: none; }
-.tint-auth-submit { background: var(--tint-accent, currentColor); color: var(--tint-on-accent, Canvas); cursor: pointer; }
+.tint-auth-submit, .tint-auth-oauth-link { display: inline-flex; min-height: 2.75rem; align-items: center; justify-content: center; gap: 0.5rem; border: 1px solid var(--tint-border-strong); padding: 0.625rem 1rem; font: inherit; text-decoration: none; }
+.tint-auth-submit { background: var(--tint-accent); color: var(--tint-on-accent); cursor: pointer; }
 .tint-auth-submit:disabled { cursor: wait; opacity: 0.65; }
 .tint-auth-oauth { display: grid; gap: 0.5rem; }
-.tint-auth-oauth-link { background: var(--tint-panel, transparent); color: var(--tint-ink, currentColor); }
-.tint-auth-oauth-link:focus-visible { outline: 2px solid var(--tint-accent, currentColor); outline-offset: 2px; }
-.tint-auth-message { border: 1px solid var(--tint-danger, currentColor); padding: 0.625rem 0.75rem; background: var(--tint-danger-soft, transparent); color: var(--tint-danger-ink, currentColor); }
+.tint-auth-oauth-link { background: var(--tint-panel); color: var(--tint-ink); }
+.tint-auth-oauth-link:focus-visible { outline: 2px solid var(--tint-accent); outline-offset: 2px; }
+.tint-auth-message { border: 1px solid var(--tint-danger); padding: 0.625rem 0.75rem; background: var(--tint-danger-soft); color: var(--tint-danger-ink); }

@@ -84,5 +84,5 @@
   onclick={seek} onkeydown={keyboardSeek}></canvas>
 
 <style>
-  canvas:focus-visible { outline: var(--tint-focus-width, 2px) solid var(--tint-focus, currentColor); outline-offset: 2px; }
+  canvas:focus-visible { outline: var(--tint-focus-width) solid var(--tint-focus); outline-offset: 2px; }
 </style>

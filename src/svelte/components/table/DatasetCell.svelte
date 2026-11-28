@@ -39,7 +39,7 @@
 <style>
   .text, .date, .num, a { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
   .text { white-space: inherit; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: var(--ds-lines, 1); line-clamp: var(--ds-lines, 1); white-space: normal; }
-  .num, .date { font-family: var(--tint-font-mono, ui-monospace, monospace); font-variant-numeric: tabular-nums; }
+  .num, .date { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
   .num { margin-inline-start: auto; }
   a { color: var(--tint-accent); text-decoration: underline; text-underline-offset: 2px; }
   .chips { display: flex; gap: .25rem; overflow: hidden; flex-wrap: var(--ds-chip-wrap, nowrap); }
@@ -61,5 +61,5 @@
     border: 1.5px solid var(--tint-border-strong); background: var(--tint-panel);
   }
   .check[data-on='true'] { background: var(--tint-accent); border-color: var(--tint-accent); }
-  .check svg { width: .75rem; height: .75rem; fill: none; stroke: var(--tint-on-accent, #fff); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .check svg { width: .75rem; height: .75rem; fill: none; stroke: var(--tint-on-accent); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 </style>

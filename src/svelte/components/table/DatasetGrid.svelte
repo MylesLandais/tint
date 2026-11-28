@@ -638,7 +638,7 @@
   .dataset { position: relative; display: grid; gap: .5rem; min-width: 0; font-size: var(--tint-font-size-sm); color: var(--tint-ink); }
   .scroller { overflow: auto; border: 1px solid var(--tint-border); border-radius: var(--tint-radius-md); background: var(--tint-panel); position: relative; }
   .grid { position: relative; outline: none; min-height: 100%; }
-  .grid:focus-visible { outline: var(--tint-focus-width, 2px) solid var(--tint-focus); outline-offset: -2px; }
+  .grid:focus-visible { outline: var(--tint-focus-width) solid var(--tint-focus); outline-offset: -2px; }
 
   .head { position: sticky; top: 0; z-index: 12; display: flex; height: 36px; background: var(--tint-surface); border-bottom: 1px solid var(--tint-border-strong); }
   .th { position: relative; flex: none; display: flex; border-inline-end: 1px solid var(--tint-border); font-weight: 600; }
@@ -659,7 +659,7 @@
   .add-form {
     position: absolute; z-index: 30; top: 100%; inset-inline-end: 0; width: 16rem; display: grid; gap: .5rem; padding: .75rem;
     background: var(--tint-panel); border: 1px solid var(--tint-border-strong); border-radius: var(--tint-radius-md);
-    box-shadow: 0 8px 24px color-mix(in srgb, var(--tint-shadow-color, #000) 22%, transparent); font-weight: 400;
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--tint-shadow-color) 22%, transparent); font-weight: 400;
   }
   .add-form label { display: grid; gap: .125rem; font-size: var(--tint-font-size-xs); color: var(--tint-muted); }
   .add-form input, .add-form select { font: inherit; color: var(--tint-ink); background: var(--tint-field); border: 0; border-bottom: 1px solid var(--tint-border-strong); padding: .375rem .5rem; outline-offset: -2px; }
@@ -669,7 +669,7 @@
     font: inherit; color: var(--tint-ink); background: var(--tint-panel); border: 1px solid var(--tint-border-strong);
     border-radius: var(--tint-radius-sm); padding: .25rem .625rem; cursor: pointer;
   }
-  .actions button:first-child { background: var(--tint-accent); color: var(--tint-on-accent, #fff); border-color: var(--tint-accent); }
+  .actions button:first-child { background: var(--tint-accent); color: var(--tint-on-accent); border-color: var(--tint-accent); }
 
   .body { position: relative; }
   .row, .group { position: absolute; inset-inline-start: 0; top: 0; display: flex; width: 100%; will-change: transform; }

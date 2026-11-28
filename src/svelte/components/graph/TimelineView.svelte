@@ -99,7 +99,7 @@
   .handle { position: absolute; z-index: 1; top: -.125rem; width: .5rem; height: 2.25rem; border-radius: var(--tint-radius-sm); background: var(--tint-accent); cursor: ew-resize; touch-action: none; }
   .handle[data-edge='start'] { left: -.25rem; }
   .handle[data-edge='end'] { right: -.25rem; }
-  .handle:focus-visible, .bar-body:focus-visible { outline: 2px solid var(--tint-focus, var(--tint-accent)); outline-offset: 2px; }
+  .handle:focus-visible, .bar-body:focus-visible { outline: 2px solid var(--tint-focus); outline-offset: 2px; }
   .bar[data-status='unknown'] { border-color: var(--tint-warning); background: var(--tint-warning-soft); }
   .bar[data-status='cancelled'] { border-style: dashed; opacity: .75; }
 </style>

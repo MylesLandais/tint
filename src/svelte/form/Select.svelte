@@ -42,6 +42,6 @@
 </select>
 
 <style>
-  select { min-height: 2.75rem; padding: 0.625rem 0.75rem; border-radius: var(--tint-radius-sm, 0.25rem); font: inherit; max-width: 100%; box-sizing: border-box; }
+  select { min-height: 2.75rem; padding: 0.625rem 0.75rem; border-radius: var(--tint-radius-sm); font: inherit; max-width: 100%; box-sizing: border-box; }
   select:where([data-size='sm']) { min-height: 2rem; }
 </style>

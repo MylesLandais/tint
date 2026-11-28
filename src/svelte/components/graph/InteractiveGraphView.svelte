@@ -414,8 +414,8 @@
   .node[data-status='warning'] { border-color: var(--tint-warning); }
   .node-main { display: flex; width: 100%; height: 100%; flex-direction: column; align-items: flex-start; gap: .25rem; overflow: hidden; padding: .65rem .75rem; border: 0; border-radius: inherit; background: transparent; color: inherit; font: inherit; text-align: left; cursor: grab; touch-action: none; }
   .node-custom { width: 100%; height: 100%; border-radius: inherit; cursor: grab; touch-action: none; }
-  .node-custom:focus-visible { outline: 2px solid var(--tint-focus, var(--tint-accent)); outline-offset: 2px; }
-  .node-main:focus-visible, .port:focus-visible, .toolbar button:focus-visible { outline: 2px solid var(--tint-focus, var(--tint-accent)); outline-offset: 2px; }
+  .node-custom:focus-visible { outline: 2px solid var(--tint-focus); outline-offset: 2px; }
+  .node-main:focus-visible, .port:focus-visible, .toolbar button:focus-visible { outline: 2px solid var(--tint-focus); outline-offset: 2px; }
   .kind { color: var(--tint-muted); font-size: .625rem; text-transform: uppercase; }
   strong { max-width: 100%; overflow: hidden; font-size: .8125rem; text-overflow: ellipsis; white-space: nowrap; }
   small, code { max-width: 100%; overflow: hidden; color: var(--tint-muted); font-size: .6875rem; text-overflow: ellipsis; white-space: nowrap; }

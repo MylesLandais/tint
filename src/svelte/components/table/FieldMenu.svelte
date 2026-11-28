@@ -76,7 +76,7 @@
   .menu {
     position: absolute; z-index: 30; top: 100%; inset-inline-start: 0; min-width: 14rem; padding: .25rem;
     background: var(--tint-panel); border: 1px solid var(--tint-border-strong); border-radius: var(--tint-radius-md);
-    box-shadow: 0 8px 24px color-mix(in srgb, var(--tint-shadow-color, #000) 22%, transparent); text-align: start; font-weight: 400;
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--tint-shadow-color) 22%, transparent); text-align: start; font-weight: 400;
   }
   .edit { display: grid; gap: .5rem; padding: .5rem; border-bottom: 1px solid var(--tint-border); }
   label { display: grid; gap: .125rem; font-size: var(--tint-font-size-xs); color: var(--tint-muted); }

@@ -85,10 +85,10 @@
 
 <style>
   .drawing {
-    --diagram-ink: var(--tint-ink, light-dark(#202123,#f4f4f4));
+    --diagram-ink: var(--tint-ink);
     --diagram-line: light-dark(#72777e,#9b9fa6);
     --diagram-surface: light-dark(#f2f3f4,#303338);
-    --diagram-ring: var(--tint-focus,light-dark(#2365cd,#83b4ff));
+    --diagram-ring: var(--tint-focus);
     --diagram-line-teal: light-dark(#187c79,#69c7be); --diagram-surface-teal: light-dark(#e2f4f1,#193d39);
     --diagram-line-amber: light-dark(#976316,#e4b466); --diagram-surface-amber: light-dark(#fff1d9,#473821);
     --diagram-line-blue: light-dark(#54789f,#93b7de); --diagram-surface-blue: light-dark(#e9eff8,#293a4c);
@@ -97,8 +97,8 @@
     --diagram-line-red: light-dark(#a55556,#e39e9b); --diagram-surface-red: light-dark(#faeaea,#473233);
     --diagram-ink-teal: var(--diagram-ink); --diagram-ink-amber: var(--diagram-ink); --diagram-ink-blue: var(--diagram-ink);
     --diagram-ink-violet: var(--diagram-ink); --diagram-ink-green: var(--diagram-ink); --diagram-ink-red: var(--diagram-ink);
-    overflow-x: auto; max-width: 100%; padding: .75rem; border: 1px solid var(--tint-border,#9997);
-    border-radius: .75rem; background: var(--tint-panel,light-dark(white,#202123)); color: var(--diagram-ink);
+    overflow-x: auto; max-width: 100%; padding: .75rem; border: 1px solid var(--tint-border);
+    border-radius: .75rem; background: var(--tint-panel); color: var(--diagram-ink);
   }
   .viewport { overflow-x: auto; padding: 4px; }
   svg { display: block; max-width: none; margin: auto; height: auto; fill: var(--diagram-ink); }

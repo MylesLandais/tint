@@ -78,8 +78,8 @@ select.tint-select.tint-select:hover:not(:disabled) {
 
 select.tint-select.tint-select:focus-visible,
 select.tint-field-input.tint-field-input:focus-visible {
-  outline: var(--tint-focus-width, 2px) solid var(--tint-focus);
-  outline-offset: calc(-1 * var(--tint-focus-width, 2px));
+  outline: var(--tint-focus-width) solid var(--tint-focus);
+  outline-offset: calc(-1 * var(--tint-focus-width));
 }
 
 select.tint-select.tint-select[aria-invalid='true'],
@@ -97,7 +97,7 @@ select.tint-field-input.tint-field-input:disabled {
 select.tint-select[data-size='sm'] {
   min-height: 2rem;
   padding-block: 0.25rem;
-  font-size: var(--tint-font-size-sm, 0.875rem);
+  font-size: var(--tint-font-size-sm);
 }
 
 /* Windows high contrast and similar: hand colours back to the system. */

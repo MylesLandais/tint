@@ -123,7 +123,7 @@
   .pop {
     position: absolute; z-index: 40; top: calc(100% + 2px); inset-inline-start: -1px; width: max(100% + 2px, 16rem); max-width: 22rem;
     display: grid; background: var(--tint-panel); color: var(--tint-ink); border: 1px solid var(--tint-muted);
-    border-radius: var(--tint-radius-md); box-shadow: 0 8px 24px color-mix(in srgb, var(--tint-shadow-color, #000) 24%, transparent);
+    border-radius: var(--tint-radius-md); box-shadow: 0 8px 24px color-mix(in srgb, var(--tint-shadow-color) 24%, transparent);
     font-size: var(--tint-font-size-sm); font-weight: 400; user-select: none; white-space: normal;
   }
   .pop.flipped { top: auto; bottom: calc(100% + 2px); }

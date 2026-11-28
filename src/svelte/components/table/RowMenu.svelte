@@ -55,7 +55,7 @@
   .menu {
     position: absolute; z-index: 50; min-width: 13rem; display: grid; padding: .25rem; background: var(--tint-panel); color: var(--tint-ink);
     border: 1px solid var(--tint-muted); border-radius: var(--tint-radius-md); font-size: var(--tint-font-size-sm);
-    box-shadow: 0 8px 24px color-mix(in srgb, var(--tint-shadow-color, #000) 24%, transparent);
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--tint-shadow-color) 24%, transparent);
   }
   button { font: inherit; text-align: start; color: inherit; background: none; border: 0; padding: .375rem .625rem; border-radius: var(--tint-radius-sm); cursor: pointer; }
   button:hover:not(:disabled), button:focus-visible { background: var(--tint-selection); outline: none; }

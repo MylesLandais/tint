@@ -86,7 +86,7 @@
   dl > div { display: grid; grid-template-columns: 5rem minmax(0, 1fr); gap: .5rem; font-size: .75rem; }
   dt { color: var(--tint-muted); }
   dd { min-width: 0; margin: 0; overflow-wrap: anywhere; }
-  code, pre { font-family: var(--tint-font-mono, monospace); }
+  code, pre { font-family: var(--font-mono); }
   pre { max-width: 100%; overflow: auto; white-space: pre-wrap; font-size: .6875rem; }
   ul { margin: 0; padding-left: 1rem; }
   li[data-severity='error'] { color: var(--tint-danger-ink); }

@@ -111,7 +111,7 @@
   .try { font-size: .85rem; color: var(--tint-muted); }
   .try summary { cursor: pointer; color: var(--tint-ink); font-weight: 600; }
   .try ol { margin: .5rem 0 0; padding-inline-start: 1.25rem; display: grid; gap: .25rem; }
-  kbd { font-family: var(--tint-font-mono, ui-monospace, monospace); font-size: .75rem; padding: 0 .3rem; border: 1px solid var(--tint-border-strong); border-radius: 3px; background: var(--tint-field); color: var(--tint-ink); }
+  kbd { font-family: var(--font-mono); font-size: .75rem; padding: 0 .3rem; border: 1px solid var(--tint-border-strong); border-radius: 3px; background: var(--tint-field); color: var(--tint-ink); }
   .status { margin: 0; padding: 2rem; text-align: center; color: var(--tint-muted); }
   .error { color: var(--tint-danger-ink); }
 </style>

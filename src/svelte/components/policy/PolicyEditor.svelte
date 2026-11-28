@@ -117,7 +117,7 @@
   .clause :is(input, select) { background: var(--tint-panel); font-size: var(--tint-font-size-xs); }
   .add { align-self: flex-start; }
   .lua { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--tint-space-3); }
-  textarea { min-height: 10rem; resize: vertical; font-family: var(--tint-font-mono, monospace); font-size: var(--tint-font-size-xs); }
+  textarea { min-height: 10rem; resize: vertical; font-family: var(--font-mono); font-size: var(--tint-font-size-xs); }
   pre { min-width: 0; max-height: 18rem; margin: 0; overflow: auto; border: 1px solid var(--tint-border); border-radius: var(--tint-radius-sm); background: var(--tint-surface); padding: var(--tint-space-2); font-size: var(--tint-font-size-xs); }
   .enabled { flex-direction: row; align-items: center; gap: var(--tint-space-2); }
   :is(input, select, textarea, button):focus-visible { outline: var(--tint-focus-width) solid var(--tint-focus); outline-offset: var(--tint-focus-offset); }
